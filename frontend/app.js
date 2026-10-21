@@ -402,9 +402,9 @@ function drawChar(ch, now, alpha, floorY) {
 /* ---------- 역할 선택 2안: 역할에 따라 볼 수 있는 구역만 열림 ---------- */
 // 화면 연출용 대응표. 실제 권한 규칙(역할 × 문서 등급)은 서버 정책이 정하며 이 표와 무관함
 const ROLE_ACCESS = {
-  admin: ['arena', 'observe', 'server', 'restricted'],
-  analyst: ['arena', 'observe', 'server'],
-  developer: ['arena', 'observe'],
+  prof: ['arena', 'observe', 'server', 'restricted'],
+  grad: ['arena', 'observe', 'server'],
+  std: ['arena', 'observe'],
 };
 let sceneRole = null; // 역할 선택 화면에서 고른 역할 (없으면 null)
 const veil = { observe: 0, server: 0, arena: 0 }; // 1이면 잠겨서 어두움
@@ -589,7 +589,7 @@ function drawRestricted(now) {
   const r = rooms.restricted;
   px(r.x, r.y, r.w, r.h, '#1c232b');
   px(r.x, r.y + r.h - 2, r.w, 2, '#262e36');
-  // 안쪽은 잠겨 있는 동안 보이지 않고, 열리면(관리자·안테나) 불이 켜지며 나타남
+  // 안쪽은 잠겨 있는 동안 보이지 않고, 열리면(교수·안테나) 불이 켜지며 나타남
   if (restrictedOpen > 0.01) {
     ctx.globalAlpha = restrictedOpen;
     drawRoomBase(r);
@@ -872,7 +872,7 @@ function startLoading() {
   render();
   loadTimer = setInterval(tick, 70);
 
-  // 개발용 지름길: 첫 슬롯(보안 분석가, Day 2, 토큰 8/20)으로 조사 화면만 바로 엶
+  // 개발용 지름길: 첫 슬롯(대학원생, Day 2, 토큰 8/20)으로 조사 화면만 바로 엶
   if (skipToPlay) {
     clearInterval(loadTimer);
     showInvestigation(saves[0]);
@@ -963,9 +963,9 @@ loginView.addEventListener('submit', (event) => {
 // 역할 = 난이도. sample: 계획서 예시 "제한 파일 접근" 사건이 역할별로 보이는 모습
 // name: 계획서·백엔드에서 쓰는 이름, label: 화면에 보이는 이름
 const roles = {
-  admin: { name: 'Administrator', label: '관리자', sample: '→ 접근한 파일명까지 확인' },
-  analyst: { name: 'Security Analyst', label: '보안 분석가', sample: '→ 제한 리소스 접근 시도 탐지' },
-  developer: { name: 'Developer', label: '개발자', sample: '→ 403 요청 실패' },
+  prof: { name: 'Professor', label: '교수', sample: '→ 접근한 파일명까지 확인' },
+  grad: { name: 'Graduate Student', label: '대학원생', sample: '→ 제한 리소스 접근 시도 탐지' },
+  std: { name: 'Undergraduate Researcher', label: '학부 연구생', sample: '→ 403 요청 실패' },
 };
 
 const roleView = document.querySelector('#role-view');
@@ -1028,8 +1028,8 @@ let currentUser = 'researcher01';
 // TODO: 백엔드 Save API가 생기면 여기서 불러옴. 지금은 예시 기록
 const MAX_TOKENS = 20; // 조사 토큰 총량: 계획서상 미확정, 임시 값
 const saves = [
-  { role: 'analyst', day: 2, tokens: 8, clues: 5, lastPlayed: '10월 16일' },
-  { role: 'developer', day: 1, tokens: 17, clues: 1, lastPlayed: '10월 14일' },
+  { role: 'grad', day: 2, tokens: 8, clues: 5, lastPlayed: '10월 16일' },
+  { role: 'std', day: 1, tokens: 17, clues: 1, lastPlayed: '10월 14일' },
   null,
 ];
 let lastSlot = 0; // 가장 최근에 한 슬롯
