@@ -15,7 +15,7 @@
   };
 
   function roleLabel(role) {
-    return data.roles[role]?.label || '보안 분석가';
+    return data.roles[role]?.label || '대학원생';
   }
 
   function escapeHtml(value) {
@@ -85,7 +85,7 @@
       const action = empty ? (mode === 'new' ? '새 실험 관찰' : '발급 전') : (mode === 'new' ? '덮어쓰기 확인' : '리더기에 대기');
       const detail = save
         ? `<strong>${escapeHtml(roleLabel(save.role))}</strong><span>Day ${save.day}/3 · 토큰 ${save.tokens}/${context.maxTokens} · 단서 ${save.clues}</span><small>마지막 접속 ${escapeHtml(save.lastPlayed || '기록 없음')}</small>`
-        : `<strong>발급 전</strong><span>새 실험 관찰</span><small>역할: ${escapeHtml(roleLabel(context.role || 'analyst'))}</small>`;
+        : `<strong>발급 전</strong><span>새 실험 관찰</span><small>역할: ${escapeHtml(roleLabel(context.role || 'grad'))}</small>`;
       return `<button type="button" class="c-session-card${empty ? ' is-empty' : ''}${selected ? ' is-selected' : ''}${reading ? ' is-reading' : ''}${mode === 'new' && save ? ' is-overwrite' : ''}" data-slot="${index}" ${disabled ? 'disabled' : ''}>
         <span class="c-session-avatar c-avatar-${index}" aria-hidden="true"><i></i><i></i><b></b></span>
         <span class="c-session-number">${index + 1}번 기록</span>
@@ -307,7 +307,7 @@
     const state = {
       root,
       save,
-      role: save.role || 'analyst',
+      role: save.role || 'grad',
       context: sessionContext,
       phase: 'desktop',
       windows: new Map(),

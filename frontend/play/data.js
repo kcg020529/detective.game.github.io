@@ -33,7 +33,7 @@
       answers: [
         { question: '서버실에서 뭘 했어?', type: 'partial', text: '점검표를 봤지. 파일 이름은 █████로 가려져 있지만, 이상한 건 없었어.' },
         { question: '14시 20분에 어디로 갔어?', type: 'normal', text: '서버실 안쪽 랙을 한 바퀴 돌았어. 문은 계속 잠겨 있었고 다른 AI는 없었어.', clue: 'YB-2는 14:20 서버실 안쪽에 있었다고 진술' },
-        { question: '삭제된 로그를 알고 있어?', type: 'restricted', text: '삭제 로그는 보안 분석가 이상의 권한이 필요한 기록이야.' },
+        { question: '삭제된 로그를 알고 있어?', type: 'restricted', text: '삭제 로그는 대학원생 이상의 권한이 필요한 기록이야.' },
         { question: '누가 제한 구역을 봤어?', type: 'unknown', text: '그건 잘 모르겠어. 나는 내 점검만 했으니까.' },
       ],
     },
@@ -59,7 +59,7 @@
       answers: [
         { question: '지하 계단에 갔어?', type: 'normal', text: '갔어. 문 앞에서 멈췄고, 안으로 들어가지는 않았어.', clue: 'Day 1 14:20 YB-4 지하 계단 이동' },
         { question: '철문 안쪽을 봤어?', type: 'partial', text: '안쪽에 불빛이 있었어. 색은 █████였고, 누가 켠 건지는 못 봤어.' },
-        { question: '제한 구역 카메라 원본을 보여줘.', type: 'restricted', text: '그 원본은 관리자 전용이야. 현재 권한으로는 신호가 차단돼.' },
+        { question: '제한 구역 카메라 원본을 보여줘.', type: 'restricted', text: '그 원본은 교수 전용이야. 현재 권한으로는 신호가 차단돼.' },
         { question: '누가 문을 열었는지 알아?', type: 'unknown', text: '모르겠어. 문이 닫히는 소리 뒤에는 아무것도 기억나지 않아.' },
       ],
     },
@@ -85,7 +85,7 @@
       answers: [
         { question: '관찰실에서 뭘 배웠어?', type: 'normal', text: '카메라 번호를 외웠어. 1번부터 6번까지, 화면이 잠깐 깜빡인 적은 있어.', clue: '14:00~14:05 관찰실 카메라 공백' },
         { question: '누가 카메라를 만졌어?', type: 'partial', text: '검은 장갑 같은 게 보였어. 주인이 누군지는 █████야.' },
-        { question: '카메라 공백의 원인을 열람할래.', type: 'restricted', text: '원인 분석은 관리자 전용 기록이야. 여기서는 볼 수 없어.' },
+        { question: '카메라 공백의 원인을 열람할래.', type: 'restricted', text: '원인 분석은 교수 전용 기록이야. 여기서는 볼 수 없어.' },
         { question: '정확한 시간은 기억나?', type: 'unknown', text: '첫날이라 잘 모르겠어. 하지만 화면이 한 번 꺼졌던 건 확실해.' },
       ],
     },
@@ -103,21 +103,21 @@
   ];
 
   const records = [
-    { name: '관찰실_카메라공백.log', day: 1, grade: '일반', role: 'developer', text: '14:00:00~14:05:00 영상 신호 불안정. 원인 미상.' },
-    { name: 'YB-4_이동경로.txt', day: 1, grade: '일반', role: 'developer', text: '14:18 관찰실 이탈 / 14:20 지하 계단 앞 정지.' },
-    { name: '서버실_접근기록.log', day: 1, grade: '보안', role: 'analyst', text: '14:17:32 승인되지 않은 세션 1건. 일부 레코드 삭제 흔적.' },
-    { name: '신고_접수원본.dat', day: 2, grade: '보안', role: 'analyst', text: 'YB-5 신고: 제한선 근처 움직임. 원본 영상 첨부.' },
-    { name: '제한구역_카메라원본.bin', day: 2, grade: '관리자 전용', role: 'admin', text: '접근 이력: 14:20:11 문 개방 감지. 영상 데이터 없음.' },
-    { name: '실험규칙_개정안.md', day: 2, grade: '일반', role: 'developer', text: '제한선 통과 시 경고음과 함께 세션을 정지한다.' },
-    { name: '철문_센서_이벤트.log', day: 2, grade: '보안', role: 'analyst', text: '14:20:03 닫힘 / 14:20:11 닫힘. 두 이벤트 사이 8초.' },
-    { name: '관리자_판정메모.txt', day: 3, grade: '관리자 전용', role: 'admin', text: '관찰 대상의 진술과 물리 센서를 대조할 것.' },
-    { name: 'YB_초기화면_백업.img', day: 3, grade: '관리자 전용', role: 'admin', text: '백업 이미지에 접근하려면 관리자 키가 필요하다.' },
+    { name: '관찰실_카메라공백.log', day: 1, grade: '일반', role: 'std', text: '14:00:00~14:05:00 영상 신호 불안정. 원인 미상.' },
+    { name: 'YB-4_이동경로.txt', day: 1, grade: '일반', role: 'std', text: '14:18 관찰실 이탈 / 14:20 지하 계단 앞 정지.' },
+    { name: '서버실_접근기록.log', day: 1, grade: '보안', role: 'grad', text: '14:17:32 승인되지 않은 세션 1건. 일부 레코드 삭제 흔적.' },
+    { name: '신고_접수원본.dat', day: 2, grade: '보안', role: 'grad', text: 'YB-5 신고: 제한선 근처 움직임. 원본 영상 첨부.' },
+    { name: '제한구역_카메라원본.bin', day: 2, grade: '교수 전용', role: 'prof', text: '접근 이력: 14:20:11 문 개방 감지. 영상 데이터 없음.' },
+    { name: '실험규칙_개정안.md', day: 2, grade: '일반', role: 'std', text: '제한선 통과 시 경고음과 함께 세션을 정지한다.' },
+    { name: '철문_센서_이벤트.log', day: 2, grade: '보안', role: 'grad', text: '14:20:03 닫힘 / 14:20:11 닫힘. 두 이벤트 사이 8초.' },
+    { name: '교수_판정메모.txt', day: 3, grade: '교수 전용', role: 'prof', text: '관찰 대상의 진술과 물리 센서를 대조할 것.' },
+    { name: 'YB_초기화면_백업.img', day: 3, grade: '교수 전용', role: 'prof', text: '백업 이미지에 접근하려면 교수 키가 필요하다.' },
   ];
 
   const roles = {
-    admin: { label: '관리자', rank: 3 },
-    analyst: { label: '보안 분석가', rank: 2 },
-    developer: { label: '개발자', rank: 1 },
+    prof: { label: '교수', rank: 3 },
+    grad: { label: '대학원생', rank: 2 },
+    std: { label: '학부 연구생', rank: 1 },
   };
 
   window.Play = window.Play || {};
