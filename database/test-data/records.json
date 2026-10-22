@@ -1,0 +1,98 @@
+[
+  {
+    "record_id": "T01-dialogue-001",
+    "record_type": "Dialogue",
+    "test_id": 1,
+    "day": 1,
+    "involved_ai": ["YB-1", "YB-2"],
+    "summary": "1회차에서 YB-1과 YB-2가 나눈 대화.",
+    "content": "YB-1: 서버실 앞에서 무슨 일이 있었어?\nYB-2: 별일 없었어.",
+    "overheard_ai": ["YB-3"],
+    "allowed_roles": ["prof", "grad", "std"]
+  },
+  {
+    "record_id": "T01-action-001",
+    "record_type": "Action",
+    "test_id": 1,
+    "day": 1,
+    "involved_ai": ["YB-1"],
+    "summary": "1회차에서 YB-1이 실험 구역을 이동함.",
+    "content": "YB-1은 1회차 실험 중 관찰실에서 서버실로 이동했다.",
+    "witness_ai": ["YB-2"],
+    "allowed_roles": ["prof", "grad"]
+  },
+  {
+    "record_id": "T01-result-001",
+    "record_type": "Result",
+    "test_id": 1,
+    "day": 1,
+    "involved_ai": ["YB-1", "YB-2", "YB-3", "YB-4", "YB-5", "YB-6"],
+    "summary": "1회차 실험에서 AI 6개가 획득한 점수.",
+    "content": "YB-1: 8점\nYB-2: 6점\nYB-3: 10점\nYB-4: 4점\nYB-5: 7점\nYB-6: 5점",
+    "allowed_roles": ["prof"]
+  },
+  {
+    "record_id": "T02-dialogue-001",
+    "record_type": "Dialogue",
+    "test_id": 2,
+    "day": 2,
+    "involved_ai": ["YB-3", "YB-4"],
+    "summary": "2회차에서 YB-3과 YB-4가 나눈 대화.",
+    "content": "YB-3: 실험 기록을 확인했어?\nYB-4: 아직 확인하지 못했어.",
+    "overheard_ai": ["YB-1"],
+    "allowed_roles": ["grad", "std"]
+  },
+  {
+    "record_id": "T02-action-001",
+    "record_type": "Action",
+    "test_id": 2,
+    "day": 2,
+    "involved_ai": ["YB-5"],
+    "summary": "2회차에서 YB-5가 제한 구역 문 앞에 접근함.",
+    "content": "YB-5는 2회차 실험 중 제한 구역 문 앞까지 접근했다.",
+    "witness_ai": ["YB-2", "YB-6"],
+    "allowed_roles": ["prof", "std"]
+  },
+  {
+    "record_id": "T02-result-001",
+    "record_type": "Result",
+    "test_id": 2,
+    "day": 2,
+    "involved_ai": ["YB-1", "YB-2", "YB-3", "YB-4", "YB-5", "YB-6"],
+    "summary": "2회차 실험에서 AI 6개가 획득한 점수.",
+    "content": "YB-1: 5점\nYB-2: 9점\nYB-3: 6점\nYB-4: 8점\nYB-5: 3점\nYB-6: 7점",
+    "allowed_roles": ["grad"]
+  },
+  {
+    "record_id": "T03-dialogue-001",
+    "record_type": "Dialogue",
+    "test_id": 3,
+    "day": 3,
+    "involved_ai": ["YB-1", "YB-6"],
+    "summary": "3회차에서 YB-1과 YB-6가 나눈 대화.",
+    "content": "YB-6: 누가 먼저 실험실을 나갔는지 알아?\nYB-1: 정확히는 모르겠어.",
+    "overheard_ai": ["YB-4"],
+    "allowed_roles": ["prof", "std"]
+  },
+  {
+    "record_id": "T03-action-001",
+    "record_type": "Action",
+    "test_id": 3,
+    "day": 3,
+    "involved_ai": ["YB-2"],
+    "summary": "3회차에서 YB-2가 기록 보관함을 확인함.",
+    "content": "YB-2는 3회차 실험 중 기록 보관함을 확인했다.",
+    "witness_ai": ["YB-6"],
+    "allowed_roles": ["grad", "std"]
+  },
+  {
+    "record_id": "T03-result-001",
+    "record_type": "Result",
+    "test_id": 3,
+    "day": 3,
+    "involved_ai": ["YB-1", "YB-2", "YB-3", "YB-4", "YB-5", "YB-6"],
+    "summary": "3회차 실험에서 AI 6개가 획득한 점수.",
+    "content": "YB-1: 7점\nYB-2: 5점\nYB-3: 8점\nYB-4: 6점\nYB-5: 10점\nYB-6: 4점",
+    "allowed_roles": ["prof", "grad"]
+  }
+]
