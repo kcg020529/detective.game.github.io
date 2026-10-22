@@ -1319,4 +1319,43 @@ document.addEventListener('keydown', (event) => {
   startButton.click();
 });
 
+/* ---------- 글자 크기 (발표용) ---------- */
+
+// 조사 화면 글자를 한 단계 키움. 고른 값은 이 브라우저에만 기억 (저장소를 못 쓰면 매번 기본값)
+const textSizeToggle = document.querySelector('#text-size-toggle');
+function applyTextSize(large) {
+  document.documentElement.dataset.textSize = large ? 'large' : 'normal';
+  textSizeToggle.setAttribute('aria-pressed', String(large));
+}
+try {
+  applyTextSize(localStorage.getItem('kervion-text-size') === 'large');
+} catch (error) {
+  applyTextSize(false);
+}
+textSizeToggle.addEventListener('click', () => {
+  const large = textSizeToggle.getAttribute('aria-pressed') !== 'true';
+  applyTextSize(large);
+  try {
+    localStorage.setItem('kervion-text-size', large ? 'large' : 'normal');
+  } catch (error) {
+    // 기억하지 못해도 지금 화면에는 적용됨
+  }
+});
+
+/* ---------- 전체 화면 (발표용) ---------- */
+
+// 게임 창을 감싼 틀을 전체 화면으로 띄움. Esc로 빠져나옴
+const fullscreenToggle = document.querySelector('#fullscreen-toggle');
+const cabinet = document.querySelector('.cabinet');
+if (document.fullscreenEnabled && fullscreenToggle && cabinet) {
+  fullscreenToggle.hidden = false;
+  fullscreenToggle.addEventListener('click', () => {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else cabinet.requestFullscreen();
+  });
+  document.addEventListener('fullscreenchange', () => {
+    fullscreenToggle.textContent = document.fullscreenElement ? '전체 화면 끝내기' : '전체 화면';
+  });
+}
+
 startLoading();
