@@ -1,0 +1,49 @@
+# CODEOWNERS 초안 — PARTS.md 담당 영역을 GitHub 계정에 연결한다.
+# 이 파일은 PR 대상 브랜치(main)에 병합된 뒤 해당 경로의 리뷰 요청에 사용된다.
+# 팀원은 저장소 쓰기 권한이 있어야 한다. 여러 담당자는 같은 줄에 적는다.
+# 코드 소유자 승인 필수 설정은 이 파일과 별도로 결정한다.
+
+# 용범: A 게임, B 데이터, C Planner, N 평가, O 문서화
+/parts/A-game/             @AnbyMata
+/parts/B-database/         @AnbyMata
+/parts/C-planner/          @AnbyMata
+/parts/N-evaluation/       @AnbyMata
+/parts/O-documentation/    @AnbyMata
+/backend/game/             @AnbyMata
+/backend/planner/          @AnbyMata
+/database/                 @AnbyMata
+/experiments/evaluation/   @AnbyMata
+
+# 선영: F 접근통제, H 감사, I 백엔드, L 공격 실험
+/parts/F-access-control/   @ssunyoung2
+/parts/H-audit/            @ssunyoung2
+/parts/I-backend/          @ssunyoung2
+/parts/L-attack-tests/     @ssunyoung2
+/backend/api/              @ssunyoung2
+/backend/policy/           @ssunyoung2
+/backend/audit/            @ssunyoung2
+/experiments/attacks/      @ssunyoung2
+
+# 형주(형규, @howl213): D Character AI, G 가드레일, M 유출 실험
+/parts/D-character-ai/     @howl213
+/parts/G-guardrails/       @howl213
+/parts/M-leakage-tests/    @howl213
+/backend/character_ai/     @howl213
+/backend/guardrails/      @howl213
+/experiments/leakage/      @howl213
+
+# 찬규: E RAG, J 프론트엔드, K 인프라
+/parts/E-rag/              @kcg020529
+/parts/J-frontend/         @kcg020529
+/parts/K-infrastructure/   @kcg020529
+/backend/rag/              @kcg020529
+/frontend/                 @kcg020529
+/infrastructure/           @kcg020529
+
+# 공유 계약·공통 서버 코드는 실제 협의 담당자를 복수 지정한다.
+/docs/interfaces/          @ssunyoung2 @kcg020529
+/backend/common/           @ssunyoung2 @AnbyMata
+/database/schemas/         @AnbyMata @ssunyoung2
+
+# CODEOWNERS 파일 자체는 저장소 소유 계정이 검토한다.
+/.github/CODEOWNERS @kcg020529
