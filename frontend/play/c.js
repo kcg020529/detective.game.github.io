@@ -574,6 +574,8 @@
       clockMinutes: DAY_START_MINUTES,
       clockTimer: null,
       dayChanging: false,
+      // 새 소식이 있는 프로그램: 아이콘·작업 표시줄에 점 표시, 열면 사라짐
+      unread: new Set(['messenger']),
       onExit: options?.onExit || (() => {}),
     };
     instance = { state, unmount: () => unmount(state) };
@@ -582,8 +584,9 @@
     root.innerHTML = buildMarkup(state);
     createWindows(state);
     bindEvents(state);
-    openWindow(state, 'messenger');
     renderTaskbar(state);
+    // 창 없이 아이콘만 있는 바탕화면에서 시작. 전환 연출이 끝난 뒤 할 일을 한 번 알림
+    addTimer(state, () => showToast(state, 'YB-1~6 대화 채널이 열렸습니다. 메신저를 열어 보세요.'), reduceMotion ? 300 : 1100);
     state.clockTimer = setInterval(() => {
       state.clockMinutes = (state.clockMinutes + 1) % (24 * 60);
       renderTaskbar(state);
@@ -733,9 +736,21 @@
     return Object.entries(appInfo).filter(([key]) => appOpen(state, key));
   }
 
+  function unreadDot(state, key) {
+    return state.unread.has(key) ? '<i class="c-unread-dot" aria-label="새 소식"></i>' : '';
+  }
+
   function renderLaunchers(state) {
-    state.root.querySelector('[data-desktop-icons]').innerHTML = openApps(state).map(([key, info]) => `<button type="button" class="c-desktop-icon" data-open="${key}">${iconMarkup(info.icon)}<span>${info.label}</span></button>`).join('');
-    state.root.querySelector('[data-start-apps]').innerHTML = openApps(state).map(([key, info]) => `<button type="button" data-open="${key}">${iconMarkup(info.icon)}<span>${info.label}</span></button>`).join('');
+    state.root.querySelector('[data-desktop-icons]').innerHTML = openApps(state).map(([key, info]) => `<button type="button" class="c-desktop-icon" data-open="${key}">${iconMarkup(info.icon)}${unreadDot(state, key)}<span>${info.label}</span></button>`).join('');
+    state.root.querySelector('[data-start-apps]').innerHTML = openApps(state).map(([key, info]) => `<button type="button" data-open="${key}">${iconMarkup(info.icon)}<span>${info.label}</span>${unreadDot(state, key)}</button>`).join('');
+  }
+
+  // 그 창이 이미 열려 있으면 바로 보고 있으므로 점을 달지 않음
+  function markUnread(state, key) {
+    if (state.windows.get(key)?.hidden === false) return;
+    state.unread.add(key);
+    renderLaunchers(state);
+    renderTaskbar(state);
   }
 
   function handleKeyDown(state, event) {
@@ -768,6 +783,7 @@
     windowEl.hidden = false;
     bringToFront(state, key);
     state.root.querySelector('[data-start-menu]').hidden = true;
+    if (state.unread.delete(key)) renderLaunchers(state);
     if (key === 'messenger') renderMessenger(state);
     if (key === 'archive') renderArchive(state);
     if (key === 'notebook') renderNotebook(state);
@@ -818,7 +834,7 @@
   function renderTaskbar(state) {
     const wrap = state.root.querySelector('[data-task-buttons]');
     if (!wrap) return;
-    wrap.innerHTML = openApps(state).map(([key, info]) => `<button type="button" data-task="${key}" class="${state.windows.get(key)?.hidden ? '' : 'is-open'}">${info.label}</button>`).join('');
+    wrap.innerHTML = openApps(state).map(([key, info]) => `<button type="button" data-task="${key}" class="${state.windows.get(key)?.hidden ? '' : 'is-open'}">${info.label}${unreadDot(state, key)}</button>`).join('');
     const next = state.root.querySelector('[data-day-next]');
     if (next) {
       const last = currentDay(state) >= data.maxDay;
@@ -947,6 +963,7 @@
       state.clues.push(clue);
       showToast(state, '새 단서가 수첩에 기록되었습니다.');
       renderNotebook(state);
+      markUnread(state, 'notebook');
     }
     renderTaskbar(state);
   }
@@ -991,6 +1008,7 @@
       state.clues.push({ id: `record-${index}`, day: record.day, text: `기록 ${record.name}: ${record.clue || record.text}` });
       state.save.clues = Math.max(Number(state.save.clues) || 0, state.clues.length);
       renderNotebook(state);
+      markUnread(state, 'notebook');
       showToast(state, '기록에서 새 단서를 찾아 수첩에 추가했습니다.');
     }
   }
@@ -1136,6 +1154,8 @@
       curtain.hidden = true;
       curtain.classList.remove('is-leaving');
       state.dayChanging = false;
+      if (opened) state.unread.add('archive');
+      if (day >= data.maxDay) state.unread.add('accuse');
       renderLaunchers(state);
       renderTaskbar(state);
       if (day >= data.maxDay) showToast(state, '마지막 Day입니다. 바탕화면에 지목이 열렸습니다.');

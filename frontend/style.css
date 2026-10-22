@@ -28,7 +28,7 @@ body {
   color: var(--panel);
 }
 .site-inner {
-  max-width: 1280px;
+  max-width: none;
   margin: 0 auto;
   padding: 12px 16px;
   display: flex;
@@ -45,16 +45,15 @@ body {
   text-decoration: none;
 }
 .site-desc {
-  margin: 0;
+  margin: 0 auto 0 14px;
   font-size: 14px;
   color: #9fb2b4;
 }
 
 /* 게임 창 */
 .stage {
-  max-width: 1280px;
   margin: 0 auto;
-  padding: 20px 16px 48px;
+  padding: 16px 16px 48px;
 }
 .cabinet {
   width: fit-content;
@@ -67,7 +66,8 @@ body {
 .game {
   position: relative;
   container-type: inline-size;
-  width: min(1240px, calc(100vw - 50px), calc((100svh - 130px) * 4 / 3));
+  /* 창 높이에 맞춰 최대한 크게 (머리말·여백 약 90px 제외) */
+  width: min(calc(100vw - 32px), calc((100svh - 90px) * 4 / 3));
   min-width: 300px;
   aspect-ratio: 4 / 3;
   overflow: hidden;
@@ -599,6 +599,13 @@ kbd {
   font: inherit;
   font-size: 13px;
 }
+
+/* 전체 화면(발표용): 화면 가운데에 4:3 게임 창을 꽉 차게 */
+.fullscreen-toggle[aria-pressed="true"] { border-color: var(--amber); color: var(--amber); }
+.fullscreen-toggle { margin-left: 12px; padding: 5px 12px; border: 1px solid #4e6a66; border-radius: 4px; background: transparent; color: var(--panel); font: inherit; font-size: 14px; cursor: pointer; }
+.fullscreen-toggle:hover, .fullscreen-toggle:focus-visible { border-color: var(--amber); color: var(--amber); outline: none; }
+.cabinet:fullscreen { display: grid; place-items: center; width: 100vw; height: 100vh; max-width: none; border-radius: 0; background: #070d10; box-shadow: none; }
+.cabinet:fullscreen .game { width: min(100vw, calc(100vh * 4 / 3)); }
 
 /* 휴대폰: 세로 창, 평면도 위 글 아래 */
 @media (max-width: 640px) {
