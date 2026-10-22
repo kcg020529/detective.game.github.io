@@ -872,7 +872,7 @@ function startLoading() {
   render();
   loadTimer = setInterval(tick, 70);
 
-  // 개발용 지름길: 첫 슬롯(대학원생, Day 2, 토큰 8/20)으로 조사 화면만 바로 엶
+  // 개발용 지름길: 첫 슬롯(대학원생, Day 2)으로 조사 화면만 바로 엶
   if (skipToPlay) {
     clearInterval(loadTimer);
     showInvestigation(saves[0]);
@@ -1026,16 +1026,16 @@ let currentUser = 'researcher01';
 
 // 저장 슬롯 3칸. 역할은 슬롯마다 고정 (계획서: Save마다 Role 고정)
 // TODO: 백엔드 Save API가 생기면 여기서 불러옴. 지금은 예시 기록
-const MAX_TOKENS = 20; // 조사 토큰 총량: 계획서상 미확정, 임시 값
+const MAX_DAY = 6; // 계획서: Day 1~6
 const saves = [
-  { role: 'grad', day: 2, tokens: 8, clues: 5, lastPlayed: '10월 16일' },
-  { role: 'std', day: 1, tokens: 17, clues: 1, lastPlayed: '10월 14일' },
+  { role: 'grad', day: 2, clues: 5, lastPlayed: '10월 16일' },
+  { role: 'std', day: 1, clues: 1, lastPlayed: '10월 14일' },
   null,
 ];
 let lastSlot = 0; // 가장 최근에 한 슬롯
 
 function saveSummary(save) {
-  return `${roles[save.role].label}, Day ${save.day}, 조사 토큰 ${save.tokens} / ${MAX_TOKENS}`;
+  return `${roles[save.role].label}, Day ${save.day} / ${MAX_DAY}, 단서 ${save.clues}개`;
 }
 
 function showLobby() {
@@ -1138,14 +1138,14 @@ function enterPlay(mode, role = null) {
     mode,
     role,
     saves,
-    maxTokens: MAX_TOKENS,
+    maxDay: MAX_DAY,
     lastSlot,
     root: gameScreen,
     zoomIn,
     zoomOut,
     onStart(slotIndex, startMode = mode) {
       if (startMode === 'new') {
-        saves[slotIndex] = { role, day: 1, tokens: MAX_TOKENS, clues: 0, lastPlayed: '오늘' };
+        saves[slotIndex] = { role, day: 1, clues: 0, lastPlayed: '오늘' };
       }
       const save = saves[slotIndex];
       if (!save) return;
@@ -1185,7 +1185,7 @@ function renderSlots() {
     opt.className = 'term-opt';
     opt.dataset.slot = i;
     const cells = save
-      ? [`슬롯${i + 1}`, roles[save.role].label, `Day ${save.day}/3`, `토큰 ${save.tokens}  단서 ${save.clues}`]
+      ? [`슬롯${i + 1}`, roles[save.role].label, `Day ${save.day}/${MAX_DAY}`, `단서 ${save.clues}`]
       : [`슬롯${i + 1}`, '(비어 있음)', '', ''];
     if (termMode === 'new' && save) cells[3] += '  (덮어쓰기)';
     for (const text of cells) {
@@ -1238,7 +1238,7 @@ function pickSlot(i) {
     }
     // TODO: 백엔드가 생기면 "이 역할로 새 Save 만들기"를 한 번 요청함.
     // 그 뒤로는 서버가 저장한 역할을 쓰고, 프론트는 역할을 다시 보내지 않음
-    saves[i] = { role: newRole, day: 1, tokens: MAX_TOKENS, clues: 0, lastPlayed: '오늘' };
+    saves[i] = { role: newRole, day: 1, clues: 0, lastPlayed: '오늘' };
     lastSlot = i;
     termLine(`<span class="ok">슬롯${i + 1}에 새 기록을 만들었습니다.</span>`);
     boot(saves[i]);

@@ -25,6 +25,8 @@ python -m http.server 8000 --bind 127.0.0.1
 | `play/pixel.js` | 픽셀 초상 그리기 |
 | `assets/` | 숨은 기능용 캐릭터 이미지 |
 
+외부 라이브러리: Pretendard 글꼴, html2canvas 1.4.1 (출입증 판독 뒤 전환 효과용). 둘 다 CDN에서 불러옴.
+
 ## 현재 상태
 
 - 모든 데이터는 Mock. 로그인·저장·채팅 답변 모두 서버 연결 없음 (J03에서 연결)
