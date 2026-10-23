@@ -32,3 +32,17 @@
    - 채팅 API가 없어서, 실제 서버만으로는 Save에 들어가면 채팅 기록 404 때문에 진입 화면으로 돌아감
    - 시간은 DB 컨테이너 시계(UTC) 그대로 나감 (날짜 형식은 보류 중)
    - 로컬 PC에서 8000번 포트를 다른 프로그램이 쓰고 있어서 8001로 띄움
+
+# I02 - 채팅 기록 API (읽기)
+
+> 상태: **구현.** 읽기만. 채팅 보내기(`POST`)는 AI 답변 흐름이 없어서 아직 없음.
+
+1. `GET /saves/{save_id}/chats/{ai_id}` (`backend/api/chats.py`, `main.py`에 라우터 한 줄)
+   - `ai_id`는 `YB-1`~`YB-6`만, `limit` 1~50(기본 20), `before`는 양수. 아니면 422
+   - Save 소유 확인은 I01 `_owned_save` 그대로 사용. 다른 계정·없는 Save는 404
+   - `message_id < before` 조건으로 `ORDER BY message_id DESC LIMIT limit+1` 한 번 조회 → 남은 줄이 있는지로 `has_more`, 잘라서 오래된 순으로 뒤집어 보냄
+   - 줄 모양 `{message_id, ai_id, sender, content, response_type, created_at}`, 사용자 줄의 `response_type`은 null
+   - 읽기 전용이라 `last_played_at`은 안 바꿈
+2. 확인
+   - `python -m pytest tests/api -q`: 15개 통과 (I01 12개 + 채팅 3개: 빈 채널, 45줄 20·20·5 페이지와 `has_more`, 다른 AI 줄 안 섞임, 다른 계정 404, 잘못된 `ai_id`·`limit` 422, 사용자 줄 null)
+   - 실제 프론트 ↔ 서버(가짜는 로그인만): Save 진입 때 채팅 기록 6개 요청 모두 200, DB에 직접 넣은 질문·답(일부 가림)이 메신저에 그대로 나옴. I01의 "채팅 기록 404로 진입 못 함" 해결
