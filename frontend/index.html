@@ -59,6 +59,12 @@
                 <p class="field-error" id="login-pw-error" aria-live="polite"></p>
               </div>
 
+              <div class="field" id="signup-pw-confirm-field" hidden>
+                <label for="signup-pw-confirm">비밀번호 확인</label>
+                <input id="signup-pw-confirm" type="password" autocomplete="new-password" aria-describedby="signup-pw-confirm-error" />
+                <p class="field-error" id="signup-pw-confirm-error" aria-live="polite"></p>
+              </div>
+
               <button class="press-start login-submit" id="login-submit" type="submit"><span class="arrow" aria-hidden="true"></span><span class="label">로그인</span></button>
               <p class="form-message" id="login-message" aria-live="polite"></p>
 
@@ -182,6 +188,7 @@
   <!-- 출입증 판독 뒤 전환 효과용: 화면을 그림으로 뜸 -->
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="./play/data.js"></script>
+  <script src="./play/api.js"></script>
   <script src="./play/pixel.js"></script>
   <script src="./play/c.js"></script>
   <script src="./app.js"></script>

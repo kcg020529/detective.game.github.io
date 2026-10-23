@@ -17,6 +17,7 @@
 | `locations` | `007_record_locations.sql`: 중앙홀·회의실·기록실·전력실·통신실·창고·서버실 |
 | `game_record_locations` | 기록별 location_ids 목록의 관계 행 |
 | `game_rules` | `008_game_rules.sql`: 공통 규칙 본문 JSON 및 AI·역할·원문 공개 조건 |
+| `save_memos` | `009_save_memos.sql`: Save별 플레이어 메모 1개 (최대 5000자) |
 
 세 테이블의 상세 계약과 공개 범위는 [permissions.md](permissions.md)에 있다. SQL은 파일명 순서로 적용하며 실제 DB 실행은 아직 미검증이다.
 
