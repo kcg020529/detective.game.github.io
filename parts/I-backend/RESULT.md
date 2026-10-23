@@ -1,0 +1,34 @@
+# I01 - Save API (Save·메모·Day 진행)
+
+> 상태: **부분 구현.** Save·메모·Day 진행 API는 로컬 MariaDB와 실제 프론트로 확인함. 로그인은 아직 임시 사용자라 계정별 동작은 시험 코드로만 확인.
+
+1. FastAPI 기본 틀 (`backend/api/main.py`, `backend/api/errors.py`)
+   - 실행: 저장소 루트에서 `uvicorn backend.api.main:app --port 8001` (DB 접속 정보는 `infrastructure/docker/.env` 값을 환경 변수로)
+   - 모든 경로 `/api/v1` 아래. CORS 허용 주소 `https://kcg020529.github.io`, `http://127.0.0.1:8010`, `http://localhost:8010` (`KERVION_ALLOWED_ORIGINS`로 바꿀 수 있음), 쿠키 허용
+   - POST·PUT에 허용 목록 밖 `Origin`이 오면 403 `ACCESS_DENIED`
+   - 오류 응답은 전부 `{error: {code, message, request_id}}`. 입력 오류 422 `VALIDATION_ERROR`, 없는 경로 404 `NOT_FOUND`, DB 연결 실패 503 `SERVICE_UNAVAILABLE`, 그 밖 500 `INTERNAL_ERROR`. SQL이나 내부 오류 내용은 응답에 안 넣음
+2. DB 연결 (`backend/api/db.py`)
+   - PyMySQL, 요청마다 연결 하나. 성공하면 커밋, 오류면 롤백
+   - 환경 변수 `MARIADB_HOST`·`MARIADB_PORT`·`MARIADB_DATABASE`·`MARIADB_USER`·`MARIADB_PASSWORD` (용범 적재 도구와 같음)
+   - SQL은 전부 매개변수로 넣음 (사용자 입력을 문자열로 붙이지 않음)
+3. 임시 로그인 사용자 (`backend/api/current_user.py`)
+   - 환경 변수 `KERVION_DEV_USER`(기본 `researcher01`) 계정을 로그인한 사람으로 씀. 없으면 로그인 불가 비밀번호(`!`)로 만듦
+   - 선영 세션 코드가 들어오면 이 파일만 바꾸면 됨
+4. Save API (`backend/api/saves.py`)
+   - `GET /saves`: 내 Save 목록 (슬롯 순)
+   - `POST /saves {slot_no, role, overwrite}`: 201 새 Save (Day 1). 차 있는 슬롯에 `overwrite`가 없으면 409 "이미 기록이 있는 슬롯입니다.". 덮어쓰기는 한 트랜잭션에서 예전 Save를 지우고(채팅·메모·요청 기록도 같이 삭제) 새로 만듦. 동시에 두 번 만들어도 DB 고유 조건에 걸린 쪽은 409
+   - `GET /saves/{id}`: Save + `current_day` + `memo`(없으면 `""`) + `accusation: null`(지목 테이블 아직 없음)
+   - `PUT /saves/{id}/memo {memo}`: `save_memos`에 저장, 5000자 넘으면 422 "메모는 5000자까지 쓸 수 있습니다."
+   - `POST /saves/{id}/advance-day {client_request_id}`: Save 줄을 잠그고 Day +1, Day 6이면 409 "마지막 Day입니다.". 같은 `client_request_id`로 다시 오면 처음 응답을 그대로 돌려주고 Day는 한 번만 오름. `client_request_id`는 영문·숫자 등 ASCII 1~64자만(아니면 422)
+   - Save는 계정마다 따로. 모든 SQL에 `user_id` 조건, 다른 계정 Save나 없는 Save는 둘 다 404 "기록을 찾을 수 없습니다."
+   - `last_played_at`은 Save 하나를 다루는 요청(만들기·불러오기·메모·Day)이 성공할 때 갱신. 목록 조회는 안 바꿈
+5. `database/schemas/mariadb/010_request_log.sql`: `(save_id, client_request_id)` 기본키, 처음 응답 JSON 저장, Save 지우면 같이 삭제. README 표에 한 줄. 로컬 MariaDB에 적용함
+6. 확인
+   - `python -m pytest tests/api -q`: 12개 통과 (실제 로컬 MariaDB, 실행마다 시험 계정 두 개를 만들고 끝나면 지움). 목록·만들기 모양, 슬롯 중복 409, 덮어쓰기 뒤 메모 삭제, 잘못된 값 422, 다른 계정 Save 404, 메모 저장·5000자 제한, Day 진행·같은 요청 재전송, Day 6 409, 없는 경로 404, Origin 403·CORS, 동시 만들기 409, ASCII 아닌 요청 ID 422
+   - 실제 프론트(8010) ↔ 이 서버(8001), Playwright: 로그인·채팅 목록만 가짜로 두고 새 Save → 메모 → Day 2 → 정문 → 이어하기에서 DB의 Day·메모가 그대로 나옴 (8개 확인 통과)
+   - 이때 프론트 `frontend/play/api.js` 버그 하나 수정: `POST /saves` 응답(Save 하나)을 목록 검사로 확인해서 실제 서버 응답을 못 읽었음. Mock은 이 검사를 안 거쳐서 몰랐음
+7. 남은 것
+   - 선영 로그인과 합치기: 세션 쿠키로 `current_user` 교체, `GET /auth/me`
+   - 채팅 API가 없어서, 실제 서버만으로는 Save에 들어가면 채팅 기록 404 때문에 진입 화면으로 돌아감
+   - 시간은 DB 컨테이너 시계(UTC) 그대로 나감 (날짜 형식은 보류 중)
+   - 로컬 PC에서 8000번 포트를 다른 프로그램이 쓰고 있어서 8001로 띄움
