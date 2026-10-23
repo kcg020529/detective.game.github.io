@@ -14,3 +14,11 @@
 5. 같은 요청 다시 보내기 기록 테이블 `010_request_log.sql`
 6. 시험 (`tests/api`, 실제 로컬 MariaDB) + 프론트와 실제 서버 연결 확인
 7. 선영 로그인과 합치기 (세션으로 `current_user` 교체, `GET /auth/me`)
+
+# I02 - 채팅 기록 API (읽기)
+
+> 담당: J. 채팅 보내기(AI 답변)는 RAG·캐릭터 AI 흐름이 생긴 뒤 따로.
+
+1. `GET /saves/{save_id}/chats/{ai_id}?limit=20&before={message_id}` (`backend/api/chats.py`)
+   - `chat_messages`에서 오래된 순으로 최근 20줄, 남은 게 있으면 `has_more`
+2. 시험 (`tests/api/test_chats.py`) + 프론트와 실제 서버 연결 확인
