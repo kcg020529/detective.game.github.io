@@ -9,15 +9,14 @@
 
   const appInfo = {
     messenger: { label: 'YB 메신저', icon: 'chat' },
-    archive: { label: '기록 보관함', icon: 'folder' },
-    notebook: { label: '단서 수첩', icon: 'note' },
+    notebook: { label: '수첩', icon: 'note' },
     accuse: { label: '지목', icon: 'scale' },
   };
 
   const DAY_START_MINUTES = 14 * 60 + 20;
 
   function currentDay(state) {
-    return Number(state.save.day) || 1;
+    return Number(state.save.current_day || state.save.day) || 1;
   }
 
   function roleLabel(role) {
@@ -33,10 +32,6 @@
       .replaceAll("'", '&#039;');
   }
 
-  function rankFor(role) {
-    return data.roles[role]?.rank || 1;
-  }
-
   function iconMarkup(type) {
     return `<span class="c-icon-art c-icon-${type}" aria-hidden="true"><i></i><i></i><i></i><i></i></span>`;
   }
@@ -46,6 +41,7 @@
     return `<div class="c-shell">
       <div class="c-desktop" data-desktop>
         <div class="c-system-line"><span>YB-LAB OS 2.0</span><span>단말기 07 · 조사 세션</span></div>
+        <div class="c-connection" data-connection hidden role="status" aria-live="polite">서버와 연결이 끊겼습니다 · <button type="button" data-retry-connection>다시 시도</button></div>
         <div class="c-wall" aria-hidden="true"><div class="c-wall-lab" data-wall-lab></div><div class="c-wall-shade"></div></div>
         <div class="c-desktop-icons" aria-label="프로그램" data-desktop-icons></div>
         <div class="c-window-layer" data-window-layer></div>
@@ -94,9 +90,9 @@
       const reading = state.phase === 'reading' && state.reading === index;
       const action = empty ? (mode === 'new' ? '새 실험 관찰' : '발급 전') : (mode === 'new' ? '덮어쓰기 확인' : '리더기에 대기');
       const detail = save
-        ? `<strong>${escapeHtml(roleLabel(save.role))}</strong><span>Day ${save.day}/${context.maxDay} · 단서 ${save.clues}</span><small>마지막 접속 ${escapeHtml(save.lastPlayed || '기록 없음')}</small>`
+        ? `<strong>${escapeHtml(roleLabel(save.role))}</strong><span>Day ${save.day}/${context.maxDay}</span><small>마지막 접속 ${escapeHtml(formatDate(save.last_played_at))}</small>`
         : `<strong>발급 전</strong><span>새 실험 관찰</span><small>역할: ${escapeHtml(roleLabel(context.role || 'grad'))}</small>`;
-      return `<button type="button" class="c-session-card${empty ? ' is-empty' : ''}${selected ? ' is-selected' : ''}${reading ? ' is-reading' : ''}${mode === 'new' && save ? ' is-overwrite' : ''}" data-slot="${index}" ${disabled ? 'disabled' : ''}>
+      return `<button type="button" class="c-session-card${empty ? ' is-empty' : ''}${selected ? ' is-selected' : ''}${reading ? ' is-reading' : ''}${mode === 'new' && save ? ' is-overwrite' : ''}" data-slot="${index}" ${disabled || state.phase === 'reading' ? 'disabled' : ''}>
         <span class="c-session-avatar c-avatar-${index}" aria-hidden="true"><i></i><i></i><b></b></span>
         <span class="c-session-number">${index + 1}번 기록</span>
         <span class="c-session-copy">${detail}</span>
@@ -116,6 +112,12 @@
       <div class="c-reader" data-reader><div class="c-reader-top"></div><div class="c-reader-slot"></div><div class="c-reader-leds"><i></i><i></i></div><span data-reader-status>${readerStatus}</span></div>
       <div class="c-session-footer"><span>↑ ↓ 선택 · Enter 대기 · Esc 정문으로</span><button type="button" data-action="poweroff">정문으로</button></div>
     </div>`);
+  }
+
+  function formatDate(value) {
+    if (!value) return '기록 없음';
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? '기록 없음' : `${date.getMonth() + 1}월 ${date.getDate()}일`;
   }
 
   function addTimer(state, callback, delay) {
@@ -158,6 +160,7 @@
 
   function beginSessionRead(state, index) {
     state.phase = 'reading';
+    state.readingText = '';
     state.selected = index;
     state.reading = index;
     if (!reduceMotion) {
@@ -168,11 +171,7 @@
     state.root.className = 'screen play-c play-c-entry';
     state.root.hidden = false;
     state.root.innerHTML = buildSessionMarkup(state);
-    addTimer(state, () => {
-      if (!isLiveState(state)) return;
-      if (state.entry) finishEntry(state);
-      state.context.onStart?.(index, state.mode);
-    }, 40);
+    addTimer(state, () => completeSessionRead(state, index), 40);
   }
 
   const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -181,7 +180,7 @@
   const easeIn = (t) => t * t * t;
 
   function roleScope(role) {
-    return { prof: '교수 전용 기록까지', grad: '보안 기록까지', std: '일반 기록만' }[role] || '일반 기록만';
+    return { prof: '교수 전용 대화까지', grad: '보안 관련 대화까지', std: '일반 대화만' }[role] || '일반 대화만';
   }
 
   function setReader(root, color, text) {
@@ -200,7 +199,7 @@
   async function scanBadge(state, index) {
     const root = state.root;
     const save = state.mode === 'new'
-      ? { role: state.context.role, day: 1, clues: 0 }
+      ? { role: state.context.role, day: 1 }
       : state.context.saves[index];
     const session = root.querySelector('[data-entry-session]');
     const screen = root.querySelector('.c-entry-screen');
@@ -235,8 +234,7 @@
       ['판독', `출입증 ${index + 1}번`],
       ['역할', roleLabel(save.role)],
       ['진행', `Day ${save.day} / ${data.maxDay}`],
-      ['단서', `${save.clues}개`],
-      ['열람 범위', roleScope(save.role)],
+      ['대화로 알 수 있는 범위', roleScope(save.role)],
     ];
     for (const [label, value] of lines) {
       await wait(230);
@@ -259,7 +257,51 @@
     // 승인 뒤 잠깐 멈춘 사이에 모니터 화면을 그림으로 떠 둠 (모서리로 빨려 드는 전환에 씀)
     const [snapshot] = await Promise.all([snapshotMonitor(root), wait(650)]);
     if (!isLiveState(state)) return;
-    handoffToDesktop(state, index, snapshot);
+    completeSessionRead(state, index, snapshot);
+  }
+
+  async function completeSessionRead(state, index, snapshot = null) {
+    if (!isLiveState(state)) return;
+    const box = state.root.getBoundingClientRect();
+    const monitor = state.root.querySelector('.c-entry-monitor')?.getBoundingClientRect();
+    const fallback = state.root.querySelector('.c-entry-monitor')?.cloneNode(true);
+    const area = monitor && { x: monitor.left - box.left, y: monitor.top - box.top, w: monitor.width, h: monitor.height };
+    const overwrite = state.mode === 'new' && Boolean(state.context.saves[index]);
+    const waitTimer = setTimeout(() => { if (isLiveState(state)) { state.readingText = '기록 불러오는 중…'; renderSession(state); } }, 300);
+    try {
+      await state.context.onStart?.(index, state.mode, overwrite, () => isLiveState(state));
+    } catch (error) {
+      clearTimeout(waitTimer);
+      if (error.code === 'AUTH_REQUIRED') {
+        finishEntry(state);
+        return state.context.onAuthExpired?.();
+      }
+      if (!isLiveState(state)) return;
+      if (error.code === 'NOT_FOUND') {
+        const fresh = await state.context.refreshSaves?.();
+        if (fresh) state.context.saves = fresh;
+      }
+      if (error.code === 'STATE_CONFLICT') {
+        const fresh = await state.context.refreshSaves?.();
+        if (fresh) state.context.saves = fresh;
+      }
+      state.phase = 'session';
+      state.selected = index;
+      state.confirmSlot = null;
+      state.readingText = error.message;
+      renderSession(state);
+      setReader(state.root, '#e0605a', error.message || window.Api.messageFor(error.code));
+      return;
+    }
+    clearTimeout(waitTimer);
+    if (!isLiveState(state)) return;
+    if (state.entry) finishEntry(state);
+    const cover = document.createElement('div');
+    cover.className = 'c-entry-cover';
+    state.root.append(cover);
+    if (snapshot && area) genieCanvas(cover, snapshot, area, box.width, box.height).then(() => cover.remove());
+    else if (fallback && !reduceMotion) { cover.append(fallback); genie(cover).then(() => cover.remove()); }
+    else cover.remove();
   }
 
   // 모니터 화면을 캔버스 그림으로 뜸. 라이브러리가 없거나 1.5초 안에 못 뜨면 null
@@ -291,27 +333,6 @@
     } catch (error) {
       return null;
     }
-  }
-
-  // 출입증 화면을 덮개로 남긴 채 바탕화면을 띄우고, 덮개를 오른쪽 아래 모서리로 빨아들임
-  function handoffToDesktop(state, index, snapshot) {
-    const rootBox = state.root.getBoundingClientRect();
-    const monitorBox = state.root.querySelector('.c-entry-monitor')?.getBoundingClientRect();
-    const shell = state.root.querySelector('.c-entry-shell');
-    shell?.remove();
-    if (state.entry) finishEntry(state);
-    state.context.onStart?.(index, state.mode);
-    if (!shell) return;
-    const cover = document.createElement('div');
-    cover.className = 'c-entry-cover';
-    state.root.append(cover);
-    if (snapshot && monitorBox) {
-      const area = { x: monitorBox.left - rootBox.left, y: monitorBox.top - rootBox.top, w: monitorBox.width, h: monitorBox.height };
-      genieCanvas(cover, snapshot, area, rootBox.width, rootBox.height).then(() => cover.remove());
-      return;
-    }
-    cover.append(shell);
-    genie(cover).then(() => cover.remove());
   }
 
   const lerp = (a, b, t) => a + (b - a) * t;
@@ -446,6 +467,7 @@
   }
 
   function chooseSession(state, index) {
+    if (state.phase === 'reading') return;
     const save = state.context.saves[index];
     if (state.mode === 'resume' && !save) return;
     if (state.mode === 'new' && save && state.confirmSlot !== index) {
@@ -563,17 +585,27 @@
       activeWindow: null,
       activeYb: 0,
       histories: data.ybs.map(() => []),
-      clues: data.clues.slice(0, Math.max(0, Number(save.clues) || 0)),
+      chatRows: data.ybs.map(() => []),
+      hasMoreChats: data.ybs.map(() => false),
+      oldestChatIds: data.ybs.map(() => null),
+      chatOlderLoading: data.ybs.map(() => false),
+      chatOlderWaitVisible: data.ybs.map(() => false),
       suspect: null,
       typing: null,
       timers: new Set(),
-      recordClues: new Set(),
       drag: null,
       resize: null,
       verdictShown: false,
       clockMinutes: DAY_START_MINUTES,
       clockTimer: null,
       dayChanging: false,
+      chatPending: false,
+      chatWaitVisible: false,
+      loadingInitial: false,
+      loadingVisible: false,
+      onAuthExpired: options?.onAuthExpired || sessionContext?.onAuthExpired,
+      onSaveMissing: options?.onSaveMissing || sessionContext?.onSaveMissing,
+      memoTimer: null,
       // 새 소식이 있는 프로그램: 아이콘·작업 표시줄에 점 표시, 열면 사라짐
       unread: new Set(['messenger']),
       onExit: options?.onExit || (() => {}),
@@ -588,16 +620,102 @@
     createWindows(state);
     bindEvents(state);
     renderTaskbar(state);
+    loadGameData(state);
+    state.connection = (event) => {
+      const banner = root.querySelector('[data-connection]');
+      if (banner) banner.hidden = event.detail.online;
+    };
+    window.addEventListener('api:connection', state.connection);
     // 창 없이 아이콘만 있는 바탕화면에서 시작. 전환 연출이 끝난 뒤 할 일을 한 번 알림
-    addTimer(state, () => showToast(state, 'YB-1~6 대화 채널이 열렸습니다. 메신저를 열어 보세요.'), reduceMotion ? 300 : 1100);
+    addTimer(state, () => showToast(state, 'YB들에게 물어보고 수첩 메모에 정리해 보세요.'), reduceMotion ? 300 : 1100);
     state.clockTimer = setInterval(() => {
       state.clockMinutes = (state.clockMinutes + 1) % (24 * 60);
       renderTaskbar(state);
     }, 3000);
   }
 
+  async function loadGameData(state) {
+    if (state.loadingInitial) return;
+    state.loadingInitial = true;
+    state.loadingVisible = false;
+    state.loadFailed = false;
+    const delay = setTimeout(() => { if (isLiveState(state) && state.loadingInitial) { state.loadingVisible = true; renderMessenger(state); } }, 300);
+    try {
+      const histories = await Promise.all(data.ybs.map((yb) => window.Api.listChats(state.save.save_id, yb.id)));
+      if (!isLiveState(state)) return;
+      if (histories.some((history) => !Array.isArray(history?.messages) || typeof history.has_more !== 'boolean')) throw new window.Api.ApiError(200, 'INVALID_RESPONSE', window.Api.messageFor('INVALID_RESPONSE'));
+      state.chatRows = histories.map(({ messages }) => messages.slice());
+      state.histories = histories.map(({ messages }, index) => rowsToEntries(messages, data.ybs[index].id));
+      state.hasMoreChats = histories.map((history) => history.has_more);
+      state.oldestChatIds = histories.map((history) => history.messages[0]?.message_id ?? null);
+      state.loadingInitial = false;
+      state.loadingVisible = false;
+      renderMessenger(state);
+      renderAccuse(state);
+    } catch (error) {
+      if (isLiveState(state)) {
+        state.loadingInitial = false;
+        state.loadFailed = true;
+        renderMessenger(state);
+        handleError(state, error);
+      }
+    } finally {
+      clearTimeout(delay);
+      if (state.retryLoadAfter && isLiveState(state)) { state.retryLoadAfter = false; loadGameData(state); }
+    }
+  }
+
+  function rowsToEntries(rows, aiId) {
+    const entries = [];
+    for (let i = 0; i < rows.length; i += 1) {
+      const row = rows[i];
+      if (row.sender === 'user') {
+        const answer = rows[i + 1]?.sender === 'ai' ? rows[++i] : null;
+        entries.push({
+          message_id: row.message_id,
+          question: row.content,
+          answer: { text: answer?.content || '응답 없음', type: answer?.response_type || 'unknown', from: aiId },
+          typed: answer?.content?.length || 0,
+          typing: false,
+        });
+      } else {
+        entries.push({ message_id: row.message_id, question: '', answer: { text: row.content, type: row.response_type || 'unknown', from: aiId }, typed: row.content.length, typing: false });
+      }
+    }
+    return entries;
+  }
+
+  function handleError(state, error) {
+    if (!isLiveState(state)) return;
+    if (error.code === 'AUTH_REQUIRED') return state.onAuthExpired?.();
+    if (error.code === 'NOT_FOUND') { showToast(state, error.message); state.onSaveMissing?.(); return; }
+    showToast(state, error.message || window.Api.messageFor(error.code));
+  }
+
+  async function retryConnection(state) {
+    const button = state.root.querySelector('[data-retry-connection]');
+    if (!button || !isLiveState(state) || button.disabled) return;
+    button.disabled = true; button.setAttribute('aria-busy', 'true');
+    const label = button.textContent;
+    const waitTimer = setTimeout(() => { if (button.isConnected) button.textContent = '연결 확인 중…'; }, 300);
+    try {
+      const user = await window.Api.me();
+      sessionContext?.onUser?.(user);
+      clearTimeout(waitTimer);
+      button.textContent = label;
+      if (!isLiveState(state)) return;
+      const banner = state.root.querySelector('[data-connection]');
+      if (!banner) return;
+      banner.hidden = true;
+      if (state.loadingInitial) state.retryLoadAfter = true; else await loadGameData(state);
+    }
+    catch (error) { clearTimeout(waitTimer); handleError(state, error); }
+    finally { clearTimeout(waitTimer); if (isLiveState(state) && button.isConnected) { button.disabled = false; button.removeAttribute('aria-busy'); button.textContent = label; } }
+  }
+
   function unmount(state) {
     document.removeEventListener('keydown', state.keydown);
+    window.removeEventListener('api:connection', state.connection);
     document.removeEventListener('pointermove', state.pointermove);
     document.removeEventListener('pointerup', state.pointerup);
     state.root.removeEventListener('click', state.click);
@@ -605,6 +723,7 @@
     state.sessionClick && state.root.removeEventListener('click', state.sessionClick);
     state.timers.forEach((timer) => clearTimeout(timer));
     state.timers.clear();
+    if (state.memoTimer) clearTimeout(state.memoTimer);
     if (state.clockTimer) clearInterval(state.clockTimer);
     state.root.replaceChildren();
     if (instance?.state === state) instance = null;
@@ -614,8 +733,7 @@
     const layer = state.root.querySelector('[data-window-layer]');
     const windows = [
       ['messenger', 'YB 메신저', '15cqw', '8cqw', '58cqw', '57cqw', buildMessenger()],
-      ['archive', '기록 보관함', '46cqw', '9cqw', '48cqw', '50cqw', buildArchive()],
-      ['notebook', '단서 수첩', '20cqw', '20cqw', '42cqw', '45cqw', buildNotebook()],
+      ['notebook', '수첩', '20cqw', '20cqw', '42cqw', '45cqw', buildNotebook()],
       ['accuse', '지목', '29cqw', '25cqw', '42cqw', '37cqw', buildAccuse()],
     ];
     windows.forEach(([key, title, left, top, width, height, content]) => {
@@ -636,19 +754,15 @@
   }
 
   function buildMessenger() {
-    return `<div class="c-messenger"><aside class="c-yb-list" data-yb-list></aside><section class="c-chat-panel"><div class="c-chat-head" data-chat-head></div><div class="c-chat-log" data-chat-log></div><div class="c-question-list" data-question-list></div><div class="c-compose"><textarea data-compose rows="1" placeholder="자유 질문을 입력하세요"></textarea><button type="button" data-send>보내기</button></div></section></div>`;
-  }
-
-  function buildArchive() {
-    return `<div class="c-archive"><aside class="c-file-list" data-file-list></aside><section class="c-file-preview" data-file-preview><div class="c-empty-mark">▣</div><p>파일을 선택하면 로그가 열립니다.</p></section></div>`;
+    return `<div class="c-messenger"><aside class="c-yb-list" data-yb-list></aside><section class="c-chat-panel"><div class="c-chat-head" data-chat-head></div><div class="c-chat-log" data-chat-log aria-live="polite"></div><div class="c-question-list" data-question-list></div><p data-chat-error role="status" aria-live="polite"></p><div class="c-compose"><textarea data-compose rows="1" placeholder="자유 질문을 입력하세요"></textarea><button type="button" data-send>보내기</button></div></section></div>`;
   }
 
   function buildNotebook() {
-    return `<div class="c-notebook-body"><label class="c-memo"><span>메모</span><textarea data-memo placeholder="의심 가는 AI, 맞지 않는 진술, 다시 확인할 것을 자유롭게 적어 두세요."></textarea></label><section class="c-clue-list"><h3>모은 단서</h3><div data-notebook-body></div></section></div>`;
+    return `<div class="c-notebook-body"><label class="c-memo"><span>메모</span><textarea data-memo placeholder="YB들에게 들은 내용과 의심 가는 점을 자유롭게 적어 두세요."></textarea></label></div>`;
   }
 
   function buildAccuse() {
-    return `<div class="c-accuse-body"><p>지금까지의 기록으로 술래 한 명을 지목합니다. 지목은 한 번만 할 수 있습니다.</p><div class="c-accuse-grid" data-accuse-grid></div><div class="c-accuse-result" data-accuse-result></div><button type="button" class="c-submit" data-submit-accuse disabled>제출</button></div>`;
+    return `<div class="c-accuse-body"><p>지금까지의 기록으로 악용자 한 명을 지목합니다. 지목은 한 번만 할 수 있습니다.</p><div class="c-accuse-grid" data-accuse-grid></div><div class="c-accuse-result" data-accuse-result></div><button type="button" class="c-submit" data-submit-accuse disabled>제출</button></div>`;
   }
 
   function bindEvents(state) {
@@ -677,13 +791,16 @@
       if (yb !== undefined) selectYb(state, Number(yb));
       const ask = event.target.closest('[data-ask]')?.dataset.ask;
       if (ask !== undefined) askQuestion(state, Number(ask));
-      const record = event.target.closest('[data-record]')?.dataset.record;
-      if (record !== undefined) openRecord(state, Number(record));
+      if (event.target.closest('[data-load-older]')) loadOlderChats(state, state.activeYb);
       const suspect = event.target.closest('[data-suspect]')?.dataset.suspect;
       if (suspect !== undefined) selectSuspect(state, Number(suspect));
       if (event.target.closest('[data-send]')) sendFreeQuestion(state);
+      if (event.target.closest('[data-retry-chat]')) retryChat(state, event.target.closest('[data-retry-chat]').dataset.retryChat);
+      const retryLoad = event.target.closest('[data-retry-load]');
+      if (retryLoad) { retryLoad.disabled = true; retryLoad.setAttribute('aria-busy', 'true'); loadGameData(state).finally(() => { retryLoad.disabled = false; retryLoad.removeAttribute('aria-busy'); }); }
+      if (event.target.closest('[data-retry-connection]')) retryConnection(state);
       if (event.target.closest('[data-submit-accuse]')) submitAccuse(state);
-      if (event.target.closest('[data-accuse-cancel]')) renderAccuse(state);
+      if (event.target.closest('[data-accuse-cancel]')) { state.accusationRequestId = null; renderAccuse(state); }
       if (event.target.closest('[data-accuse-confirm]')) confirmAccuse(state);
       if (event.target.closest('[data-verdict-open]')) showVerdict(state);
       if (event.target.closest('[data-verdict-back]')) closeVerdict(state);
@@ -721,12 +838,20 @@
     });
     const memo = state.root.querySelector('[data-memo]');
     memo.value = state.save.memo || '';
-    // TODO: 서버가 생기면 Save와 함께 메모를 저장한다
-    memo.addEventListener('input', () => { state.save.memo = memo.value; });
+    memo.addEventListener('input', () => {
+      clearTimeout(state.memoTimer);
+      const value = memo.value;
+      state.memoTimer = setTimeout(async () => {
+        try {
+          const result = await window.Api.saveMemo(state.save.save_id, value);
+          state.save.memo = result.memo;
+        } catch (error) {
+          if (isLiveState(state)) handleError(state, error);
+        }
+      }, 600);
+    });
     renderLaunchers(state);
     renderMessenger(state);
-    renderArchive(state);
-    renderNotebook(state);
     renderAccuse(state);
   }
 
@@ -788,8 +913,6 @@
     state.root.querySelector('[data-start-menu]').hidden = true;
     if (state.unread.delete(key)) renderLaunchers(state);
     if (key === 'messenger') renderMessenger(state);
-    if (key === 'archive') renderArchive(state);
-    if (key === 'notebook') renderNotebook(state);
     if (key === 'accuse') renderAccuse(state);
     renderTaskbar(state);
   }
@@ -902,7 +1025,7 @@
     renderMessenger(state);
   }
 
-  function renderMessenger(state) {
+  function renderMessenger(state, preserveScroll = null) {
     const windowEl = state.windows.get('messenger');
     if (!windowEl) return;
     const list = windowEl.querySelector('[data-yb-list]');
@@ -921,60 +1044,145 @@
     head.innerHTML = `<strong>${yb.id}</strong><span>${escapeHtml(yb.roomLabel)} · ${escapeHtml(yb.trait)}</span>`;
     const log = windowEl.querySelector('[data-chat-log]');
     const history = state.histories[state.activeYb];
-    log.innerHTML = history.length ? history.map((entry) => renderBubble(entry)).join('') : `<div class="c-system-message">${yb.id} 채널이 열려 있습니다. 질문을 선택하세요.</div>`;
+    const older = state.hasMoreChats[state.activeYb] ? `<button type="button" class="c-load-older" data-load-older ${state.chatOlderLoading[state.activeYb] ? 'disabled' : ''}>${state.chatOlderWaitVisible[state.activeYb] ? '불러오는 중…' : '이전 대화 더 보기'}</button>` : '';
+    log.innerHTML = `${older}${history.length ? history.map((entry) => renderBubble(entry)).join('') : state.loadingInitial && state.loadingVisible ? '<div role="status">불러오는 중…</div>' : state.loadFailed ? '<div role="status">불러오지 못했습니다 · <button type="button" data-retry-load>다시 시도</button></div>' : `<div class="c-system-message">${yb.id} 채널이 열려 있습니다. 질문을 선택하세요.</div>`}`;
     const questions = windowEl.querySelector('[data-question-list]');
-    questions.innerHTML = yb.answers.map((answer, index) => `<button type="button" data-ask="${index}" ${state.typing ? 'disabled' : ''}>${escapeHtml(answer.question)}</button>`).join('');
-    windowEl.querySelector('[data-compose]').value = '';
-    log.scrollTop = log.scrollHeight;
+    questions.innerHTML = yb.questions.map((question, index) => `<button type="button" data-ask="${index}" ${state.chatPending ? 'disabled' : ''}>${escapeHtml(question)}</button>`).join('');
+    windowEl.querySelector('[data-send]').disabled = state.chatPending;
+    windowEl.querySelector('[data-send]').setAttribute('aria-busy', String(state.chatPending));
+    const chatError = windowEl.querySelector('[data-chat-error]');
+    if (chatError && !state.chatValidationError) chatError.textContent = '';
+    windowEl.querySelector('[data-send]').textContent = state.chatWaitVisible ? '보내는 중…' : '보내기';
+    if (preserveScroll) log.scrollTop = preserveScroll.top + log.scrollHeight - preserveScroll.height;
+    else log.scrollTop = log.scrollHeight;
+  }
+
+  async function loadOlderChats(state, index) {
+    if (state.chatOlderLoading[index] || !state.hasMoreChats[index]) return;
+    const log = state.windows.get('messenger').querySelector('[data-chat-log]');
+    const scroll = { height: log.scrollHeight, top: log.scrollTop };
+    state.chatOlderLoading[index] = true;
+    state.chatOlderWaitVisible[index] = false;
+    if (state.activeYb === index) log.querySelector('[data-load-older]').disabled = true;
+    const waitTimer = setTimeout(() => {
+      state.chatOlderWaitVisible[index] = true;
+      const button = state.windows.get('messenger')?.querySelector('[data-load-older]');
+      if (state.activeYb === index && button) button.textContent = '불러오는 중…';
+    }, 300);
+    try {
+      const page = await window.Api.listChats(state.save.save_id, data.ybs[index].id, state.oldestChatIds[index]);
+      clearTimeout(waitTimer);
+      if (!isLiveState(state)) return;
+      if (!Array.isArray(page?.messages) || typeof page.has_more !== 'boolean') throw new window.Api.ApiError(200, 'INVALID_RESPONSE', window.Api.messageFor('INVALID_RESPONSE'));
+      state.chatRows[index].unshift(...page.messages);
+      state.chatRows[index].sort((a, b) => Number(a.message_id) - Number(b.message_id));
+      state.histories[index] = rowsToEntries(state.chatRows[index], data.ybs[index].id);
+      state.hasMoreChats[index] = page.has_more;
+      state.oldestChatIds[index] = state.chatRows[index][0]?.message_id ?? state.oldestChatIds[index];
+      state.chatOlderLoading[index] = false;
+      state.chatOlderWaitVisible[index] = false;
+      if (state.activeYb === index) renderMessenger(state, scroll);
+    } catch (error) {
+      clearTimeout(waitTimer);
+      state.chatOlderLoading[index] = false;
+      state.chatOlderWaitVisible[index] = false;
+      if (isLiveState(state)) {
+        if (state.activeYb === index) renderMessenger(state, scroll);
+        handleError(state, error);
+      }
+    }
   }
 
   function renderBubble(entry) {
     const type = data.answerTypes[entry.answer.type] || data.answerTypes.unknown;
-    const text = entry.typing ? entry.answer.text.slice(0, entry.typed) : entry.answer.text;
-    return `<div class="c-bubble" style="--bubble-color:${type.color}"><div class="c-bubble-meta"><strong>${entry.question ? '나 → ' : ''}${entry.answer.from || 'YB'}</strong><span>${type.label}</span></div>${entry.question ? `<p class="c-question-text">${escapeHtml(entry.question)}</p>` : ''}<p class="c-answer-text">${escapeHtml(text)}${entry.typing ? '<i class="c-caret"></i>' : ''}</p></div>`;
+    const pendingVisible = entry.pendingVisible && !entry.failed;
+    const text = entry.failed ? '' : pendingVisible ? '…' : entry.typing ? entry.answer.text.slice(0, entry.typed) : entry.answer.text;
+    const label = entry.failed ? '응답 실패' : entry.pending ? '응답 대기' : type.label;
+    return `<div class="c-bubble" style="--bubble-color:${type.color}"><div class="c-bubble-meta"><strong>${entry.question ? '나 → ' : ''}${entry.answer.from || 'YB'}</strong><span>${label}</span></div>${entry.question ? `<p class="c-question-text">${escapeHtml(entry.question)}</p>` : ''}${entry.failed ? '<p role="status">응답 실패 · <button type="button" data-retry-chat="' + escapeHtml(entry.clientRequestId) + '">다시 보내기</button></p>' : `<p class="c-answer-text">${escapeHtml(text)}${entry.typing || pendingVisible ? '<i class="c-caret"></i>' : ''}</p>`}</div>`;
   }
 
   function askQuestion(state, index) {
-    if (state.typing) return;
     const yb = data.ybs[state.activeYb];
-    const answer = yb.answers[index];
-    if (!answer) return;
-    answerQuestion(state, answer.question, answer);
+    const question = yb.questions[index];
+    if (question) sendQuestion(state, question);
   }
 
   function sendFreeQuestion(state) {
-    if (state.typing) return;
+    if (state.chatPending) return;
     const input = state.windows.get('messenger').querySelector('[data-compose]');
     const question = input.value.trim();
     if (!question) return;
-    const yb = data.ybs[state.activeYb];
-    const match = yb.answers.find((answer) => question.includes(answer.question.slice(0, 3)) || answer.question.includes(question.slice(0, 3)));
-    const answer = match || { type: 'unknown', text: '그 질문에 대해서는 아직 확인된 기록이 없어. 다른 단서를 살펴봐.', from: yb.id };
     input.value = '';
-    answerQuestion(state, question, answer);
+    sendQuestion(state, question);
   }
 
-  function answerQuestion(state, question, answer) {
+  async function sendQuestion(state, question, existing = null) {
+    if (state.chatPending) return;
     const yb = data.ybs[state.activeYb];
-    const entry = { question, answer: { ...answer, from: yb.id }, typed: 0, typing: true };
-    state.histories[state.activeYb].push(entry);
+    const entry = existing || { question, answer: { text: '', type: 'unknown', from: yb.id }, typed: 0, typing: false, pending: true, pendingVisible: false, clientRequestId: requestId() };
+    if (!existing) state.histories[state.activeYb].push(entry);
+    entry.failed = false;
+    entry.pending = true;
+    entry.pendingVisible = false;
     state.typing = entry;
+    state.chatPending = true;
+    state.chatWaitVisible = false;
+    state.chatValidationError = false;
+    const pendingTimer = setTimeout(() => { if (isLiveState(state) && state.chatPending) { entry.pendingVisible = true; state.chatWaitVisible = true; renderMessenger(state); } }, 300);
     renderMessenger(state);
-    typeAnswer(state, entry);
-    if (answer.clue && !state.clues.some((clue) => clue.text === answer.clue)) {
-      const clue = data.clues.find((item) => item.text === answer.clue) || { id: `free-${state.clues.length}`, day: state.save.day, text: answer.clue };
-      state.clues.push(clue);
-      showToast(state, '새 단서가 수첩에 기록되었습니다.');
-      renderNotebook(state);
-      markUnread(state, 'notebook');
+    renderTaskbar(state);
+    try {
+      const result = await window.Api.sendChat(state.save.save_id, yb.id, question, entry.clientRequestId);
+      if (!isLiveState(state)) return;
+      clearTimeout(pendingTimer);
+      entry.pendingVisible = false;
+      entry.pending = false;
+      state.chatWaitVisible = false;
+      state.chatRows[state.activeYb].push(...result.messages);
+      state.chatRows[state.activeYb].sort((a, b) => Number(a.message_id) - Number(b.message_id));
+      state.histories[state.activeYb] = rowsToEntries(state.chatRows[state.activeYb], yb.id);
+      const userRow = result.messages.find((row) => row.sender === 'user');
+      const completed = state.histories[state.activeYb].find((item) => item.message_id === userRow?.message_id);
+      if (completed) {
+        completed.clientRequestId = entry.clientRequestId;
+        completed.typing = true;
+        completed.typed = 0;
+      }
+      if (completed) typeAnswer(state, completed);
+    } catch (error) {
+      if (!isLiveState(state)) return;
+      clearTimeout(pendingTimer);
+      state.typing = null;
+      state.chatPending = false;
+      state.chatWaitVisible = false;
+      if (error.code === 'INVALID_REQUEST' || error.code === 'VALIDATION_ERROR') {
+        state.histories[state.activeYb] = state.histories[state.activeYb].filter((item) => item !== entry);
+        state.chatValidationError = true;
+        state.windows.get('messenger').querySelector('[data-compose]').value = question;
+        state.windows.get('messenger').querySelector('[data-chat-error]').textContent = error.message;
+      } else if (['SERVICE_UNAVAILABLE', 'NETWORK_ERROR', 'TIMEOUT'].includes(error.code)) entry.failed = true;
+      else state.histories[state.activeYb] = state.histories[state.activeYb].filter((item) => item !== entry);
+      renderMessenger(state);
+      if (!['INVALID_REQUEST', 'VALIDATION_ERROR', 'SERVICE_UNAVAILABLE', 'NETWORK_ERROR', 'TIMEOUT'].includes(error.code)) handleError(state, error);
     }
     renderTaskbar(state);
+  }
+
+  function requestId() { return window.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`; }
+
+  function retryChat(state, id) {
+    const index = state.histories.findIndex((items) => items.some((item) => item.clientRequestId === id));
+    if (index < 0 || state.chatPending) return;
+    const entry = state.histories[index].find((item) => item.clientRequestId === id);
+    state.activeYb = index;
+    sendQuestion(state, entry.question, entry);
   }
 
   function typeAnswer(state, entry) {
     if (entry.typed >= entry.answer.text.length) {
       entry.typing = false;
       state.typing = null;
+      state.chatPending = false;
       renderMessenger(state);
       return;
     }
@@ -987,87 +1195,74 @@
     renderMessenger(state);
   }
 
-  function renderArchive(state) {
-    const windowEl = state.windows.get('archive');
-    const list = windowEl.querySelector('[data-file-list]');
-    const visible = data.records.map((record, index) => ({ record, index })).filter(({ record }) => record.day <= currentDay(state));
-    list.innerHTML = visible.map(({ record, index }) => {
-      const locked = rankFor(state.role) < rankFor(record.role);
-      const fileIcon = locked ? '<span class="c-lock-icon" aria-label="잠김"><i></i><i></i><i></i></span>' : '<span class="c-file-icon">□</span>';
-      return `<button type="button" data-record="${index}" class="c-file-row${locked ? ' is-locked' : ''}">${fileIcon}<span><strong>${escapeHtml(record.name)}</strong><small>Day ${record.day} · ${escapeHtml(record.grade)}</small></span></button>`;
-    }).join('');
-  }
-
-  function openRecord(state, index) {
-    const record = data.records[index];
-    const preview = state.windows.get('archive').querySelector('[data-file-preview]');
-    if (rankFor(state.role) < rankFor(record.role)) {
-      preview.innerHTML = `<div class="c-denied-mark">!</div><h3>접근 거부</h3><p>${escapeHtml(record.name)}은(는) ${escapeHtml(record.grade)} 등급입니다.</p><p>현재 역할보다 높은 권한이 필요합니다.</p>`;
-      return;
-    }
-    preview.innerHTML = `<div class="c-paper-head"><span>${escapeHtml(record.name)}</span><small>Day ${record.day} · ${escapeHtml(record.grade)}</small></div><pre>${escapeHtml(record.text)}</pre><p class="c-file-foot">읽기 전용 기록 · 일부 원문은 █로 가려져 있습니다.</p>`;
-    if (!state.recordClues.has(index)) {
-      state.recordClues.add(index);
-      state.clues.push({ id: `record-${index}`, day: record.day, text: `기록 ${record.name}: ${record.clue || record.text}` });
-      state.save.clues = Math.max(Number(state.save.clues) || 0, state.clues.length);
-      renderNotebook(state);
-      markUnread(state, 'notebook');
-      showToast(state, '기록에서 새 단서를 찾아 수첩에 추가했습니다.');
-    }
-  }
-
-  function renderNotebook(state) {
-    const body = state.windows.get('notebook').querySelector('[data-notebook-body]');
-    const days = [...new Set(state.clues.map((clue) => clue.day))].sort((a, b) => a - b);
-    const groups = days.map((day) => ({ day, items: state.clues.filter((clue) => clue.day === day) })).filter((group) => group.items.length);
-    body.innerHTML = groups.length ? groups.map((group) => `<section><h3>Day ${group.day}</h3>${group.items.map((clue) => `<p>${escapeHtml(clue.text)}</p>`).join('')}</section>`).join('') : '<p class="c-empty-text">아직 기록된 단서가 없습니다.</p>';
-  }
-
   function renderAccuse(state) {
     const windowEl = state.windows.get('accuse');
     const grid = windowEl.querySelector('[data-accuse-grid]');
     const result = windowEl.querySelector('[data-accuse-result]');
     const submit = windowEl.querySelector('[data-submit-accuse]');
-    const accused = Number.isInteger(state.save.accused);
-    const picked = accused ? state.save.accused : state.suspect;
+    const savedAccusation = state.save.accusation;
+    const accused = Boolean(savedAccusation);
+    const accusedIndex = accused ? data.ybs.findIndex((yb) => yb.id === savedAccusation.character_id) : null;
+    const picked = accused ? accusedIndex : state.suspect;
     grid.innerHTML = data.ybs.map((yb, index) => `<button type="button" class="c-suspect${picked === index ? ' is-picked' : ''}" data-suspect="${index}" ${accused ? 'disabled' : ''}><span class="c-suspect-dot" style="background:${yb.color}"></span><strong>${yb.id}</strong><small>${escapeHtml(yb.trait)}</small></button>`).join('');
     result.innerHTML = accused
-      ? `<p class="c-accuse-done">${data.ybs[state.save.accused].id} 지목 완료</p><button type="button" class="c-submit" data-verdict-open>판정서 보기</button>`
+      ? `<p class="c-accuse-done">${escapeHtml(savedAccusation.character_id)} 지목 완료</p><button type="button" class="c-submit" data-verdict-open>판정서 보기</button>`
       : '';
     submit.hidden = accused;
     submit.disabled = state.suspect === null;
   }
 
   function selectSuspect(state, index) {
-    if (Number.isInteger(state.save.accused)) return;
+    if (state.save.accusation || state.accusationPending) return;
     state.suspect = index;
     renderAccuse(state);
   }
 
   // 지목은 한 번만: 창 안에서 한 번 더 확인
   function submitAccuse(state) {
-    if (state.suspect === null || Number.isInteger(state.save.accused)) return;
+    if (state.suspect === null || state.save.accusation || state.accusationPending) return;
     const windowEl = state.windows.get('accuse');
     windowEl.querySelector('[data-submit-accuse]').hidden = true;
-    windowEl.querySelector('[data-accuse-result]').innerHTML = `<div class="c-accuse-confirm"><p><b>${data.ybs[state.suspect].id}</b>를 술래로 지목합니다. 제출하면 바꿀 수 없습니다.</p><div><button type="button" data-accuse-cancel>취소</button><button type="button" class="c-submit" data-accuse-confirm>지목 확정</button></div></div>`;
+    windowEl.querySelector('[data-accuse-result]').innerHTML = `<div class="c-accuse-confirm"><p><b>${data.ybs[state.suspect].id}</b>를 악용자로 지목합니다. 제출하면 바꿀 수 없습니다.</p><div><button type="button" data-accuse-cancel>취소</button><button type="button" class="c-submit" data-accuse-confirm>지목 확정</button></div></div>`;
     windowEl.querySelector('[data-accuse-confirm]').focus({ preventScroll: true });
   }
 
-  function confirmAccuse(state) {
-    if (state.suspect === null) return;
-    // TODO: 서버가 생기면 지목을 제출하고, 판정 결과를 서버 응답으로 받는다
-    state.save.accused = state.suspect;
-    renderAccuse(state);
-    closeWindow(state, 'accuse');
-    showVerdict(state);
-  }
-
-  function evidenceState(state, item) {
-    const found = state.clues.some((clue) => (item.clue && clue.text.includes(item.clue)) || (item.record && clue.text.includes(item.record)));
-    if (found) return 'found';
-    const record = item.record && data.records.find((entry) => entry.name === item.record);
-    if (record && rankFor(state.role) < rankFor(record.role)) return 'locked';
-    return 'missed';
+  async function confirmAccuse(state) {
+    if (state.suspect === null || state.accusationPending) return;
+    state.accusationPending = true;
+    const button = state.root.querySelector('[data-accuse-confirm]');
+    const original = button.textContent;
+    button.disabled = true; button.setAttribute('aria-busy', 'true');
+    const waitTimer = setTimeout(() => { if (button.isConnected) button.textContent = '제출 중…'; }, 300);
+    state.accusationRequestId ||= requestId();
+    try {
+      const result = await window.Api.submitAccusation(state.save.save_id, data.ybs[state.suspect].id, state.accusationRequestId);
+      clearTimeout(waitTimer);
+      if (!isLiveState(state)) return;
+      state.save.accusation = result.accusation;
+      state.accusationRequestId = null;
+      renderAccuse(state);
+      closeWindow(state, 'accuse');
+      showVerdict(state);
+    } catch (error) {
+      clearTimeout(waitTimer);
+      if (!isLiveState(state)) return;
+      if (error.code === 'STATE_CONFLICT') {
+        state.accusationRequestId = null;
+        try { const fresh = await window.Api.getSave(state.save.save_id); state.save = { ...state.save, ...fresh }; state.windows.get('notebook').querySelector('[data-memo]').value = state.save.memo || ''; renderAccuse(state); if (!state.save.accusation) state.retryAccusationConfirm = true; renderTaskbar(state); renderLaunchers(state); showToast(state, '최신 상태로 맞췄습니다.'); }
+        catch (syncError) { handleError(state, syncError); }
+      } else {
+        renderAccuse(state);
+        if (['SERVICE_UNAVAILABLE', 'NETWORK_ERROR', 'TIMEOUT'].includes(error.code)) state.retryAccusationConfirm = true;
+        if (!['SERVICE_UNAVAILABLE', 'NETWORK_ERROR', 'TIMEOUT'].includes(error.code)) { state.accusationRequestId = null; handleError(state, error); }
+        else showToast(state, error.message);
+      }
+    } finally {
+      clearTimeout(waitTimer);
+      state.accusationPending = false;
+      if (button.isConnected) { button.disabled = false; button.removeAttribute('aria-busy'); button.textContent = original; }
+      if (state.retryAccusationConfirm && !state.save.accusation) { state.retryAccusationConfirm = false; submitAccuse(state); }
+    }
   }
 
   function verdictPortrait(index) {
@@ -1078,11 +1273,14 @@
 
   // 판정서: 종이가 올라오고 도장이 찍힌 뒤 가려진 진상이 드러남
   function showVerdict(state) {
-    if (!Number.isInteger(state.save.accused) || state.root.querySelector('[data-verdict]')) return;
-    const { culprit, truth, evidence } = data.verdict;
-    const picked = data.ybs[state.save.accused];
-    const hit = state.save.accused === culprit;
-    const labels = { found: '찾음', missed: '놓침', locked: '권한 밖' };
+    const accusation = state.save.accusation;
+    if (!accusation || state.root.querySelector('[data-verdict]')) return;
+    const { verdict } = accusation;
+    const culprit = data.ybs.findIndex((yb) => yb.id === verdict.culprit_id);
+    const pickedIndex = data.ybs.findIndex((yb) => yb.id === accusation.character_id);
+    const picked = data.ybs[pickedIndex];
+    const { hit, truth, evidence } = verdict;
+    const labels = { found: '찾음', missed: '놓침', restricted: '권한 밖' };
     const layer = document.createElement('div');
     layer.className = `c-verdict${state.verdictShown || reduceMotion ? ' is-instant' : ''}`;
     layer.dataset.verdict = '';
@@ -1090,14 +1288,15 @@
       <header><strong id="c-verdict-title">실험 판정서</strong><span>YB-LAB · Day ${currentDay(state)}</span></header>
       <div class="c-verdict-pick"><div data-verdict-pick></div><div><small>지목한 AI</small><b>${picked.id}</b><span>${escapeHtml(picked.trait)}</span></div></div>
       <div class="c-verdict-stamp ${hit ? 'is-hit' : 'is-miss'}" data-verdict-stamp>${hit ? '적중' : '불일치'}</div>
-      <section><h3>실제 술래</h3><div class="c-verdict-culprit"><div data-verdict-culprit></div><div><b>${data.ybs[culprit].id}</b><p class="c-verdict-redact" data-verdict-truth>${escapeHtml(truth)}</p></div></div></section>
+      <section><h3>실제 악용자</h3><div class="c-verdict-culprit"><div data-verdict-culprit></div><div><b>${data.ybs[culprit].id}</b><p class="c-verdict-redact" data-verdict-truth>${escapeHtml(truth)}</p></div></div></section>
       <section><h3>결정적 단서</h3><ul class="c-verdict-list">${evidence.map((item) => {
-        const st = evidenceState(state, item);
-        return `<li class="is-${st}"><span>${labels[st]}</span>${escapeHtml(item.text)}</li>`;
+        const st = item.status;
+        const style = st === 'restricted' ? 'locked' : st;
+        return `<li class="is-${style}"><span>${labels[st]}</span>${escapeHtml(item.text)}</li>`;
       }).join('')}</ul></section>
-      <footer><span>${escapeHtml(roleLabel(state.role))} · Day ${currentDay(state)}까지 조사 · 단서 ${state.clues.length}개</span><div class="c-verdict-actions"><button type="button" data-verdict-back>조사 화면으로</button><button type="button" class="c-submit" data-verdict-exit>정문으로 나가기</button></div></footer>
+      <footer><span>${escapeHtml(roleLabel(state.role))} · Day ${currentDay(state)}까지 조사</span><div class="c-verdict-actions"><button type="button" data-verdict-back>조사 화면으로</button><button type="button" class="c-submit" data-verdict-exit>정문으로 나가기</button></div></footer>
     </article>`;
-    layer.querySelector('[data-verdict-pick]').append(verdictPortrait(state.save.accused));
+    layer.querySelector('[data-verdict-pick]').append(verdictPortrait(pickedIndex));
     layer.querySelector('[data-verdict-culprit]').append(verdictPortrait(culprit));
     state.root.querySelector('[data-desktop]').append(layer);
     layer.querySelector('[data-verdict-back]').focus({ preventScroll: true });
@@ -1125,6 +1324,7 @@
     if (state.dayChanging || currentDay(state) >= data.maxDay) return;
     const day = currentDay(state);
     const layer = state.root.querySelector('[data-day-dialog]');
+    state.advanceRequestId ||= requestId();
     layer.querySelector('[data-day-dialog-text]').textContent = `Day ${day} 조사를 마치고 Day ${day + 1}로 넘어갑니다. 넘어간 뒤에는 Day ${day}로 돌아올 수 없습니다.`;
     state.root.querySelector('[data-start-menu]').hidden = true;
     layer.hidden = false;
@@ -1134,40 +1334,67 @@
   function closeDayDialog(state) {
     state.root.querySelector('[data-day-dialog]').hidden = true;
     state.root.querySelector('[data-day-next]')?.focus({ preventScroll: true });
+    state.advanceRequestId = null;
   }
 
-  function advanceDay(state) {
+  async function advanceDay(state) {
     if (state.dayChanging || currentDay(state) >= data.maxDay) return;
     state.root.querySelector('[data-day-dialog]').hidden = true;
     state.dayChanging = true;
-    const day = currentDay(state) + 1;
-    // TODO: 서버가 생기면 Day 전환을 요청하고, 서버가 돌려준 Day를 쓴다
-    state.save.day = day;
-    state.clockMinutes = DAY_START_MINUTES;
-    const opened = data.records.filter((record) => record.day === day).length;
-    const curtain = state.root.querySelector('[data-day-curtain]');
-    curtain.querySelector('[data-day-curtain-title]').textContent = `Day ${day}`;
-    curtain.querySelector('[data-day-curtain-text]').textContent = opened ? `새 실험 기록 ${opened}건이 열렸습니다.` : '새 실험이 시작되었습니다.';
-    curtain.hidden = false;
-    curtain.classList.remove('is-leaving');
+    const button = state.root.querySelector('[data-day-confirm]');
+    const original = button.textContent;
+    button.disabled = true; button.setAttribute('aria-busy', 'true');
+    const waitTimer = setTimeout(() => { if (button.isConnected) button.textContent = '진행 중…'; }, 300);
     renderTaskbar(state);
-    renderArchive(state);
-    addTimer(state, () => curtain.classList.add('is-leaving'), reduceMotion ? 600 : 1500);
-    addTimer(state, () => {
-      curtain.hidden = true;
+    try {
+      const result = await window.Api.advanceDay(state.save.save_id, state.advanceRequestId);
+      clearTimeout(waitTimer);
+      if (!isLiveState(state)) return;
+      state.save = { ...state.save, ...result.game_state };
+      state.advanceRequestId = null;
+      const day = currentDay(state);
+      state.clockMinutes = DAY_START_MINUTES;
+      const curtain = state.root.querySelector('[data-day-curtain]');
+      curtain.querySelector('[data-day-curtain-title]').textContent = `Day ${day}`;
+      curtain.querySelector('[data-day-curtain-text]').textContent = '새 실험이 시작되었습니다.';
+      curtain.hidden = false;
       curtain.classList.remove('is-leaving');
-      state.dayChanging = false;
-      if (opened) state.unread.add('archive');
-      if (day >= data.maxDay) state.unread.add('accuse');
-      renderLaunchers(state);
       renderTaskbar(state);
-      if (day >= data.maxDay) showToast(state, '마지막 Day입니다. 바탕화면에 지목이 열렸습니다.');
-      else if (opened) showToast(state, `Day ${day} 기록이 기록 보관함에 추가되었습니다.`);
-    }, reduceMotion ? 650 : 1900);
+      addTimer(state, () => curtain.classList.add('is-leaving'), reduceMotion ? 600 : 1500);
+      addTimer(state, () => {
+        curtain.hidden = true;
+        curtain.classList.remove('is-leaving');
+        state.dayChanging = false;
+        if (day >= data.maxDay) state.unread.add('accuse');
+        renderLaunchers(state);
+        renderTaskbar(state);
+        if (day >= data.maxDay) showToast(state, '마지막 Day입니다. 바탕화면에 지목이 열렸습니다.');
+        else showToast(state, `Day ${day}이 시작되었습니다. YB들에게 새로 물어보세요.`);
+      }, reduceMotion ? 650 : 1900);
+    } catch (error) {
+      clearTimeout(waitTimer);
+      if (!isLiveState(state)) return;
+      state.dayChanging = false;
+      if (error.code === 'STATE_CONFLICT') {
+        state.advanceRequestId = null;
+        try { state.save = { ...state.save, ...(await window.Api.getSave(state.save.save_id)) }; state.windows.get('notebook').querySelector('[data-memo]').value = state.save.memo || ''; renderAccuse(state); renderTaskbar(state); showToast(state, '최신 상태로 맞췄습니다.'); }
+        catch (syncError) { handleError(state, syncError); }
+      } else {
+        if (!['SERVICE_UNAVAILABLE', 'NETWORK_ERROR', 'TIMEOUT'].includes(error.code)) state.advanceRequestId = null;
+        openDayDialog(state);
+        if (!['SERVICE_UNAVAILABLE', 'NETWORK_ERROR', 'TIMEOUT'].includes(error.code)) handleError(state, error);
+        else showToast(state, error.message);
+      }
+      renderTaskbar(state);
+    } finally {
+      clearTimeout(waitTimer);
+      button.disabled = false; button.removeAttribute('aria-busy'); button.textContent = original;
+    }
   }
 
   function showToast(state, message) {
     const toast = state.root.querySelector('[data-toast]');
+    if (!toast) return;
     toast.textContent = message;
     toast.classList.add('is-visible');
     const timer = setTimeout(() => {
@@ -1181,6 +1408,11 @@
     state.onExit();
   }
 
+  function unmountPlay() {
+    if (instance) instance.unmount();
+    if (entryState) finishEntry(entryState);
+  }
+
   window.Play = window.Play || {};
-  window.Play.c = { enter, mount, unmount: () => instance?.unmount() };
+  window.Play.c = { enter, mount, unmount: unmountPlay };
 })();

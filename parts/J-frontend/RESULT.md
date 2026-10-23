@@ -91,3 +91,50 @@
    - CSS 필터로 어둡게 하면 지니 전환 중 매 장면 다시 계산돼 약 40fps로 떨어져서 그림에 미리 구움
    - 왼쪽 아이콘 쪽은 그라데이션 덮개로 더 어둡게. 그림을 못 뜨면 단색 배경
    - 확인: 실제 흐름(로그인 → 이어하기 → 판독 → 바탕화면)에서 이름표 없는 어두운 연구소 표시, 정문 화면은 불 켜진 장면과 이름표 그대로, 지니 전환 프레임 간격 중앙값 약 18ms, 콘솔 오류 없음
+
+# J03 - 백엔드 API 연결 준비
+
+> 상태: **부분 구현 / 서버 미연결.** 화면은 전부 `window.Api`를 거치지만 실제 FastAPI 서버가 아직 없어서 Mock으로만 동작 확인함.
+
+1. API 통로 (`frontend/play/api.js`, 새 파일)
+   - `window.KERVION_API_BASE`가 비어 있으면 Mock, 값이 있으면 `fetch`로 `/api/v1` 호출 (`credentials: 'include'`, 15초 제한시간)
+   - 오류 본문 `{error: {code, message, request_id}}` → `Api.ApiError(status, code, message, requestId)`. 서버 꺼짐·시간 초과는 `NETWORK_ERROR`/`TIMEOUT`(status 0), 본문이 JSON이 아닌 502·504는 `SERVICE_UNAVAILABLE`, 200인데 필수 필드가 없으면 `INVALID_RESPONSE`
+   - 204 빈 응답(로그아웃) 정상 처리. 연결 상태는 `api:connection` 이벤트로 알림
+   - 채팅·Day 진행·지목은 `client_request_id`를 만들어 보내고, 다시 보내기 때는 같은 값을 재사용. Mock도 같은 값이면 한 번만 반영
+   - 시험용 `Api.mockControl`: `failNext(code)`, `delayNext(ms)`, `seedChats(aiId, count)`, `setRoles(roles)`
+   - 프론트 밖 서버 요청은 이 파일 말고 없음 (`fetch` 검색으로 확인)
+2. 화면 연결 (`frontend/app.js`, `frontend/play/c.js`)
+   - 로그인·회원가입·로그아웃, Save 목록·새 수사·덮어쓰기·이어하기, 채팅, Day 진행, 메모, 지목·판정서를 Api 경유로 바꿈
+   - 역할·Day·소유자는 요청에 인가 근거로 넣지 않음. 서버 응답의 Save 값만 화면에 씀
+   - 토큰 없음. 응답에 `access_token`이 와도 무시
+3. 기다림·오류 화면
+   - 0.3초 넘게 걸리면 대기 문구(채팅 `…`, 출입증 "기록 불러오는 중…", 이전 대화 "불러오는 중…")
+   - 401: 게임 화면을 내리고 로그인 화면에 "접속이 만료되었습니다. 다시 로그인해 주세요.", 아이디 유지. 확대·페이드 상태도 초기화(처음엔 남아서 로그인이 막혔던 것 수정)
+   - 로그인 요청의 401은 만료가 아니라 아이디·비밀번호 오류라 서버 문구만 표시
+   - 403 알림, 409 최신 Save 다시 받아 맞춤, 422 입력 칸에 글자 복원 + 오류 문구, 503·연결 끊김은 다시 보내기 버튼과 연결 끊김 띠
+4. Save 모양을 `003_saves.sql`에 맞춤: 숫자 `save_id`, `slot_no` 1~3, `role`, `day` 1~6, `created_at`, `last_played_at`(DATETIME 문자열 그대로 표시)
+5. 기록 보관함 삭제 + 이전 대화 더 보기
+   - 기록 보관함 앱·아이콘·창·관련 API(`listRecords`, `getRecord`) 제거
+   - 채팅 기록 `GET /saves/{id}/chats/{ai_id}?limit=20&before={message_id}` → `{messages, has_more}`. 맨 위 "이전 대화 더 보기"로 이어 붙이고 보던 위치 유지
+6. 회원가입 화면
+   - 로그인 폼 재사용: 아이디·비밀번호·비밀번호 확인 → 역할 카드 → `POST /auth/signup {username, password, role}`
+   - 비밀번호 확인 불일치는 프론트에서 막음. 역할 화면에서 돌아가도 입력값 유지. 409 "이미 있는 아이디입니다.", 422 서버 문구
+7. 로그아웃(204)·덮어쓰기(`POST /saves {slot_no, role, overwrite}`) 연결. Mock에서 `overwrite: false`면 409, `true`면 Day 1 새 Save로 교체 확인
+8. 용범 DB(004~007)에 맞춤
+   - 답변 종류 `normal / partial / restricted / unknown` (`chat_messages.response_type`과 같음). 모르는 값은 `unknown`으로 표시
+   - 채팅은 메시지 한 줄씩 `{message_id, ai_id, sender, content, response_type, created_at}`. 화면은 질문·답 짝으로 묶고, 페이지 경계에서 나뉜 짝은 이전 대화를 불러올 때 이어 붙임. 답 없는 질문은 "응답 없음"
+   - 보내기 `POST /saves/{id}/chats/{ai_id}` → `{messages: [사용자 줄, AI 줄], game_state}`
+   - 역할은 난이도(교수 쉬움 · 대학원생 보통 · 학부 연구생 어려움)라 잠금 없음. 가입 역할(`roles`)은 새 수사 화면에서 미리 선택만
+   - 자동 단서 기능 제거(단서 목록·알림·`clue_count`·`listClues`). 수첩은 메모만. Mock 판정서는 대화 기록으로 찾음/놓침/권한 밖을 정함
+   - 메모 테이블 `database/schemas/mariadb/009_save_memos.sql` 추가 (`save_id` PK·FK CASCADE, `memo` 최대 5000자, `updated_at`), README 표에 한 줄. 로컬 MariaDB(Docker)에서 실행해 테이블 생성 확인. 번호는 용범 008과 겹치지 않게 009
+   - 지목 문구 "술래" → "악용자". YB-1 소개에서 "술래 담당" 제거
+9. `docs/interfaces/계정_API_명세.md`: 회원가입·로그인·로그아웃 요청·응답, 쿠키(HttpOnly·SameSite·Origin 확인), CORS, 오류 형식. 선영에게 전달함
+10. 확인 (Playwright + Chrome, Mock, 로컬 정적 서버)
+    - 전체 흐름 26개, 오류 화면 28개, 가짜 서버(`page.route`)로 http 경로 14개, 가입·역할 11개, 페이지 경계 짝 맞추기 확인 전부 통과. 콘솔 오류는 favicon 404만
+    - 시험 스크립트는 아직 작업 폴더에만 있음 (`tests/frontend`로 옮기지 않음)
+11. 남은 것
+    - 실제 서버 연결 확인 (선영 계정 API, Save·메모·Day API)
+    - `GET /auth/me` 담당 미정 (게임 화면 들어갈 때 호출)
+    - 지목 테이블·재전송 기록(`request_log`) 없음, 악용자 정답 데이터는 시나리오 확정 후
+    - 연구소 그림의 방 이름이 게임 장소 7곳과 다름 (지도 작업 때 수정)
+    - 로비 이름표 겹침, 시험 스크립트 `tests/frontend` 이동

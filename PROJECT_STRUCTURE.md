@@ -88,8 +88,9 @@ ai-hide-and-seek/
 │
 ├── frontend/                     # 웹 게임 UI (6개 캐릭터 채팅 등)
 │
-├── database/                     # DB 스키마와 적재용 SQL
-│   └── schemas/                 # test-data / game-data 공통 스키마
+├── database/                     # DB 스키마와 적재 도구
+│   ├── schemas/                 # test-data / game-data 공통 스키마
+│   └── loaders/                 # JSON → MariaDB 검증·적재 CLI
 │
 ├── data/                         # 게임·테스트 콘텐츠 원본
 │   ├── README.md

@@ -55,3 +55,17 @@
 2. 스키마 README에 data/ 원본 경로와 목록의 행 변환을 기록함. Setup의 장소 목록은 실험 장소 전체이며 AI별 초기 배치는 content에 유지함.
    - permissions.md에서 장소 목록은 metadata 이상에 포함하고 basic_metadata는 기존 네 필드를 유지하도록 명시함. AI별 초기 위치 본문은 full에서만 제공함.
 3. SQL·안내 작성 완료이며 실제 DB 적용·JSON 적재·외래키 실행 검증은 미수행. 기존 초기화 DB에는 001~006 이후 007을 별도 적용해야 하며 볼륨 삭제는 필요하지 않음. 예전 테스트 원본의 location_ids 보완과 적재 도구는 후속 작업임.
+
+# B06 - MariaDB 적재 도구
+
+1. `database/loaders/load_mariadb.py`에 game-data/test-data 원본을 읽는 Python CLI를 구현함. 접속 전 ID·Day·회차·파일 유형·중복·필수 메타데이터·AI 관계를 검증하며 dry-run을 지원함.
+2. 환경변수 또는 명시한 env 파일로 PyMySQL 접속 정보를 구성함. 비밀번호를 로그나 명령행 인자로 노출하지 않으며 선택적으로 TLS CA·서버 호스트명 검증을 지원함.
+   - records와 AI·장소·document_permissions 관계를 전체 묶음 단위로 트랜잭션 저장함. 동일 키는 upsert, 연결 행은 교체하며 원본에서 사라진 기록은 자동 삭제하지 않음. 레거시 game_record_allowed_roles 및 사용자·Save·채팅은 변경하지 않음.
+3. disclosure_level 누락은 기본 거부(검증 실패)하며 `--default-disclosure`를 명시해야 함. 데이터별 값은 옵션보다 우선함. 예전 test-data의 장소 누락은 `--allow-missing-locations`를 지정할 때만 빈 배열로 처리함.
+   - 이 적재 도구는 선택한 기록의 기존 권한을 원본 기준으로 교체함. 운영자 수동 권한을 유지하는 merge 모드는 없으며 역할마다 다른 수준을 가진 원본 형식은 후속 확장 대상임.
+4. `008_game_rules.sql`에 공통 game_rules 테이블을 추가함. 실험 record_id와 별도 rule_id로 규칙 본문 JSON과 AI·역할·full/deny 조건을 저장함. 규칙의 권한 검사는 API에서 구현해야 하며 document_permissions를 통한 자동 인가는 아님.
+5. 원본 dry-run 결과 game-data 113건과 공통 규칙 1건, test-data 9건 검증 성공함. 게임 데이터의 장소 누락은 0건, 테스트 데이터는 명시적 호환 모드로 9건 처리함.
+   - 실행 명령: `python database/loaders/load_mariadb.py --dataset game-data --default-disclosure full --dry-run`, `python database/loaders/load_mariadb.py --dataset test-data --default-disclosure full --allow-missing-locations --dry-run`.
+   - `python -m unittest discover -s tests -p test_mariadb_loader.py -v`로 검증 실패·권한 누락·중복 JSON 키/ID·DB child insert 실패 시 rollback 호출·공통 규칙 저장 등 단위 테스트 13개 통과함. 트랜잭션 테스트는 fake connection으로 호출 흐름을 확인한 것이며 실제 DB 실행 검증은 아님.
+   - 현재 세션에서 Docker API 접근은 permission denied로 거부됨. 실제 MariaDB 제약·재적재·DB rollback·TLS 접속 및 운영 API 연동은 미검증이고 실제 DB에 적재하지 않음.
+6. 의존성은 `database/loaders/requirements.txt`, 준비·실행·배포 환경별 설정과 권한 덮어쓰기 범위는 같은 폴더의 README에 기록함. 기존 DB는 누락된 001~008 스키마를 순서대로 적용한 후 사용해야 함.

@@ -16,11 +16,14 @@
 | `document_permissions` | `006_document_permissions.sql`: 문서·역할별 5단계 공개 수준 |
 | `locations` | `007_record_locations.sql`: 중앙홀·회의실·기록실·전력실·통신실·창고·서버실 |
 | `game_record_locations` | 기록별 location_ids 목록의 관계 행 |
-| `auth_sessions` | `009_auth_sessions.sql`: 로그인 쿠키 해시·사용자·만료 시각 |
+| `game_rules` | `008_game_rules.sql`: 공통 규칙 본문 JSON 및 AI·역할·원문 공개 조건 |
+| `save_memos` | `009_save_memos.sql`: Save별 플레이어 메모 1개 (최대 5000자) |
+| `request_log` | `010_request_log.sql`: 같은 요청을 다시 보냈을 때 처음 응답을 돌려주기 위한 기록 (Day 진행 등) |
+| `auth_sessions` | `011_auth_sessions.sql`: 로그인 쿠키 해시·사용자·만료 시각 |
 
-세 테이블의 상세 계약과 공개 범위는 [permissions.md](permissions.md)에 있다. SQL은 파일명 순서로 적용하며 실제 DB 실행은 아직 미검증이다.
+세 테이블의 상세 계약과 공개 범위는 [permissions.md](permissions.md)에 있다. SQL은 파일명 순서로 적용한다. 2026-10-23 격리된 MariaDB 테스트 컨테이너에서 초기 적용을 확인했으나, 모든 제약·적재 결과와 공유 DB 적용은 검증하지 않았다.
 
-`users`는 `user_id`, `username`, `password_hash`, `created_at` 네 필드로 구성한다. `username`은 최대 50자이고 고유값이며 현재 테이블 비교 규칙상 대소문자를 구분하지 않는다. 비밀번호 해시 생성·검증은 인증 API에서 처리한다. 이 SQL도 아직 실제 MariaDB에서 실행 검증하지 않았다.
+`users`는 `user_id`, `username`, `password_hash`, `created_at` 네 필드로 구성한다. `username`은 최대 50자이고 고유값이며 현재 테이블 비교 규칙상 대소문자를 구분하지 않는다. 비밀번호 해시 생성·검증은 인증 API에서 처리한다. 격리된 MariaDB에서 가입·중복 아이디·해시 저장을 확인했으며 공유 DB 적용은 미검증이다.
 
 ## JSON 원본과의 대응
 
@@ -30,7 +33,7 @@
 - 관계 테이블의 `record_type`은 부모와 일치하는지 외래키로 확인하기 위한 값이다. CHECK 제약으로 Action만 witness, Dialogue만 overheard를 가질 수 있다.
 - 같은 기록에서 동일 AI가 직접 참여자이면서 관찰자로 중복 등록되지 않도록 기본키를 둔다.
 - 테스트 JSON의 `allowed_roles`는 초기 이진 허용 목록이다. 현재 권한은 `document_permissions`에 공개 수준을 명시하여 저장하며 기존 목록을 자동으로 full에 매핑하지 않는다. game_record_allowed_roles를 인가 fallback으로 사용하지 않는다. 실제 조회의 역할·Day·AI 범위 조건은 서버가 강제해야 한다.
-- 기록 본문과 관계·허용 역할은 하나의 트랜잭션으로 적재한다. JSON 적재 도구는 아직 없다.
+- 기록 본문과 관계·허용 역할은 하나의 트랜잭션으로 적재한다. 실행 방법은 [적재 도구 안내](../../loaders/README.md)를 따른다.
 - 콘텐츠 원본은 `data/test-data/records.json`과 `data/game-data/experiments/day_01/`~`day_06/`의 유형별 JSON에서 읽는다. DB별 원본 사본은 만들지 않는다.
 - `location_ids`는 원소당 `game_record_locations` 한 행으로 저장한다. 현재 JSON의 장소 이름을 location_id 값으로 그대로 사용하며 영문 코드로 임의 변환하지 않는다. 일곱 장소는 `locations`에 초기 등록한다.
 - Setup의 장소 관계는 실험에 사용하는 장소 전체를 뜻한다. AI별 초기 위치와 이동 순서는 content에 유지하며 장소 관계 테이블이 AI 배치나 경로를 뜻하지 않는다. 장소와 관계없는 기록의 빈 목록은 연결 행이 없는 상태로 표현한다.
@@ -46,7 +49,7 @@
 
 Docker의 첫 실행은 `.env`의 `MARIADB_DATABASE`에 이 SQL을 적용한다. 이미 초기화된 볼륨에는 새 SQL이 자동 적용되지 않는다. 기존 DB에는 선택한 데이터베이스에서 이 파일을 한 번 실행해야 하며, 재실행용 마이그레이션은 아직 없다. 기존 데이터를 삭제할 필요는 없다.
 
-`009_auth_sessions.sql`은 I 백엔드의 세션 저장용이다. 기존 DB에는 이 파일만
+`011_auth_sessions.sql`은 I 백엔드의 세션 저장용이다. 기존 DB에는 이 파일만
 별도로 적용한다. 2026-10-23에 격리된 MariaDB 11.4 테스트 컨테이너에서
-001~007과 009의 초기 적용, 계정 API의 세션 생성·조회·삭제를 확인했다.
+001~007과 세션 SQL의 초기 적용, 계정 API의 세션 생성·조회·삭제를 확인했다.
 공유 서버나 기존 볼륨에 적용된 상태를 뜻하지 않는다.

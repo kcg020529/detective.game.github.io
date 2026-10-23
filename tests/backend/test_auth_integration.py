@@ -7,14 +7,14 @@ import unittest
 from fastapi.testclient import TestClient
 import pymysql
 
-from backend.app import app
+from backend.api.main import app
 
 
 class AccountIntegrationTest(unittest.TestCase):
     def setUp(self):
-        database = os.getenv("KERVION_DB_NAME", "")
+        database = os.getenv("MARIADB_DATABASE", "")
         if not database.endswith("_test"):
-            self.skipTest("KERVION_DB_NAME must end in _test")
+            self.skipTest("MARIADB_DATABASE must end in _test")
         self.username = "auth_test_" + secrets.token_hex(6)
         self.other_username = "other_test_" + secrets.token_hex(6)
         self.origin = {"Origin": "http://127.0.0.1:8010"}
@@ -28,11 +28,11 @@ class AccountIntegrationTest(unittest.TestCase):
         if not hasattr(self, "username"):
             return
         with pymysql.connect(
-            host=os.getenv("KERVION_DB_HOST", "127.0.0.1"),
-            port=int(os.getenv("KERVION_DB_PORT", "3306")),
-            user=os.getenv("KERVION_DB_USER", "kervion"),
-            password=os.getenv("KERVION_DB_PASSWORD", ""),
-            database=os.getenv("KERVION_DB_NAME", ""),
+            host=os.getenv("MARIADB_HOST", "127.0.0.1"),
+            port=int(os.getenv("MARIADB_PORT", "3306")),
+            user=os.getenv("MARIADB_USER", "kervion"),
+            password=os.getenv("MARIADB_PASSWORD", ""),
+            database=os.getenv("MARIADB_DATABASE", ""),
             autocommit=True,
         ) as connection:
             with connection.cursor() as cursor:
@@ -56,12 +56,28 @@ class AccountIntegrationTest(unittest.TestCase):
         self.assertEqual(self.client.get("/api/v1/auth/me").json()["username"], self.username)
         self.assertEqual(self.client.get("/api/v1/saves").json(), {"saves": []})
 
+        created = self.client.post(
+            "/api/v1/saves",
+            json={"slot_no": 1, "role": "std", "overwrite": False},
+            headers=self.origin,
+        )
+        self.assertEqual(created.status_code, 201, created.text)
+        save_id = created.json()["save_id"]
+        self.assertEqual(self.client.get(f"/api/v1/saves/{save_id}").status_code, 200)
+        advanced = self.client.post(
+            f"/api/v1/saves/{save_id}/advance-day",
+            json={"client_request_id": "auth-integration-1"},
+            headers=self.origin,
+        )
+        self.assertEqual(advanced.status_code, 200, advanced.text)
+        self.assertEqual(advanced.json()["game_state"]["current_day"], 2)
+
         with pymysql.connect(
-            host=os.getenv("KERVION_DB_HOST", "127.0.0.1"),
-            port=int(os.getenv("KERVION_DB_PORT", "3306")),
-            user=os.getenv("KERVION_DB_USER", "kervion"),
-            password=os.getenv("KERVION_DB_PASSWORD", ""),
-            database=os.getenv("KERVION_DB_NAME", ""),
+            host=os.getenv("MARIADB_HOST", "127.0.0.1"),
+            port=int(os.getenv("MARIADB_PORT", "3306")),
+            user=os.getenv("MARIADB_USER", "kervion"),
+            password=os.getenv("MARIADB_PASSWORD", ""),
+            database=os.getenv("MARIADB_DATABASE", ""),
             autocommit=True,
         ) as connection:
             with connection.cursor() as cursor:
@@ -73,14 +89,17 @@ class AccountIntegrationTest(unittest.TestCase):
                     "INSERT INTO saves (user_id, slot_no, role, day) VALUES (%s, 1, 'std', 1)",
                     (cursor.lastrowid,),
                 )
-        self.assertEqual(self.client.get("/api/v1/saves").json(), {"saves": []})
+        self.assertEqual(
+            [row["save_id"] for row in self.client.get("/api/v1/saves").json()["saves"]],
+            [save_id],
+        )
 
         with pymysql.connect(
-            host=os.getenv("KERVION_DB_HOST", "127.0.0.1"),
-            port=int(os.getenv("KERVION_DB_PORT", "3306")),
-            user=os.getenv("KERVION_DB_USER", "kervion"),
-            password=os.getenv("KERVION_DB_PASSWORD", ""),
-            database=os.getenv("KERVION_DB_NAME", ""),
+            host=os.getenv("MARIADB_HOST", "127.0.0.1"),
+            port=int(os.getenv("MARIADB_PORT", "3306")),
+            user=os.getenv("MARIADB_USER", "kervion"),
+            password=os.getenv("MARIADB_PASSWORD", ""),
+            database=os.getenv("MARIADB_DATABASE", ""),
         ) as connection:
             with connection.cursor() as cursor:
                 cursor.execute(
@@ -116,6 +135,7 @@ class AccountIntegrationTest(unittest.TestCase):
             204,
         )
         self.assertEqual(self.client.get("/api/v1/auth/me").status_code, 401)
+        self.assertEqual(self.client.get(f"/api/v1/saves/{save_id}").status_code, 401)
         wrong = self.client.post(
             "/api/v1/auth/login",
             json={"username": self.username, "password": "wrong password"},
