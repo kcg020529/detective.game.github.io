@@ -50,6 +50,12 @@ body {
   color: #9fb2b4;
 }
 
+/* 시작·로그인·정문·역할 선택 글자 배율 (발표 화면에서도 읽히게). 머리말 "글자 크게"로 한 단계 더 */
+.game { --e-text: 1.18; }
+:root[data-text-size="large"] .game { --e-text: 1.35; }
+/* 역할 선택은 글이 가장 많아 크게 모드에서도 한 화면에 들어가도록 조금 덜 키움 */
+:root[data-text-size="large"] .is-role .intro { --e-text: 1.22; }
+
 /* 게임 창 */
 .stage {
   margin: 0 auto;
@@ -83,7 +89,7 @@ body {
 /* 로딩 화면: 왼쪽 글, 오른쪽 평면도 */
 .loading {
   display: grid;
-  grid-template-columns: 35% 1fr;
+  grid-template-columns: 40% 1fr;
 }
 .intro {
   display: flex;
@@ -108,12 +114,12 @@ body {
   font-family: 'Pretendard Variable', Pretendard, sans-serif;
   font-weight: 800;
   letter-spacing: -0.03em;
-  font-size: 5.6cqw;
+  font-size: calc(5.6cqw * var(--e-text, 1));
   line-height: 1.05;
 }
 .tagline {
   margin: 1.6cqw 0 0;
-  font-size: 1.6cqw;
+  font-size: calc(1.6cqw * var(--e-text, 1));
   line-height: 1.6;
   color: #a7b3b9;
   max-width: 24em;
@@ -128,7 +134,7 @@ body {
   list-style: none;
   margin: 0;
   padding: 0;
-  font-size: 1.4cqw;
+  font-size: calc(1.4cqw * var(--e-text, 1));
   color: #75838b;
 }
 .log li {
@@ -147,14 +153,14 @@ body {
   display: flex;
   align-items: baseline;
   gap: 1.4cqw;
-  font-size: 1.4cqw;
+  font-size: calc(1.4cqw * var(--e-text, 1));
   color: #a7b3b9;
   font-variant-numeric: tabular-nums;
 }
 .readout .percent {
   font-family: 'Pretendard Variable', Pretendard, sans-serif;
   font-weight: 800;
-  font-size: 3.6cqw;
+  font-size: calc(3.6cqw * var(--e-text, 1));
   line-height: 1;
   color: var(--amber);
   /* "100%" 폭을 미리 잡아둠: 자릿수가 늘 때 옆 글자가 밀리지 않게 */
@@ -231,21 +237,21 @@ body {
 /* 로그인 */
 .login-title {
   margin: 0;
-  font-size: 3.6cqw;
+  font-size: calc(3.6cqw * var(--e-text, 1));
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1.1;
 }
 .login-desc {
   margin: 1cqw 0 3cqw;
-  font-size: 1.5cqw;
+  font-size: calc(1.5cqw * var(--e-text, 1));
   color: #a7b3b9;
 }
 .field { margin-bottom: 1.2cqw; }
 .field label {
   display: block;
   margin-bottom: .6cqw;
-  font-size: 1.3cqw;
+  font-size: calc(1.3cqw * var(--e-text, 1));
   font-weight: 600;
   color: #a7b3b9;
 }
@@ -286,7 +292,7 @@ body {
 .field-error {
   min-height: 1.6cqw;
   margin: .4cqw 0 0;
-  font-size: 1.15cqw;
+  font-size: calc(1.15cqw * var(--e-text, 1));
   color: #e9937e;
 }
 .login-submit { margin: .8cqw 0 0; }
@@ -294,7 +300,7 @@ body {
 .form-message {
   min-height: 1.6cqw;
   margin: .8cqw 0 0;
-  font-size: 1.2cqw;
+  font-size: calc(1.2cqw * var(--e-text, 1));
   color: #a7b3b9;
 }
 .login-links {
@@ -369,7 +375,7 @@ body {
 }
 .badge-text { display: grid; gap: .2cqw; min-width: 0; }
 .badge-name {
-  font-size: 1.5cqw;
+  font-size: calc(1.5cqw * var(--e-text, 1));
   font-weight: 700;
   color: #8a99a2;
   transition: color .2s ease;
@@ -377,12 +383,12 @@ body {
 .badge:hover .badge-name { color: var(--room-on); }
 .badge:has(input:checked) .badge-name { color: #fff; }
 .badge-info {
-  font-size: 1.15cqw;
+  font-size: calc(1.15cqw * var(--e-text, 1));
   color: #8796a0;
 }
 .badge:has(input:checked) .badge-info { color: #a7b3b9; }
 .badge-level {
-  font-size: 1.2cqw;
+  font-size: calc(1.2cqw * var(--e-text, 1));
   font-weight: 700;
   color: #8796a0;
 }
@@ -396,9 +402,9 @@ body {
   background: #0f151d;
 }
 .sample p { margin: 0; }
-.sample-head { font-size: 1.1cqw; color: #75838b; }
-.sample .sample-event { margin-top: .4cqw; font-size: 1.35cqw; color: var(--room-on); }
-.sample .sample-result { margin-top: .3cqw; font-size: 1.35cqw; font-weight: 700; color: #75838b; }
+.sample-head { font-size: calc(1.1cqw * var(--e-text, 1)); color: #75838b; }
+.sample .sample-event { margin-top: .4cqw; font-size: calc(1.35cqw * var(--e-text, 1)); color: var(--room-on); }
+.sample .sample-result { margin-top: .3cqw; font-size: calc(1.35cqw * var(--e-text, 1)); font-weight: 700; color: #75838b; }
 .sample .sample-result.is-set { color: var(--amber); }
 
 .role-actions {
@@ -409,7 +415,7 @@ body {
 }
 .role-note {
   margin: 0;
-  font-size: 1.15cqw;
+  font-size: calc(1.15cqw * var(--e-text, 1));
   color: #75838b;
 }
 
@@ -435,7 +441,7 @@ body {
 }
 .menu-item b {
   display: block;
-  font-size: 1.9cqw;
+  font-size: calc(1.9cqw * var(--e-text, 1));
   font-weight: 700;
   color: #8a99a2;
   transition: color .2s ease;
@@ -443,7 +449,7 @@ body {
 .menu-item small {
   display: block;
   margin-top: .2cqw;
-  font-size: 1.15cqw;
+  font-size: calc(1.15cqw * var(--e-text, 1));
   color: var(--dim, #5f6d76);
 }
 .menu-item .arrow {
@@ -471,7 +477,7 @@ body {
   justify-content: space-between;
   align-items: center;
 }
-.lobby-account { font-size: 1.3cqw; color: #8796a0; }
+.lobby-account { font-size: calc(1.3cqw * var(--e-text, 1)); color: #8796a0; }
 
 /* 관찰실 모니터로 확대해 들어가는 전환 */
 .pixel.zooming { transition: transform .7s cubic-bezier(.6, 0, .9, .5); }
@@ -609,6 +615,7 @@ kbd {
 
 /* 휴대폰: 세로 창, 평면도 위 글 아래 */
 @media (max-width: 640px) {
+  .game { --e-text: 1; }
   .game {
     width: calc(100vw - 50px);
     aspect-ratio: 9 / 14;

@@ -46,7 +46,7 @@
     return `<div class="c-shell">
       <div class="c-desktop" data-desktop>
         <div class="c-system-line"><span>YB-LAB OS 2.0</span><span>단말기 07 · 조사 세션</span></div>
-        <div class="c-desktop-pattern" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="c-wall" aria-hidden="true"><div class="c-wall-lab" data-wall-lab></div><div class="c-wall-shade"></div></div>
         <div class="c-desktop-icons" aria-label="프로그램" data-desktop-icons></div>
         <div class="c-window-layer" data-window-layer></div>
         <div class="c-start-menu" data-start-menu hidden>
@@ -582,6 +582,9 @@
     root.className = 'screen play-c';
     root.hidden = false;
     root.innerHTML = buildMarkup(state);
+    // 바탕화면: 정문에서 보던 연구소를 글씨 없이 어둡게 깖. 그림을 못 뜨면 단색 배경
+    const wallUrl = window.Play.labWallpaperUrl?.();
+    if (wallUrl) root.querySelector('[data-wall-lab]').style.backgroundImage = `url(${wallUrl})`;
     createWindows(state);
     bindEvents(state);
     renderTaskbar(state);

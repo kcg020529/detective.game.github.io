@@ -636,12 +636,18 @@ function drawBotLabels(now) {
 
 let frameId = null;
 let lastTime = 0;
+let showLabels = true;
 
 function frame() {
   const now = performance.now(); // 로딩 쪽 lightAt/shownAt과 같은 시계
   const dt = lastTime ? Math.min(now - lastTime, 50) : 16;
   lastTime = now;
+  drawScene(now, dt);
+  frameId = requestAnimationFrame(frame);
+}
 
+// 장면 한 장 그리기. dt가 0이면 로봇·캐릭터가 움직이지 않음
+function drawScene(now, dt) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawSky(now);
   ctx.save();
@@ -681,12 +687,44 @@ function frame() {
   if (discoDrop > 0) drawDiscoBall(now);
   // 잠금 검사가 끝난 제한 구역은 서버실과 같은 자물쇠로 표시 (열리면 사라짐)
   if (rooms.restricted.state === 'checked') drawLock(rooms.restricted, 1 - restrictedOpen, false);
-  drawLabels(now);
-  if (lightLevel(rooms.arena, now) > 0.5) drawBotLabels(now);
+  if (showLabels) drawLabels(now);
+  if (showLabels && lightLevel(rooms.arena, now) > 0.5) drawBotLabels(now);
   ctx.restore();
-
-  frameId = requestAnimationFrame(frame);
 }
+
+// 조사 화면 바탕화면용: 불 꺼진 밤 연구소를 이름표 없이 한 장 떠서 돌려줌
+// 방 불·로봇을 잠깐 끄고 그린 뒤 어둡게 구워 둠 (CSS 필터로 어둡게 하면 전환 연출이 느려짐)
+// 같은 페이지에서는 처음 뜬 그림을 다시 씀
+let labWallpaper = null;
+function labWallpaperUrl() {
+  if (labWallpaper !== null) return labWallpaper;
+  const litRooms = ['observe', 'server', 'arena'];
+  const lights = litRooms.map((key) => rooms[key].lightAt);
+  const shown = bots.map((bot) => bot.shownAt);
+  try {
+    showLabels = false;
+    litRooms.forEach((key) => { rooms[key].lightAt = null; });
+    bots.forEach((bot) => { bot.shownAt = null; });
+    drawScene(performance.now(), 0);
+    const night = document.createElement('canvas');
+    night.width = canvas.width;
+    night.height = canvas.height;
+    const nightCtx = night.getContext('2d');
+    nightCtx.filter = 'brightness(.38) saturate(.75)';
+    nightCtx.drawImage(canvas, 0, 0);
+    labWallpaper = night.toDataURL();
+  } catch (error) {
+    labWallpaper = '';
+  } finally {
+    showLabels = true;
+    litRooms.forEach((key, i) => { rooms[key].lightAt = lights[i]; });
+    bots.forEach((bot, i) => { bot.shownAt = shown[i]; });
+    drawScene(performance.now(), 0);
+  }
+  return labWallpaper;
+}
+window.Play = window.Play || {};
+window.Play.labWallpaperUrl = labWallpaperUrl;
 
 function startScene() {
   cancelAnimationFrame(frameId);
