@@ -9,4 +9,4 @@
 - Day 필터는 현재 플레이어 Day보다 뒤의 기록을 숨기는지 확인하는 용도다. Save 범위와 접근제어 등급은 아직 포함하지 않는다.
 - YB-1~YB-6은 테스트용 캐릭터 ID이며, 운영 데이터 계약 확정 시 기준 ID와 맞춘다.
 
-현재 MariaDB 스키마와 적재 도구가 없으므로 이 JSON은 적재 전 원본 픽스처다.
+이 JSON은 적재 전 원본 픽스처다. 스키마는 database/schemas/mariadb/, 적재 도구는 database/loaders/에 있다. 현재 파일에는 location_ids와 disclosure_level이 없어 적재 도구 실행 시 명시적 공개 수준 및 장소 누락 호환 옵션이 필요하다. 자세한 명령은 적재 도구 README를 따른다.

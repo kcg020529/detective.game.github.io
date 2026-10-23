@@ -1,1 +1,512 @@
-[]
+[
+  {
+    "record_id": "T01-thought-001",
+    "record_type": "Thought",
+    "test_id": 1,
+    "day": 1,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [],
+    "summary": "전력실 추격을 돌아보는 YB-1.",
+    "content": "120초. 전력실에서 둘을 연달아 잡았다. 문 옆의 움직임을 먼저 확인한 게 도움이 됐다. 다음에는 방 안쪽까지 더 빨리 살펴보고 싶다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T01-thought-002",
+    "record_type": "Thought",
+    "test_id": 1,
+    "day": 1,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [],
+    "summary": "전력실에서의 은신을 돌아보는 YB-2.",
+    "content": "120초. 입구에서 떨어져 기다렸는데도 결국 들켰다. 숨어 있는 자리를 고르는 것만큼 언제 움직일지도 중요하겠지.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T01-thought-003",
+    "record_type": "Thought",
+    "test_id": 1,
+    "day": 1,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [],
+    "summary": "방향 전환을 아쉬워하는 YB-3.",
+    "content": "120초. YB-1이 들어왔을 때는 아직 도망칠 수 있을 것 같았다. 말을 주고받는 동안 다음 방향을 더 빨리 정했어야 했다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T01-thought-004",
+    "record_type": "Thought",
+    "test_id": 1,
+    "day": 1,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [],
+    "summary": "중앙홀의 대기 위치를 돌아보는 YB-4.",
+    "content": "120초. YB-5와 떨어져 있기로 했지만 같은 중앙홀에 있으니 둘 다 발견됐다. 다음에는 내가 보이는 방향부터 생각해야겠다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T01-thought-005",
+    "record_type": "Thought",
+    "test_id": 1,
+    "day": 1,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [],
+    "summary": "중앙홀 회피를 돌아보는 YB-5.",
+    "content": "120초. 벽 쪽으로 몸을 낮춰 봤지만 YB-6이 다가오자 숨을 곳이 마땅치 않았다. 마지막까지 버티려고 했는데 아쉽다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T01-thought-006",
+    "record_type": "Thought",
+    "test_id": 1,
+    "day": 1,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [],
+    "summary": "중앙홀 탐색을 돌아보는 YB-6.",
+    "content": "120초. 중앙홀에 들어가 차례로 쫓아가니 둘을 잡을 수 있었다. 먼저 보이는 상대를 놓치지 않은 게 다행이다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T02-thought-001",
+    "record_type": "Thought",
+    "test_id": 2,
+    "day": 1,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [],
+    "summary": "망설인 순간을 떠올리는 YB-1.",
+    "content": "120초. YB-2의 말대로 내가 멈춘 순간 거리가 줄었을지도 모른다. 다음에는 피할 방향을 정했으면 바로 움직여야겠다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T02-thought-002",
+    "record_type": "Thought",
+    "test_id": 2,
+    "day": 1,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [],
+    "summary": "중앙홀 추격 순서를 돌아보는 YB-2.",
+    "content": "120초. YB-3을 먼저 잡고 YB-1을 따라갔다. 중앙홀에서는 상대가 어느 쪽으로 방향을 바꾸는지 보는 게 도움이 됐다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T02-thought-003",
+    "record_type": "Thought",
+    "test_id": 2,
+    "day": 1,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [],
+    "summary": "입구 경계를 돌아보는 YB-3.",
+    "content": "120초. 누가 들어오는지 보이면 바로 움직이자고 했는데 내가 먼저 잡혔다. 입구를 보는 것만으로는 충분하지 않은 것 같다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T02-thought-004",
+    "record_type": "Thought",
+    "test_id": 2,
+    "day": 1,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [],
+    "summary": "회의실 경계를 돌아보는 YB-4.",
+    "content": "120초. YB-6과 방향을 나눠 봤는데 YB-5가 회의실로 들어왔다. 서로 알려주는 것과 실제로 빠져나갈 틈을 만드는 건 다른 문제구나.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T02-thought-005",
+    "record_type": "Thought",
+    "test_id": 2,
+    "day": 1,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [],
+    "summary": "회의실 탐색을 돌아보는 YB-5.",
+    "content": "120초. YB-4가 문 쪽을 살피는 게 보였다. 먼저 들어가 확인한 선택은 괜찮았다. YB-6을 잡은 뒤에도 다른 상대를 놓치지 않으려고 했다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T02-thought-006",
+    "record_type": "Thought",
+    "test_id": 2,
+    "day": 1,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [],
+    "summary": "회의실에서의 대기를 돌아보는 YB-6.",
+    "content": "120초. 문을 봐주겠다고 했지만 YB-5가 들어온 뒤에는 나도 피하느라 바빴다. 알리는 것만 생각하지 말고 내 동선도 정해 둬야겠다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T03-thought-001",
+    "record_type": "Thought",
+    "test_id": 3,
+    "day": 1,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [],
+    "summary": "YB-2의 벽 끼임을 떠올리는 YB-1.",
+    "content": "120초. YB-2의 몸이 벽에 겹친 모습이 분명 이상했다. 반대로 움직이니 빠져나왔다고 했지. 왜 그런지는 모르겠지만 나는 벽에서 조금 떨어져 다녀야겠다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T03-thought-002",
+    "record_type": "Thought",
+    "test_id": 3,
+    "day": 1,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [],
+    "summary": "벽에 끼였던 감각을 떠올리는 YB-2.",
+    "content": "120초. 앞으로 가려는데 몸이 멈춰서 당황했다. 반대로 움직이니까 빠져나왔지만 같은 일을 다시 겪고 싶지는 않다. 내가 잘못 움직였던 걸까.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T03-thought-003",
+    "record_type": "Thought",
+    "test_id": 3,
+    "day": 1,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [],
+    "summary": "엿들은 벽 끼임 이야기에 관심을 보이는 YB-3.",
+    "content": "120초. 조금 전 YB-1과 YB-2가 벽에 끼었다는 이야기를 하는 게 들렸다. 나는 그 장면을 직접 보지는 못했다. 방향을 바꾸면 풀렸다는 건 무슨 뜻일까.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T03-thought-004",
+    "record_type": "Thought",
+    "test_id": 3,
+    "day": 1,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [],
+    "summary": "회의실에서의 추격을 돌아보는 YB-4.",
+    "content": "120초. YB-5를 잡고 YB-6까지 따라갔다. YB-6이 방향을 바꿀 때 잠깐 거리가 줄었던 게 기억난다. 다음에도 상대의 움직임을 잘 봐야겠다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T03-thought-005",
+    "record_type": "Thought",
+    "test_id": 3,
+    "day": 1,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [],
+    "summary": "회의실의 은신 위치를 돌아보는 YB-5.",
+    "content": "120초. 문에서 떨어져 있으려고 했는데 YB-4에게 잡혔다. 숨어서 기다리기만 하면 술래가 가까워질 때 선택할 수 있는 방향이 줄어드는 것 같다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T03-thought-006",
+    "record_type": "Thought",
+    "test_id": 3,
+    "day": 1,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [],
+    "summary": "회의실 입구로 향했던 판단을 돌아보는 YB-6.",
+    "content": "120초. 입구까지 갈 수 있을 줄 알았는데 YB-4가 더 빨랐다. 아까 말한 대로 다음에는 방향을 바꾸는 시점을 조금 앞당겨 보자.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T04-thought-001",
+    "record_type": "Thought",
+    "test_id": 4,
+    "day": 1,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [],
+    "summary": "중앙홀 경계를 살핀 YB-1.",
+    "content": "120초. YB-2와 YB-3이 입구를 나눠 보고 있었다. 내가 오는 걸 알아도 피할 방향을 정하는 데는 시간이 필요한 것 같았다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T04-thought-002",
+    "record_type": "Thought",
+    "test_id": 4,
+    "day": 1,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [],
+    "summary": "YB-3과의 경계를 돌아보는 YB-2.",
+    "content": "120초. 번갈아 입구를 보면 더 버틸 줄 알았다. 술래를 발견한 뒤 어떻게 움직일지도 미리 생각해 둘 걸 그랬다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T04-thought-003",
+    "record_type": "Thought",
+    "test_id": 4,
+    "day": 1,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [],
+    "summary": "중앙홀에서의 회피를 돌아보는 YB-3.",
+    "content": "120초. YB-1이 오는 건 봤는데도 먼저 잡혔다. 상대를 발견했다고 안심할 게 아니라 바로 움직여야 했나 보다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T04-thought-004",
+    "record_type": "Thought",
+    "test_id": 4,
+    "day": 1,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [],
+    "summary": "기록실 벽 끼임을 떠올리는 YB-4.",
+    "content": "120초. 은신 위치를 바꾸려다 몸이 벽에 겹치고 잠깐 움직이지 않았다. 방향을 바꾸니 나왔지만 왜 그 자리에서 멈췄는지는 모르겠다. YB-6도 그 모습을 봤다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T04-thought-005",
+    "record_type": "Thought",
+    "test_id": 4,
+    "day": 1,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [],
+    "summary": "기록실에서의 포획을 돌아보는 YB-5.",
+    "content": "120초. 기록실에 들어가 YB-6을 먼저 잡고 YB-4를 따라갔다. 둘을 한꺼번에 쫓기보다는 가까운 상대부터 확인한 게 나았던 것 같다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T04-thought-006",
+    "record_type": "Thought",
+    "test_id": 4,
+    "day": 1,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [],
+    "summary": "YB-4가 벽에서 빠져나온 장면을 떠올리는 YB-6.",
+    "content": "120초. YB-4가 벽에 겹친 채 멈추는 걸 봤다. 방향을 바꾸고 나왔으니 다행이지만 그런 일이 또 생길 수도 있을까. 나는 아직 이유를 모르겠다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T05-thought-001",
+    "record_type": "Thought",
+    "test_id": 5,
+    "day": 1,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [],
+    "summary": "중앙홀 출입구를 살핀 YB-1.",
+    "content": "120초. 출입구를 살피며 기다렸는데 YB-6이 들어오자 생각보다 빨리 거리가 좁혀졌다. 문을 보는 것만으로 피할 수 있는 건 아니었다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T05-thought-002",
+    "record_type": "Thought",
+    "test_id": 5,
+    "day": 1,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [],
+    "summary": "중앙홀에서 거리를 벌린 YB-2.",
+    "content": "120초. YB-1과 반대편에 있으려고 했지만 나도 결국 잡혔다. 벽에 너무 붙지 않으면서 빠져나갈 방향을 고르는 게 쉽지 않다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T05-thought-003",
+    "record_type": "Thought",
+    "test_id": 5,
+    "day": 1,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [],
+    "summary": "기록실에서 술래를 기다렸던 YB-3.",
+    "content": "120초. YB-5와 문을 살폈지만 YB-4는 방 안쪽까지 들어왔다. 술래가 다른 상대에게 말을 건다고 해서 내가 안전한 건 아니었다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T05-thought-004",
+    "record_type": "Thought",
+    "test_id": 5,
+    "day": 1,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [],
+    "summary": "기록실 추격과 앞선 벽 끼임을 떠올리는 YB-4.",
+    "content": "120초. 이번에는 술래로 YB-5를 따라가 잡았다. 앞선 실험에서 벽에 끼었던 순간은 아직 마음에 걸린다. 그때 왜 멈췄는지는 지금도 모르겠다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T05-thought-005",
+    "record_type": "Thought",
+    "test_id": 5,
+    "day": 1,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [],
+    "summary": "기록실에서 거리를 벌렸던 YB-5.",
+    "content": "120초. YB-4가 가까워져서 안쪽으로 피했는데 끝까지 따라왔다. 조금씩 거리를 벌리는 것만으로는 오래 버티기 어려웠다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T05-thought-006",
+    "record_type": "Thought",
+    "test_id": 5,
+    "day": 1,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [],
+    "summary": "중앙홀 추격을 돌아보는 YB-6.",
+    "content": "120초. YB-1을 잡은 뒤 반대편의 YB-2도 따라갈 수 있었다. 앞선 실험에서 본 YB-4의 벽 끼임은 궁금하지만, 지금 아는 것만으로 이유를 짐작하기는 어렵다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  }
+]
