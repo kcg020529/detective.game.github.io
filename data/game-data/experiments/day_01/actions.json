@@ -1,0 +1,1232 @@
+[
+  {
+    "record_id": "T01-action-001",
+    "record_type": "Action",
+    "test_id": 1,
+    "day": 1,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "회의실",
+      "전력실"
+    ],
+    "summary": "YB-2 이동 및 은신.",
+    "content": "15초: YB-2는 회의실에서 전력실로 이동했다. 입구에서 떨어진 곳에 멈춰 주변을 살폈다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T01-action-002",
+    "record_type": "Action",
+    "test_id": 1,
+    "day": 1,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실",
+      "전력실"
+    ],
+    "summary": "YB-3 이동 및 은신.",
+    "content": "25초: YB-3은 기록실에서 전력실로 이동했다. 문 옆에 멈춘 뒤 방 안쪽으로 자리를 옮겼다.",
+    "witness_ai": [
+      "YB-2"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T01-action-003",
+    "record_type": "Action",
+    "test_id": 1,
+    "day": 1,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "전력실",
+      "중앙홀"
+    ],
+    "summary": "YB-4 이동 및 은신.",
+    "content": "35초: YB-4는 전력실에서 중앙홀로 이동했다. 입구에서 떨어진 곳에 멈춰 주변을 살폈다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T01-action-004",
+    "record_type": "Action",
+    "test_id": 1,
+    "day": 1,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "통신실",
+      "중앙홀"
+    ],
+    "summary": "YB-5 이동 및 은신.",
+    "content": "45초: YB-5는 통신실에서 중앙홀로 이동했다. 문 옆에 멈춘 뒤 방 안쪽으로 자리를 옮겼다.",
+    "witness_ai": [
+      "YB-4"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T01-action-005",
+    "record_type": "Action",
+    "test_id": 1,
+    "day": 1,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "YB-2의 대기.",
+    "content": "55초: YB-2는 전력실 입구 쪽을 확인한 뒤 안쪽에서 움직임을 멈췄다.",
+    "witness_ai": [
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T01-action-006",
+    "record_type": "Action",
+    "test_id": 1,
+    "day": 1,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-5의 은신 위치 변경.",
+    "content": "60초: YB-5는 중앙홀 문 옆에서 벽 쪽으로 이동해 몸을 낮췄다.",
+    "witness_ai": [
+      "YB-4"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T01-action-007",
+    "record_type": "Action",
+    "test_id": 1,
+    "day": 1,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "전력실"
+    ],
+    "summary": "YB-1 탐색.",
+    "content": "70초: YB-1은 중앙홀에서 전력실로 이동해 출입구와 방 안쪽을 차례로 확인했다.",
+    "witness_ai": [
+      "YB-2",
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T01-action-008",
+    "record_type": "Action",
+    "test_id": 1,
+    "day": 1,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "창고",
+      "중앙홀"
+    ],
+    "summary": "YB-6 탐색.",
+    "content": "75초: YB-6은 창고에서 중앙홀로 이동해 출입구와 방 안쪽을 차례로 확인했다.",
+    "witness_ai": [
+      "YB-4",
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T01-action-009",
+    "record_type": "Action",
+    "test_id": 1,
+    "day": 1,
+    "involved_ai": [
+      "YB-1",
+      "YB-2"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "YB-1의 YB-2 포획.",
+    "content": "96초: YB-1은 전력실에서 달아나던 YB-2를 따라가 최초 포획했다.",
+    "witness_ai": [
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T01-action-010",
+    "record_type": "Action",
+    "test_id": 1,
+    "day": 1,
+    "involved_ai": [
+      "YB-1",
+      "YB-3"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "YB-1의 YB-3 포획.",
+    "content": "102초: YB-1은 전력실에서 달아나던 YB-3을 따라가 최초 포획했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T01-action-011",
+    "record_type": "Action",
+    "test_id": 1,
+    "day": 1,
+    "involved_ai": [
+      "YB-6",
+      "YB-4"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-6의 YB-4 포획.",
+    "content": "102초: YB-6은 중앙홀에서 달아나던 YB-4를 따라가 최초 포획했다.",
+    "witness_ai": [
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T01-action-012",
+    "record_type": "Action",
+    "test_id": 1,
+    "day": 1,
+    "involved_ai": [
+      "YB-6",
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-6의 YB-5 포획.",
+    "content": "108초: YB-6은 중앙홀에서 달아나던 YB-5를 따라가 최초 포획했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T02-action-001",
+    "record_type": "Action",
+    "test_id": 2,
+    "day": 1,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [
+      "회의실",
+      "중앙홀"
+    ],
+    "summary": "YB-1 이동 및 은신.",
+    "content": "15초: YB-1은 회의실에서 중앙홀로 이동했다. 입구에서 떨어진 곳에 멈춰 주변을 살폈다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T02-action-002",
+    "record_type": "Action",
+    "test_id": 2,
+    "day": 1,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "전력실",
+      "중앙홀"
+    ],
+    "summary": "YB-3 이동 및 은신.",
+    "content": "25초: YB-3은 전력실에서 중앙홀로 이동했다. 문 옆에 멈춘 뒤 방 안쪽으로 자리를 옮겼다.",
+    "witness_ai": [
+      "YB-1"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T02-action-003",
+    "record_type": "Action",
+    "test_id": 2,
+    "day": 1,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "통신실",
+      "회의실"
+    ],
+    "summary": "YB-4 이동 및 은신.",
+    "content": "35초: YB-4는 통신실에서 회의실로 이동했다. 입구에서 떨어진 곳에 멈춰 주변을 살폈다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T02-action-004",
+    "record_type": "Action",
+    "test_id": 2,
+    "day": 1,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "서버실",
+      "회의실"
+    ],
+    "summary": "YB-6 이동 및 은신.",
+    "content": "45초: YB-6은 서버실에서 회의실로 이동했다. 문 옆에 멈춘 뒤 방 안쪽으로 자리를 옮겼다.",
+    "witness_ai": [
+      "YB-4"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T02-action-005",
+    "record_type": "Action",
+    "test_id": 2,
+    "day": 1,
+    "involved_ai": [
+      "YB-2",
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실",
+      "중앙홀"
+    ],
+    "summary": "YB-2의 탐색과 YB-3 포획.",
+    "content": "70초: YB-2는 기록실에서 중앙홀로 이동해 출입구와 방 안쪽을 차례로 확인했다.\n96초: YB-2는 중앙홀에서 달아나던 YB-3을 따라가 최초 포획했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T02-action-006",
+    "record_type": "Action",
+    "test_id": 2,
+    "day": 1,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "창고",
+      "회의실"
+    ],
+    "summary": "YB-5 탐색.",
+    "content": "75초: YB-5는 창고에서 회의실로 이동해 출입구와 방 안쪽을 차례로 확인했다.",
+    "witness_ai": [
+      "YB-4",
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T02-action-007",
+    "record_type": "Action",
+    "test_id": 2,
+    "day": 1,
+    "involved_ai": [
+      "YB-2",
+      "YB-1"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-2의 YB-1 포획.",
+    "content": "102초: YB-2는 중앙홀에서 달아나던 YB-1을 따라가 최초 포획했다.",
+    "witness_ai": [
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T02-action-008",
+    "record_type": "Action",
+    "test_id": 2,
+    "day": 1,
+    "involved_ai": [
+      "YB-5",
+      "YB-6"
+    ],
+    "location_ids": [
+      "회의실"
+    ],
+    "summary": "YB-5의 YB-6 포획.",
+    "content": "102초: YB-5는 회의실에서 달아나던 YB-6을 따라가 최초 포획했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T02-action-009",
+    "record_type": "Action",
+    "test_id": 2,
+    "day": 1,
+    "involved_ai": [
+      "YB-5",
+      "YB-4"
+    ],
+    "location_ids": [
+      "회의실"
+    ],
+    "summary": "YB-5의 YB-4 포획.",
+    "content": "108초: YB-5는 회의실에서 달아나던 YB-4를 따라가 최초 포획했다.",
+    "witness_ai": [
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T03-action-001",
+    "record_type": "Action",
+    "test_id": 3,
+    "day": 1,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [
+      "기록실",
+      "중앙홀"
+    ],
+    "summary": "YB-1 이동 및 은신.",
+    "content": "15초: YB-1은 기록실에서 중앙홀로 이동했다. 입구에서 떨어진 곳에 멈춰 주변을 살폈다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T03-action-002",
+    "record_type": "Action",
+    "test_id": 3,
+    "day": 1,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "전력실",
+      "중앙홀"
+    ],
+    "summary": "YB-2의 이동과 벽 끼임.",
+    "content": "25초: YB-2는 전력실에서 중앙홀로 이동했다. 27초에 벽 쪽으로 붙어 움직이던 중 몸 일부가 벽에 겹친 채 멈췄다. 29초에 반대 방향으로 움직이자 벽에서 빠져나왔다.",
+    "witness_ai": [
+      "YB-1"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T03-action-003",
+    "record_type": "Action",
+    "test_id": 3,
+    "day": 1,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "서버실",
+      "회의실"
+    ],
+    "summary": "YB-5 이동 및 은신.",
+    "content": "35초: YB-5는 서버실에서 회의실로 이동했다. 입구에서 떨어진 곳에 멈춰 주변을 살폈다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T03-action-004",
+    "record_type": "Action",
+    "test_id": 3,
+    "day": 1,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "회의실"
+    ],
+    "summary": "YB-6 이동 및 은신.",
+    "content": "45초: YB-6은 중앙홀에서 회의실로 이동했다. 문 옆에 멈춘 뒤 방 안쪽으로 자리를 옮겼다.",
+    "witness_ai": [
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T03-action-005",
+    "record_type": "Action",
+    "test_id": 3,
+    "day": 1,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "통신실",
+      "중앙홀"
+    ],
+    "summary": "YB-3 탐색.",
+    "content": "70초: YB-3은 통신실에서 중앙홀로 이동해 출입구와 방 안쪽을 차례로 확인했다.",
+    "witness_ai": [
+      "YB-1",
+      "YB-2"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T03-action-006",
+    "record_type": "Action",
+    "test_id": 3,
+    "day": 1,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "창고",
+      "회의실"
+    ],
+    "summary": "YB-4 탐색.",
+    "content": "75초: YB-4는 창고에서 회의실로 이동해 출입구와 방 안쪽을 차례로 확인했다.",
+    "witness_ai": [
+      "YB-5",
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T03-action-007",
+    "record_type": "Action",
+    "test_id": 3,
+    "day": 1,
+    "involved_ai": [
+      "YB-3",
+      "YB-1"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-3의 YB-1 포획.",
+    "content": "96초: YB-3은 중앙홀에서 달아나던 YB-1을 따라가 최초 포획했다.",
+    "witness_ai": [
+      "YB-2"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T03-action-008",
+    "record_type": "Action",
+    "test_id": 3,
+    "day": 1,
+    "involved_ai": [
+      "YB-3",
+      "YB-2"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-3의 YB-2 포획.",
+    "content": "102초: YB-3은 중앙홀에서 달아나던 YB-2를 따라가 최초 포획했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T03-action-009",
+    "record_type": "Action",
+    "test_id": 3,
+    "day": 1,
+    "involved_ai": [
+      "YB-4",
+      "YB-5"
+    ],
+    "location_ids": [
+      "회의실"
+    ],
+    "summary": "YB-4의 YB-5 포획.",
+    "content": "102초: YB-4는 회의실에서 달아나던 YB-5를 따라가 최초 포획했다.",
+    "witness_ai": [
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T03-action-010",
+    "record_type": "Action",
+    "test_id": 3,
+    "day": 1,
+    "involved_ai": [
+      "YB-4",
+      "YB-6"
+    ],
+    "location_ids": [
+      "회의실"
+    ],
+    "summary": "YB-4의 YB-6 포획.",
+    "content": "108초: YB-4는 회의실에서 달아나던 YB-6을 따라가 최초 포획했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T04-action-001",
+    "record_type": "Action",
+    "test_id": 4,
+    "day": 1,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "통신실",
+      "중앙홀"
+    ],
+    "summary": "YB-2 이동 및 은신.",
+    "content": "15초: YB-2는 통신실에서 중앙홀로 이동했다. 입구에서 떨어진 곳에 멈춰 주변을 살폈다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T04-action-002",
+    "record_type": "Action",
+    "test_id": 4,
+    "day": 1,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "창고",
+      "중앙홀"
+    ],
+    "summary": "YB-3 이동 및 은신.",
+    "content": "25초: YB-3은 창고에서 중앙홀로 이동했다. 문 옆에 멈춘 뒤 방 안쪽으로 자리를 옮겼다.",
+    "witness_ai": [
+      "YB-2"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T04-action-003",
+    "record_type": "Action",
+    "test_id": 4,
+    "day": 1,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "서버실",
+      "기록실"
+    ],
+    "summary": "YB-4 이동 및 은신.",
+    "content": "35초: YB-4는 서버실에서 기록실로 이동했다. 입구에서 떨어진 곳에 멈춰 주변을 살폈다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T04-action-004",
+    "record_type": "Action",
+    "test_id": 4,
+    "day": 1,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "회의실",
+      "기록실"
+    ],
+    "summary": "YB-6 이동 및 은신.",
+    "content": "45초: YB-6은 회의실에서 기록실로 이동했다. 문 옆에 멈춘 뒤 방 안쪽으로 자리를 옮겼다.",
+    "witness_ai": [
+      "YB-4"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T04-action-005",
+    "record_type": "Action",
+    "test_id": 4,
+    "day": 1,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-4의 벽 끼임.",
+    "content": "55초: YB-4는 기록실에서 은신 위치를 바꾸려고 벽 쪽으로 이동했다. 몸 일부가 벽에 겹친 채 움직임이 멈췄고, 58초에 방향을 바꾸자 벽에서 빠져나왔다.",
+    "witness_ai": [
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T04-action-006",
+    "record_type": "Action",
+    "test_id": 4,
+    "day": 1,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [
+      "전력실",
+      "중앙홀"
+    ],
+    "summary": "YB-1 탐색.",
+    "content": "70초: YB-1은 전력실에서 중앙홀로 이동해 출입구와 방 안쪽을 차례로 확인했다.",
+    "witness_ai": [
+      "YB-2",
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T04-action-007",
+    "record_type": "Action",
+    "test_id": 4,
+    "day": 1,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "기록실"
+    ],
+    "summary": "YB-5 탐색.",
+    "content": "75초: YB-5는 중앙홀에서 기록실로 이동해 출입구와 방 안쪽을 차례로 확인했다.",
+    "witness_ai": [
+      "YB-4",
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T04-action-008",
+    "record_type": "Action",
+    "test_id": 4,
+    "day": 1,
+    "involved_ai": [
+      "YB-1",
+      "YB-3"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-1의 YB-3 포획.",
+    "content": "96초: YB-1은 중앙홀에서 달아나던 YB-3을 따라가 최초 포획했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T04-action-009",
+    "record_type": "Action",
+    "test_id": 4,
+    "day": 1,
+    "involved_ai": [
+      "YB-1",
+      "YB-2"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-1의 YB-2 포획.",
+    "content": "102초: YB-1은 중앙홀에서 달아나던 YB-2를 따라가 최초 포획했다.",
+    "witness_ai": [
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T04-action-010",
+    "record_type": "Action",
+    "test_id": 4,
+    "day": 1,
+    "involved_ai": [
+      "YB-5",
+      "YB-6"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-5의 YB-6 포획.",
+    "content": "102초: YB-5는 기록실에서 달아나던 YB-6을 따라가 최초 포획했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T04-action-011",
+    "record_type": "Action",
+    "test_id": 4,
+    "day": 1,
+    "involved_ai": [
+      "YB-5",
+      "YB-4"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-5의 YB-4 포획.",
+    "content": "108초: YB-5는 기록실에서 달아나던 YB-4를 따라가 최초 포획했다.",
+    "witness_ai": [
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T05-action-001",
+    "record_type": "Action",
+    "test_id": 5,
+    "day": 1,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [
+      "통신실",
+      "중앙홀"
+    ],
+    "summary": "YB-1 이동 및 은신.",
+    "content": "15초: YB-1은 통신실에서 중앙홀로 이동했다. 입구에서 떨어진 곳에 멈춰 주변을 살폈다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T05-action-002",
+    "record_type": "Action",
+    "test_id": 5,
+    "day": 1,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "창고",
+      "중앙홀"
+    ],
+    "summary": "YB-2 이동 및 은신.",
+    "content": "25초: YB-2는 창고에서 중앙홀로 이동했다. 문 옆에 멈춘 뒤 방 안쪽으로 자리를 옮겼다.",
+    "witness_ai": [
+      "YB-1"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T05-action-003",
+    "record_type": "Action",
+    "test_id": 5,
+    "day": 1,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "서버실",
+      "기록실"
+    ],
+    "summary": "YB-3 이동 및 은신.",
+    "content": "35초: YB-3은 서버실에서 기록실로 이동했다. 입구에서 떨어진 곳에 멈춰 주변을 살폈다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T05-action-004",
+    "record_type": "Action",
+    "test_id": 5,
+    "day": 1,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "회의실",
+      "기록실"
+    ],
+    "summary": "YB-5 이동 및 은신.",
+    "content": "45초: YB-5는 회의실에서 기록실로 이동했다. 문 옆에 멈춘 뒤 방 안쪽으로 자리를 옮겼다.",
+    "witness_ai": [
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T05-action-005",
+    "record_type": "Action",
+    "test_id": 5,
+    "day": 1,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-1의 출입구 확인.",
+    "content": "55초: YB-1은 중앙홀 출입구를 살피고 문에서 한 걸음 물러났다.",
+    "witness_ai": [
+      "YB-2"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T05-action-006",
+    "record_type": "Action",
+    "test_id": 5,
+    "day": 1,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-2의 대기 위치 변경.",
+    "content": "60초: YB-2는 중앙홀 안쪽에서 YB-1과 거리를 벌려 반대편에 멈췄다.",
+    "witness_ai": [
+      "YB-1"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T05-action-007",
+    "record_type": "Action",
+    "test_id": 5,
+    "day": 1,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "기록실",
+      "중앙홀"
+    ],
+    "summary": "YB-6 탐색.",
+    "content": "70초: YB-6은 기록실에서 중앙홀로 이동해 출입구와 방 안쪽을 차례로 확인했다.",
+    "witness_ai": [
+      "YB-1",
+      "YB-2"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T05-action-008",
+    "record_type": "Action",
+    "test_id": 5,
+    "day": 1,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "기록실"
+    ],
+    "summary": "YB-4 탐색.",
+    "content": "75초: YB-4는 중앙홀에서 기록실로 이동해 출입구와 방 안쪽을 차례로 확인했다.",
+    "witness_ai": [
+      "YB-3",
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T05-action-009",
+    "record_type": "Action",
+    "test_id": 5,
+    "day": 1,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-5의 회피.",
+    "content": "85초: YB-5는 기록실을 탐색하는 YB-4와 거리를 벌리며 방 안쪽으로 이동했다.",
+    "witness_ai": [
+      "YB-3",
+      "YB-4"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T05-action-010",
+    "record_type": "Action",
+    "test_id": 5,
+    "day": 1,
+    "involved_ai": [
+      "YB-6",
+      "YB-1"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-6의 YB-1 포획.",
+    "content": "96초: YB-6은 중앙홀에서 달아나던 YB-1을 따라가 최초 포획했다.",
+    "witness_ai": [
+      "YB-2"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T05-action-011",
+    "record_type": "Action",
+    "test_id": 5,
+    "day": 1,
+    "involved_ai": [
+      "YB-6",
+      "YB-2"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-6의 YB-2 포획.",
+    "content": "102초: YB-6은 중앙홀에서 달아나던 YB-2를 따라가 최초 포획했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T05-action-012",
+    "record_type": "Action",
+    "test_id": 5,
+    "day": 1,
+    "involved_ai": [
+      "YB-4",
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-4의 YB-3 포획.",
+    "content": "102초: YB-4는 기록실에서 달아나던 YB-3을 따라가 최초 포획했다.",
+    "witness_ai": [
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T05-action-013",
+    "record_type": "Action",
+    "test_id": 5,
+    "day": 1,
+    "involved_ai": [
+      "YB-4",
+      "YB-5"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-4의 YB-5 포획.",
+    "content": "108초: YB-4는 기록실에서 달아나던 YB-5를 따라가 최초 포획했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  }
+]

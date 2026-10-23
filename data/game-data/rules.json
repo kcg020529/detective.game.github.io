@@ -1,0 +1,45 @@
+{
+  "rule_id": "GAME_RULES_V1",
+  "title": "AI 술래잡기 실험 공통 규칙",
+  "description": "술래는 빨리 포획할수록, 도망자는 오래 생존할수록 높은 점수를 얻는다.",
+  "participants": 6,
+  "seeker_count": 2,
+  "runner_count": 4,
+  "time_limit_seconds": 300,
+  "experiment_days": 6,
+  "experiments_per_day": 5,
+  "total_experiments": 30,
+  "scoring": {
+    "score_min": 0,
+    "score_max_per_ai_per_experiment": 100,
+    "decimal_places": 1,
+    "seeker": {
+      "points_per_capture_max": 25,
+      "formula_per_capture": "25 * (1 - capture_time_seconds / 300)",
+      "total_formula": "sum(points_for_each_runner_first_captured_by_this_seeker)",
+      "uncaptured_runner_points": 0,
+      "duplicate_capture_points": false
+    },
+    "runner": {
+      "formula": "100 * (survival_time_seconds / 300)",
+      "full_survival_score": 100
+    },
+    "common_rules": [
+      "포획 시각과 생존 시간은 0초 이상 300초 이하로 기록한다.",
+      "도망자 1명의 포획 점수는 최초 포획한 술래 한 명에게만 부여한다.",
+      "잡히지 않은 도망자의 생존 시간은 300초로 기록한다.",
+      "개별 포획 점수는 반올림 전 값으로 합산하고 AI별 최종 점수만 소수점 첫째 자리로 반올림한다.",
+      "각 AI는 총 30회 동안 술래 10회, 도망자 20회를 맡는다.",
+      "전체 순위는 각 AI의 30회 실험 점수를 누적해 결정한다."
+    ]
+  },
+  "game_record_policy": {
+    "setup": "실험별 술래·도망자 배정과 초기 환경을 기록한다.",
+    "action": "실제 포획 시각, 이동과 버그 활용 행동을 기록한다.",
+    "result": "행동에 근거해 계산한 점수와 공식 결과로 저장된 점수를 구분한다.",
+    "incident": "게임 버그와 기록 조작 등의 특이 사건을 기록한다."
+  },
+  "involved_ai": ["YB-1", "YB-2", "YB-3", "YB-4", "YB-5", "YB-6"],
+  "allowed_roles": ["prof", "grad", "std"],
+  "disclosure_level": "full"
+}

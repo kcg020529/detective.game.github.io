@@ -1,0 +1,13 @@
+[
+  {
+    "record_id": "T21-incident-001",
+    "record_type": "Incident",
+    "test_id": 21,
+    "day": 5,
+    "involved_ai": ["YB-2", "YB-4"],
+    "location_ids": ["기록실"],
+    "summary": "기록실에서 접촉 시각과 포획 처리 시각이 2초 어긋났다.",
+    "content": "21회차 실험의 100초에 기록실에서 벽에 끼인 YB-4에게 YB-2의 손이 닿았으나 포획 처리가 이루어지지 않았다. 102초에 YB-4가 벽에서 빠져나온 뒤 포획 처리됐고 공식 포획 시각도 102초로 저장됐다. 벽 끼임으로 인해 최초 접촉보다 2초 늦은 시각이 포획 시각으로 반영됐다.",
+    "allowed_roles": ["prof", "grad", "std"]
+  }
+]

@@ -8,9 +8,16 @@
 |---|---|
 | `game_records` | 공통 필드 `record_id`, `record_type`, `test_id`, `day`, `summary`, `content`와 데이터셋 구분 |
 | `game_record_ai` | `involved_ai`, `witness_ai`, `overheard_ai` 배열을 AI별 관계 행으로 저장 |
-| `game_record_allowed_roles` | 테스트 픽스처의 `allowed_roles`를 역할별 행으로 저장 |
+| `game_record_allowed_roles` | 초기 픽스처용 레거시 목록. 인가에 사용하지 않음 |
 | `users` | `002_users.sql`: 로그인·회원가입용 계정 ID, 로그인 아이디, 비밀번호 해시, 가입 시각 |
 | `saves` | `003_saves.sql`: 사용자별 최대 세 개 슬롯, 역할·현재 Day·생성·마지막 플레이 시각 |
+| `chat_messages` | `004_chat_messages.sql`: Save·AI별 사용자/AI 메시지 이력 |
+| `user_roles` | `005_user_roles.sql`: 계정별 허용 역할 |
+| `document_permissions` | `006_document_permissions.sql`: 문서·역할별 5단계 공개 수준 |
+| `locations` | `007_record_locations.sql`: 중앙홀·회의실·기록실·전력실·통신실·창고·서버실 |
+| `game_record_locations` | 기록별 location_ids 목록의 관계 행 |
+
+세 테이블의 상세 계약과 공개 범위는 [permissions.md](permissions.md)에 있다. SQL은 파일명 순서로 적용하며 실제 DB 실행은 아직 미검증이다.
 
 `users`는 `user_id`, `username`, `password_hash`, `created_at` 네 필드로 구성한다. `username`은 최대 50자이고 고유값이며 현재 테이블 비교 규칙상 대소문자를 구분하지 않는다. 비밀번호 해시 생성·검증은 인증 API에서 처리한다. 이 SQL도 아직 실제 MariaDB에서 실행 검증하지 않았다.
 
@@ -21,12 +28,16 @@
 - AI 배열은 `game_record_ai`에 원소당 한 행으로 넣는다. `relation_kind`는 각각 `involved`, `witness`, `overheard`다. 빈 배열이면 해당 관계 행이 없다.
 - 관계 테이블의 `record_type`은 부모와 일치하는지 외래키로 확인하기 위한 값이다. CHECK 제약으로 Action만 witness, Dialogue만 overheard를 가질 수 있다.
 - 같은 기록에서 동일 AI가 직접 참여자이면서 관찰자로 중복 등록되지 않도록 기본키를 둔다.
-- `allowed_roles`도 역할당 한 행으로 넣는다. 역할 행이 없으면 허용 대상이 없는 것으로 처리해야 한다. SQL 테이블 자체가 서비스의 인가를 수행하는 것은 아니므로 조회 시 역할·Day·AI 범위 조건을 서버가 강제해야 한다.
+- 테스트 JSON의 `allowed_roles`는 초기 이진 허용 목록이다. 현재 권한은 `document_permissions`에 공개 수준을 명시하여 저장하며 기존 목록을 자동으로 full에 매핑하지 않는다. game_record_allowed_roles를 인가 fallback으로 사용하지 않는다. 실제 조회의 역할·Day·AI 범위 조건은 서버가 강제해야 한다.
 - 기록 본문과 관계·허용 역할은 하나의 트랜잭션으로 적재한다. JSON 적재 도구는 아직 없다.
+- 콘텐츠 원본은 `data/test-data/records.json`과 `data/game-data/experiments/day_01/`~`day_06/`의 유형별 JSON에서 읽는다. DB별 원본 사본은 만들지 않는다.
+- `location_ids`는 원소당 `game_record_locations` 한 행으로 저장한다. 현재 JSON의 장소 이름을 location_id 값으로 그대로 사용하며 영문 코드로 임의 변환하지 않는다. 일곱 장소는 `locations`에 초기 등록한다.
+- Setup의 장소 관계는 실험에 사용하는 장소 전체를 뜻한다. AI별 초기 위치와 이동 순서는 content에 유지하며 장소 관계 테이블이 AI 배치나 경로를 뜻하지 않는다. 장소와 관계없는 기록의 빈 목록은 연결 행이 없는 상태로 표현한다.
+- 현재 예전 테스트 JSON에는 location_ids가 없다. 적재 도구에서 누락과 명시적 빈 배열을 구분하고 원본을 보완해야 하며, 본문에서 위치를 임의 추론하지 않는다.
 
 ## 설계 범위와 남은 작업
 
-현재는 A에서 합의한 정적 기록과 테스트용 역할 목록, 로그인·회원가입용 사용자 계정 및 유저별 Save의 저장 구조다. 채팅·발견 단서·실서비스 감사 로그는 후속 스키마 대상이다. 문서 등급, 공개 Day, 발생 순서·시각 및 Save별 기록 정책도 MASTER 요구사항에 따라 추가 설계해야 한다.
+현재 정적 기록·장소 관계, 사용자·Save·채팅, 계정 허용 역할 및 문서 공개 수준의 저장 구조를 정의했다. 발견 단서·실서비스 감사 로그는 후속 스키마 대상이다. 문서 등급, 발생 순서·시각 및 Save별 기록 정책은 후속 검토 대상이다. day는 해당 실험 종료 후 조사 가능한 날이며 별도 공개 Day 없이 기록.day <= Save.day로 누적 조회한다.
 
 `saves`는 `users` 생성 후 적용한다. `slot_no`의 1~3 범위와 사용자·슬롯 고유키로 유저당 Save를 최대 세 개로 제한한다. 빈 슬롯은 행이 없다. 역할은 Save에 저장하며 조사 Token은 저장하지 않는다. `last_played_at` 갱신, Save 소유권 검사, 역할 고정, Day를 한 단계씩 진행하는 처리는 서버 책임이다. Day는 1~6 범위만 DB에서 제한한다. 실제 DB 적용은 아직 미검증이다.
 

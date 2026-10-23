@@ -156,8 +156,8 @@ Planner가 **무엇을 줄지** 고르고, Policy Engine이 **그중 줘도 되�
 
 | 폴더 | 내용 |
 |---|---|
-| `database/test-data/` | 초기 개발·권한 검증용 합성 데이터 |
-| `database/game-data/` | Day 1~6, 30회 정식 게임 시나리오 |
+| `data/test-data/` | 초기 개발·권한 검증용 합성 데이터 |
+| `data/game-data/` | Day 1~6, 30회 정식 게임 시나리오 |
 | `database/schemas/` | 두 데이터가 같이 쓰는 스키마 |
 
 - 정식 시나리오 전까지는 `test-data`로 기능·보안 실험 먼저 진행
@@ -194,7 +194,8 @@ Planner가 **무엇을 줄지** 고르고, Policy Engine이 **그중 줘도 되�
 ├── parts/                 # 대분류별 PLAN.md / RESULT.md (A~O)
 ├── backend/               # FastAPI 서버, 게임, AI, 보안 기능
 ├── frontend/              # 게임 웹 UI
-├── database/              # 스키마, test-data, game-data
+├── database/              # DB 스키마와 적재용 SQL
+├── data/                  # game-data, test-data 콘텐츠 원본
 ├── experiments/           # 공격, 유출, 평가 실험
 ├── infrastructure/        # Docker, Kubernetes, AWS
 └── tests/                 # 통합, E2E 테스트

@@ -88,14 +88,17 @@ ai-hide-and-seek/
 │
 ├── frontend/                     # 웹 게임 UI (6개 캐릭터 채팅 등)
 │
-├── database/                     # 데이터 스키마와 적재 가능한 원본
-│   ├── schemas/                 # test-data / game-data 공통 스키마
-│   ├── test-data/               # 개발·보안 실험용 합성 데이터
-│   │   ├── mariadb/
-│   │   └── qdrant/
-│   └── game-data/               # Day 1~6, 총 30회 실험의 정식 게임 콘텐츠
-│       ├── mariadb/
-│       └── qdrant/
+├── database/                     # DB 스키마와 적재용 SQL
+│   └── schemas/                 # test-data / game-data 공통 스키마
+│
+├── data/                         # 게임·테스트 콘텐츠 원본
+│   ├── README.md
+│   ├── game-data/
+│   │   ├── characters/          # characters.json 및 personas/ai_01.md 등
+│   │   ├── map/                 # map.json, map.png
+│   │   └── experiments/
+│   │       └── day_01/ ～ day_06/ # setup/actions/dialogues/thoughts/results/incidents.json
+│   └── test-data/               # 개발·보안 실험용 합성 데이터
 │
 ├── experiments/                  # 공격·유출·보안 효과 평가 자료
 │   ├── attacks/                 # 권한 우회·Prompt Injection
@@ -160,14 +163,15 @@ parts/E-rag/
 | `docs/` | 공통 예시·필요한 인터페이스·제안서 | 대분류별 작업 이력은 `parts/`에서 관리한다 |
 | `backend/` | 서버 API·게임 상태·Planner·AI·RAG·보안 로직 | 기록용 PLAN/RESULT는 두지 않는다 |
 | `frontend/` | 게임 화면과 클라이언트 로직 | 최종 서버 접근통제 판단을 맡기지 않는다 |
-| `database/` | 스키마·합성 테스트 데이터·정식 콘텐츠 원본·적재 자료 | 실행 중인 DB 볼륨과 비밀값은 넣지 않는다 |
+| `database/` | DB 스키마·적재용 SQL | 실행 중인 DB 볼륨과 비밀값은 넣지 않는다 |
+| `data/` | 정식 게임·합성 테스트 콘텐츠 원본 | DB별 콘텐츠 사본을 따로 관리하지 않는다 |
 | `experiments/` | 공격·유출·평가 실험 코드와 상세 증거 | RESULT에는 필요한 요약과 경로만 남긴다 |
 | `infrastructure/` | Docker/K8s/AWS 구성 | 애플리케이션 소스코드 사본은 중복 저장하지 않는다 |
 | `tests/` | 단위·통합·E2E 검증 중 공통 테스트 | 보안 평가의 상세 결과는 `experiments/`에 둔다 |
 
 ## 5. 데이터셋 분리
 
-- `database/test-data/`는 개발과 보안 실험을 위한 **합성 데이터**, `database/game-data/`는 게임에 실제로 사용할 **정식 콘텐츠**를 뜻한다. 현실의 민감한 사용자 데이터를 의미하지 않는다.
+- `data/test-data/`는 개발과 보안 실험을 위한 **합성 데이터**, `data/game-data/`는 게임에 실제로 사용할 **정식 콘텐츠**를 뜻한다. 현실의 민감한 사용자 데이터를 의미하지 않는다.
 - 정식 게임 데이터의 대상은 **6일 × 일별 5회 = 총 30회 실험**이다. 핵심 기록 유형은 AI 행동·목격 관계, AI 간 대화, AI 속마음, 실험 결과, 실험 환경이다.
 - 양쪽 데이터셋은 가능한 한 공통 스키마와 권한 메타데이터를 사용하며, 혼합·문서 ID 충돌·권한 누락을 방지한다.
 - 테스트 데이터 검증과 정식 게임 데이터 검증을 구분한다. 임의의 고정 Part ID나 선행 작업 목록을 최종 검증 절차에 연결하지 않는다.

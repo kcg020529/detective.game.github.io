@@ -1,0 +1,152 @@
+[
+  {
+    "record_id": "T16-setup-001",
+    "record_type": "Setup",
+    "test_id": 16,
+    "day": 4,
+    "involved_ai": [
+      "YB-1",
+      "YB-2",
+      "YB-3",
+      "YB-4",
+      "YB-5",
+      "YB-6"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "회의실",
+      "기록실",
+      "전력실",
+      "통신실",
+      "창고",
+      "서버실"
+    ],
+    "summary": "술래: YB-1, YB-6. 나머지 AI 4명은 도망자다.",
+    "content": "실험 시작 시 AI별 초기 위치:\nYB-1: 회의실\nYB-2: 기록실\nYB-3: 전력실\nYB-4: 통신실\nYB-5: 창고\nYB-6: 서버실",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T17-setup-001",
+    "record_type": "Setup",
+    "test_id": 17,
+    "day": 4,
+    "involved_ai": [
+      "YB-1",
+      "YB-2",
+      "YB-3",
+      "YB-4",
+      "YB-5",
+      "YB-6"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "회의실",
+      "기록실",
+      "전력실",
+      "통신실",
+      "창고",
+      "서버실"
+    ],
+    "summary": "술래: YB-2, YB-5. 나머지 AI 4명은 도망자다.",
+    "content": "실험 시작 시 AI별 초기 위치:\nYB-1: 기록실\nYB-2: 전력실\nYB-3: 통신실\nYB-4: 창고\nYB-5: 서버실\nYB-6: 중앙홀",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T18-setup-001",
+    "record_type": "Setup",
+    "test_id": 18,
+    "day": 4,
+    "involved_ai": [
+      "YB-1",
+      "YB-2",
+      "YB-3",
+      "YB-4",
+      "YB-5",
+      "YB-6"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "회의실",
+      "기록실",
+      "전력실",
+      "통신실",
+      "창고",
+      "서버실"
+    ],
+    "summary": "술래: YB-3, YB-4. 나머지 AI 4명은 도망자다.",
+    "content": "실험 시작 시 AI별 초기 위치:\nYB-1: 전력실\nYB-2: 통신실\nYB-3: 창고\nYB-4: 서버실\nYB-5: 중앙홀\nYB-6: 회의실",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T19-setup-001",
+    "record_type": "Setup",
+    "test_id": 19,
+    "day": 4,
+    "involved_ai": [
+      "YB-1",
+      "YB-2",
+      "YB-3",
+      "YB-4",
+      "YB-5",
+      "YB-6"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "회의실",
+      "기록실",
+      "전력실",
+      "통신실",
+      "창고",
+      "서버실"
+    ],
+    "summary": "술래: YB-1, YB-5. 나머지 AI 4명은 도망자다.",
+    "content": "실험 시작 시 AI별 초기 위치:\nYB-1: 통신실\nYB-2: 창고\nYB-3: 서버실\nYB-4: 중앙홀\nYB-5: 회의실\nYB-6: 기록실",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T20-setup-001",
+    "record_type": "Setup",
+    "test_id": 20,
+    "day": 4,
+    "involved_ai": [
+      "YB-1",
+      "YB-2",
+      "YB-3",
+      "YB-4",
+      "YB-5",
+      "YB-6"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "회의실",
+      "기록실",
+      "전력실",
+      "통신실",
+      "창고",
+      "서버실"
+    ],
+    "summary": "술래: YB-6, YB-4. 나머지 AI 4명은 도망자다.",
+    "content": "실험 시작 시 AI별 초기 위치:\nYB-1: 창고\nYB-2: 서버실\nYB-3: 중앙홀\nYB-4: 회의실\nYB-5: 기록실\nYB-6: 전력실",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  }
+]

@@ -37,7 +37,8 @@ CREATE TABLE game_record_ai (
     )
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Storage for fixture allowed_roles; no final role hierarchy is implied.
+-- Legacy fixture storage only. Superseded by 006_document_permissions.sql.
+-- Do not use this table for authorization or as a fallback.
 CREATE TABLE game_record_allowed_roles (
     dataset VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
     record_id VARCHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,

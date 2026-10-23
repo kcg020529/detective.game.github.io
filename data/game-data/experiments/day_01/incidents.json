@@ -1,0 +1,40 @@
+[
+  {
+    "record_id": "T03-incident-001",
+    "record_type": "Incident",
+    "test_id": 3,
+    "day": 1,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "중앙홀에서 YB-2의 몸이 벽에 겹치며 이동이 멈춘 현상.",
+    "content": "실험 시작 후 27~29초, 중앙홀에서 YB-2의 몸 일부가 벽에 겹친 채 움직임이 멈췄다. YB-2가 반대 방향으로 움직이자 벽에서 빠져나왔다. 같은 장소에 있던 YB-1이 이 장면을 목격했다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T04-incident-001",
+    "record_type": "Incident",
+    "test_id": 4,
+    "day": 1,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "기록실에서 YB-4의 몸이 벽에 겹치며 이동이 멈춘 현상.",
+    "content": "실험 시작 후 55~58초, 기록실에서 은신 위치를 바꾸던 YB-4의 몸 일부가 벽에 겹친 채 움직임이 멈췄다. YB-4가 방향을 바꾸자 벽에서 빠져나왔다. 같은 장소에 있던 YB-6이 이 장면을 목격했다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  }
+]
