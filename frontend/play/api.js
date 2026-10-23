@@ -84,14 +84,15 @@
       const route = path.split('?')[0];
       const chatRoute = /\/chats\/[^/]+$/.test(route);
       const chatList = method === 'GET' && chatRoute;
-      const arrayField = route === '/saves' ? 'saves' : chatList ? 'messages' : null;
+      const arrayField = method === 'GET' && route === '/saves' ? 'saves' : chatList ? 'messages' : null;
       const savePath = /^\/saves\/[^/]+$/.test(route);
       const valid = arrayField ? Array.isArray(result[arrayField]) && (!chatList || (typeof result.has_more === 'boolean' && result.messages.every(validChatRow)))
-        : method === 'POST' && chatRoute ? Array.isArray(result.messages) && result.messages.length === 2 && validChatRow(result.messages[0]) && result.messages[0].sender === 'user' && validChatRow(result.messages[1]) && result.messages[1].sender === 'ai' && Number.isFinite(result.game_state?.current_day)
-          : method === 'POST' && route.endsWith('/advance-day') ? Number.isFinite(result.game_state?.current_day)
-            : method === 'GET' && savePath ? result.save_id != null && typeof result.role === 'string' && Number.isFinite(result.current_day ?? result.day)
-              : method === 'POST' && route.endsWith('/accusations') ? Array.isArray(result.accusation?.verdict?.evidence) && typeof result.accusation?.verdict?.hit === 'boolean'
-                  : true;
+        : method === 'POST' && route === '/saves' ? result.save_id != null && typeof result.role === 'string' && Number.isFinite(result.day)
+          : method === 'POST' && chatRoute ? Array.isArray(result.messages) && result.messages.length === 2 && validChatRow(result.messages[0]) && result.messages[0].sender === 'user' && validChatRow(result.messages[1]) && result.messages[1].sender === 'ai' && Number.isFinite(result.game_state?.current_day)
+            : method === 'POST' && route.endsWith('/advance-day') ? Number.isFinite(result.game_state?.current_day)
+              : method === 'GET' && savePath ? result.save_id != null && typeof result.role === 'string' && Number.isFinite(result.current_day ?? result.day)
+                : method === 'POST' && route.endsWith('/accusations') ? Array.isArray(result.accusation?.verdict?.evidence) && typeof result.accusation?.verdict?.hit === 'boolean'
+                    : true;
       if (!valid) throw new ApiError(response.status, 'INVALID_RESPONSE', messageFor('INVALID_RESPONSE'));
       if (chatRoute) result.messages = result.messages.map(normalizeChatRow);
       return result;
