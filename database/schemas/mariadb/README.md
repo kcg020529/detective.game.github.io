@@ -16,6 +16,7 @@
 | `document_permissions` | `006_document_permissions.sql`: 문서·역할별 5단계 공개 수준 |
 | `locations` | `007_record_locations.sql`: 중앙홀·회의실·기록실·전력실·통신실·창고·서버실 |
 | `game_record_locations` | 기록별 location_ids 목록의 관계 행 |
+| `auth_sessions` | `009_auth_sessions.sql`: 로그인 쿠키 해시·사용자·만료 시각 |
 
 세 테이블의 상세 계약과 공개 범위는 [permissions.md](permissions.md)에 있다. SQL은 파일명 순서로 적용하며 실제 DB 실행은 아직 미검증이다.
 
@@ -44,3 +45,8 @@
 `test_id`는 1~30, `day`는 1~6이다. 테스트 데이터는 하루 1회이므로 DB에 하루 5회 관계를 강제하지 않았다. 정식 데이터의 Day별 5회 규칙, ID 형식과 필드의 일치, Thought의 참여 AI 한 명 제한, AI ID 유효성 및 필수 관계 누락은 후속 적재 검증에서 확인해야 한다.
 
 Docker의 첫 실행은 `.env`의 `MARIADB_DATABASE`에 이 SQL을 적용한다. 이미 초기화된 볼륨에는 새 SQL이 자동 적용되지 않는다. 기존 DB에는 선택한 데이터베이스에서 이 파일을 한 번 실행해야 하며, 재실행용 마이그레이션은 아직 없다. 기존 데이터를 삭제할 필요는 없다.
+
+`009_auth_sessions.sql`은 I 백엔드의 세션 저장용이다. 기존 DB에는 이 파일만
+별도로 적용한다. 2026-10-23에 격리된 MariaDB 11.4 테스트 컨테이너에서
+001~007과 009의 초기 적용, 계정 API의 세션 생성·조회·삭제를 확인했다.
+공유 서버나 기존 볼륨에 적용된 상태를 뜻하지 않는다.
