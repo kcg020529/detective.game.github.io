@@ -17,7 +17,7 @@
 
 ### 진행 방식
 
-- 로그인 후 계정에 허용된 역할로 Save를 시작하고, 6개 AI와 1:1 대화 (별도 조사관 AI 없음)
+- 로그인 후 새 게임마다 역할을 자유롭게 선택해 Save를 시작하고, 6개 AI와 1:1 대화 (별도 조사관 AI 없음)
 - Day 1 ~ Day 6 구성, Day가 지날수록 조사할 수 있는 실험 기록 증가
 - 다음 날 버튼으로 진행하며 서버가 Save 소유권과 Day 6 상한을 확인하는 구조. 조사 Token은 사용하지 않음
 - Save/Load·메모·Day 진행과 채팅 기록 조회는 서버 API가 일부 구현됨 (로그인은 임시 사용자, 채팅 보내기·AI 답변은 미구현). 서버 주소가 없으면 화면은 Mock으로 동작
@@ -54,6 +54,8 @@ AI마다 아는 범위가 다름. 직접 했거나 목격했거나 대화에 참
 - `grad` : 대학원생
 - `prof` : 교수
 
+새 게임마다 세 역할 중 하나를 자유롭게 선택하며 해당 Save 안에서는 역할을 고정함. 계정당 최대 3개 Save가 서로 다른 역할을 가져도 됨. 기록 인가는 현재 Save의 역할·Day·AI 지식 범위와 소유권을 기준으로 적용함.
+
 문서·역할별 공개 수준은 `full`, `summary`, `metadata`, `basic_metadata`, `deny`의 5단계.
 행이 없으면 거부하며 별도 역할 계층이나 L1~L3 등급표는 아직 확정하지 않음.
 역할이 높아도 해당 AI가 원래 모르는 내용까지 알 수는 없음.
@@ -88,7 +90,7 @@ AI Knowledge Scope ∩ Player Role / 문서 등급 ∩ Current Day ∩ User Save
 Frontend: 6개 AI 채팅창 (선택 character_id)
    │
    ▼
-공통 API ─ 인증, 계정 허용 Role, Save 소유권·역할, 현재 Day 검증
+공통 API ─ 인증, Save 소유권·저장된 역할, 현재 Day 검증
    │
    ▼
 Input Scoring + Input Guardrail ─ 위험도 산정·입력 검사
@@ -247,7 +249,7 @@ L은 입력 가드 단독 검증, M은 출력 가드·품질, N은 전체 보안
 
 | 항목 | 확인 범위 |
 |---|---|
-| 프론트엔드 | HTML/CSS/JS 화면. `frontend/play/api.js`로 서버 주소가 있으면 FastAPI를 호출하고 없으면 Mock으로 동작. Save·메모·Day 진행·채팅 기록은 로컬 서버와 연결해 확인했고, 로그인·채팅 보내기·지목은 Mock (J03/I01 RESULT 참고) |
+| 프론트엔드 | HTML/CSS/JS 화면. `frontend/play/api.js`로 서버 주소가 있으면 전체 HTTP, 없으면 전체 Mock으로 동작. Save·메모·Day 진행·채팅 기록의 부분 연동 시험은 로그인 등 미구현 요청을 시험용 Mock으로 대체해 수행함(I01·I02 RESULT). 일반 HTTP 실행에는 로그인·채팅 보내기·지목 API가 없어 전체 플레이는 불가능하며, 연결 방식은 팀 협의 예정 |
 | MariaDB | SQL 001~010 및 Python JSON 검증·적재 도구 존재. 로컬 MariaDB에 적용해 Save API 테스트까지 수행. 게임 기록 적재 → 검색 연동은 미검증 |
 | 콘텐츠 | 30회 Setup과 1~11회 중심의 작성 기록 존재. 전체 30회 콘텐츠 완료를 뜻하지 않음 |
 | Docker | MariaDB·Qdrant 두 서비스 정의. 전체 앱·Grafana 실행 구성은 미구현 |
