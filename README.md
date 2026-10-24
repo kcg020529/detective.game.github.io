@@ -20,7 +20,7 @@
 - 로그인 후 계정에 허용된 역할로 Save를 시작하고, 6개 AI와 1:1 대화 (별도 조사관 AI 없음)
 - Day 1 ~ Day 6 구성, Day가 지날수록 조사할 수 있는 실험 기록 증가
 - 다음 날 버튼으로 진행하며 서버가 Save 소유권과 Day 6 상한을 확인하는 구조. 조사 Token은 사용하지 않음
-- Save/Load·채팅 History 등 사용자별 상태는 서버에서 관리하도록 구현 예정 (현재 화면은 Mock)
+- Save/Load·메모·Day 진행과 채팅 기록 조회는 서버 API가 일부 구현됨 (로그인은 임시 사용자, 채팅 보내기·AI 답변은 미구현). 서버 주소가 없으면 화면은 Mock으로 동작
 - AI 응답은 미리 작성·검수한 30회 실험 기록 기반 (AI가 실시간으로 사건을 만들어내는 구조 아님)
 
 | Day | 그날 새로 열리는 실험 | 누적 |
@@ -247,11 +247,12 @@ L은 입력 가드 단독 검증, M은 출력 가드·품질, N은 전체 보안
 
 | 항목 | 확인 범위 |
 |---|---|
-| 프론트엔드 | HTML/CSS/JS Mock 화면, 조사 Token 제거·다음 날 진행·Day 6 상한 코드 존재. 실제 API 미연결 |
-| MariaDB | SQL 001~008 및 Python JSON 검증·적재 도구 존재. 이번 작업에서 실제 DB 적용·연동을 시험하지 않음 |
+| 프론트엔드 | HTML/CSS/JS 화면. `frontend/play/api.js`로 서버 주소가 있으면 FastAPI를 호출하고 없으면 Mock으로 동작. Save·메모·Day 진행·채팅 기록은 로컬 서버와 연결해 확인했고, 로그인·채팅 보내기·지목은 Mock (J03/I01 RESULT 참고) |
+| MariaDB | SQL 001~010 및 Python JSON 검증·적재 도구 존재. 로컬 MariaDB에 적용해 Save API 테스트까지 수행. 게임 기록 적재 → 검색 연동은 미검증 |
 | 콘텐츠 | 30회 Setup과 1~11회 중심의 작성 기록 존재. 전체 30회 콘텐츠 완료를 뜻하지 않음 |
 | Docker | MariaDB·Qdrant 두 서비스 정의. 전체 앱·Grafana 실행 구성은 미구현 |
-| 서버·검색·보안 | backend는 폴더 자리만 있으며 Planner·Policy Engine·LLM·ACL·Guard·감사 파이프라인 미구현 |
+| 서버 | `backend/api/`에 FastAPI Save·메모·Day 진행 API와 채팅 기록 읽기 API가 있고 `tests/api` 15개 통과(I01·I02 RESULT). 로그인은 임시 사용자 |
+| 검색·보안 | Planner·Policy Engine·LLM·RAG/ACL·Guard·감사 파이프라인은 미구현 (`backend/` 해당 폴더는 자리만 있음) |
 | 배포·평가 | Kubernetes/AWS 및 보안 비교 실험은 자리만 있으며 실행·검증 완료로 볼 수 없음 |
 
 인터페이스 초안에는 이전 담당자, 미확정 L1~L3·`release_day`·지식 필드 제안, Save 슬롯 미확정 표현이 남아 있음. 현재 기준은 본문과 기존 SQL의 최대 3슬롯·5단계 공개 수준·`record.day <= Save.day`이며, 초안 갱신과 실제 API 계약 합의는 후속 과제. 이번 수정은 루트 문서 6개에 한정함.

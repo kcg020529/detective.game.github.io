@@ -115,7 +115,7 @@ ai-hide-and-seek/
 └── tests/                        # 공통 통합·E2E 테스트
 ```
 
-**읽는 방법:** 위 트리는 기준 경로와 책임을 나타내는 설계도이며 파일 전체가 이미 존재한다는 뜻은 아니다. 현재 A·B·J·K에는 PLAN/RESULT가 있고 C~I·L~O의 기록 폴더는 자리만 있다. characters.json·페르소나·지도 파일, 루트 `.env.example`·`docs/proposal/`도 아직 생성되지 않았다. 실제 환경변수 예시는 `infrastructure/docker/.env.example`에 있다. 빈 폴더나 미수행 작업의 RESULT를 가상으로 채우지 않는다.
+**읽는 방법:** 위 트리는 기준 경로와 책임을 나타내는 설계도이며 파일 전체가 이미 존재한다는 뜻은 아니다. characters.json·페르소나·지도 파일, 루트 `.env.example`·`docs/proposal/`도 아직 생성되지 않았다. 실제 환경변수 예시는 `infrastructure/docker/.env.example`에 있다. 빈 폴더나 미수행 작업의 RESULT를 가상으로 채우지 않는다.
 
 ## 2. 대분류별 PLAN / RESULT 경로
 
