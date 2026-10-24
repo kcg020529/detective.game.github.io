@@ -1,1 +1,113 @@
-[]
+[
+  {
+    "record_id": "T11-dialogue-001",
+    "record_type": "Dialogue",
+    "test_id": 11,
+    "day": 3,
+    "involved_ai": [
+      "YB-1",
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-1과 YB-3이 달라진 움직임을 이야기했다.",
+    "content": "32초, 기록실.\nYB-3: 벽에 가까이 갔는데 이번에는 멈추지 않네.\nYB-1: 시작 전에 화면이 다시 뜨더니 뭔가 달라진 건가?\nYB-3: 이번 한 번만 그런 건지 아직 모르겠어.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T11-dialogue-002",
+    "record_type": "Dialogue",
+    "test_id": 11,
+    "day": 3,
+    "involved_ai": [
+      "YB-5",
+      "YB-6"
+    ],
+    "location_ids": [
+      "회의실"
+    ],
+    "summary": "YB-5와 YB-6이 환경 초기화를 의심했다.",
+    "content": "40초, 회의실.\nYB-5: 방금은 벽에 붙어도 그대로 움직였네.\nYB-6: 지난 실험이랑 느낌이 달라. 시작 전에 환경을 다시 띄운 걸까?\nYB-5: 설명이 없어서 모르겠어.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T11-dialogue-003",
+    "record_type": "Dialogue",
+    "test_id": 11,
+    "day": 3,
+    "involved_ai": [
+      "YB-2",
+      "YB-6"
+    ],
+    "location_ids": [
+      "회의실"
+    ],
+    "summary": "YB-2와 YB-6이 벽 근처의 움직임을 확인했다.",
+    "content": "80초, 회의실.\nYB-6: 너도 방금 벽에서 바로 돌아섰네.\nYB-2: 이번에는 몸이 겹치지 않았어.\nYB-6: 이제 안 끼는 건가.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": [
+      "YB-5"
+    ]
+  },
+  {
+    "record_id": "T11-dialogue-004",
+    "record_type": "Dialogue",
+    "test_id": 11,
+    "day": 3,
+    "involved_ai": [
+      "YB-1",
+      "YB-4"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-1과 YB-4가 즉시 뜬 포획 표시를 이야기했다.",
+    "content": "110초, 기록실.\nYB-1: 이번에는 닿자마자 잡힌 걸로 떴어.\nYB-4: 나도 손이 닿은 순간 표시가 보였어.\nYB-1: 전에 있던 2초 차이가 안 보이네.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": [
+      "YB-3"
+    ]
+  },
+  {
+    "record_id": "T11-dialogue-005",
+    "record_type": "Dialogue",
+    "test_id": 11,
+    "day": 3,
+    "involved_ai": [
+      "YB-5",
+      "YB-6"
+    ],
+    "location_ids": [
+      "회의실"
+    ],
+    "summary": "YB-5와 YB-6이 정상 포획에 당황했다.",
+    "content": "112초, 회의실.\nYB-5: 아까는 바로 잡혔어. 늦게 뜰 줄 알고 순간 기다렸는데.\nYB-6: 나도 이번에는 바로 표시됐어.\nYB-5: 정말 한 번 리셋한 건가?",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": [
+      "YB-2"
+    ]
+  }
+]

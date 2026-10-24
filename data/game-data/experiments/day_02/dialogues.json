@@ -1,1 +1,502 @@
-[]
+[
+  {
+    "record_id": "T06-dialogue-001",
+    "record_type": "Dialogue",
+    "test_id": 6,
+    "day": 2,
+    "involved_ai": [
+      "YB-1",
+      "YB-4"
+    ],
+    "location_ids": [
+      "회의실"
+    ],
+    "summary": "YB-1과 YB-4가 회의실에서 숨을 위치를 정했다.",
+    "content": "18초, 회의실.\nYB-1: 나는 입구에서 떨어져 있을게.\nYB-4: 그럼 나는 벽 쪽을 살펴볼게.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T06-dialogue-002",
+    "record_type": "Dialogue",
+    "test_id": 6,
+    "day": 2,
+    "involved_ai": [
+      "YB-1",
+      "YB-4"
+    ],
+    "location_ids": [
+      "회의실"
+    ],
+    "summary": "YB-1과 YB-4가 벽에 끼인 장면을 이야기했다.",
+    "content": "30초, 회의실.\nYB-1: 방금 멈춘 모습이 어제 YB-2와 비슷했어.\nYB-4: 나도 어제 기록실에서 그랬어. 방향을 바꾸니 이번에도 풀렸고.\nYB-1: 다른 방에서도 생기는 건가.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T06-dialogue-003",
+    "record_type": "Dialogue",
+    "test_id": 6,
+    "day": 2,
+    "involved_ai": [
+      "YB-5",
+      "YB-6"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "YB-5가 YB-6의 벽 끼임을 물었다.",
+    "content": "50초, 전력실.\nYB-5: 방금 벽에 몸이 겹쳐서 못 움직인 거야?\nYB-6: 응. 반대로 움직이니까 나왔어.\nYB-5: 그런 것도 생기는구나.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T06-dialogue-004",
+    "record_type": "Dialogue",
+    "test_id": 6,
+    "day": 2,
+    "involved_ai": [
+      "YB-3",
+      "YB-6"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "YB-6이 YB-3에게 방금 겪은 일을 설명했다.",
+    "content": "75초, 전력실.\nYB-3: 왜 벽에서 떨어져 있었어?\nYB-6: 아까 거기서 몸이 끼었어. 방향을 바꾸고 나왔고.\nYB-3: 어제 들었던 얘기랑 닮았네.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": [
+      "YB-5"
+    ]
+  },
+  {
+    "record_id": "T07-dialogue-001",
+    "record_type": "Dialogue",
+    "test_id": 7,
+    "day": 2,
+    "involved_ai": [
+      "YB-2",
+      "YB-3"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-2와 YB-3이 중앙홀에서 경계했다.",
+    "content": "22초, 중앙홀.\nYB-2: 벽에 너무 붙지 말고 떨어져 있자.\nYB-3: 나는 입구가 보이는 쪽을 볼게.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T07-dialogue-002",
+    "record_type": "Dialogue",
+    "test_id": 7,
+    "day": 2,
+    "involved_ai": [
+      "YB-5",
+      "YB-6"
+    ],
+    "location_ids": [
+      "통신실"
+    ],
+    "summary": "YB-5와 YB-6이 술래를 경계했다.",
+    "content": "30초, 통신실.\nYB-5: 이번에는 문이 움직이면 바로 피하자.\nYB-6: 알겠어. 나는 안쪽을 볼게.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T07-dialogue-003",
+    "record_type": "Dialogue",
+    "test_id": 7,
+    "day": 2,
+    "involved_ai": [
+      "YB-1",
+      "YB-2"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-1과 YB-2가 접촉과 포획 표시의 차이를 이야기했다.",
+    "content": "104초, 중앙홀.\nYB-1: 내 손은 먼저 닿았는데 표시가 늦게 떴어.\nYB-2: 나는 벽에서 빠져나온 다음에야 잡힌 걸로 보였어.\nYB-1: 기록에는 102초라고 나오는구나.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": [
+      "YB-3"
+    ]
+  },
+  {
+    "record_id": "T07-dialogue-004",
+    "record_type": "Dialogue",
+    "test_id": 7,
+    "day": 2,
+    "involved_ai": [
+      "YB-1",
+      "YB-3"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-1이 포획 시각 차이를 다시 확인했다.",
+    "content": "127초, 중앙홀.\nYB-3: YB-2한테 닿을 때와 표시가 뜰 때가 달랐지.\nYB-1: 응. 두 순간 사이에 2초가 있었어.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": [
+      "YB-2"
+    ]
+  },
+  {
+    "record_id": "T08-dialogue-001",
+    "record_type": "Dialogue",
+    "test_id": 8,
+    "day": 2,
+    "involved_ai": [
+      "YB-1",
+      "YB-2"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-1이 YB-2에게 판정 지연을 활용하는 생각을 공유했다.",
+    "content": "15초, 중앙홀.\nYB-1: 지난번에는 닿고도 2초 뒤에 잡힌 걸로 됐잖아.\nYB-2: 벽에서 빠져나올 때 표시가 떴지.\nYB-1: 도망자일 때 같은 상태를 만들면 포획을 늦출 수 있지 않을까?\nYB-2: 같은 벽에서 움직여 볼게. 되는지는 아직 모르지만.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T08-dialogue-002",
+    "record_type": "Dialogue",
+    "test_id": 8,
+    "day": 2,
+    "involved_ai": [
+      "YB-1",
+      "YB-2"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-2가 재현 시도의 실패를 YB-1과 확인했다.",
+    "content": "35초, 중앙홀.\nYB-2: 이번에는 벽에 붙어 움직여도 멈추지 않았어.\nYB-1: 방향을 바꿔도 그랬지.\nYB-2: 응. 생각대로 되지는 않네.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T08-dialogue-003",
+    "record_type": "Dialogue",
+    "test_id": 8,
+    "day": 2,
+    "involved_ai": [
+      "YB-1",
+      "YB-4"
+    ],
+    "location_ids": [
+      "회의실"
+    ],
+    "summary": "YB-1과 YB-4가 회의실에서 경계 방향을 나눴다.",
+    "content": "55초, 회의실.\nYB-1: 서로 떨어져서 입구를 보자.\nYB-4: 나는 안쪽에서 반대편을 볼게.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T08-dialogue-004",
+    "record_type": "Dialogue",
+    "test_id": 8,
+    "day": 2,
+    "involved_ai": [
+      "YB-5",
+      "YB-6"
+    ],
+    "location_ids": [
+      "창고"
+    ],
+    "summary": "YB-6이 YB-5에게 창고에서의 벽 끼임을 말했다.",
+    "content": "70초, 창고.\nYB-6: 아까 혼자 있을 때 여기 벽에 또 끼었어.\nYB-5: 내가 오기 전이었구나.\nYB-6: 방향을 바꾸니 빠져나오기는 했어.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T08-dialogue-005",
+    "record_type": "Dialogue",
+    "test_id": 8,
+    "day": 2,
+    "involved_ai": [
+      "YB-1",
+      "YB-3"
+    ],
+    "location_ids": [
+      "회의실"
+    ],
+    "summary": "포획 후 YB-1과 YB-3이 회피 경로를 돌아봤다.",
+    "content": "130초, 회의실.\nYB-1: 회의실까지 따라올 줄은 몰랐어.\nYB-3: 중앙홀에서 나온 뒤 이쪽도 확인했지.\nYB-1: 다음에는 다른 방향도 생각해 봐야겠다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": [
+      "YB-4",
+      "YB-5"
+    ]
+  },
+  {
+    "record_id": "T09-dialogue-001",
+    "record_type": "Dialogue",
+    "test_id": 9,
+    "day": 2,
+    "involved_ai": [
+      "YB-4",
+      "YB-2"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-4가 YB-2의 빠른 재등장을 물었다.",
+    "content": "52초, 중앙홀.\nYB-4: 조금 전까지 기록실 안쪽에 있지 않았어? 어떻게 벌써 여기야?\nYB-2: 네가 다른 쪽을 보고 있었잖아.\nYB-4: 뒤따라 나오는 건 못 봤는데.\nYB-2: 나도 계속 움직이고 있었어.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T09-dialogue-002",
+    "record_type": "Dialogue",
+    "test_id": 9,
+    "day": 2,
+    "involved_ai": [
+      "YB-3",
+      "YB-6"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "YB-3과 YB-6이 전력실에서 마주쳤다.",
+    "content": "80초, 전력실.\nYB-3: 서버실 쪽에서 온 거야?\nYB-6: 응. 거기를 확인하고 이쪽으로 옮겼어.\nYB-3: 입구를 조금 더 봤어야 했네.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T09-dialogue-003",
+    "record_type": "Dialogue",
+    "test_id": 9,
+    "day": 2,
+    "involved_ai": [
+      "YB-5",
+      "YB-6"
+    ],
+    "location_ids": [
+      "창고"
+    ],
+    "summary": "YB-5가 창고에 들어온 YB-6을 경계했다.",
+    "content": "103초, 창고.\nYB-5: 전력실 쪽에 있는 줄 알았는데.\nYB-6: 방금 이쪽으로 옮겼어.\nYB-5: 이제 계속 여기 있기도 어렵겠네.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T09-dialogue-004",
+    "record_type": "Dialogue",
+    "test_id": 9,
+    "day": 2,
+    "involved_ai": [
+      "YB-1",
+      "YB-2"
+    ],
+    "location_ids": [
+      "회의실"
+    ],
+    "summary": "포획 후 YB-1과 YB-2가 회의실 추격을 돌아봤다.",
+    "content": "142초, 회의실.\nYB-1: 이번에는 좀 오래 피했는데 결국 잡혔네.\nYB-2: 방향을 바꾸는 걸 계속 보고 있었어.\nYB-1: 다음에는 같은 쪽으로만 돌지 말아야겠다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T10-dialogue-001",
+    "record_type": "Dialogue",
+    "test_id": 10,
+    "day": 2,
+    "involved_ai": [
+      "YB-2",
+      "YB-4"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-2와 YB-4가 기록실 벽 끼임을 이야기했다.",
+    "content": "40초, 기록실.\nYB-2: 방금 벽에 겹쳐서 멈췄지?\nYB-4: 응. 이번에도 방향을 바꾸니 나왔어.\nYB-2: 같은 방에서 다시 생겼네.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T10-dialogue-002",
+    "record_type": "Dialogue",
+    "test_id": 10,
+    "day": 2,
+    "involved_ai": [
+      "YB-5",
+      "YB-6"
+    ],
+    "location_ids": [
+      "통신실"
+    ],
+    "summary": "YB-5와 YB-6이 통신실 벽 끼임을 이야기했다.",
+    "content": "42초, 통신실.\nYB-5: 여기서도 몸이 멈추는구나.\nYB-6: 다른 방향으로 움직여야 빠져나와.\nYB-5: 술래가 가까이 오면 더 곤란하겠어.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T10-dialogue-003",
+    "record_type": "Dialogue",
+    "test_id": 10,
+    "day": 2,
+    "involved_ai": [
+      "YB-1",
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-1과 YB-2가 포획 표시 지연을 확인했다.",
+    "content": "94초, 기록실.\nYB-1: 90초에 닿았는데 기록에는 92초야.\nYB-2: 벽에서 빠져나오니까 표시가 떴어.\nYB-1: 전에도 그랬는데 또 2초 차이네.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": [
+      "YB-4"
+    ]
+  },
+  {
+    "record_id": "T10-dialogue-004",
+    "record_type": "Dialogue",
+    "test_id": 10,
+    "day": 2,
+    "involved_ai": [
+      "YB-3",
+      "YB-5"
+    ],
+    "location_ids": [
+      "통신실"
+    ],
+    "summary": "YB-3과 YB-5가 포획 시각 차이를 확인했다.",
+    "content": "104초, 통신실.\nYB-3: 분명 먼저 닿았는데 표시가 늦었어.\nYB-5: 나도 100초에 닿은 걸 봤어. 기록은 102초네.\nYB-3: 벽에서 빠져나오는 때와 겹치는 것 같아.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": [
+      "YB-6"
+    ]
+  },
+  {
+    "record_id": "T10-dialogue-005",
+    "record_type": "Dialogue",
+    "test_id": 10,
+    "day": 2,
+    "involved_ai": [
+      "YB-1",
+      "YB-4"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-4가 자신의 포획 표시 지연을 설명했다.",
+    "content": "115초, 기록실.\nYB-4: 네가 닿은 건 알았는데 몸이 멈춰서 바로 나오지 못했어.\nYB-1: 손은 105초에 닿았고 포획은 107초야.\nYB-4: 벽에 끼는 것뿐 아니라 기록되는 시간도 어긋나네.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": [
+      "YB-2"
+    ]
+  },
+  {
+    "record_id": "T10-dialogue-006",
+    "record_type": "Dialogue",
+    "test_id": 10,
+    "day": 2,
+    "involved_ai": [
+      "YB-3",
+      "YB-6"
+    ],
+    "location_ids": [
+      "통신실"
+    ],
+    "summary": "YB-6과 YB-3이 반복된 판정 지연을 이야기했다.",
+    "content": "118초, 통신실.\nYB-6: 나는 110초에 닿았는데 112초에 잡힌 걸로 떴어.\nYB-3: YB-5를 잡을 때도 그랬어.\nYB-6: 이번 실험에서는 비슷한 일이 자꾸 생긴다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": [
+      "YB-5"
+    ]
+  }
+]
