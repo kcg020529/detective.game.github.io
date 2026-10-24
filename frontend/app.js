@@ -895,7 +895,7 @@ function tick() {
   if (progress >= 100) finish();
 }
 
-function startLoading() {
+async function startLoading() {
   clearInterval(loadTimer);
   progress = 0;
   stageIndex = -1;
@@ -910,10 +910,22 @@ function startLoading() {
   render();
   loadTimer = setInterval(tick, 70);
 
-  // 개발용 지름길: 첫 슬롯(대학원생, Day 2)으로 조사 화면만 바로 엶
+  // 개발용 지름길: Mock 계정 첫 Save로 조사 화면을 바로 엶
   if (skipToPlay) {
     clearInterval(loadTimer);
-    showInvestigation(saves[0]);
+    try {
+      const user = await window.Api.login('researcher01', 'skip');
+      currentUser = user.username;
+      await refreshSaves();
+      let save = saves.find(Boolean);
+      if (!save) throw new Error('이어갈 기록이 없습니다.');
+      save = await window.Api.getSave(save.save_id);
+      saves[save.slot_no - 1] = save;
+      showInvestigation(save);
+    } catch (error) {
+      showLogin();
+      loginMessage.textContent = error.message;
+    }
   }
 }
 
@@ -928,10 +940,17 @@ const pwError = document.querySelector('#login-pw-error');
 const pwToggle = document.querySelector('#pw-toggle');
 const loginSubmit = document.querySelector('#login-submit');
 const loginMessage = document.querySelector('#login-message');
+const confirmField = document.querySelector('#signup-pw-confirm-field');
+const confirmInput = document.querySelector('#signup-pw-confirm');
+const confirmError = document.querySelector('#signup-pw-confirm-error');
+let signupMode = false;
+let signupPendingId = '';
+let rolePurpose = 'new';
 
 // is-login: 모바일에서 로그인 폼이 들어갈 자리를 위해 연구소 그림을 줄임
 function showTitle() {
   resetRole();
+  confirmInput.value = '';
   document.querySelector('#lobby-view').hidden = true;
   loginView.hidden = true;
   document.querySelector('#role-view').hidden = true;
@@ -941,10 +960,48 @@ function showTitle() {
 
 function showLogin() {
   titleView.hidden = true;
+  document.querySelector('#lobby-view').hidden = true;
+  roleView.hidden = true;
   loginView.hidden = false;
   loadingScreen.classList.add('is-login');
   loginMessage.textContent = '';
+  signupMode = false;
+  confirmField.hidden = true;
+  confirmInput.value = '';
+  loginView.querySelector('h2').textContent = '로그인';
+  loginView.querySelector('.login-desc').textContent = '연구원 계정으로 연구소에 들어갑니다.';
+  loginSubmit.querySelector('.label').textContent = '로그인';
   idInput.focus();
+}
+
+function showSignup() {
+  signupMode = true;
+  titleView.hidden = true;
+  lobbyView.hidden = true;
+  roleView.hidden = true;
+  loginView.hidden = false;
+  confirmField.hidden = false;
+  loginView.querySelector('h2').textContent = '계정 만들기';
+  loginView.querySelector('.login-desc').textContent = '계정 역할이 조사 난이도가 됩니다.';
+  loginSubmit.querySelector('.label').textContent = '다음';
+  loginMessage.textContent = '';
+  idInput.focus();
+}
+
+function expireSession() {
+  if (!loginView.hidden && loginMessage.textContent === '접속이 만료되었습니다. 다시 로그인해 주세요.') return;
+  mountedPlay?.unmount();
+  if (!mountedPlay) window.Play?.[requestedPlay]?.unmount?.();
+  mountedPlay = null;
+  fade.classList.remove('on');
+  canvas.classList.remove('zooming', 'zoom-out');
+  canvas.style.transform = '';
+  resumeScene();
+  terminal.hidden = true;
+  gameScreen.hidden = true;
+  loadingScreen.hidden = false;
+  showLogin();
+  loginMessage.textContent = '접속이 만료되었습니다. 다시 로그인해 주세요.';
 }
 
 function setFieldError(input, errorEl, message) {
@@ -958,7 +1015,7 @@ startButton.addEventListener('click', showLogin);
 document.querySelector('#back-to-title').addEventListener('click', showTitle);
 
 document.querySelector('#signup-link').addEventListener('click', () => {
-  loginMessage.textContent = '계정 만들기는 아직 준비 중입니다.';
+  showSignup();
 });
 
 pwToggle.addEventListener('click', () => {
@@ -970,8 +1027,9 @@ pwToggle.addEventListener('click', () => {
 
 idInput.addEventListener('input', () => setFieldError(idInput, idError, ''));
 pwInput.addEventListener('input', () => setFieldError(pwInput, pwError, ''));
+confirmInput.addEventListener('input', () => setFieldError(confirmInput, confirmError, ''));
 
-loginView.addEventListener('submit', (event) => {
+loginView.addEventListener('submit', async (event) => {
   event.preventDefault();
   if (loginSubmit.getAttribute('aria-busy') === 'true') return;
 
@@ -981,19 +1039,38 @@ loginView.addEventListener('submit', (event) => {
   setFieldError(pwInput, pwError, pw ? '' : '비밀번호를 입력하세요.');
   if (!id) return idInput.focus();
   if (!pw) return pwInput.focus();
+  if (signupMode) {
+    setFieldError(confirmInput, confirmError, confirmInput.value === pw ? '' : '비밀번호가 일치하지 않습니다.');
+    if (confirmInput.value !== pw) return confirmInput.focus();
+    signupPendingId = id;
+    showRoleSelect('signup');
+    return;
+  }
 
-  // TODO: 백엔드(FastAPI) 인증 API가 생기면 여기서 요청을 보냄.
-  // 지금은 입력만 확인하고 다음 화면으로 넘어가는 임시 로그인
   loginSubmit.setAttribute('aria-busy', 'true');
-  loginSubmit.querySelector('.label').textContent = '로그인 중…';
+  loginSubmit.disabled = true;
+  const loginLabel = loginSubmit.querySelector('.label');
+  const loginWait = setTimeout(() => { loginLabel.textContent = '로그인 중…'; }, 300);
   loginMessage.textContent = '';
-  setTimeout(() => {
-    loginSubmit.removeAttribute('aria-busy');
-    loginSubmit.querySelector('.label').textContent = '로그인';
+  try {
+    const user = await window.Api.login(id, pw);
+    currentUser = user.username;
+    currentUserRoles = roleList(user.roles);
+    await refreshSaves();
     pwInput.value = '';
-    currentUser = id;
     showLobby();
-  }, 700);
+  } catch (error) {
+    if (error.code === 'AUTH_REQUIRED') loginMessage.textContent = error.message || '아이디 또는 비밀번호가 맞지 않습니다.';
+    else if (error.code === 'INVALID_REQUEST' || error.code === 'VALIDATION_ERROR') {
+      loginMessage.textContent = error.message;
+      setFieldError(idInput, idError, error.message);
+    } else loginMessage.textContent = error.message || window.Api.messageFor(error.code);
+  } finally {
+    clearTimeout(loginWait);
+    loginSubmit.removeAttribute('aria-busy');
+    loginSubmit.disabled = false;
+    loginLabel.textContent = '로그인';
+  }
 });
 
 /* ---------- 역할 선택 (1안: 출입증 3장) ---------- */
@@ -1001,9 +1078,9 @@ loginView.addEventListener('submit', (event) => {
 // 역할 = 난이도. sample: 계획서 예시 "제한 파일 접근" 사건이 역할별로 보이는 모습
 // name: 계획서·백엔드에서 쓰는 이름, label: 화면에 보이는 이름
 const roles = {
-  prof: { name: 'Professor', label: '교수', sample: '→ 접근한 파일명까지 확인' },
-  grad: { name: 'Graduate Student', label: '대학원생', sample: '→ 제한 리소스 접근 시도 탐지' },
-  std: { name: 'Undergraduate Researcher', label: '학부 연구생', sample: '→ 403 요청 실패' },
+  prof: { name: 'Professor', label: '교수', sample: '난이도: 쉬움' },
+  grad: { name: 'Graduate Student', label: '대학원생', sample: '난이도: 보통' },
+  std: { name: 'Undergraduate Researcher', label: '학부 연구생', sample: '난이도: 어려움' },
 };
 
 const roleView = document.querySelector('#role-view');
@@ -1011,13 +1088,20 @@ const sampleResult = document.querySelector('#sample-result');
 const roleError = document.querySelector('#role-error');
 const readyTitle = document.querySelector('#ready-title');
 
-function showRoleSelect() {
+function showRoleSelect(purpose = 'new') {
+  rolePurpose = purpose;
   loginView.hidden = true;
   titleView.hidden = true;
   roleView.hidden = false;
   loadingScreen.classList.add('is-login', 'is-role');
-  // 브라우저가 예전 선택을 복원해 둔 경우에도 화면과 연구소를 그 선택에 맞춤
-  // (이미 골라진 걸 다시 누르면 change가 안 일어나서, 안 맞추면 다른 역할을 눌렀다 와야 풀렸음)
+  document.querySelector('#role-back').textContent = purpose === 'signup' ? '계정 만들기로 돌아가기' : '정문으로 돌아가기';
+  const roleDescriptions = { prof: '쉬움', grad: '보통', std: '어려움' };
+  for (const input of roleView.querySelectorAll('input[name="role"]')) {
+    input.disabled = false;
+    input.closest('.badge').classList.remove('is-disabled');
+    input.closest('.badge').querySelector('.badge-info').textContent = roleDescriptions[input.value];
+  }
+  if (purpose === 'new' && currentUserRoles[0]) roleView.querySelector(`input[name="role"][value="${currentUserRoles[0]}"]`).checked = true;
   const picked = roleView.querySelector('input[name="role"]:checked');
   if (picked) applyRole(picked.value);
 }
@@ -1043,17 +1127,43 @@ function resetRole() {
 
 roleView.addEventListener('change', (event) => applyRole(event.target.value));
 
-roleView.addEventListener('submit', (event) => {
+roleView.addEventListener('submit', async (event) => {
   event.preventDefault();
   const picked = roleView.querySelector('input[name="role"]:checked');
   if (!picked) {
     roleError.textContent = '역할을 하나 고르세요.';
     return;
   }
-  enterPlay('new', picked.value);
+  if (rolePurpose !== 'signup') return enterPlay('new', picked.value);
+  const submit = roleView.querySelector('#role-submit');
+  submit.disabled = true;
+  try {
+    const user = await window.Api.signup(signupPendingId, pwInput.value, picked.value);
+    currentUser = user.username;
+    currentUserRoles = roleList(user.roles);
+    await refreshSaves();
+    pwInput.value = '';
+    confirmInput.value = '';
+    signupPendingId = '';
+    showLobby();
+  } catch (error) {
+    if (error.status === 409 || error.code === 'STATE_CONFLICT') {
+      showSignup();
+      setFieldError(idInput, idError, '이미 있는 아이디입니다.');
+    } else if (error.status === 422 || error.code === 'VALIDATION_ERROR' || error.code === 'INVALID_REQUEST') {
+      showSignup();
+      setFieldError(idInput, idError, error.message);
+    } else if (error.code === 'AUTH_REQUIRED') expireSession();
+    else roleError.textContent = error.message || window.Api.messageFor(error.code);
+  } finally {
+    submit.disabled = false;
+  }
 });
 
-document.querySelector('#role-back').addEventListener('click', showLobby);
+document.querySelector('#role-back').addEventListener('click', () => {
+  if (rolePurpose === 'signup') showSignup();
+  else showLobby();
+});
 
 /* ---------- 정문 (로비) ---------- */
 
@@ -1061,19 +1171,30 @@ const lobbyView = document.querySelector('#lobby-view');
 const continueButton = document.querySelector('#menu-continue');
 const continueInfo = document.querySelector('#continue-info');
 let currentUser = 'researcher01';
+let currentUserRoles = ['prof', 'grad', 'std'];
 
-// 저장 슬롯 3칸. 역할은 슬롯마다 고정 (계획서: Save마다 Role 고정)
-// TODO: 백엔드 Save API가 생기면 여기서 불러옴. 지금은 예시 기록
+function roleList(value) {
+  const available = Array.isArray(value) ? value.filter((role) => roles[role]) : [];
+  return available.length ? available : ['prof', 'grad', 'std'];
+}
+
 const MAX_DAY = 6; // 계획서: Day 1~6
-const saves = [
-  { role: 'grad', day: 2, clues: 5, lastPlayed: '10월 16일' },
-  { role: 'std', day: 1, clues: 1, lastPlayed: '10월 14일' },
-  null,
-];
+let saves = [null, null, null];
 let lastSlot = 0; // 가장 최근에 한 슬롯
 
+async function refreshSaves() {
+  try {
+    const result = await window.Api.listSaves();
+    saves = [null, null, null];
+    result.saves.forEach((save) => { saves[save.slot_no - 1] = save; });
+  } catch (error) {
+    if (error.code === 'AUTH_REQUIRED') expireSession();
+    throw error;
+  }
+}
+
 function saveSummary(save) {
-  return `${roles[save.role].label}, Day ${save.day} / ${MAX_DAY}, 단서 ${save.clues}개`;
+  return `${roles[save.role].label}, Day ${save.day} / ${MAX_DAY}`;
 }
 
 function showLobby() {
@@ -1096,10 +1217,15 @@ document.querySelector('#menu-new').addEventListener('click', () => {
   lobbyView.hidden = true;
   showRoleSelect();
 });
-document.querySelector('#logout').addEventListener('click', () => {
-  // TODO: 백엔드가 생기면 세션 종료 요청
-  lobbyView.hidden = true;
-  showTitle();
+document.querySelector('#logout').addEventListener('click', async () => {
+  try {
+    await window.Api.logout();
+    saves = [null, null, null];
+    lobbyView.hidden = true;
+    showTitle();
+  } catch (error) {
+    continueInfo.textContent = error.message;
+  }
 });
 
 /* ---------- 관찰실 모니터로 들어가는 전환 ---------- */
@@ -1143,6 +1269,13 @@ async function zoomIn() {
 async function zoomOut() {
   fade.classList.add('on');
   await wait(reduceMotion ? 0 : 300);
+  let refreshError = '';
+  try {
+    await refreshSaves();
+  } catch (error) {
+    if (error.code === 'AUTH_REQUIRED') { expireSession(); return; }
+    refreshError = error.message;
+  }
   mountedPlay?.unmount();
   mountedPlay = null;
   terminal.hidden = true;
@@ -1160,6 +1293,7 @@ async function zoomOut() {
   fade.classList.remove('on');
   await wait(reduceMotion ? 0 : 600);
   canvas.classList.remove('zoom-out');
+  if (refreshError) continueInfo.textContent = refreshError;
   continueButton.focus({ preventScroll: true });
 }
 
@@ -1179,15 +1313,31 @@ function enterPlay(mode, role = null) {
     maxDay: MAX_DAY,
     lastSlot,
     root: gameScreen,
+    onUser(user) { currentUser = user.username; currentUserRoles = roleList(user.roles); },
     zoomIn,
     zoomOut,
-    onStart(slotIndex, startMode = mode) {
+    onAuthExpired: expireSession,
+    async onSaveMissing() {
+      await zoomOut();
+      enterPlay('resume');
+    },
+    async refreshSaves() { await refreshSaves(); return saves; },
+    async onStart(slotIndex, startMode = mode, overwrite = false, isEntryLive = () => true) {
+      let save = saves[slotIndex];
       if (startMode === 'new') {
-        saves[slotIndex] = { role, day: 1, clues: 0, lastPlayed: '오늘' };
+        try { save = await window.Api.createSave(slotIndex + 1, role, overwrite); }
+        catch (error) {
+          if (error.code === 'STATE_CONFLICT') await refreshSaves();
+          throw error;
+        }
+        saves[slotIndex] = save;
+        if (!isEntryLive()) return;
       }
-      const save = saves[slotIndex];
-      if (!save) return;
+      if (!save) throw new Error('저장 기록을 찾을 수 없습니다.');
+      save = await window.Api.getSave(save.save_id);
+      if (!isEntryLive()) return;
       lastSlot = slotIndex;
+      saves[slotIndex] = save;
       showInvestigation(save);
     },
     onBack(backMode = mode) {
@@ -1223,7 +1373,7 @@ function renderSlots() {
     opt.className = 'term-opt';
     opt.dataset.slot = i;
     const cells = save
-      ? [`슬롯${i + 1}`, roles[save.role].label, `Day ${save.day}/${MAX_DAY}`, `단서 ${save.clues}`]
+      ? [`슬롯${i + 1}`, roles[save.role].label, `Day ${save.day}/${MAX_DAY}`, '']
       : [`슬롯${i + 1}`, '(비어 있음)', '', ''];
     if (termMode === 'new' && save) cells[3] += '  (덮어쓰기)';
     for (const text of cells) {
@@ -1232,7 +1382,7 @@ function renderSlots() {
       opt.append(cell);
     }
     opt.addEventListener('mouseenter', () => opt.focus());
-    opt.addEventListener('click', () => pickSlot(i));
+    opt.addEventListener('click', () => pickSlot(i).catch((error) => termLine(`<span class="deny">${error.message}</span>`)));
     termList.append(opt);
   });
 }
@@ -1260,12 +1410,12 @@ async function enterTerminal(mode, role = null) {
   termList.children[Math.max(0, first)]?.focus();
 }
 
-function pickSlot(i) {
+async function pickSlot(i) {
   if (termMode === 'resume') {
     // 빈 슬롯을 고르면 새 수사로
     if (!saves[i]) { zoomOutTo(() => { lobbyView.hidden = true; showRoleSelect(); }); return; }
     lastSlot = i;
-    boot(saves[i]);
+    await boot(saves[i]);
     return;
   }
   if (termMode === 'new') {
@@ -1274,12 +1424,15 @@ function pickSlot(i) {
       termLine(`<span class="deny">슬롯${i + 1}의 ${roles[saves[i].role].label} 기록을 덮어씁니다. 한 번 더 Enter를 누르면 진행합니다.</span>`);
       return;
     }
-    // TODO: 백엔드가 생기면 "이 역할로 새 Save 만들기"를 한 번 요청함.
-    // 그 뒤로는 서버가 저장한 역할을 쓰고, 프론트는 역할을 다시 보내지 않음
-    saves[i] = { role: newRole, day: 1, clues: 0, lastPlayed: '오늘' };
-    lastSlot = i;
-    termLine(`<span class="ok">슬롯${i + 1}에 새 기록을 만들었습니다.</span>`);
-    boot(saves[i]);
+    try {
+      const save = await window.Api.createSave(i + 1, newRole, Boolean(saves[i]));
+      saves[i] = save;
+      lastSlot = i;
+      termLine(`<span class="ok">슬롯${i + 1}에 새 기록을 만들었습니다.</span>`);
+      await boot(save);
+    } catch (error) {
+      termLine(`<span class="deny">${error.message}</span>`);
+    }
   }
 }
 
@@ -1288,7 +1441,7 @@ async function boot(save) {
   termMode = 'boot';
   termList.replaceChildren();
   termHelp.textContent = '';
-  const access = ROLE_ACCESS[save.role];
+  const access = ROLE_ACCESS[save.role] || [];
   const days = save.day > 1 ? `Day 1~${save.day}` : 'Day 1';
   const lines = [
     termPrompt(`./접속 --기록 슬롯${lastSlot + 1}`),
@@ -1305,7 +1458,7 @@ async function boot(save) {
     termLine(line);
   }
   await wait(reduceMotion ? 300 : 900);
-  showInvestigation(save);
+  showInvestigation(await window.Api.getSave(save.save_id));
 }
 
 // 메인 조사 화면 자리 (C안은 다음 단계)
@@ -1318,7 +1471,7 @@ function showInvestigation(save) {
   const play = window.Play?.[requestedPlay];
   if (play?.mount) {
     mountedPlay = play;
-    play.mount(gameScreen, save, { onExit: zoomOut });
+    play.mount(gameScreen, save, { onExit: zoomOut, onAuthExpired: expireSession, onSaveMissing: () => enterPlay('resume') });
     return;
   }
   // 모듈이 로드되지 않은 경우에도 기존 종료 경로를 잃지 않도록 최소 대체 화면을 보임
