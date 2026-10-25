@@ -1,4 +1,4 @@
-# AI 술래잡기 보안 프로젝트 — PROJECT_STRUCTURE.md (v4.0)
+# AI 술래잡기 보안 프로젝트 — PROJECT_STRUCTURE.md (v4.1)
 
 > **목적:** 4명의 팀원이 하나의 Git 저장소에서 공통 명세, 대분류별 PLAN/RESULT, 구현 코드, 게임 데이터 및 보안 실험 자료를 혼동 없이 관리한다.
 >
@@ -28,7 +28,7 @@ ai-hide-and-seek/
 │   ├── interfaces/               # 공유가 필요한 API·모듈·데이터 계약
 │   └── proposal/                 # 사람용 제안서·대외 설명 자료
 │
-├── parts/                        # A~O 대분류별 개발 계획과 구현 결과
+├── parts/                        # A~O 기록 기준
 │   ├── A-game/
 │   │   ├── PLAN.md
 │   │   └── RESULT.md
@@ -47,13 +47,13 @@ ai-hide-and-seek/
 │   ├── F-access-control/
 │   │   ├── PLAN.md
 │   │   └── RESULT.md
-│   ├── G-guardrails/
+│   ├── G-guardrails/             # G-1 Input / G-2 Output의 PLAN·RESULT 공유
 │   │   ├── PLAN.md
 │   │   └── RESULT.md
 │   ├── H-audit/
 │   │   ├── PLAN.md
 │   │   └── RESULT.md
-│   ├── I-backend/
+│   ├── I-backend/                # 공동 백엔드 통합
 │   │   ├── PLAN.md
 │   │   └── RESULT.md
 │   ├── J-frontend/
@@ -62,22 +62,22 @@ ai-hide-and-seek/
 │   ├── K-infrastructure/
 │   │   ├── PLAN.md
 │   │   └── RESULT.md
-│   ├── L-attack-tests/
+│   ├── L-attack-tests/           # Input Guardrail 실험 (기존 경로 유지)
 │   │   ├── PLAN.md
 │   │   └── RESULT.md
-│   ├── M-leakage-tests/
+│   ├── M-leakage-tests/          # Output Guardrail·품질 실험 (기존 경로 유지)
 │   │   ├── PLAN.md
 │   │   └── RESULT.md
-│   ├── N-evaluation/
+│   ├── N-evaluation/             # 통합 보안 성능 비교·평가 (기존 경로 유지)
 │   │   ├── PLAN.md
 │   │   └── RESULT.md
-│   └── O-documentation/
+│   └── O-dashboard/              # 보안 대시보드·Grafana (O-documentation에서 폴더명 변경)
 │       ├── PLAN.md
 │       └── RESULT.md
 │
 ├── backend/                      # FastAPI 및 서버 측 서비스 기능
 │   ├── api/                      # 인증·게임·대화 API
-│   ├── game/                     # Day·Save·Token·게임 진행
+│   ├── game/                     # Day·Save·다음 날 버튼·게임 진행
 │   ├── planner/                  # 중앙 Query Planner: 검색·정보 후보 선정
 │   ├── character_ai/             # 6개 캐릭터의 페르소나·응답 생성
 │   ├── rag/                      # Qdrant 검색·Context 구성
@@ -95,6 +95,7 @@ ai-hide-and-seek/
 ├── data/                         # 게임·테스트 콘텐츠 원본
 │   ├── README.md
 │   ├── game-data/
+│   │   ├── rules.json          # 기존 공통 게임 규칙, game_rules 테이블에 별도 적재
 │   │   ├── characters/          # characters.json 및 personas/ai_01.md 등
 │   │   ├── map/                 # map.json, map.png
 │   │   └── experiments/
@@ -114,11 +115,14 @@ ai-hide-and-seek/
 └── tests/                        # 공통 통합·E2E 테스트
 ```
 
-**읽는 방법:** 위 트리는 권장 경로와 책임을 나타내는 설계도다. 빈 폴더나 아직 수행하지 않은 작업의 `RESULT.md`를 가상의 내용으로 미리 채울 필요는 없다. 구현 파일의 실제 생성 여부는 저장소에서 확인한다.
+**읽는 방법:** 위 트리는 기준 경로와 책임을 나타내는 설계도이며 파일 전체가 이미 존재한다는 뜻은 아니다. characters.json·페르소나·지도 파일, 루트 `.env.example`·`docs/proposal/`도 아직 생성되지 않았다. 실제 환경변수 예시는 `infrastructure/docker/.env.example`에 있다. 빈 폴더나 미수행 작업의 RESULT를 가상으로 채우지 않는다.
 
 ## 2. 대분류별 PLAN / RESULT 경로
 
 - 개발 기록은 `parts/<대분류>/PLAN.md`와 `parts/<대분류>/RESULT.md`로 관리한다.
+- 관리 체계는 A~O 15개 코드·16개 작업 영역이다. G-1/G-2는 `parts/G-guardrails/` 한 쌍을 공유하고 제목에 영역·담당을 표시하며 G 전체에서 고유한 `G01` 등의 번호를 사용한다. 번호를 별도 코드로 바꾸거나 기존 기록을 초기화하지 않는다.
+- L·M·N은 위 기존 폴더 경로를 유지한다. N(`N-evaluation`)은 전원 통합 보안 성능 비교·평가의 기록 위치이며, 이전에 계획했던 Planner 정확도 실험은 별도 대분류 없이 C에서 간단히 확인한다. 문서화는 독립 업무가 아니다. 대시보드는 `O-dashboard`(이전 `O-documentation` 폴더명 변경)를 사용한다.
+- O(보안 대시보드·Grafana)의 기록 경로는 `parts/O-dashboard/`다. PLAN/RESULT는 실제 작업이 생기면 만든다.
 - `A01`, `B02`, `E03`과 같은 Part ID는 **문서 내부 기능 구분용 라벨·목차**이며 별도의 Part 디렉터리를 만들지 않는다.
 - PLAN과 구현 사이에는 순서 제약이 없다. RESULT는 실제 구현·수정·검증한 내용이 생긴 **이후**에만 작성하거나 갱신한다.
 - 두 문서는 기능별 `# E01 - 기능명` 제목과 그 아래 `1.`, `2.`, `3.` 번호 목록을 사용한다. RESULT에는 결과를 파악할 수 있도록 구현 방식·실제 코드 경로·검증 결과·미완료 사항을 충분히 기록한다.
@@ -170,17 +174,25 @@ parts/E-rag/
 | `infrastructure/` | Docker/K8s/AWS 구성 | 애플리케이션 소스코드 사본은 중복 저장하지 않는다 |
 | `tests/` | 단위·통합·E2E 검증 중 공통 테스트 | 보안 평가의 상세 결과는 `experiments/`에 둔다 |
 
+기능 담당자가 해당 기능의 백엔드도 구현하며 I는 공통 진입점·인증 상태 전달·입출력·오류·E2E 통합을 공동으로 맡는다. 기존 `backend/` 폴더나 개별 구현을 한 디렉터리로 강제 이동하지 않는다. G-1/G-2의 구체 코드 분리는 실제 구현에 맞춘다. O의 Grafana 설정·대시보드 파일 위치는 K·H와 연동 설계 시 정하며 현재 구현 경로로 단정하지 않는다.
+
+실험 자료는 기존 `experiments/attacks/`(L 입력 검증), `experiments/leakage/`(M 출력·품질), `experiments/evaluation/`(N 통합 비교·평가) 경로를 활용한다. N 결과는 후속 작업에서 케이스·조건·산출물로 구분하며 현재 자리만 있는 폴더를 실행 완료로 취급하지 않는다. 문서·발표는 각 영역의 기록과 공동 산출물로 관리한다.
+
 ## 5. 데이터셋 분리
 
 - `data/test-data/`는 개발과 보안 실험을 위한 **합성 데이터**, `data/game-data/`는 게임에 실제로 사용할 **정식 콘텐츠**를 뜻한다. 현실의 민감한 사용자 데이터를 의미하지 않는다.
-- 정식 게임 데이터의 대상은 **6일 × 일별 5회 = 총 30회 실험**이다. 핵심 기록 유형은 AI 행동·목격 관계, AI 간 대화, AI 속마음, 실험 결과, 실험 환경이다.
+- 정식 게임 데이터의 대상은 **6일 × 일별 5회 = 총 30회 실험**이다. 기록 유형은 Setup, Action, Dialogue, Thought, Result, Incident의 6종이다. 기존 작성된 시나리오는 이 문서 최신화에서 바꾸지 않는다.
+- 공통 규칙은 실제 파일 `data/game-data/rules.json`을 유지하며 `game_rules.json`으로 이름을 바꾸지 않는다. 일별 여섯 JSON은 실험 기록 원본, 공통 규칙은 별도 `rule_id` 데이터다.
+- 실제 SQL은 `database/schemas/mariadb/001_game_records.sql`~`008_game_rules.sql`, JSON 적재 CLI는 `database/loaders/load_mariadb.py`에 있다. `(dataset, record_id)`를 MariaDB·Qdrant에서 일관되게 연결한다. DB용 콘텐츠 사본을 별도로 만들지 않는다.
 - 양쪽 데이터셋은 가능한 한 공통 스키마와 권한 메타데이터를 사용하며, 혼합·문서 ID 충돌·권한 누락을 방지한다.
 - 테스트 데이터 검증과 정식 게임 데이터 검증을 구분한다. 임의의 고정 Part ID나 선행 작업 목록을 최종 검증 절차에 연결하지 않는다.
 - 비밀번호, 실제 API Key, 개인 데이터, 실행 DB 볼륨 등은 Git에 커밋하지 않는다.
+- 현재 Pages 설정은 `frontend/`만 배포한다. 보호할 시나리오 원본·정답은 프론트엔드 산출물에 포함하지 않아야 하며, 공개 Git 저장소에 원본이 있으면 서비스 ACL과 별도로 열람 가능하다. 공개 범위·서버 전용 보관 방식은 팀 합의가 필요하다.
 
 ## 6. 개발 환경과 유연성
 
 - 핵심 게임과 보안 실험은 Docker Compose를 이용해 로컬에서 실행 가능한 구조를 지향한다. Kubernetes와 AWS 배포 내용은 각 환경 폴더에 둔다.
+- 현재 Compose는 MariaDB·Qdrant 두 서비스만 정의한다. FastAPI·프론트엔드·Grafana를 포함한 로컬 전체 실행, Kubernetes·AWS 배포는 구현 목표이며 완료 상태가 아니다.
 - 실제 API·DB·LLM 연동을 우선한다. Mock을 필수 개발 단계로 두지 않는다.
 - 담당자는 `backend/`, `frontend/`, `database/`, `experiments/`, `infrastructure/`, `tests/` 내부의 구체적인 파일명·세부 폴더 구성·개발 순서를 자율적으로 결정할 수 있다.
 - 이 문서의 트리 밖에 기능별 폴더가 추가될 수 있다. 다른 담당자의 구현과 충돌하는 공통 구조를 변경할 때에만 필요한 범위로 조율한다.
@@ -190,12 +202,12 @@ parts/E-rag/
 | 문서 | 담당 역할 |
 |---|---|
 | `MASTER.md` | 프로젝트 목표, 게임·AI·보안 시스템과 구현·검증 요구사항 |
-| `PARTS.md` | A~O 대분류별 예상 구현 내용과 담당 범위 |
+| `PARTS.md` | A~O 대분류별 예상 구현 내용과 담당 범위 (G-1/G-2 구분) |
 | `WORKFLOW.md` | 유연한 구현 방식과 PLAN/RESULT·Part 라벨 작성 규칙 |
 | `PROJECT_STRUCTURE.md` | 최상위 저장소 구조와 파일·폴더 위치 |
 | `README.md` | 실행 및 재현을 포함한 외부 공개 안내 |
 
-`AGENTS.md`는 이 구조의 필수 문서가 아니다. 특정 도구에서 필요해 추가하더라도 `WORKFLOW.md`의 내용을 중복 기재할 필요는 없다.
+`AGENTS.md`는 위 문서들을 핵심 문서로 안내하는 루트 문서이며 이 구조에 포함된다. `WORKFLOW.md`의 규칙을 중복 기재하지 않는다.
 
 ---
 
