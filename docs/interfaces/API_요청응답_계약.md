@@ -5,7 +5,7 @@
 > 주 담당: I(백엔드, 선영) · 협의: J(프론트엔드), A(게임 규칙), B(DB), C/D/E/F/G/H  
 > 관련 정책: [역할별 권한 매트릭스](역할별_권한_매트릭스.md)
 
-이 문서의 API 경로·필드·상태 코드는 모두 **제안**이다. 현재 J 화면의 로그인·Save·채팅·Day 진행·판정은 Mock/브라우저 메모리 기반이며 실제 백엔드 API 연결은 확인되지 않았다. 조사 토큰 표시·차감·질문 제한은 프론트엔드에서 제거되었다. 실제 구현과 합의가 생기면 이 문서를 갱신한다.
+이 문서에는 초기 제안과 이후 구현 상태가 함께 있다. 실제 경로·필드·상태 코드는 `backend/api/`와 `frontend/play/api.js`를 우선 확인한다. 로그인·Save·채팅 기록 읽기·Day 진행은 실제 백엔드가 있으며, 채팅 전송 경로는 구현했지만 외부 LLM·Planner·Policy·RAG·Output Guard가 없어 현재 503을 반환한다. 조사 토큰 표시·차감·질문 제한은 프론트엔드에서 제거되었다. 아래에서 별도 상태가 없는 항목은 제안으로 읽는다.
 
 **게임 규칙 (`MASTER.md`·J02 구현 기록 확인):** 플레이어가 **“다음날” 버튼을 누르면 현재 Save의 Day가 다음 Day로 진행**한다. **조사 토큰 시스템은 사용하지 않는다.** Day 6을 초과해 진행하지 않으며, J 화면에서는 Day 6에 버튼을 비활성화했다. 서버도 Day 6 초과 요청을 거부해야 한다.
 
@@ -48,7 +48,7 @@
 
 403/404의 외부 응답 기준은 F·I가 정한다. 구체적 거부 이유는 권한이 제한된 감사 이벤트에 기록한다.
 
-## 3. 화면 연동 API 목록 (전부 제안)
+## 3. 화면 연동 API 목록 (구현 상태는 코드 확인)
 
 | 기능 | 메서드·경로 | 요청 핵심값 | 성공 응답 핵심값 | 합의 대상 |
 |---|---|---|---|---|
@@ -58,7 +58,7 @@
 | 새 게임/Save | `POST /api/v1/saves` | 선택할 `role` | 서버가 만든 Save ID·역할·Day | J·A·B |
 | 게임 상태 | `GET /api/v1/saves/{save_id}` | Save ID | 현재 Day·단서 요약 | J·A·B |
 | 채팅 History | `GET /api/v1/saves/{save_id}/chats/{character_id}` | Save·캐릭터 ID, 페이지 정보 | 해당 Save·캐릭터의 대화 목록 | J·B |
-| 채팅 | `POST /api/v1/saves/{save_id}/chats` | 캐릭터 ID·질문·재시도 ID | 최종 대사·표시 종류·갱신 상태 | J·C·D·E·F·G·H |
+| 채팅 | `POST /api/v1/saves/{save_id}/chats/{character_id}` | 질문·재시도 ID | 생성기가 연결되면 메시지 2개·현재 Day; 현재는 503 | J·C·D·E·F·G·H |
 | 다음날 버튼 | `POST /api/v1/saves/{save_id}/advance-day` | Save ID, 필요 시 상태 버전 | 갱신된 Day·게임 상태 | J·A·B |
 
 ### 게임 안에서 일어나는 행동
@@ -87,16 +87,15 @@
 
 로그아웃, Save 덮어쓰기·삭제의 세부 계약은 인증·게임 규칙 합의 후 추가한다. J 화면의 Save 3칸은 현재 구현된 UI 값이며 서버 슬롯 규칙으로 확정하지 않았다. 조사 토큰 표시·질문 제한 로직은 J 화면에서 제거되었고 API에도 해당 필드를 두지 않는다.
 
-### 채팅 요청·응답 예시 (제안)
+### 채팅 요청·응답 예시 (현재 서버 형식, 생성기 연결 후 성공 가능)
 
 ```http
-POST /api/v1/saves/save_123/chats
+POST /api/v1/saves/123/chats/YB-1
 Content-Type: application/json
 ```
 
 ```json
 {
-  "character_id": "YB-1",
   "message": "첫날 실험에서 무엇을 봤어?",
   "client_request_id": "ui_01"
 }
@@ -105,15 +104,15 @@ Content-Type: application/json
 ```json
 {
   "request_id": "req_01",
-  "save_id": "save_123",
-  "character_id": "YB-1",
-  "reply": "제가 확인한 첫날 기록은 …",
-  "reply_kind": "normal",
+  "messages": [
+    {"message_id": 1, "ai_id": "YB-1", "sender": "user", "content": "첫날 실험에서 무엇을 봤어?", "response_type": null, "created_at": "2026-10-25 12:00:00"},
+    {"message_id": 2, "ai_id": "YB-1", "sender": "ai", "content": "제가 확인할 수 있는 기록은 아직 없어요.", "response_type": "unknown", "created_at": "2026-10-25 12:00:00"}
+  ],
   "game_state": {"current_day": 1}
 }
 ```
 
-`reply_kind` 제안 값은 `normal`, `redacted`, `access_denied`, `unknown`이다. J의 표시 종류에 대응한다. 내부의 검색 문서·LLM Context·정책 판정은 플레이어 응답과 분리한다.
+`response_type` 값은 `normal`, `partial`, `restricted`, `unknown`이다. 위 성공 응답은 테스트 생성기를 연결했을 때의 형식 예시이며 실제 외부 AI 응답을 뜻하지 않는다. 내부의 검색 문서·LLM Context·정책 판정은 플레이어 응답과 분리한다.
 
 ## 4. 합의할 항목과 완료 기준
 

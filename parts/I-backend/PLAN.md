@@ -33,7 +33,14 @@
 
 # I04 - 채팅 전 Input Guard 연동 — 선영
 
-1. 채팅 전송 API가 구현되면 인증·Save 확인 뒤 Input Guard를 호출한다.
-2. 팀 합의에 따라 Input Guard는 탐지 전용이다. allow, warn, high_risk 모두 후속 흐름을 계속하고 warn 이상은 감사 이벤트로 보낸다.
+1. 채팅 전송 API에서 인증·Save 확인 뒤 Input Guard를 호출한다.
+2. 팀 합의에 따라 Input Guard는 탐지 전용이다. allow, warn, high_risk 모두 후속 흐름을 계속하고 warn 이상은 감사 이벤트로 만든다. H 저장소·대시보드 전송은 후속 연동한다.
 3. 탐지 결과가 권한 상승의 근거가 되지 않도록 F 정책·검색 ACL 검사를 별도로 강제한다.
 4. 실제 Planner·RAG·캐릭터 응답·Output Guard와 연결한 후 정상·위험 질문을 검증한다.
+
+# I05 - 채팅 전송 API와 응답 생성 경계 — 선영
+
+1. J 화면의 `POST /api/v1/saves/{save_id}/chats/{ai_id}` 요청 형식에 맞춰 메시지·재시도 ID를 검증한다.
+2. 인증·Save 소유권·서버 저장 역할·Day를 확인하고 Input Guard를 호출한다. 같은 재시도 ID는 질문과 AI가 같을 때 처음 응답을 재사용한다.
+3. 팀에서 모델을 정하고 C·F·E·D·G-2의 안전한 Context·응답 흐름이 준비되면 실제 생성기를 연결한다. 준비 전에는 503을 반환하고 질문·가짜 답변을 저장하지 않는다.
+4. 성공한 생성 응답만 질문과 함께 한 트랜잭션으로 저장하고 프론트의 `messages`·`game_state.current_day` 형식으로 반환한다.

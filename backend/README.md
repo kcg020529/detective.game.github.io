@@ -1,9 +1,12 @@
-# 백엔드 계정 API 첫 구현
+# 백엔드 API 로컬 실행
 
 선영의 계정 API는 기존 backend/api/main.py 서버에 연결한다.
 회원가입, 로그인, 내 정보, 로그아웃은 backend/api/auth.py에 있고,
 Save·메모·Day 진행과 채팅 기록 읽기는 팀원이 작성한 기존 라우터를 사용한다.
-채팅 보내기·AI 응답 API는 아직 없다.
+채팅 전송 `POST /api/v1/saves/{save_id}/chats/{ai_id}`는 인증·Save 소유권,
+Input Guard, 재시도 중복 방지, 질문·응답 저장 경로까지 구현했다.
+팀의 외부 LLM 모델과 Planner·Policy·RAG·Output Guard가 아직 없어 현재
+실제 전송 요청은 `503 SERVICE_UNAVAILABLE`을 반환하고 채팅을 저장하지 않는다.
 
 ## 로컬 실행
 
@@ -52,10 +55,16 @@ MARIADB_DATABASE가 _test로 끝나는 격리 DB에서만 계정 통합 테스�
 테스트는 회원가입, 역할 저장, 쿠키, Save 목록, 아이디 중복, 출처 거부,
 로그아웃, 틀린 비밀번호, 재로그인과 DB에 원문 비밀번호가 없는지 확인한다.
 
+채팅 전송 경로의 격리 DB 테스트는 `python -m pytest tests/api -q`로 실행한다.
+`tests/api/test_send_chat.py`는 응답 생성기를 테스트용으로 교체해 저장·재시도·
+소유권·Input Guard 호출을 확인한다. 이 테스트가 실제 LLM 응답을 검증한 것은 아니다.
+
 ## 팀 합의가 필요한 부분
 
-- J03 화면과 현재 Save API는 가입 때 고른 역할 외에도 Save를 만들 수
-  있도록 한다. database/schemas/mariadb/permissions.md는 계정의
-  user_roles에 있는 역할만 허용한다고 한다. 이 충돌은 팀에서 합의해야 한다.
+- 현재 정책은 새 게임마다 역할을 선택하고 Save 안에서는 역할을 고정한다.
+  `user_roles`는 새 게임 역할 선택을 제한하는 목록이 아니다.
+- 팀이 모델을 정한 뒤 D·C·F·E·G-2가 안전한 생성 Context와 출력 검사
+  계약을 제공해야 실제 AI 응답을 연결할 수 있다. 기록 원문을 이 경계 없이
+  생성 모델에 넘기지 않는다.
 - 프론트의 배포 주소와 백엔드 도메인이 확정되면 쿠키의 SameSite,
   Secure, CORS, Origin 허용 목록을 함께 검증한다.

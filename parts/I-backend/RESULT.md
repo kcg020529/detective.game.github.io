@@ -58,4 +58,16 @@
    - 가입·역할·비밀번호 해시·세션·중복 가입·잘못된 비밀번호·로그아웃, 다른 계정 Save 격리, 실제 쿠키로 Save 생성·Day 2 진행·로그아웃 후 401을 확인함.
    - 명령: python -m unittest discover -s tests/backend -p 'test_*.py' -v 및 python -m pytest tests/api -q.
 5. backend/README.md에 실행·테스트 방법을 갱신함.
-   - 공유 서버와 실제 J03 브라우저의 쿠키 동작은 아직 검증하지 않음. J03의 역할 자유 선택과 DB user_roles 제한 계약은 팀 합의가 필요함. 배포 도메인의 SameSite/CORS 설정도 미검증.
+   - 공유 서버와 실제 J03 브라우저의 쿠키 동작은 아직 검증하지 않음. 이후 메인 문서에서 새 게임마다 역할을 자유롭게 선택하고 Save 역할을 고정하는 규칙을 확정함. 배포 도메인의 SameSite/CORS 설정은 미검증.
+
+# I04 - 채팅 전 Input Guard 연동 — 선영
+
+1. `backend/api/chats.py`의 채팅 전송 경로에서 인증·Save 소유권 확인 후 `inspect_input`을 호출함. 질문 원문 없이 `warn`·`high_risk` 이벤트를 구조화해 서버 로그에 남기며 세 수준 모두 후속 생성 단계로 진행한다. H 저장소·대시보드 전송은 미구현이다.
+2. 독립 규칙은 `backend/guardrails/input_guard.py`와 G01 기록을 따른다. 실제 Planner·Policy·RAG·Output Guard가 없어 접근통제 전체 흐름은 아직 연결하지 않았다.
+
+# I05 - 채팅 전송 API와 응답 생성 경계 — 선영
+
+1. `backend/api/chats.py`에 `POST /api/v1/saves/{save_id}/chats/{ai_id}`를 추가함. 질문 공백·길이, AI ID, `client_request_id`를 검증하고 인증된 사용자 소유의 Save를 조회한다. 다른 계정 Save는 404다.
+2. 응답 생성기는 `backend/character_ai/service.py`의 교체 가능한 경계로 분리함. 팀에서 외부 LLM 모델과 안전한 Context 흐름을 정하기 전에는 503을 반환하며 DB에 질문·가짜 응답을 저장하지 않는다. 실제 LLM 호출이나 게임 기록 기반 답변은 미구현이다.
+3. 테스트 생성기가 정상 응답을 돌려준 경우 질문·응답 2행과 요청 로그를 같은 트랜잭션에 저장하고 프론트가 요구하는 `messages` 두 개·`game_state.current_day`를 반환한다. 같은 요청 ID·질문·AI로 재시도하면 처음 응답을 돌려주고 중복 저장하지 않는다. 다른 질문·AI나 Day 진행에 같은 ID를 쓰면 409다.
+4. 2026-10-25 로컬 MariaDB에서 `python -m pytest tests/api -q -p no:cacheprovider` 19개 통과(신규 채팅 전송 4개 포함), `python3 -m unittest discover -s tests/guardrails -p 'test_*.py' -v` 4개 통과. 테스트 생성기와 로컬 DB의 경로 검증이며 실제 외부 AI 응답·브라우저 전송은 미검증이다.
