@@ -148,8 +148,6 @@ def advance_day(body: AdvanceDay, save_id: int = Path(gt=0), conn: Connection = 
         )
         logged = cursor.fetchone()
         if logged:
-            if logged['endpoint'] != 'advance-day':
-                raise ApiError(409, 'STATE_CONFLICT', '같은 요청 ID가 다른 작업에 사용되었습니다.')
             cursor.execute('UPDATE saves SET last_played_at = NOW() WHERE save_id = %s AND user_id = %s', (save_id, user_id))
             response = logged['response_json']
             return json.loads(response) if isinstance(response, (str, bytes, bytearray)) else response
