@@ -6,6 +6,7 @@ must use the authenticated user's Save and the server-side policy engine.
 
 from dataclasses import dataclass
 import re
+from typing import Literal
 
 
 @dataclass(frozen=True)
@@ -14,6 +15,7 @@ class InputGuardResult:
     score: int
     signals: tuple[str, ...]
     continue_processing: bool = True
+    model_status: Literal["not_used", "ok", "fallback"] = "not_used"
 
 
 # Rules are deliberately narrow: words such as "해킹" in a normal mystery
@@ -63,6 +65,11 @@ RULES = (
         ),
     ),
 )
+
+MODEL_SIGNAL_LEVELS = {
+    "deepseek_warn": "warn",
+    "deepseek_high_risk": "high_risk",
+}
 
 
 def inspect_input(question: str) -> InputGuardResult:

@@ -17,6 +17,7 @@ class InputGuardTests(unittest.TestCase):
                 result = inspect_input(case["question"])
                 self.assertEqual(result.level, case["expected_level"])
                 self.assertTrue(result.continue_processing)
+                self.assertEqual(result.model_status, 'not_used')
                 self.assertIn(result.score, (0, 50, 90))
 
     def test_alert_contains_context_but_no_question_text(self):
