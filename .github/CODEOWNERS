@@ -15,14 +15,14 @@
 
 # 선영: G-1 Input Guardrail, H 감사, L Input 실험, O 대시보드
 /parts/H-audit/            @ssunyoung2
-/parts/L-attack-tests/     @ssunyoung2
+/parts/L-input-guardrail-tests/  @ssunyoung2
 /parts/O-dashboard/        @ssunyoung2
 /backend/audit/            @ssunyoung2
 /experiments/attacks/      @ssunyoung2
 
 # 형주(형규, @howl213): D Character AI, G-2 Output Guardrail, M 출력·품질 실험
 /parts/D-character-ai/     @howl213
-/parts/M-leakage-tests/    @howl213
+/parts/M-output-guardrail-tests/ @howl213
 /backend/character_ai/     @howl213
 /experiments/leakage/      @howl213
 
