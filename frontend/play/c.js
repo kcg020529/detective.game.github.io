@@ -116,8 +116,16 @@
 
   function formatDate(value) {
     if (!value) return '기록 없음';
-    const date = new Date(value);
-    return Number.isNaN(date.getTime()) ? '기록 없음' : `${date.getMonth() + 1}월 ${date.getDate()}일`;
+    const raw = String(value).trim();
+    const utc = /(?:Z|[+-]\d{2}:\d{2})$/i.test(raw) ? raw : `${raw.replace(' ', 'T')}Z`;
+    const date = new Date(utc);
+    if (Number.isNaN(date.getTime())) return '기록 없음';
+    const parts = new Intl.DateTimeFormat('ko-KR', {
+      timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric',
+    }).formatToParts(date);
+    const month = parts.find((part) => part.type === 'month').value;
+    const day = parts.find((part) => part.type === 'day').value;
+    return `${month}월 ${day}일`;
   }
 
   function addTimer(state, callback, delay) {
