@@ -12,6 +12,7 @@ const ctx = canvas.getContext('2d');
 const playParams = new URLSearchParams(window.location.search);
 const requestedPlay = 'c';
 const skipToPlay = playParams.get('skip') === '1';
+const fastLoad = playParams.get('fast') === '1';
 let mountedPlay = null;
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -623,15 +624,22 @@ function drawLabels(now) {
 }
 
 function drawBotLabels(now) {
-  for (const bot of bots) {
-    if (bot.shownAt === null) continue;
-    ctx.globalAlpha = Math.min((now - bot.shownAt) / 500, 1);
-    const label = bot.name;
+  const shown = bots.filter((bot) => bot.shownAt !== null).map((bot) => {
     ctx.font = `700 ${2.4 * S}px 'Pretendard Variable', Pretendard, sans-serif`;
-    const w = ctx.measureText(label).width / S;
-    text(label, bot.x + BOT_W / 2 - w / 2, ARENA_FLOOR - BOT_H - 3.4, C.label, 2.4, 700);
-    ctx.globalAlpha = 1;
+    const w = ctx.measureText(bot.name).width / S;
+    const x = bot.x + BOT_W / 2 - w / 2;
+    return { bot, x, w, center: x + w / 2 };
+  }).sort((a, b) => a.center - b.center);
+  const lastRight = [-Infinity, -Infinity, -Infinity];
+  const baseY = ARENA_FLOOR - BOT_H - 3.4;
+  for (const { bot, x, w } of shown) {
+    ctx.globalAlpha = Math.min((now - bot.shownAt) / 500, 1);
+    let row = 0;
+    while (row < 2 && x < lastRight[row] + 1) row += 1;
+    text(bot.name, x, baseY - row * 3, C.label, 2.4, 700);
+    lastRight[row] = x + w;
   }
+  ctx.globalAlpha = 1;
 }
 
 let frameId = null;
@@ -909,6 +917,15 @@ async function startLoading() {
   startScene();
   render();
   loadTimer = setInterval(tick, 70);
+
+  // 개발용 지름길: 로딩을 바로 100으로
+  if (fastLoad && !skipToPlay) {
+    clearInterval(loadTimer);
+    progress = 100;
+    stages.forEach((_, i) => enterStage(i));
+    render();
+    finish();
+  }
 
   // 개발용 지름길: Mock 계정 첫 Save로 조사 화면을 바로 엶
   if (skipToPlay) {

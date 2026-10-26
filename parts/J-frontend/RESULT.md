@@ -138,3 +138,25 @@
     - 지목 테이블·재전송 기록(`request_log`) 없음, 악용자 정답 데이터는 시나리오 확정 후
     - 연구소 그림의 방 이름이 게임 장소 7곳과 다름 (지도 작업 때 수정)
     - 로비 이름표 겹침, 시험 스크립트 `tests/frontend` 이동
+
+# J04 - 로비 이름표·한국 시간·브라우저 시험 정리
+
+1. 로비 이름표 (`frontend/app.js` `drawBotLabels`)
+   - 이름표를 x 순서로 놓고, 앞 이름표와 겹치면 한 줄 위로 올림 (최대 3줄)
+   - 로봇 4대 이상이 한곳에 몰리면 맨 윗줄은 겹칠 수 있음
+2. 한국 시간 (`frontend/play/c.js` `formatDate`)
+   - 시간대가 없는 값은 UTC로 읽고 `Asia/Seoul` 기준 날짜로 표시. `Z`나 `+09:00`이 붙은 값은 그대로 읽음
+   - 예: `2026-10-25 16:00:00` → `10월 26일`
+   - 서버 쪽에서 시간대를 붙여 보내는 것은 선영 브랜치가 합쳐진 뒤 협의
+3. 브라우저 시험 `tests/frontend/`
+   - `check_flow`·`check_errors`·`check_http`·`check_roles`·`check_split` 5개 + `run_all.py`, `_server.py`, `requirements.txt`(playwright 1.64.0), `README.md`
+   - 각 시험이 빈 포트에 정적 서버를 직접 띄움. `FRONT_URL`을 주면 이미 떠 있는 주소를 씀
+   - `check_flow`에 이름표 줄 나눔, KST 날짜 확인 추가
+4. `?fast=1`: 로딩 단계를 한 번에 채우고 시작 버튼 표시. 주소에 없으면 기존과 같음
+5. 확인
+   - `node --check`, `git diff --check` 통과
+   - `python tests/frontend/run_all.py` 5개 모두 통과 (Mock, Chrome). 전체 약 20분
+   - 실제 서버 연결 시험(`ui_check_s01_real`)은 옮기지 않음. 선영 로그인이 합쳐진 뒤 다시 작성
+6. 남은 것
+   - 연구소 그림·YB 소개의 방 이름을 게임 장소 7곳에 맞추기
+   - 지목 문구 "악용자" → 확정 이름
