@@ -1,0 +1,16 @@
+# C01 - DeepSeek 질문 분류와 검색 계획
+
+1. 사용자 결정대로 `backend/planner/deepseek.py`에 DeepSeek HTTP 연결을 구현함. DEEPSEEK_PLANNER_API_KEY를 필수로 받고 DEEPSEEK_PLANNER_MODEL(기본 deepseek-flash)·DEEPSEEK_PLANNER_TIMEOUT_SECONDS를 별도 설정함. 입력 가드의 키를 자동 재사용하지 않으며 실제 키 파일은 생성하지 않음. DeepSeek 공식 Chat Completions·JSON Output 문서를 확인해 thinking disabled·JSON object·비스트리밍을 사용함. 키 누락·HTTP 오류·timeout·빈 응답·잘린 응답은 PlannerUnavailable이며 가짜 계획으로 대체하지 않음.
+2. `service.py`는 서버 PolicyContext의 유효성·소유권과 원문 질문·동일 Save/AI의 이력 범위를 확인함. 계정·Save ID는 모델에 보내지 않고 서버 role/day/character_id만 별도 system 메시지에 넣음. 질문·이력은 user JSON의 분석 대상으로 전달하며 AI 이력도 assistant 지시로 재사용하지 않음. 임의 역할 주장으로 서버 상태를 바꾸지 않음.
+3. `schema.py`·`prompt.py`에 retrieve/character/out_of_scope/clarify와 엄격한 검색 계획을 구현함. query·record_types·test_ids·location_ids·related_ai_ids·limit을 필수로 요구하고 미등록 값·누락·추가 권한 필드·중복 JSON 키·모호한 route 조합을 거부함. limit은 1~20이며 role/Day/Save/공개 수준은 모델이 출력할 수 없음. 혼합 질문은 retrieve, 모호한 문맥은 clarify로 계획하도록 지시함. 실제 API 초기 평가 결과는 6번, 최신 RAG 합류 후 검증은 8번에 기록함. 회차·관련 AI 필터는 main에 반영된 `docs/interfaces/RAG_검색_계약.md`와 형식을 맞춤.
+4. `python -m unittest discover -s tests -p test_planner.py -q` 현재 15개 통과함(초기 14개에 미래 Day 출력 오류 회귀 검사 추가). 서버 상태·원문 보존·이력 scope·JSON 계약·누락/오류·API 요청 형태·키 격리와 숨김·HTTP 실패를 검사했으며 이 단위 테스트는 테스트용 모델/HTTP 응답을 사용함. 실제 모델 호출 평가는 6번과 구분함.
+   - 회귀: `test_policy_engine.py` 19개, `test_mariadb_loader.py` 20개 통과. 합계 54개이며 실제 DB/RAG/채팅 E2E를 증명하지 않음.
+   - `python -m backend.planner --help` 실행 확인. `__main__.py`는 키 설정 후 개발자가 가상 서버 상태로 실제 API 계획만 시험하는 도구이며 로그인·권한 부여·DB/RAG를 수행하지 않음.
+5. Planner README·키 없는 .env.example·`docs/interfaces/Planner_입출력_계약.md`와 핵심 문서를 작성·갱신함. Pydantic 2 사용을 backend/requirements.txt에 명시함. 실제 세션 인증이 main에 들어온 것을 확인해 Policy README의 과거 임시 인증 설명도 바로잡음. 실제 인증 경로와 Planner·E/RAG·D 연결 코드는 추가하지 않음. `codex/query-planner`에 초기 `5b880bc`(planner v1)와 실제 API 검증·미래 Day 수정 `ca6859f`를 커밋·push함.
+6. 2026-10-26 사용자 요청으로 WSL의 실제 DeepSeek API 평가를 수행함. 최초 질문 14개 중 미래 Day 요청 1개가 미등록 FUTURE_DAY/FUTURE_DAY_OUT_OF_RANGE 코드를 출력해 검증에 실패함. 해당 질문을 3회 재현해 확인했으며, `prompt.py`에 정적 30회 기록의 유효 범위와 현재 진행 Day를 구분하고 유효 미래 회차는 반드시 retrieve로 계획하도록 명시함. 허용 clarification_code와 미래 Day 예시를 보완했고 출력 스키마는 완화하지 않음.
+   - 수정 후 기존 14개 모두 통과, 실패 질문 3회 재시험 통과. Day 6 이후/Day 1 이전 두 경계 사례를 추가한 최종 실제 API 평가도 16/16 통과함. 질문 분류와 명시된 회차·관련 AI·장소·기록 종류를 비교한 소규모 고정 질문셋이며 전체 정확도·보안을 보장하지 않음.
+   - `tests/planner_live_eval.py`에 명시적으로 실행하는 유료 API 평가 도구를 추가함. 가상 서버 상태로 계획만 평가하고 DB/RAG를 호출하지 않으며 자동 단위 테스트에 수집되지 않음. 실제 키는 환경변수로만 받고 출력하지 않음. 상세 결과는 Git에서 제외되는 personal-docs에 저장하고 코드에는 키·개인 결과를 포함하지 않음.
+7. 최초 검증 당시에는 원격 E01 브랜치의 validate_plan 함수를 단독 추출해 실제 Planner의 검색 요청 11개가 모두 허용되는 것을 확인함. 이는 입력 계약 검사이며 E의 DB/Qdrant 검색 실행이나 전체 채팅 연결 시험은 아님. 당시 별도 브랜치였던 RAG는 이후 PR #17로 main에 합쳐져 8번에서 다시 확인함.
+8. 사용자 merge 요청 후 최신 main의 PR #17(E01 RAG)을 Planner 브랜치에 충돌 없이 반영함. WSL 가상환경에 E의 고정 의존성 qdrant-client 1.19.1·fastembed 0.9.0을 설치하고 `python -m pytest tests/test_planner.py tests/test_policy_engine.py tests/test_mariadb_loader.py tests/rag -q -rs`를 실행해 80개 통과·6개 skip을 확인함.
+   - skip은 모델 캐시가 없는 실제 토크나이저 검사 1개와 로컬 MariaDB 연결 불가(2003)인 DB 기반 Policy/RAG 검사 5개임. skip을 성공으로 집계하지 않았으며 실제 임베딩 모델·DB·Qdrant 서버·채팅 E2E는 미검증으로 남김. RAG 단위 검사는 in-memory Qdrant와 테스트용 DB/임베딩을 사용함.
+   - 합류한 실제 backend.rag.search.validate_plan에도 기존 실제 DeepSeek 검색 요청 11개를 직접 전달해 전부 일치하게 수용됨을 확인함. 실제 검색 호출은 아님. 문서의 초기 미검증·push 전 설명은 현재 상태와 구분해 정리함.

@@ -55,4 +55,4 @@ resolve는 Save 상태·권한·AI 관계를 DB에서 다시 읽는다. metadata
 
 `python -m unittest discover -s tests -p test_policy_engine.py -v`로 순수 판정과 DB 어댑터의 fake connection 테스트를 실행한다. 실제 MariaDB·Qdrant·채팅 E2E 검증은 아직 수행하지 않았다.
 
-현재 로컬 API의 current_user_id는 임시 개발 사용자다. 이번 구현에서 계정 API나 채팅 라우터를 변경하지 않았으며, 실서비스에는 I의 실제 세션 인증을 먼저 연결해야 한다. 실제 인증 ID와 서버가 선택한 데이터셋을 사용하고 입력 위험도 점수를 권한으로 해석하지 않는다.
+최신 main의 current_user_id는 로그인 세션을 검증한다. Policy Engine은 아직 해당 인증·채팅 요청 경로에 연결되지 않았으므로 호출자가 실제 인증 ID와 서버가 선택한 데이터셋을 전달해야 한다. 입력 위험도 점수를 권한으로 해석하지 않는다.
