@@ -1,6 +1,6 @@
 # I01 - Save API (Save·메모·Day 진행)
 
-> 상태: **부분 구현.** Save·메모·Day 진행 API는 로컬 MariaDB와 실제 프론트로 확인함. 로그인은 아직 임시 사용자라 계정별 동작은 시험 코드로만 확인.
+> 상태: Save·메모·Day 진행 API는 로컬 MariaDB와 실제 프론트로 확인함. 임시 사용자는 I03에서 세션 인증으로 교체했고, 이 브랜치에서 계정별 통합 테스트를 추가함.
 
 1. FastAPI 기본 틀 (`backend/api/main.py`, `backend/api/errors.py`)
    - 실행: 저장소 루트에서 `uvicorn backend.api.main:app --port 8001` (DB 접속 정보는 `infrastructure/docker/.env` 값을 환경 변수로)
@@ -11,9 +11,7 @@
    - PyMySQL, 요청마다 연결 하나. 성공하면 커밋, 오류면 롤백
    - 환경 변수 `MARIADB_HOST`·`MARIADB_PORT`·`MARIADB_DATABASE`·`MARIADB_USER`·`MARIADB_PASSWORD` (용범 적재 도구와 같음)
    - SQL은 전부 매개변수로 넣음 (사용자 입력을 문자열로 붙이지 않음)
-3. 임시 로그인 사용자 (`backend/api/current_user.py`)
-   - 환경 변수 `KERVION_DEV_USER`(기본 `researcher01`) 계정을 로그인한 사람으로 씀. 없으면 로그인 불가 비밀번호(`!`)로 만듦
-   - 선영 세션 코드가 들어오면 이 파일만 바꾸면 됨
+3. 초기 구현의 임시 로그인 사용자는 I03에서 서버 세션 검사로 교체함. 현재 사용자 식별은 `backend/api/current_user.py`가 담당함.
 4. Save API (`backend/api/saves.py`)
    - `GET /saves`: 내 Save 목록 (슬롯 순)
    - `POST /saves {slot_no, role, overwrite}`: 201 새 Save (Day 1). 차 있는 슬롯에 `overwrite`가 없으면 409 "이미 기록이 있는 슬롯입니다.". 덮어쓰기는 한 트랜잭션에서 예전 Save를 지우고(채팅·메모·요청 기록도 같이 삭제) 새로 만듦. 동시에 두 번 만들어도 DB 고유 조건에 걸린 쪽은 409
@@ -28,7 +26,7 @@
    - 실제 프론트(8010) ↔ 이 서버(8001), Playwright: 로그인·채팅 목록만 가짜로 두고 새 Save → 메모 → Day 2 → 정문 → 이어하기에서 DB의 Day·메모가 그대로 나옴 (8개 확인 통과)
    - 이때 프론트 `frontend/play/api.js` 버그 하나 수정: `POST /saves` 응답(Save 하나)을 목록 검사로 확인해서 실제 서버 응답을 못 읽었음. Mock은 이 검사를 안 거쳐서 몰랐음
 7. 남은 것
-   - 선영 로그인과 합치기: 세션 쿠키로 `current_user` 교체, `GET /auth/me`
+   - 계정 인증 연동은 I03에서 완료. 실제 브라우저에서 계정별 Save 흐름은 추가 검증 필요
    - 채팅 API가 없어서, 실제 서버만으로는 Save에 들어가면 채팅 기록 404 때문에 진입 화면으로 돌아감
    - 시간은 DB 컨테이너 시계(UTC) 그대로 나감 (날짜 형식은 보류 중)
    - 로컬 PC에서 8000번 포트를 다른 프로그램이 쓰고 있어서 8001로 띄움
@@ -46,3 +44,18 @@
 2. 확인
    - `python -m pytest tests/api -q`: 15개 통과 (I01 12개 + 채팅 3개: 빈 채널, 45줄 20·20·5 페이지와 `has_more`, 다른 AI 줄 안 섞임, 다른 계정 404, 잘못된 `ai_id`·`limit` 422, 사용자 줄 null)
    - 실제 프론트 ↔ 서버(가짜는 로그인만): Save 진입 때 채팅 기록 6개 요청 모두 200, DB에 직접 넣은 질문·답(일부 가림)이 메신저에 그대로 나옴. I01의 "채팅 기록 404로 진입 못 함" 해결
+
+# I03 - 계정 인증·세션 API — 선영
+
+1. backend/api/auth.py에 회원가입·로그인·내 정보·로그아웃 라우터를 작성하고 기존 backend/api/main.py 서버에 연결함.
+   - 가입은 users와 user_roles에 같은 DB 트랜잭션으로 저장하고 201 및 역할 배열을 반환함. 중복 아이디 409, 잘못된 입력 422, 틀린 비밀번호 401을 공통 오류 형식으로 반환함.
+   - 비밀번호는 backend/common/security.py에서 랜덤 salt를 사용한 scrypt 해시로 저장·검증함. 가입 비밀번호 길이는 UTF-8 기준 8~128바이트.
+2. database/schemas/mariadb/011_auth_sessions.sql에 세션 테이블을 추가함.
+   - 로그인·가입마다 랜덤 쿠키를 발급하고 DB에는 SHA-256 해시·사용자 ID·7일 만료 시각만 저장함. 쿠키는 HttpOnly, 기본 SameSite=Lax이고 로컬 HTTP에서는 Secure를 끔. 로그아웃 시 DB 세션과 쿠키를 삭제함.
+3. backend/api/current_user.py의 임시 사용자 생성 로직을 실제 세션 검사로 교체함. Save·채팅 라우터는 기존 current_user_id 의존성을 그대로 사용하므로 인증된 사용자 ID로 조회함.
+   - 기존 backend.app 별도 진입점은 제거하고 하나의 서버 진입점 backend.api.main:app으로 통합함.
+4. 2026-10-23 격리된 MariaDB 11.4.12 테스트 컨테이너에서 001~011 SQL을 적용하고 계정 통합 테스트 1개 및 기존 Save·채팅 API 테스트 15개를 통과함.
+   - 가입·역할·비밀번호 해시·세션·중복 가입·잘못된 비밀번호·로그아웃, 다른 계정 Save 격리, 실제 쿠키로 Save 생성·Day 2 진행·로그아웃 후 401을 확인함.
+   - 명령: python -m unittest discover -s tests/backend -p 'test_*.py' -v 및 python -m pytest tests/api -q.
+5. backend/README.md에 실행·테스트 방법을 갱신함.
+   - 공유 서버와 실제 J03 브라우저의 쿠키 동작은 아직 검증하지 않음. J03의 역할 자유 선택과 DB user_roles 제한 계약은 팀 합의가 필요함. 배포 도메인의 SameSite/CORS 설정도 미검증.

@@ -20,7 +20,7 @@
 - 로그인 후 새 게임마다 역할을 자유롭게 선택해 Save를 시작하고, 6개 AI와 1:1 대화 (별도 조사관 AI 없음)
 - Day 1 ~ Day 6 구성, Day가 지날수록 조사할 수 있는 실험 기록 증가
 - 다음 날 버튼으로 진행하며 서버가 Save 소유권과 Day 6 상한을 확인하는 구조. 조사 Token은 사용하지 않음
-- Save/Load·메모·Day 진행과 채팅 기록 조회는 서버 API가 일부 구현됨 (로그인은 임시 사용자, 채팅 보내기·AI 답변은 미구현). 서버 주소가 없으면 화면은 Mock으로 동작
+- 회원가입·로그인·로그아웃·세션과 Save/Load·메모·Day 진행·채팅 기록 조회는 서버 API가 구현됨. 채팅 보내기·AI 답변은 미구현이며, 서버 주소가 없으면 화면은 Mock으로 동작
 - AI 응답은 미리 작성·검수한 30회 실험 기록 기반 (AI가 실시간으로 사건을 만들어내는 구조 아님)
 
 | Day | 그날 새로 열리는 실험 | 누적 |
@@ -249,12 +249,12 @@ L은 입력 가드 단독 검증, M은 출력 가드·품질, N은 전체 보안
 
 | 항목 | 확인 범위 |
 |---|---|
-| 프론트엔드 | HTML/CSS/JS 화면. `frontend/play/api.js`로 서버 주소가 있으면 전체 HTTP, 없으면 전체 Mock으로 동작. Save·메모·Day 진행·채팅 기록의 부분 연동 시험은 로그인 등 미구현 요청을 시험용 Mock으로 대체해 수행함(I01·I02 RESULT). 일반 HTTP 실행에는 로그인·채팅 보내기·지목 API가 없어 전체 플레이는 불가능하며, 연결 방식은 팀 협의 예정 |
-| MariaDB | SQL 001~010 및 Python JSON 검증·적재 도구 존재. 로컬 MariaDB에 적용해 Save API 테스트까지 수행. 게임 기록 적재 → 검색 연동은 미검증 |
+| 프론트엔드 | HTML/CSS/JS 화면. `frontend/play/api.js`로 서버 주소가 있으면 HTTP, 없으면 Mock으로 동작. Save·메모·Day 진행·채팅 기록의 부분 연동은 I01·I02 RESULT에 기록되어 있다. 현재 로그인 API는 구현됐지만 채팅 보내기·지목 API가 없어 서버만으로 전체 플레이는 불가능하다. |
+| MariaDB | 초기 SQL 001~012 및 Python JSON 검증·적재 도구가 있다. 로컬 MariaDB에서 Save·계정 API와 감사 테이블을 확인했다. 게임 기록 적재 → 검색 연동은 미검증이다. |
 | 콘텐츠 | 30회 Setup과 1~11회 중심의 작성 기록 존재. 전체 30회 콘텐츠 완료를 뜻하지 않음 |
 | Docker | MariaDB·Qdrant 두 서비스 정의. 전체 앱·Grafana 실행 구성은 미구현 |
-| 서버 | `backend/api/`에 FastAPI Save·메모·Day 진행 API와 채팅 기록 읽기 API가 있고 `tests/api` 15개 통과(I01·I02 RESULT). 로그인은 임시 사용자 |
-| 검색·보안 | `backend/policy/`에 순수 Policy Engine·공개 필드 투영과 MariaDB 검색 허용 목록·원본 재검증 어댑터를 구현했다. 단위 테스트 단계이며 실제 DB·Qdrant·채팅 연결은 미검증이다. Planner·LLM·RAG/ACL·Guard·감사 전체 파이프라인은 아직 미연동 |
+| 서버 | `backend/api/`에 FastAPI 회원가입·로그인·로그아웃·세션, Save·메모·Day 진행, 채팅 기록 읽기 API가 있다. 채팅 전송 API는 없다. 로컬 MariaDB에서 기존 `tests/api` 15개를 통과했으며 계정 기능의 별도 통합 테스트는 I03 RESULT를 따른다. |
+| 검색·보안 | `backend/policy/`에 순수 Policy Engine·공개 필드 투영과 MariaDB 검색 허용 목록·원본 재검증 어댑터가 있다. `backend/guardrails/`에는 규칙 기반 Input Guard와 현재 질문만 보내는 DeepSeek 추가 판정, `backend/audit/`에는 Input Guard 경고 저장 함수가 있다. 실제 채팅·Policy·Qdrant·감사 자동 저장 전체 흐름은 아직 미연동이다. |
 | 배포·평가 | Kubernetes/AWS 및 보안 비교 실험은 자리만 있으며 실행·검증 완료로 볼 수 없음 |
 
 2026-10-26 역할별 공개 표와 4단계 SQL·적재 도구·기존 DB용 이관 SQL을 작성했다. 로더 단위 테스트와 game-data/test-data dry-run을 확인했으며 실제 DB 실행은 미검증이다. 최대 3슬롯·`record.day <= Save.day` 기준은 유지한다. 다른 인터페이스 초안의 과거 제안과 실제 API 계약은 후속 정합성 확인이 필요하다.

@@ -10,6 +10,7 @@ from pymysql.err import InterfaceError, OperationalError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from backend.api.chats import router as chats_router
+from backend.api.auth import router as auth_router
 from backend.api.errors import ApiError
 from backend.api.saves import router as saves_router
 
@@ -89,3 +90,4 @@ async def handle_unexpected_error(request: Request, exc: Exception):
 
 app.include_router(saves_router, prefix='/api/v1')
 app.include_router(chats_router, prefix='/api/v1')
+app.include_router(auth_router, prefix='/api/v1')

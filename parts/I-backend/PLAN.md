@@ -22,3 +22,18 @@
 1. `GET /saves/{save_id}/chats/{ai_id}?limit=20&before={message_id}` (`backend/api/chats.py`)
    - `chat_messages`에서 오래된 순으로 최근 20줄, 남은 게 있으면 `has_more`
 2. 시험 (`tests/api/test_chats.py`) + 프론트와 실제 서버 연결 확인
+
+# I03 - 계정 인증·세션 API — 선영
+
+1. users와 user_roles에 가입 계정·선택 역할을 함께 저장하고, 로그인·로그아웃·내 정보 API를 구현한다.
+2. 011_auth_sessions.sql에 세션을 저장하고 HttpOnly 쿠키로 인증한다. 비밀번호 원문과 쿠키 원문은 DB에 저장하지 않는다.
+3. 기존 backend/api/main.py에 계정 라우터를 붙이고 backend/api/current_user.py의 임시 사용자를 실제 세션 확인으로 교체한다.
+4. Save·채팅 API에서 인증된 사용자 ID를 사용하고 다른 사용자 Save 접근을 검증한다.
+5. J03 화면의 역할 자유 선택 설명과 DB의 user_roles 제한 계약을 팀과 맞춘다. 배포 도메인 쿠키 설정도 실제 주소에서 검증한다.
+
+# I04 - 채팅 전 Input Guard 연동 — 선영
+
+1. 채팅 전송 API가 구현되면 인증·Save 확인 뒤 Input Guard를 호출한다.
+2. 팀 합의에 따라 Input Guard는 탐지 전용이다. allow, warn, high_risk 모두 후속 흐름을 계속하고 warn 이상은 감사 이벤트로 보낸다.
+3. 탐지 결과가 권한 상승의 근거가 되지 않도록 F 정책·검색 ACL 검사를 별도로 강제한다.
+4. 실제 Planner·RAG·캐릭터 응답·Output Guard와 연결한 후 정상·위험 질문을 검증한다.

@@ -1,22 +1,27 @@
-import os
+"""Authenticated user lookup shared by Save and chat routes."""
 
-from fastapi import Depends
+from fastapi import Depends, Request
+from pymysql.connections import Connection
 
 from backend.api.db import get_db
+from backend.api.errors import ApiError
+from backend.common.security import session_hash
 
 
-def current_user_id(conn=Depends(get_db)) -> int:
-    # shortcut: 로그인 붙기 전 임시 사용자. 선영 세션 코드로 교체
-    username = os.getenv('KERVION_DEV_USER', 'researcher01')
+COOKIE_NAME = "kervion_session"
+
+
+def current_user_id(request: Request, conn: Connection = Depends(get_db)) -> int:
+    token = request.cookies.get(COOKIE_NAME)
+    if not token:
+        raise ApiError(401, "AUTH_REQUIRED", "로그인이 필요합니다.")
     with conn.cursor() as cursor:
-        cursor.execute('SELECT user_id FROM users WHERE username = %s', (username,))
-        row = cursor.fetchone()
-        if row:
-            return int(row['user_id'])
         cursor.execute(
-            "INSERT INTO users (username, password_hash) VALUES (%s, '!') "
-            'ON DUPLICATE KEY UPDATE username = VALUES(username)',
-            (username,),
+            "SELECT user_id FROM auth_sessions "
+            "WHERE session_hash = %s AND expires_at > UTC_TIMESTAMP()",
+            (session_hash(token),),
         )
-        cursor.execute('SELECT user_id FROM users WHERE username = %s', (username,))
-        return int(cursor.fetchone()['user_id'])
+        row = cursor.fetchone()
+        if not row:
+            raise ApiError(401, "AUTH_REQUIRED", "접속이 만료되었습니다. 다시 로그인해 주세요.")
+        return int(row["user_id"])
