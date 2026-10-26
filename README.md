@@ -254,7 +254,7 @@ L은 입력 가드 단독 검증, M은 출력 가드·품질, N은 전체 보안
 | 콘텐츠 | 30회 Setup과 1~11회 중심의 작성 기록 존재. 전체 30회 콘텐츠 완료를 뜻하지 않음 |
 | Docker | MariaDB·Qdrant 두 서비스 정의. 전체 앱·Grafana 실행 구성은 미구현 |
 | 서버 | `backend/api/`에 FastAPI Save·메모·Day 진행 API와 채팅 기록 읽기 API가 있고 `tests/api` 15개 통과(I01·I02 RESULT). 로그인은 임시 사용자 |
-| 검색·보안 | Planner·Policy Engine·LLM·RAG/ACL·Guard·감사 파이프라인은 미구현 (`backend/` 해당 폴더는 자리만 있음) |
+| 검색·보안 | `backend/policy/`에 순수 Policy Engine·공개 필드 투영과 MariaDB 검색 허용 목록·원본 재검증 어댑터를 구현했다. 단위 테스트 단계이며 실제 DB·Qdrant·채팅 연결은 미검증이다. Planner·LLM·RAG/ACL·Guard·감사 전체 파이프라인은 아직 미연동 |
 | 배포·평가 | Kubernetes/AWS 및 보안 비교 실험은 자리만 있으며 실행·검증 완료로 볼 수 없음 |
 
 2026-10-26 역할별 공개 표와 4단계 SQL·적재 도구·기존 DB용 이관 SQL을 작성했다. 로더 단위 테스트와 game-data/test-data dry-run을 확인했으며 실제 DB 실행은 미검증이다. 최대 3슬롯·`record.day <= Save.day` 기준은 유지한다. 다른 인터페이스 초안의 과거 제안과 실제 API 계약은 후속 정합성 확인이 필요하다.
