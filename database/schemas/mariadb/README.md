@@ -13,7 +13,7 @@
 | `saves` | `003_saves.sql`: 사용자별 최대 세 개 슬롯, 역할·현재 Day·생성·마지막 플레이 시각 |
 | `chat_messages` | `004_chat_messages.sql`: Save·AI별 사용자/AI 메시지 이력 |
 | `user_roles` | `005_user_roles.sql`: 기존 계정·역할 관계. 새 게임의 선택 가능 역할을 제한하는 인가 목록으로 사용하지 않음 |
-| `document_permissions` | `006_document_permissions.sql`: 문서·역할별 5단계 공개 수준 |
+| `document_permissions` | `006_document_permissions.sql`: 문서·역할별 4단계 공개 수준 |
 | `locations` | `007_record_locations.sql`: 중앙홀·회의실·기록실·전력실·통신실·창고·서버실 |
 | `game_record_locations` | 기록별 location_ids 목록의 관계 행 |
 | `game_rules` | `008_game_rules.sql`: 공통 규칙 본문 JSON 및 AI·역할·원문 공개 조건 |
@@ -21,6 +21,8 @@
 | `request_log` | `010_request_log.sql`: 같은 요청을 다시 보냈을 때 처음 응답을 돌려주기 위한 기록 (Day 진행 등) |
 
 세 테이블의 상세 계약과 공개 범위는 [permissions.md](permissions.md)에 있다. SQL은 파일명 순서로 적용하며 실제 DB 실행은 아직 미검증이다.
+
+기존 5단계 DB에는 [기존 DB 이관](../../migrations/README.md)을 먼저 수행한다. 신규 초기 SQL을 수정해도 기존 Docker 볼륨에는 자동 적용되지 않는다. 게임 권한 표는 `database/policies/game_record_permissions.json`이며 적재 도구가 각 기록의 세 역할 권한을 생성한다.
 
 `users`는 `user_id`, `username`, `password_hash`, `created_at` 네 필드로 구성한다. `username`은 최대 50자이고 고유값이며 현재 테이블 비교 규칙상 대소문자를 구분하지 않는다. 비밀번호 해시 생성·검증은 인증 API에서 처리한다. 이 SQL도 아직 실제 MariaDB에서 실행 검증하지 않았다.
 

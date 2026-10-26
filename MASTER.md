@@ -254,13 +254,13 @@
 | 기록 종류 | `std` | `grad` | `prof` |
 |---|---|---|---|
 | `Setup` | `full` | `full` | `full` |
-| `Action` | `summary` | `full` | `full` |
+| `Action` | `summary` | `summary` | `full` |
 | `Dialogue` | `metadata` | `summary` | `full` |
 | `Thought` | `deny` | `deny` | `summary` |
 | `Result` | `summary` | `full` | `full` |
-| `Incident` | `metadata` | `summary` | `full` |
+| `Incident` | `deny` | `metadata` | `summary` |
 
-위 표는 기록별·역할별 권한 행 작성 기준이며, 런타임 권한 누락을 보충하는 fallback이 아니다. 정책 상세와 이관 과제는 [역할별 권한 매트릭스](docs/interfaces/역할별_권한_매트릭스.md)를 따른다. 기존 SQL·적재 도구는 아직 `basic_metadata`를 포함한 5단계다. 새 정책은 이를 제거하되, 기존 행을 `metadata`로 자동 변환해 공개 범위를 넓히지 않는다. 역할별 권한 적재와 DB 마이그레이션은 미구현이다.
+위 표는 기록별·역할별 권한 행 작성 기준이며, 런타임 권한 누락을 보충하는 fallback이 아니다. 정책 상세와 이관 과제는 [역할별 권한 매트릭스](docs/interfaces/역할별_권한_매트릭스.md)를 따른다. 신규 SQL·적재 도구는 4단계를 지원하며 유형별 표는 `database/policies/game_record_permissions.json`에서 읽어 기록별 권한으로 저장한다. 기존 5단계 DB용 이관 SQL은 `basic_metadata`를 `deny`로 낮춘 뒤 CHECK를 교체한다. 역할별 적재·이관 코드는 작성했으며 실제 DB 실행과 서버 접근통제 연동은 미검증이다.
 
 권한 행이 없으면 기본 거부하며 레거시 `game_record_allowed_roles`를 fallback으로 사용하지 않는다. 공개 수준에 맞게 **Context를 만들기 전에 필드를 선택**한다. `summary` 권한으로 `content`를 전달한 뒤 출력에서만 가려서는 안 된다. 역할에 관계없이 **해당 캐릭터가 모르는 정보**는 대사의 근거로 자동 포함되지 않는다. 상세 저장 계약은 `database/schemas/mariadb/permissions.md`를 따른다.
 
@@ -476,7 +476,7 @@
 
 1. 기존에 작성된 AI 설정·실험 기록을 유지하면서 남은 페르소나·관계·사건·엔딩을 완성하는 작업. 이번 최신화에서는 시나리오와 공통 `rules.json`을 변경하지 않는다.
 2. 오답 시 엔딩·재도전 여부 등 게임 종료 세부 규칙. 승리 조건(Day 6, 1회 지목)은 확정이다.
-3. 기록별 예외 공개 수준의 필요성, 기존 `user_roles`·가입 역할 정보의 후속 정리, 신뢰도·친밀도 등 추가 속성 적용 여부. 새 게임의 역할 자유 선택·Save 내 역할 고정, 역할명 `std`·`grad`·`prof`와 §5.1의 4단계·기록 종류별 공개 표는 확정된 기준을 유지한다. 기존 5단계 DB·적재 도구의 이관은 후속 구현이다.
+3. 기록별 예외 공개 수준의 검수, 기존 `user_roles`·가입 역할 정보의 후속 정리, 신뢰도·친밀도 등 추가 속성 적용 여부. 새 게임의 역할 자유 선택·Save 내 역할 고정, 역할명 `std`·`grad`·`prof`와 §5.1의 4단계·기록 종류별 공개 표는 확정된 기준을 유지한다. 역할별 적재·기존 DB 이관 코드는 작성했으며 실제 DB 적용 검증은 후속 작업이다.
 4. 기존 JSON·MariaDB 스키마의 실제 DB 적용·연동 검증, 추가 단서·감사 저장 구조, Qdrant 컬렉션·임베딩·텍스트 분할 전략.
 5. Query Planner의 구체 입출력·선정 알고리즘·질문 처리 분기, 단일/복수 LLM 호출 전략.
 6. LLM API·임베딩 모델, 현재 정적 HTML/CSS/JS 프론트엔드의 서버 연동 API·인증·오류 계약.

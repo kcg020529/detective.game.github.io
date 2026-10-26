@@ -90,7 +90,9 @@ ai-hide-and-seek/
 │
 ├── database/                     # DB 스키마와 적재 도구
 │   ├── schemas/                 # test-data / game-data 공통 스키마
-│   └── loaders/                 # JSON → MariaDB 검증·적재 CLI
+│   ├── loaders/                 # JSON → MariaDB 검증·적재 CLI
+│   ├── policies/                # 기록 종류·역할별 공개 수준 표
+│   └── migrations/              # 기존 DB용 명시적 이관 SQL·실행 안내
 │
 ├── data/                         # 게임·테스트 콘텐츠 원본
 │   ├── README.md

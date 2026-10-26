@@ -67,7 +67,7 @@
 - 여섯 기록 유형과 사건·AI·목격·인지 관계를 구조화하고 식별자·시간·보안 메타데이터 관리.
 - `test-data` 및 `game-data` 저장 구조, 초기화·적재·변경·검증 도구 마련.
 - MariaDB 원본과 Qdrant 검색 문서의 `(dataset, record_id)`·Day·역할·Save·AI Scope 정합성 검증.
-- 기존 `database/schemas/mariadb/001_game_records.sql`~`008_game_rules.sql`과 `database/loaders/load_mariadb.py`를 기준으로 JSON 원본·AI/장소 관계를 연결한다. 공개 수준은 MASTER §5.1의 4단계를 따르며 기존 5단계 SQL·적재 도구의 이관과 역할별 공개 수준 적재를 구현해야 한다. 공통 규칙은 별도 `rule_id`로 관리한다.
+- 기존 `database/schemas/mariadb/001_game_records.sql`~`008_game_rules.sql`과 `database/loaders/load_mariadb.py`를 기준으로 JSON 원본·AI/장소 관계를 연결한다. 공개 수준은 MASTER §5.1의 4단계와 `database/policies/game_record_permissions.json`을 따르며 역할별 적재·기존 5단계 DB용 이관 SQL의 실제 적용을 검증한다. 공통 규칙은 별도 `rule_id`로 관리한다.
 - 서로 다른 사용자 Save와 채팅 이력의 데이터 분리 및 무단 교차 조회 방지 지원.
 
 **협의·충돌 가능 지점**

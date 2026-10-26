@@ -36,3 +36,12 @@
 2. DB 환경변수와 dry-run을 지원하고 본문·AI·장소·권한을 단일 트랜잭션으로 upsert한다.
 3. 공개 수준과 예전 테스트 데이터의 장소 누락은 명시적 옵션으로 처리한다.
 4. 공통 규칙의 별도 저장 테이블을 추가하고 반복 적재·rollback 처리 및 검증 실패를 테스트한다.
+
+# B07 - 역할별 공개 수준 적재와 4단계 이관
+
+1. 확정된 여섯 기록 종류 × 세 역할 공개 표를 `database/policies/game_record_permissions.json`으로 관리한다.
+2. game-data는 표를 사용해 기록별 세 권한 행을 생성하고 단일 disclosure_level/--default-disclosure 덮어쓰기를 거부한다. 검수한 role_permissions 예외와 생략 역할의 deny 처리를 지원한다. test-data의 명시적 단일 수준 형식은 호환용으로 유지한다.
+3. 신규 006 SQL을 4단계로 제한하고 기존 DB에서는 basic_metadata를 deny로 낮춘 뒤 CHECK를 교체하는 명시적 이관 SQL을 제공한다.
+4. 18개 역할 조합·예외·누락·잘못된 수준·권한 행 저장·트랜잭션 회귀 테스트와 두 데이터셋 dry-run을 수행한다. 실행 환경이 가능하면 실제 MariaDB 이관·재적재도 검증한다.
+5. 적재·DB·핵심 정책 문서를 맞추고 실제 DB 적용과 F/E의 접근 강제는 별도 상태로 기록한다.
+6. 추가 사용자 요청에 따라 게임 원본의 allowed_roles도 실제 공개 수준이 deny가 아닌 역할의 목록으로 맞춘다. 공개 수준 자체는 역할별 정책·document_permissions에서 관리한다.

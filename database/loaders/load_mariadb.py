@@ -17,7 +17,8 @@ TYPES = {
 }
 AIS = {f'YB-{n}' for n in range(1, 7)}
 ROLES = {'prof', 'grad', 'std'}
-LEVELS = {'full', 'summary', 'metadata', 'basic_metadata', 'deny'}
+LEVELS = {'full', 'summary', 'metadata', 'deny'}
+POLICY_PATH = ROOT / 'database/policies/game_record_permissions.json'
 LOCATIONS = {'중앙홀', '회의실', '기록실', '전력실', '통신실', '창고', '서버실'}
 
 
@@ -65,7 +66,47 @@ def text(record, key):
             f'{key} must be nonempty text')
 
 
-def validate_record(raw, dataset, default_level=None, allow_missing_locations=False):
+def role_permissions(value, *, complete=False):
+    require(isinstance(value, dict), 'role_permissions must be an object')
+    require(set(value) <= ROLES, 'role_permissions contains an unsupported role')
+    if complete:
+        require(set(value) == ROLES, 'role_permissions must define all three roles')
+    require(all(isinstance(level, str) and level in LEVELS for level in value.values()),
+            'role_permissions contains an unsupported disclosure level')
+    # An explicit partial map is authoritative: omitted roles are denied,
+    # never filled from a broader default or allowed_roles.
+    return {role: value.get(role, 'deny') for role in sorted(ROLES)}
+
+
+def load_disclosure_policy(path=POLICY_PATH):
+    policy = read_json(path)
+    require(isinstance(policy, dict) and set(policy) == set(TYPES.values()),
+            'disclosure policy must define exactly the six record types')
+    return {kind: role_permissions(value, complete=True) for kind, value in policy.items()}
+
+
+def resolve_permissions(record, dataset, default_level=None, policy=None):
+    require(dataset in ('game-data', 'test-data'), 'unsupported dataset')
+    if dataset == 'game-data':
+        require(default_level is None and 'disclosure_level' not in record,
+                'game-data uses the role policy; single disclosure_level/default is not allowed')
+    if 'role_permissions' in record:
+        require('disclosure_level' not in record,
+                'do not mix role_permissions and single disclosure_level')
+        return role_permissions(record['role_permissions'])
+    if dataset == 'game-data':
+        policy = load_disclosure_policy() if policy is None else policy
+        require(record['record_type'] in policy, 'record type is missing from disclosure policy')
+        return role_permissions(policy[record['record_type']], complete=True)
+    # Retain the explicit single-level format only for synthetic fixtures.
+    level = record.get('disclosure_level', default_level)
+    require(isinstance(level, str) and level in LEVELS,
+            'test-data needs role_permissions or an explicit disclosure_level/default')
+    roles = array(record, 'allowed_roles', ROLES)
+    return {role: level if role in roles else 'deny' for role in sorted(ROLES)}
+
+
+def validate_record(raw, dataset, default_level=None, allow_missing_locations=False, policy=None):
     require(isinstance(raw, dict), 'each record must be an object')
     record = dict(raw)
     for key in ('record_id', 'record_type', 'summary', 'content'):
@@ -93,11 +134,9 @@ def validate_record(raw, dataset, default_level=None, allow_missing_locations=Fa
             require(not set(participants) & set(observers), f'{key} overlaps involved_ai')
         else:
             require(key not in record, f'{key} is invalid for this record_type')
-    array(record, 'allowed_roles', ROLES)
-    level = record.get('disclosure_level', default_level)
-    require(isinstance(level, str) and level in LEVELS,
-            'disclosure_level is required; explicitly set --default-disclosure if intended')
-    record['disclosure_level'] = level
+    if 'allowed_roles' in record:
+        array(record, 'allowed_roles', ROLES)
+    record['role_permissions'] = resolve_permissions(record, dataset, default_level, policy)
     return record
 
 
@@ -122,7 +161,10 @@ def validate_rules(raw):
 
 def load_sources(source, dataset, default_level=None, allow_missing_locations=False):
     require(source.is_dir(), f'source directory not found: {source}')
+    policy = None
     if dataset == 'game-data':
+        require(default_level is None, '--default-disclosure is for test-data only')
+        policy = load_disclosure_policy()
         files = sorted((source / 'experiments').glob('day_*/*.json'))
     else:
         files = sorted(source.rglob('*.json'))
@@ -137,7 +179,7 @@ def load_sources(source, dataset, default_level=None, allow_missing_locations=Fa
             require(match is not None, f'{path}: invalid Day directory')
         for raw in rows:
             try:
-                record = validate_record(raw, dataset, default_level, allow_missing_locations)
+                record = validate_record(raw, dataset, default_level, allow_missing_locations, policy)
                 if dataset == 'game-data':
                     require(record['record_type'] == TYPES[path.name], 'file/type mismatch')
                     require(record['day'] == int(match.group(1)), 'directory/day mismatch')
@@ -154,6 +196,9 @@ def load_sources(source, dataset, default_level=None, allow_missing_locations=Fa
 
 def import_records(connection, dataset, records, rules=None):
     """Caller provides an autocommit=False connection; one atomic batch."""
+    # Reject non-normalized permissions before starting writes.
+    for record in records:
+        role_permissions(record.get('role_permissions'), complete=True)
     try:
         connection.begin()
         with connection.cursor() as cursor:
@@ -184,10 +229,10 @@ def import_records(connection, dataset, records, rules=None):
                     cursor.executemany('INSERT INTO game_record_locations '
                                        '(dataset,record_id,location_id) VALUES (%s,%s,%s)',
                                        [(*key, loc) for loc in r['location_ids']])
-                if r['allowed_roles']:
-                    cursor.executemany('INSERT INTO document_permissions '
-                                       '(dataset,record_id,role,disclosure_level) VALUES (%s,%s,%s,%s)',
-                                       [(*key, role, r['disclosure_level']) for role in r['allowed_roles']])
+                cursor.executemany('INSERT INTO document_permissions '
+                                   '(dataset,record_id,role,disclosure_level) VALUES (%s,%s,%s,%s)',
+                                   [(*key, role, level)
+                                    for role, level in sorted(r['role_permissions'].items())])
             if rules is not None:
                 body = {k: v for k, v in rules.items() if k not in {
                     'rule_id', 'title', 'description', 'involved_ai', 'allowed_roles', 'disclosure_level'}}
@@ -244,7 +289,7 @@ def main(argv=None):
     parser.add_argument('--source', type=Path, help='dataset directory; defaults to repository data/<dataset>')
     parser.add_argument('--env-file', type=Path, help='optional simple KEY=VALUE file; environment takes precedence')
     parser.add_argument('--default-disclosure', choices=sorted(LEVELS),
-                        help='explicit level for records without disclosure_level; never inferred from roles')
+                        help='test-data only: explicit level for legacy allowed_roles fixtures')
     parser.add_argument('--allow-missing-locations', action='store_true',
                         help='explicit legacy compatibility: missing location_ids becomes []')
     parser.add_argument('--dry-run', action='store_true', help='validate sources without connecting to DB')
@@ -256,6 +301,11 @@ def main(argv=None):
                                               args.allow_missing_locations)
         print(f'Validated {len(records)} records: {dict(Counter(r["record_type"] for r in records))}; '
               f'common rules: {int(rules is not None)}; missing locations accepted: {missing}')
+        counts = Counter((role, level) for record in records
+                         for role, level in record['role_permissions'].items())
+        print(f'Permission rows: {sum(counts.values())}; by role: '
+              + json.dumps({role: {level: counts[role, level] for level in sorted(LEVELS)}
+                            for role in sorted(ROLES)}, sort_keys=True))
         if args.dry_run:
             return 0
         import pymysql

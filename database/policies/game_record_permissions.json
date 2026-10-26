@@ -1,0 +1,8 @@
+{
+  "Setup": {"std": "full", "grad": "full", "prof": "full"},
+  "Action": {"std": "summary", "grad": "summary", "prof": "full"},
+  "Dialogue": {"std": "metadata", "grad": "summary", "prof": "full"},
+  "Thought": {"std": "deny", "grad": "deny", "prof": "summary"},
+  "Result": {"std": "summary", "grad": "full", "prof": "full"},
+  "Incident": {"std": "deny", "grad": "metadata", "prof": "summary"}
+}
