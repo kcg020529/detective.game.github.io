@@ -59,3 +59,11 @@
    - 명령: python -m unittest discover -s tests/backend -p 'test_*.py' -v 및 python -m pytest tests/api -q.
 5. backend/README.md에 실행·테스트 방법을 갱신함.
    - 공유 서버와 실제 J03 브라우저의 쿠키 동작은 아직 검증하지 않음. J03의 역할 자유 선택과 DB user_roles 제한 계약은 팀 합의가 필요함. 배포 도메인의 SameSite/CORS 설정도 미검증.
+# I04 - 채팅 POST API와 처리 파이프라인
+
+1. `backend/api/chats.py`에 POST `/api/v1/saves/{save_id}/chats/{ai_id}`를 구현함. 기존 세션·Save 소유권을 확인하며 message 1~2000자·ASCII 요청 ID를 검증하고 추가 인가 필드를 거부함. PolicyContext는 DB 역할·Day와 game-data로 구성함.
+2. 규칙 입력 가드와 선택적 DeepSeek 결합(`KERVION_INPUT_GUARD_LLM=1`)을 호출함. warn/high_risk는 H의 save_input_guard_alert로 저장·commit한 후 대화 트랜잭션을 시작해 후속 장애에도 경고가 남게 함. allow는 감사 저장하지 않음. 재전송의 감사 이벤트는 요청별로 별도 생성될 수 있음.
+3. `backend/api/chat_pipeline.py`에 Planner와 retrieve 전용 E search_records(F 포함)를 연결함. D generator와 G-2 output_guard의 내부 어댑터를 제안하고, 둘 다 없으면 유료 Planner 호출 전에 503을 반환함. 현재 D/G-2 미구현이므로 기본 서버에서 실제 AI 대화는 아직 불가능함. 승인된 최종 답변만 저장하며 출력 실패 시 초안을 반환하지 않음.
+4. Save 행 잠금으로 동일 Save 요청을 직렬화하고 질문·AI 답변·요청 응답 캐시를 같은 트랜잭션에 저장함. 재전송은 기존 응답을 반환하고 다른 질문·AI·Day endpoint의 요청 ID 충돌은 409임. 기존 advance-day도 endpoint 충돌을 검사하도록 보완함. DB 의존성을 function scope로 통일하고 FastAPI 최소 버전을 0.121로 높여 commit 실패 후 성공 응답이 나가던 문제를 수정함.
+5. WSL `python -m pytest tests -q -rs`: 105 passed, 22 skipped, 경고 1건. 추가 `tests/test_chat_post.py` 12개는 서버 context·쌍 저장·중복·충돌·권한 거부·경고 commit 후 장애·입력 검증·미연결 503·commit 실패·검색 결과 전달·출력 검사 실패를 검증함. DB 없는 모의 연결/어댑터 검사이며 실제 MariaDB 동시성·감사 영속성·롤백이나 LLM/Qdrant 실행 증거는 아님. skip은 DB 연결 불가·_test DB 미설정·모델 캐시 없음임. 실제 DB 및 D/G-2·프론트 전체 검증은 미수행임.
+6. `docs/interfaces/채팅_POST_API.md`에 요청·응답·실패·감사 트랜잭션·연결 제안·검증 한계를 작성함. D/G-2 인터페이스 담당자 합의, 긴 모델 호출 동안 Save 잠금 운영 검토는 후속 작업임.

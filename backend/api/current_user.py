@@ -11,7 +11,7 @@ from backend.common.security import session_hash
 COOKIE_NAME = "kervion_session"
 
 
-def current_user_id(request: Request, conn: Connection = Depends(get_db)) -> int:
+def current_user_id(request: Request, conn: Connection = Depends(get_db, scope='function')) -> int:
     token = request.cookies.get(COOKIE_NAME)
     if not token:
         raise ApiError(401, "AUTH_REQUIRED", "로그인이 필요합니다.")

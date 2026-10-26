@@ -69,7 +69,7 @@ def _game_state(cursor, row: dict) -> dict:
 
 
 @router.get('/saves')
-def list_saves(conn: Connection = Depends(get_db), user_id: int = Depends(current_user_id)):
+def list_saves(conn: Connection = Depends(get_db, scope='function'), user_id: int = Depends(current_user_id)):
     with conn.cursor() as cursor:
         cursor.execute(
             'SELECT save_id, slot_no, role, day, created_at, last_played_at '
@@ -80,7 +80,7 @@ def list_saves(conn: Connection = Depends(get_db), user_id: int = Depends(curren
 
 
 @router.post('/saves', status_code=201)
-def create_save(body: CreateSave, conn: Connection = Depends(get_db), user_id: int = Depends(current_user_id)):
+def create_save(body: CreateSave, conn: Connection = Depends(get_db, scope='function'), user_id: int = Depends(current_user_id)):
     with conn.cursor() as cursor:
         cursor.execute(
             'SELECT save_id FROM saves WHERE user_id = %s AND slot_no = %s FOR UPDATE',
@@ -111,7 +111,7 @@ def create_save(body: CreateSave, conn: Connection = Depends(get_db), user_id: i
 
 
 @router.get('/saves/{save_id}')
-def get_save(save_id: int = Path(gt=0), conn: Connection = Depends(get_db), user_id: int = Depends(current_user_id)):
+def get_save(save_id: int = Path(gt=0), conn: Connection = Depends(get_db, scope='function'), user_id: int = Depends(current_user_id)):
     with conn.cursor() as cursor:
         row = _owned_save(cursor, user_id, save_id)
         cursor.execute('UPDATE saves SET last_played_at = NOW() WHERE save_id = %s AND user_id = %s', (save_id, user_id))
@@ -124,7 +124,7 @@ def get_save(save_id: int = Path(gt=0), conn: Connection = Depends(get_db), user
 
 
 @router.put('/saves/{save_id}/memo')
-def put_memo(body: SaveMemo, save_id: int = Path(gt=0), conn: Connection = Depends(get_db), user_id: int = Depends(current_user_id)):
+def put_memo(body: SaveMemo, save_id: int = Path(gt=0), conn: Connection = Depends(get_db, scope='function'), user_id: int = Depends(current_user_id)):
     with conn.cursor() as cursor:
         _owned_save(cursor, user_id, save_id, lock=True)
         cursor.execute(
@@ -139,7 +139,7 @@ def put_memo(body: SaveMemo, save_id: int = Path(gt=0), conn: Connection = Depen
 
 
 @router.post('/saves/{save_id}/advance-day')
-def advance_day(body: AdvanceDay, save_id: int = Path(gt=0), conn: Connection = Depends(get_db), user_id: int = Depends(current_user_id)):
+def advance_day(body: AdvanceDay, save_id: int = Path(gt=0), conn: Connection = Depends(get_db, scope='function'), user_id: int = Depends(current_user_id)):
     with conn.cursor() as cursor:
         row = _owned_save(cursor, user_id, save_id, lock=True)
         cursor.execute(
@@ -148,6 +148,8 @@ def advance_day(body: AdvanceDay, save_id: int = Path(gt=0), conn: Connection = 
         )
         logged = cursor.fetchone()
         if logged:
+            if logged['endpoint'] != 'advance-day':
+                raise ApiError(409, 'STATE_CONFLICT', '다른 요청에 사용한 요청 ID입니다.')
             cursor.execute('UPDATE saves SET last_played_at = NOW() WHERE save_id = %s AND user_id = %s', (save_id, user_id))
             response = logged['response_json']
             return json.loads(response) if isinstance(response, (str, bytes, bytearray)) else response
