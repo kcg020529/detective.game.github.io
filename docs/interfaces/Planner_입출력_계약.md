@@ -1,6 +1,6 @@
 # Planner 입출력 계약
 
-2026-10-26 · C 초기 구현 기준. RAG 협의안의 회차·관련 AI 조건을 포함하며 E/I의 실제 연결 계약은 후속 합의가 필요하다.
+2026-10-26 · C 초기 구현 기준. 회차·관련 AI 조건을 포함해 main에 반영된 `RAG_검색_계약.md`와 입력 형식을 맞췄다. 실제 요청 경로의 E/I 연결 검증은 후속 작업이다.
 
 ## 입력
 
@@ -32,7 +32,7 @@
 | out_of_scope | 서버의 범위 밖 고정 안내로 연결 |
 | clarify | 서버의 추가 질문 안내로 연결 |
 
-search의 여섯 필드는 모두 필수다. query는 비어 있지 않은 2,000자 이하 문자열, record_types는 기존 여섯 종류, test_ids는 1~30 정수, location_ids는 일곱 장소명, related_ai_ids는 YB-1~6, limit은 1~20이다. 필터는 중복을 허용하지 않으며 빈 배열은 ACL 안에서 추가 제한이 없다는 뜻이다. 회차·관련 AI 필터의 실제 E 처리 방식은 협의 중이다.
+search의 여섯 필드는 모두 필수다. query는 비어 있지 않은 2,000자 이하 문자열, record_types는 기존 여섯 종류, test_ids는 1~30 정수, location_ids는 일곱 장소명, related_ai_ids는 YB-1~6, limit은 1~20이다. 필터는 중복을 허용하지 않으며 빈 배열은 ACL 안에서 추가 제한이 없다는 뜻이다. E는 회차·관련 AI를 payload 필터에 적용하고 query가 해당 임베딩 모델의 토큰 한도를 넘으면 오류로 처리한다. 세부 규칙은 RAG 검색 계약을 따른다.
 
 retrieve에는 search가 있고 clarification_code가 없어야 한다. 다른 경로의 search는 null이다. clarify만 AMBIGUOUS_REFERENCE 또는 INSUFFICIENT_CONTEXT 코드를 사용하며, 나머지 경로의 clarification_code는 null이다. 모델은 사용자용 자유 답변·서버 역할·Day·Save·공개 수준을 출력할 수 없다. 잘못된 값·누락·추가 필드·중복 JSON 키는 오류로 처리한다.
 
