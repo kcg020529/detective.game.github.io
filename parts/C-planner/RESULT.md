@@ -1,0 +1,9 @@
+# C01 - DeepSeek 질문 분류와 검색 계획
+
+1. 사용자 결정대로 `backend/planner/deepseek.py`에 DeepSeek HTTP 연결을 구현함. DEEPSEEK_PLANNER_API_KEY를 필수로 받고 DEEPSEEK_PLANNER_MODEL(기본 deepseek-flash)·DEEPSEEK_PLANNER_TIMEOUT_SECONDS를 별도 설정함. 입력 가드의 키를 자동 재사용하지 않으며 실제 키 파일은 생성하지 않음. DeepSeek 공식 Chat Completions·JSON Output 문서를 확인해 thinking disabled·JSON object·비스트리밍을 사용함. 키 누락·HTTP 오류·timeout·빈 응답·잘린 응답은 PlannerUnavailable이며 가짜 계획으로 대체하지 않음.
+2. `service.py`는 서버 PolicyContext의 유효성·소유권과 원문 질문·동일 Save/AI의 이력 범위를 확인함. 계정·Save ID는 모델에 보내지 않고 서버 role/day/character_id만 별도 system 메시지에 넣음. 질문·이력은 user JSON의 분석 대상으로 전달하며 AI 이력도 assistant 지시로 재사용하지 않음. 임의 역할 주장으로 서버 상태를 바꾸지 않음.
+3. `schema.py`·`prompt.py`에 retrieve/character/out_of_scope/clarify와 엄격한 검색 계획을 구현함. query·record_types·test_ids·location_ids·related_ai_ids·limit을 필수로 요구하고 미등록 값·누락·추가 권한 필드·중복 JSON 키·모호한 route 조합을 거부함. limit은 1~20이며 role/Day/Save/공개 수준은 모델이 출력할 수 없음. 혼합 질문은 retrieve, 모호한 문맥은 clarify로 계획하도록 지시했으나 실제 모델의 판단 정확도는 미검증임. 회차·관련 AI 필터는 용범 측 RAG 제안으로 E와의 최종 처리 계약은 미확정임.
+4. `python -m unittest discover -s tests -p test_planner.py -q` 14개 통과함. 서버 상태·원문 보존·이력 scope·JSON 계약·누락/오류·API 요청 형태·키 격리와 숨김·HTTP 실패를 검사했으며 테스트용 모델/HTTP 응답을 사용함. 제품 경로의 실제 모델 호출을 실행한 것은 아님.
+   - 회귀: `test_policy_engine.py` 19개, `test_mariadb_loader.py` 20개 통과. 총 53개 테스트 통과이며 실제 DeepSeek 분류 품질·지연·비용·한국어 회차/AI 해석·혼합 질문·DB/RAG/채팅 E2E는 미검증임. 현재 프로세스에 Planner 키가 없어 실제 API 호출은 수행하지 않음.
+   - `python -m backend.planner --help` 실행 확인. `__main__.py`는 키 설정 후 개발자가 가상 서버 상태로 실제 API 계획만 시험하는 도구이며 로그인·권한 부여·DB/RAG를 수행하지 않음.
+5. Planner README·키 없는 .env.example·`docs/interfaces/Planner_입출력_계약.md`와 핵심 문서를 작성·갱신함. Pydantic 2 사용을 backend/requirements.txt에 명시함. 최신 main에 실제 세션 인증이 들어온 것을 확인해 Policy README의 과거 임시 인증 설명도 바로잡음. 실제 인증 경로와 Planner·E/RAG·D 연결 코드는 추가하지 않음. 작업은 최신 origin/main 기반 codex/query-planner 브랜치에서 진행했으며 커밋·push·PR은 수행하지 않음.
