@@ -11,6 +11,6 @@ CREATE TABLE document_permissions (
         REFERENCES game_records (dataset, record_id) ON DELETE CASCADE,
     CONSTRAINT ck_document_permissions_role CHECK (role IN ('prof', 'grad', 'std')),
     CONSTRAINT ck_document_permissions_level CHECK (
-        disclosure_level IN ('full', 'summary', 'metadata', 'basic_metadata', 'deny')
+        disclosure_level IN ('full', 'summary', 'metadata', 'deny')
     )
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

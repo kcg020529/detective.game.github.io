@@ -16,6 +16,8 @@ Save 삭제 시 이력도 삭제된다. 서버는 요청자의 Save 소유권을
 
 ## document_permissions
 
+> 2026-10-26 새 SQL과 적재 도구는 [역할별 권한 매트릭스](../../../docs/interfaces/역할별_권한_매트릭스.md)의 4단계를 지원한다. 기존 5단계 DB는 [이관 안내](../../migrations/README.md)를 따른다. 코드 작성과 실제 DB 적용 완료는 구분한다.
+
 `(dataset, record_id, role)`에 공개 수준 하나를 저장한다. 권한 행이 없거나 판정에 실패하면 `deny`다. 수준은 문자열의 정렬 순서로 비교하지 않고 명시적인 필드 허용 목록으로 해석한다.
 
 | 수준 | 허용 필드 |
@@ -23,15 +25,14 @@ Save 삭제 시 이력도 삭제된다. 서버는 요청자의 Save 소유권을
 | `full` | 기본 메타데이터 + AI 관계 정보 + summary + content |
 | `summary` | 기본 메타데이터 + AI 관계 정보 + summary |
 | `metadata` | 기본 메타데이터 + AI 관계 정보 |
-| `basic_metadata` | record_id, record_type, test_id, day |
 | `deny` | 없음. 문서 존재·ID도 응답이나 모델 Context에 제공하지 않음 |
 
 AI 관계 정보는 involved_ai와 해당 유형에 존재하는 witness_ai·overheard_ai다. Action과 Dialogue 외 유형에는 관찰 필드를 요구하지 않는다. 해당 유형에서 관찰자가 없으면 빈 배열이며, 필수 필드 누락은 적재 오류로 구분해야 한다.
 
-추가된 location_ids는 metadata·summary·full 수준에서 제공하는 장소 메타데이터에 포함한다. basic_metadata의 허용 필드는 기존 네 필드만 유지하며 장소는 포함하지 않는다. content에 기록된 AI별 초기 위치는 full에서만 제공한다.
+location_ids는 metadata·summary·full 수준에서 제공하는 장소 메타데이터에 포함한다. 제거한 basic_metadata를 metadata로 자동 변환하지 않는다. 기존 DB 이관은 해당 행을 deny로 낮춘 뒤 검수한 권한을 재적재한다. content에 기록된 AI별 초기 위치는 full에서만 제공한다.
 
 서버는 공개 수준에 맞춰 DB 조회 결과를 투영한 뒤 모델 Context와 API 응답을 구성해야 한다. summary 수준에서 content를 전달한 뒤 출력만 가리는 방식은 허용하지 않는다. Day·AI 지식 범위·Save 소유권·Save에 고정된 역할도 별도로 모두 확인한다. summary에도 더 높은 수준의 비밀이 섞이지 않도록 콘텐츠 검수가 필요하다.
 
 `document_permissions`를 문서·역할 공개 수준의 유일한 판정 원천으로 사용한다. 기존 `game_record_allowed_roles`는 초기 설계의 레거시 테이블로 남겨 두되 인가·fallback에는 사용하지 않는다. 기존 데이터 삭제나 권한 변환은 이 SQL에서 수행하지 않는다. 실제 이관 후 레거시 테이블 제거는 별도 마이그레이션으로 진행한다.
 
-테스트 JSON의 allowed_roles는 이진 허용 목록이라 다섯 공개 수준을 결정할 수 없다. 적재 시 공개 수준을 별도로 명시해야 하며 기존 허용 역할을 자동으로 full에 매핑하지 않는다. 현재 권한 데이터·이관 도구는 없다.
+game-data의 권한은 `database/policies/game_record_permissions.json`에서 유형별 표를 읽어 기록마다 세 역할의 행으로 생성한다. 검수한 기록별 예외는 원본의 role_permissions 객체로 지정할 수 있으며 생략한 역할은 deny다. game-data의 레거시 allowed_roles·단일 disclosure_level은 역할별 표를 대체하지 않는다. 합성 test-data에만 명시적인 단일 수준과 allowed_roles 형식을 지원한다. 실행 방법과 덮어쓰기 범위는 적재 도구 README를 따른다.

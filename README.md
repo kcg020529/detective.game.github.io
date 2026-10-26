@@ -56,7 +56,7 @@ AI마다 아는 범위가 다름. 직접 했거나 목격했거나 대화에 참
 
 새 게임마다 세 역할 중 하나를 자유롭게 선택하며 해당 Save 안에서는 역할을 고정함. 계정당 최대 3개 Save가 서로 다른 역할을 가져도 됨. 기록 인가는 현재 Save의 역할·Day·AI 지식 범위와 소유권을 기준으로 적용함.
 
-문서·역할별 공개 수준은 `full`, `summary`, `metadata`, `basic_metadata`, `deny`의 5단계.
+문서·역할별 공개 정책은 `full`, `summary`, `metadata`, `deny`의 4단계(2026-10-26 확정). 기록 종류별 역할 공개 표는 [역할별 권한 매트릭스](docs/interfaces/역할별_권한_매트릭스.md) 참고. 신규 SQL·로더는 4단계·역할별 적재를 지원하며 기존 5단계 DB용 [이관 SQL](database/migrations/README.md)도 작성했다. 실제 DB 적용과 서버 접근통제 연결은 후속 검증 대상이다.
 행이 없으면 거부하며 별도 역할 계층이나 L1~L3 등급표는 아직 확정하지 않음.
 역할이 높아도 해당 AI가 원래 모르는 내용까지 알 수는 없음.
 
@@ -254,10 +254,10 @@ L은 입력 가드 단독 검증, M은 출력 가드·품질, N은 전체 보안
 | 콘텐츠 | 30회 Setup과 1~11회 중심의 작성 기록 존재. 전체 30회 콘텐츠 완료를 뜻하지 않음 |
 | Docker | MariaDB·Qdrant 두 서비스 정의. 전체 앱·Grafana 실행 구성은 미구현 |
 | 서버 | `backend/api/`에 FastAPI Save·메모·Day 진행 API와 채팅 기록 읽기 API가 있고 `tests/api` 15개 통과(I01·I02 RESULT). 로그인은 임시 사용자 |
-| 검색·보안 | Planner·Policy Engine·LLM·RAG/ACL·Guard·감사 파이프라인은 미구현 (`backend/` 해당 폴더는 자리만 있음) |
+| 검색·보안 | `backend/policy/`에 순수 Policy Engine·공개 필드 투영과 MariaDB 검색 허용 목록·원본 재검증 어댑터를 구현했다. 단위 테스트 단계이며 실제 DB·Qdrant·채팅 연결은 미검증이다. Planner·LLM·RAG/ACL·Guard·감사 전체 파이프라인은 아직 미연동 |
 | 배포·평가 | Kubernetes/AWS 및 보안 비교 실험은 자리만 있으며 실행·검증 완료로 볼 수 없음 |
 
-인터페이스 초안에는 이전 담당자, 미확정 L1~L3·`release_day`·지식 필드 제안, Save 슬롯 미확정 표현이 남아 있음. 현재 기준은 본문과 기존 SQL의 최대 3슬롯·5단계 공개 수준·`record.day <= Save.day`이며, 초안 갱신과 실제 API 계약 합의는 후속 과제. 이번 수정은 루트 문서 6개에 한정함.
+2026-10-26 역할별 공개 표와 4단계 SQL·적재 도구·기존 DB용 이관 SQL을 작성했다. 로더 단위 테스트와 game-data/test-data dry-run을 확인했으며 실제 DB 실행은 미검증이다. 최대 3슬롯·`record.day <= Save.day` 기준은 유지한다. 다른 인터페이스 초안의 과거 제안과 실제 API 계약은 후속 정합성 확인이 필요하다.
 
 전체 서비스 실행과 실험 재현 안내는 구현 진행 후 추가 예정.
 

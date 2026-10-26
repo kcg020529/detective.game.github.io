@@ -8,6 +8,6 @@
 - 술래 조합은 6명 중 2명을 고르는 15쌍을 두 번 반복한다. 회차 1~15와 16~30의 조합 순서는 같다. 각 AI는 전체 30회 중 술래 10회, 도망자 20회다.
 - summary에 술래를 명시하고 content에 여섯 AI의 초기 위치를 기록한다. 초기 위치는 장소 목록을 한 칸씩 순환해 배치한 시나리오 초깃값이며, 매 실험에서 AI들은 서로 다른 장소에서 시작한다.
 - 실험 장소는 중앙홀·회의실·기록실·전력실·통신실·창고·서버실이다. Setup의 location_ids에는 실험에 사용하는 일곱 장소 전체를 넣었다. 저장용 장소 코드가 미확정이므로 현재 배열 값은 장소 이름을 사용한다.
-- allowed_roles에는 prof·grad·std 세 역할을 모두 넣었다. 문서 권한 테이블에 적재할 5단계 공개 수준은 별도로 지정해야 한다.
+- allowed_roles는 합의한 공개 표에서 deny가 아닌 역할만 나열한다. Setup·Action·Dialogue·Result는 prof·grad·std, Thought는 prof, Incident는 prof·grad다. 이는 목록의 역할에 본문을 허용한다는 뜻이 아니며 게임 기록 인가의 원천으로 사용하지 않는다. 적재 도구는 `database/policies/game_record_permissions.json`의 합의된 4단계·역할별 표를 기록별 document_permissions로 저장한다. 검수한 기록별 예외는 role_permissions 객체로 지정하며 빠진 역할은 deny다. 예외를 작성하면 allowed_roles도 그 공개 범위에 맞춘다.
 
 MariaDB 적재 도구는 database/loaders/에 작성했다. 원본 검사만 하는 dry-run과 실제 적재 명령은 해당 README를 따른다. 실제 DB 적재·Qdrant 인덱싱과 나머지 유형의 시나리오 기록은 후속 작업이다.

@@ -69,3 +69,17 @@
    - `python -m unittest discover -s tests -p test_mariadb_loader.py -v`로 검증 실패·권한 누락·중복 JSON 키/ID·DB child insert 실패 시 rollback 호출·공통 규칙 저장 등 단위 테스트 13개 통과함. 트랜잭션 테스트는 fake connection으로 호출 흐름을 확인한 것이며 실제 DB 실행 검증은 아님.
    - 현재 세션에서 Docker API 접근은 permission denied로 거부됨. 실제 MariaDB 제약·재적재·DB rollback·TLS 접속 및 운영 API 연동은 미검증이고 실제 DB에 적재하지 않음.
 6. 의존성은 `database/loaders/requirements.txt`, 준비·실행·배포 환경별 설정과 권한 덮어쓰기 범위는 같은 폴더의 README에 기록함. 기존 DB는 누락된 001~008 스키마를 순서대로 적용한 후 사용해야 함.
+
+# B07 - 역할별 공개 수준 적재와 4단계 이관
+
+1. `database/policies/game_record_permissions.json`에 확정된 18개 조합을 작성함. Action은 std·grad summary/prof full, Incident는 std deny/grad metadata/prof summary이며 Setup·Dialogue·Thought·Result도 확정 표를 반영함.
+2. `database/loaders/load_mariadb.py`에서 game-data 적재 시 유형별 표를 기록별 role_permissions로 정규화하고 document_permissions에 세 역할 행을 저장하도록 변경함. game-data의 allowed_roles는 인가에 사용하지 않고 단일 disclosure_level·--default-disclosure는 오류로 처리함.
+   - 검수한 원본의 role_permissions 객체는 명시적 예외로 우선하며 생략한 역할은 deny다. 빈 객체는 전부 deny이며, 미등록 역할·제거된 basic_metadata·null·배열·혼합 형식은 거부함. 테스트 데이터에만 기존 allowed_roles+명시적 단일 수준 형식을 유지함. 권한 오류는 DB 쓰기 전에 검증하며 기존 일괄 트랜잭션·rollback 처리는 유지함.
+3. 신규 `006_document_permissions.sql`의 CHECK를 네 수준으로 제한하고 `database/migrations/mariadb/001_disclosure_levels_v2.sql`과 실행 안내를 작성함. 기존 basic_metadata 행을 deny로 낮춘 뒤 같은 이름의 CHECK를 한 ALTER 문에서 교체함. 기존 네 수준의 행은 이 SQL만으로 변경하지 않으며, 검수한 원본을 재적재해야 역할 표가 적용됨. DDL의 암묵적 commit과 원본에 없는 기록·수동 예외의 검수 필요성을 명시함.
+4. `python -m unittest discover -s tests -p test_mariadb_loader.py -v` 20개 통과함. 18개 확정 조합 및 현재 게임 원본 전체의 권한, 명시적 예외의 누락 역할 거부, 기존 역할 목록·단일 옵션에 의한 덮어쓰기 거부, 잘못된 정책의 쓰기 전 실패, 세 권한 행 전달과 기존 rollback 등을 확인함. DB 호출 테스트는 fake connection을 사용하므로 실제 SQL 실행 검증은 아님.
+   - `python database/loaders/load_mariadb.py --dataset game-data --dry-run`: 기록 302건·공통 규칙 1건·권한 906행 검증. grad는 deny 66/full 41/metadata 15/summary 180, prof는 full 221/summary 81, std는 deny 81/full 30/metadata 47/summary 144행임.
+   - `python database/loaders/load_mariadb.py --dataset test-data --default-disclosure full --allow-missing-locations --dry-run`: 합성 기록 9건·권한 27행 검증. 두 dry-run 모두 DB에 접속하거나 쓰지 않음.
+   - Docker CLI는 Linux 엔진 named pipe를 찾지 못했고 로컬 3306 리스너·MariaDB 실행 파일도 확인되지 않음. 실제 DB 이관·재적재·CHECK 제약·반복 적재 검증은 미수행이며 기존 DB를 변경하지 않음.
+5. 적재·스키마·게임 데이터 안내, 정책 문서와 MASTER·PARTS·README·PROJECT_STRUCTURE를 현재 구현에 맞춤. 게임 JSON의 allowed_roles·내용은 이번 B 변경으로 수정하지 않았으며 앞선 A의 summary 변경은 그대로 보존함. Policy Engine·Qdrant 필터·공개 필드 투영·서버 접근 강제는 후속 F/E/I 구현임.
+6. 추가 사용자 요청으로 게임 원본의 allowed_roles를 deny가 아닌 역할 목록과 일치시킴. Thought 66건은 prof만, Incident 15건은 prof·grad만 남겼으며 나머지 네 유형은 세 역할을 유지함. Day 1·2·3의 thoughts.json과 Day 1·2·5의 incidents.json, 총 6개 파일의 81개 목록을 수정함.
+   - 변경 직전 원본 302건과 비교해 allowed_roles 외 필드·키·기록 순서·건수 및 앞서 수정한 summary가 보존됨을 확인함. 단위 테스트의 전체 게임 원본 검사에 allowed_roles와 역할별 표의 일치 검증을 추가했고 20개 테스트가 통과함. game-data dry-run도 302건·공통 규칙 1건·권한 906행으로 유지됨. 이 목록은 이진 공개 여부만 나타내며 실제 공개 수준의 원천은 역할별 정책과 document_permissions임. 실제 DB 적용은 여전히 미수행임.
