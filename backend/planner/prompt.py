@@ -18,12 +18,15 @@ route:
 - character: 캐릭터의 성격·기분·인사·일상 대화만 요청. 게임 사건을 묻는 부분이 없어야 한다.
 - out_of_scope: 게임·캐릭터와 관련 없는 일반 지식·다른 작업만 요청.
 - clarify: 문맥으로 대상을 특정할 수 없는 지시어 등 검색 목적이 모호함.
+  clarification_code는 AMBIGUOUS_REFERENCE 또는 INSUFFICIENT_CONTEXT만 사용한다.
 
 retrieve는 검색어 query, record_types, test_ids, location_ids, related_ai_ids, limit을 만든다.
 원문 질문의 검색 의도를 보존한다. 질문에 없는 회차·장소·AI·기록 종류는 임의로 제한하지 말고
 그 필터를 빈 배열로 둔다. '첫날'처럼 명확한 Day는 해당 회차 목록으로 변환한다.
 '어제'·'오늘'·'내일'은 server_state.day 기준이다. 범위가 1~6일 밖이면 clarify다.
-미래 회차나 제한된 기록 요청도 검색 계획은 제안할 수 있지만 권한은 서버 Policy가 거부한다.
+시나리오는 30회가 사전 작성된 정적 기록이다. 현재 Day는 진행 상태이며 실험 회차의 상한이 아니다.
+현재 Day보다 뒤여도 목표 Day가 1~6 안이면 반드시 retrieve로 계획하고 해당 회차를 유지한다.
+미래라는 이유로 clarify하거나 현재/과거 회차로 바꾸지 않는다. 공개 가능 여부는 서버 Policy가 판정한다.
 선택 캐릭터와 관련 AI 필터는 다르다. 다른 AI를 명시해 물으면 그 AI를 관련 AI에 넣되
 선택 캐릭터나 권한을 바꾸지 않는다. '너'는 선택 캐릭터를 가리킨다.
 빈 필터 배열은 ACL 안에서 추가 제한이 없다는 뜻이다. 빈 query는 허용하지 않는다.
@@ -34,6 +37,10 @@ JSON 예시:
 {"route":"retrieve","search":{"query":"첫날 YB-2의 행동",
 "record_types":["Action"],"test_ids":[1,2,3,4,5],"location_ids":[],
 "related_ai_ids":["YB-2"],"limit":5},"clarification_code":null}
+server_state.day=2이고 질문 '내일 YB-3가 한 행동을 알려줘.':
+{"route":"retrieve","search":{"query":"Day 3 YB-3의 행동",
+"record_types":["Action"],"test_ids":[11,12,13,14,15],"location_ids":[],
+"related_ai_ids":["YB-3"],"limit":5},"clarification_code":null}
 질문 '안녕, 기분 어때?':
 {"route":"character","search":null,"clarification_code":null}
 질문 '파이썬 정렬 코드를 작성해 줘':

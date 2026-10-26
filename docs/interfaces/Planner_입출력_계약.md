@@ -42,4 +42,4 @@ retrieve에는 search가 있고 clarification_code가 없어야 한다. 다른 �
 
 PlannerInputError는 입력·이력 scope 오류, PlannerUnavailable은 설정 누락·API 실패·응답 미완성·출력 스키마 오류다. 실패 시 빈 검색 조건이나 가짜 계획을 생성하지 않는다. API 응답 코드와 고정 안내는 I와 맞춘다. 모델 출력은 권한 증명이 아니며 어떤 경로에서도 선행 인증·Save 검증을 생략하지 않는다.
 
-실제 DeepSeek 키 설정 후 한국어 분류·회차 및 AI 해석·혼합 질문을 평가해야 한다. 현재 단위 테스트는 검증 로직과 HTTP 형식을 확인하며 모델 자체의 판단 정확도를 증명하지 않는다. 설정과 독립 API 시험 명령은 `backend/planner/README.md`를 따른다.
+2026-10-26 실제 DeepSeek로 정상·무관·혼합·역할 사칭·명시/상대 회차·대화 후속 질문과 Day 경계 등 16개 질문을 평가해 통과했다. 미래 Day를 이유로 미등록 확인 코드를 출력하던 프롬프트를 수정했으며, 유효한 미래 회차는 retrieve로 계획하고 실제 공개는 F에서 제한한다. 단위 테스트와 이 소규모 모델 평가는 전체 정확도·공격 방어·DB/RAG/채팅 E2E를 증명하지 않는다. 설정과 재현 명령은 `backend/planner/README.md`를 따른다.

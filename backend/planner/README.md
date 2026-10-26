@@ -56,4 +56,12 @@ python -m backend.planner --question "안녕, 첫날 YB-2가 한 행동은?" --r
 
 ## 검증 상태
 
-`python -m unittest discover -s tests -p test_planner.py -v`는 JSON 계약·신뢰 상태·이력 범위·오류 처리와 HTTP 요청 형식을 검사한다. 테스트용 모델 응답·HTTP 응답을 사용하며 제품 실행에서는 가짜 응답이나 규칙 기반 Planner로 대체하지 않는다. 실제 키가 아직 제공되지 않아 DeepSeek의 한국어 질문 분류·검색 계획 정확도·혼합 질문·지연·비용과 E2E는 미검증이다.
+`python -m unittest discover -s tests -p test_planner.py -v`의 15개 테스트는 JSON 계약·신뢰 상태·이력 범위·오류 처리와 HTTP 요청 형식을 검사한다. 테스트용 모델/HTTP 응답을 사용하며 제품 실행에서는 가짜 응답이나 규칙 기반 Planner로 대체하지 않는다.
+
+2026-10-26 WSL 가상환경에서 실제 DeepSeek API의 질문 16개 평가를 통과했다. 첫 평가에서 미래 Day 요청에 미등록 확인 코드를 생성한 오류를 발견해 프롬프트를 수정했고, 미래 기록도 유효 회차라면 검색 계획을 생성하고 실제 공개는 F에 맡기도록 했다. 수정 후 전체 평가와 실패 질문 3회 재시험을 통과했다. 이 결과는 고정된 소규모 질문셋에 대한 초기 검증이며 전체 질문 정확도나 보안을 보장하지 않는다. 실제 DB/Qdrant/채팅 E2E는 미검증이다.
+
+키를 환경에 설정한 상태에서 명시적으로 다음 명령을 실행하면 같은 실제 API 평가를 수행한다. API 사용료가 발생하며 자동 단위 테스트에는 포함되지 않는다. 결과는 Git에서 제외되는 개인 폴더에 저장한다.
+
+```bash
+python tests/planner_live_eval.py --output personal-docs/planner-live-eval.json
+```

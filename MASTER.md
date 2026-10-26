@@ -226,7 +226,7 @@
 - 문맥이 부족한 질문: clarify와 고정 코드로 추가 확인을 요청한다.
 - 공격성 요청: Input Guardrail의 탐지·차단 대상으로 평가한다. 정상 추리 질문을 단어만으로 공격으로 간주하지 않는다.
 
-사용자 결정에 따라 Planner는 DeepSeek API를 사용하며 기본 모델은 deepseek-flash, 키·모델은 별도 환경변수로 설정한다. 초기 분류·엄격한 JSON 검색 계획 검증을 `backend/planner/`에 구현했다. 게임 기록 요청이 섞인 질문은 retrieve로 계획하도록 지시하며, 오류 시 넓은 검색으로 대체하지 않는다. 실제 분류 정확도·E/I/D 연결은 미검증이고 회차·관련 AI 필터의 RAG 처리 방식은 협의 중이다. [Planner 입출력 계약](docs/interfaces/Planner_입출력_계약.md)을 따른다. 어떤 분기에서도 선행 인증·Save 검증을 생략하지 않으며 검색 ACL을 우회해서는 안 된다.
+사용자 결정에 따라 Planner는 DeepSeek API를 사용하며 기본 모델은 deepseek-flash, 키·모델은 별도 환경변수로 설정한다. 초기 분류·엄격한 JSON 검색 계획 검증을 `backend/planner/`에 구현했다. 게임 기록 요청이 섞인 질문은 retrieve로 계획하도록 지시하며, 오류 시 넓은 검색으로 대체하지 않는다. 실제 API 질문 16개 초기 평가를 통과했으며 전체 정확도·E/I/D 연결은 후속 검증 대상이다. 회차·관련 AI 필터는 E의 검색 계약과 맞춘다. [Planner 입출력 계약](docs/interfaces/Planner_입출력_계약.md)을 따른다. 어떤 분기에서도 선행 인증·Save 검증을 생략하지 않으며 검색 ACL을 우회해서는 안 된다.
 
 ---
 

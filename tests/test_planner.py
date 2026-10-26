@@ -106,6 +106,12 @@ class PlannerTests(unittest.TestCase):
             with self.subTest(content=content[:40]), self.assertRaises(PlannerUnavailable):
                 parse_result(content)
 
+    def test_invented_future_day_codes_do_not_bypass_output_validation(self):
+        for code in ('FUTURE_DAY', 'FUTURE_DAY_OUT_OF_RANGE'):
+            with self.subTest(code=code), self.assertRaises(PlannerUnavailable):
+                parse_result(json.dumps(dict(route='clarify', search=None,
+                                             clarification_code=code)))
+
     def test_model_error_has_no_search_fallback_or_private_error(self):
         model = Model()
         with patch.object(model, 'complete', side_effect=RuntimeError('private-error')):
