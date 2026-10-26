@@ -116,6 +116,42 @@ def test_bad_responses_raise_clear_errors():
         _raises(lambda: chat_json("S", "Q", post=lambda *a: _ok("   \n  ")), "비어 있습니다")  # 공백뿐인 응답(2026-10-21 실제로 나옴)
 
 
+def _counting(responses):
+    """호출 횟수를 세면서 responses를 차례로 돌려주는 가짜 post. 마지막 응답은 계속 반복한다."""
+    calls = []
+
+    def fake(url, headers, body, timeout):
+        calls.append(1)
+        return responses[min(len(calls) - 1, len(responses) - 1)]
+
+    return fake, calls
+
+
+def test_non_stop_finish_reason_is_failure_and_not_retried():
+    # 내용이 멀쩡해 보여도 stop이 아니면 성공으로 치지 않는다. 같은 입력은 다시 보내도 같은 결과이기 쉬워 재시도하지 않는다.
+    for finish in ("content_filter", "tool_calls", None):
+        fake, calls = _counting([_ok('{"reply": "안녕하세요"}', finish=finish)])
+        with env():
+            _raises(lambda: chat_json("S", "Q", post=fake, sleep=lambda s: None), "finish_reason")
+        assert len(calls) == 1, (finish, len(calls))
+
+
+def test_resource_shortage_finish_is_retried():
+    fake, calls = _counting([_ok('{"reply": "x"}', finish="insufficient_system_resource"), _ok('{"reply": "안녕하세요"}')])
+    with env():
+        res = chat_json("S", "Q", post=fake, sleep=lambda s: None)
+    assert res["data"]["reply"] == "안녕하세요" and res["attempts"] == 2 and len(calls) == 2
+
+
+def test_blank_reply_is_failure_and_retried():
+    # JSON은 올바르지만 reply가 빈 문자열이거나 공백뿐인 경우. LLM_RETRIES=1이므로 총 2번 보낸다.
+    for content in ('{"reply": ""}', '{"reply": "   \\n "}'):
+        fake, calls = _counting([_ok(content)])
+        with env():
+            _raises(lambda: chat_json("S", "Q", post=fake, sleep=lambda s: None), "비어 있습니다")
+        assert len(calls) == 2, (content, len(calls))
+
+
 def test_missing_key_and_bad_settings():
     with env(DEEPSEEK_API_KEY=""):
         _raises(lambda: chat_json("S", "Q", post=lambda *a: _ok("{}")), "DEEPSEEK_API_KEY")

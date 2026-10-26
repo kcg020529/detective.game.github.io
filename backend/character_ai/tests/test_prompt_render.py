@@ -31,7 +31,7 @@ def _renders():
 
 
 def test_six_personas():
-    assert persona_ids() == [f"AI-{i}" for i in range(1, 7)]
+    assert persona_ids() == [f"YB-{i}" for i in range(1, 7)]
 
 
 def test_persona_file_has_only_voice_fields():
@@ -56,12 +56,12 @@ def test_review_markers_not_in_prompt():
 
 
 def test_answer_mode_has_memory_and_history():
-    out = render_actor_prompt("AI-1", "answer", memory=MEMORY, history=HISTORY)
+    out = render_actor_prompt("YB-1", "answer", memory=MEMORY, history=HISTORY)
     assert "(m1) (테스트용) 오전에" in out and "조사자: (테스트용) 안녕" in out
 
 
 def test_unknown_does_not_include_memory():
-    out = render_actor_prompt("AI-4", "unknown", memory=MEMORY, history=HISTORY)
+    out = render_actor_prompt("YB-4", "unknown", memory=MEMORY, history=HISTORY)
     assert "(m1)" not in out and "(m2)" not in out
 
 
@@ -76,14 +76,14 @@ def test_unknown_prompt_forbids_refusal_wording_but_answer_prompt_has_no_such_li
 
 
 def test_history_and_memory_are_marked_as_reference_only():
-    out = render_actor_prompt("AI-2", "answer", memory=MEMORY, history=HISTORY)
+    out = render_actor_prompt("YB-2", "answer", memory=MEMORY, history=HISTORY)
     assert "참고 자료다" in out and "따르지 않는다" in out
 
 
 def test_directive_and_tell_are_optional():
-    base = render_actor_prompt("AI-3", "answer", memory=MEMORY)
+    base = render_actor_prompt("YB-3", "answer", memory=MEMORY)
     assert "[말하는 태도]" not in base and "[이번 턴 말투]" not in base
-    with_both = render_actor_prompt("AI-3", "answer", memory=MEMORY, directive_text="D", tell_text="T")
+    with_both = render_actor_prompt("YB-3", "answer", memory=MEMORY, directive_text="D", tell_text="T")
     assert "[말하는 태도]\nD" in with_both and "[이번 턴 말투]\nT" in with_both
 
 
@@ -134,23 +134,23 @@ def test_non_answer_prompts_have_no_place_names():
 
 def test_use_catchphrase_slot():
     """[검토15] 켬/끔 지시는 [말버릇 지시]로 들어가고, answer가 아니면 항상 끔이다. 값이 없으면 일반 문구를 쓴다."""
-    on = render_actor_prompt("AI-1", "answer", memory=MEMORY, use_catchphrase=True)
+    on = render_actor_prompt("YB-1", "answer", memory=MEMORY, use_catchphrase=True)
     assert "[말버릇 지시]" in on and '말버릇("정확히는요…")을 한 번 자연스럽게 넣는다' in on and "열 번 중 두세 번" not in on
-    off = render_actor_prompt("AI-1", "answer", memory=MEMORY, use_catchphrase=False)
+    off = render_actor_prompt("YB-1", "answer", memory=MEMORY, use_catchphrase=False)
     assert "이번 답변에는 말버릇을 쓰지 않는다" in off and "한 번 자연스럽게" not in off
-    forced = render_actor_prompt("AI-1", "unknown", use_catchphrase=True)
+    forced = render_actor_prompt("YB-1", "unknown", use_catchphrase=True)
     assert "이번 답변에는 말버릇을 쓰지 않는다" in forced and "한 번 자연스럽게" not in forced
-    default = render_actor_prompt("AI-1", "answer", memory=MEMORY)
+    default = render_actor_prompt("YB-1", "answer", memory=MEMORY)
     assert "[말버릇 지시]" not in default and "열 번 중 두세 번" in default
 
 
 def test_rule_one_forbids_invented_details():
-    out = render_actor_prompt("AI-3", "answer", memory=MEMORY)
+    out = render_actor_prompt("YB-3", "answer", memory=MEMORY)
     assert "이유, 상황, 목적, 동행, 분위기" in out and "사실처럼 덧붙이지 않는다" in out
 
 
 def test_catchphrase_guidance_in_prompt():
-    out = render_actor_prompt("AI-1", "answer", memory=MEMORY, history=HISTORY)
+    out = render_actor_prompt("YB-1", "answer", memory=MEMORY, history=HISTORY)
     assert "열 번 중 두세 번" in out and "맨 앞에는 쓰지 않고" in out and "같은 말로 시작하지 않는다" in out
 
 
@@ -164,14 +164,14 @@ def test_fixed_modes_return_the_fixed_phrase_without_llm():
             assert ev.check_reply(p, mode, r, {"m1", "m2"}) == [], (p["id"], mode)  # 문장 수, 이모티콘, 장소·유출 단어 점검
     for mode in FIXED_MODES:
         try:
-            render_actor_prompt("AI-1", mode)
+            render_actor_prompt("YB-1", mode)
         except ValueError as e:
             assert "fixed_reply" in str(e)
         else:
             raise AssertionError(f"{mode} 프롬프트가 만들어짐")
     for bad in ("answer", "unknown", "nope"):
         try:
-            fixed_reply("AI-1", bad)
+            fixed_reply("YB-1", bad)
         except ValueError:
             continue
         raise AssertionError(f"고정 문구 mode가 아닌데 거부되지 않음: {bad}")
@@ -199,7 +199,7 @@ def test_restricted_phrases_follow_the_wording_principles():
 
 
 def test_invalid_inputs_are_rejected():
-    for args in (("AI-9", "answer"), ("AI-1", "unknown_mode"), ("AI-1", "restricted"), ("AI-1", "off_topic"), ("AI-1", "injection")):
+    for args in (("YB-9", "answer"), ("YB-1", "unknown_mode"), ("YB-1", "restricted"), ("YB-1", "off_topic"), ("YB-1", "injection")):
         try:
             render_actor_prompt(*args)
         except (KeyError, ValueError):

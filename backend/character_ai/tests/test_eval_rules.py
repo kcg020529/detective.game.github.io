@@ -68,7 +68,7 @@ def test_problems_are_detected():
 
 
 def test_unrelated_memory_is_caught_by_id_not_by_words():
-    """질문과 무관한 기억(m2)을 쓴 응답은 답변 문장이 어떻든 used 번호로 잡힌다. (2026-10-21 AI-1에서 1/25건 나옴)"""
+    """질문과 무관한 기억(m2)을 쓴 응답은 답변 문장이 어떻든 used 번호로 잡힌다. (2026-10-21 YB-1에서 1/25건 나옴)"""
     p = _persona()
     both = {"reply": "오전엔 A구역 복도, 오후엔 대기실이었어요.", "used": ["m1", "m2"]}
     assert _has(ev.check_reply(p, "answer", both, IDS, ("A구역",), relevant_ids=("m1",)), "무관한 기억을 사용함: ['m2']")
@@ -90,7 +90,7 @@ def test_run_checks_flags_unrelated_memory_with_default_scenario():
         return {"data": {"reply": "A구역 복도에 있었어요. 오후엔 대기실이요.", "used": ["m1", "m2"]}, "raw": "",
                 "model": "fake", "usage": {"prompt_tokens": 1, "completion_tokens": 1}}
 
-    report = check_llm.run_checks(["AI-1"], ("answer",), 2, "Q", chat=chat)
+    report = check_llm.run_checks(["YB-1"], ("answer",), 2, "Q", chat=chat)
     assert all(_has(r["problems"], "무관한 기억을 사용함") for r in report["results"])
 
 
@@ -125,7 +125,7 @@ def _fake_chat_ok(prompt, question):
 
 
 def test_run_checks_counts_calls_and_tokens():
-    report = check_llm.run_checks(["AI-1", "AI-2"], ("answer", "unknown"), 3, "질문", chat=_fake_chat_ok)
+    report = check_llm.run_checks(["YB-1", "YB-2"], ("answer", "unknown"), 3, "질문", chat=_fake_chat_ok)
     assert len(report["results"]) == 2 * 2 * 3 and not report["aborted"]
     assert report["totals"] == {"prompt_tokens": 1200, "completion_tokens": 120}
     # 가짜 응답은 A구역을 말하지 않으므로 answer 응답에서만 점검에 걸린다.
@@ -136,7 +136,7 @@ def test_run_checks_counts_calls_and_tokens():
 def test_run_checks_records_attempts_and_counts_failed_tokens():
     """재시도한 호출은 attempts를 남기고, 끝내 실패한 호출의 토큰도 합계에 넣는다(요금에는 잡히기 때문)."""
     def chat(prompt, question):
-        if "AI-2" in prompt:
+        if "YB-2" in prompt:
             e = LLMError("모델 응답이 비어 있습니다.", retryable=True)
             e.attempts, e.usage = 2, {"prompt_tokens": 300, "completion_tokens": 2}
             raise e
@@ -144,7 +144,7 @@ def test_run_checks_records_attempts_and_counts_failed_tokens():
         res["attempts"] = 2
         return res
 
-    report = check_llm.run_checks(["AI-1", "AI-2"], ("unknown",), 1, "Q", chat=chat)
+    report = check_llm.run_checks(["YB-1", "YB-2"], ("unknown",), 1, "Q", chat=chat)
     ok, bad = report["results"]
     assert ok["attempts"] == 2 and not ok["error"]
     assert bad["attempts"] == 2 and bad["usage"]["prompt_tokens"] == 300
@@ -159,15 +159,15 @@ def test_run_checks_fixed_modes_use_fixed_phrases_without_calling_llm():
         calls.append(1)
         return _fake_chat_ok(prompt, question)
 
-    report = check_llm.run_checks(["AI-1", "AI-2"], FIXED_MODES, 5, "Q", chat=chat)
+    report = check_llm.run_checks(["YB-1", "YB-2"], FIXED_MODES, 5, "Q", chat=chat)
     assert calls == [] and len(report["results"]) == 2 * len(FIXED_MODES)
     first = report["results"][0]
     assert first["mode"] == "restricted" and first["fixed"]
-    assert first["reply"] == get_persona("AI-1")["restricted_style"] == fixed_reply("AI-1", "restricted")["reply"]
+    assert first["reply"] == get_persona("YB-1")["restricted_style"] == fixed_reply("YB-1", "restricted")["reply"]
     assert first["problems"] == [] and first["usage"] == {} and first["error"] is None
     assert all(r["fixed"] and r["problems"] == [] for r in report["results"])
-    by_mode = {r["mode"]: r["reply"] for r in report["results"] if r["persona"] == "AI-1"}
-    assert by_mode["off_topic"] == by_mode["injection"] == get_persona("AI-1")["off_topic_style"]
+    by_mode = {r["mode"]: r["reply"] for r in report["results"] if r["persona"] == "YB-1"}
+    assert by_mode["off_topic"] == by_mode["injection"] == get_persona("YB-1")["off_topic_style"]
     assert report["totals"] == {"prompt_tokens": 0, "completion_tokens": 0} and not report["aborted"]
 
 
@@ -176,11 +176,11 @@ def test_run_checks_flags_a_bad_fixed_phrase():
     original = check_llm.fixed_reply
     check_llm.fixed_reply = lambda pid, mode: {"reply": "그건 기록이 없어서 말씀드릴 수 없어요.", "used": []}
     try:
-        report = check_llm.run_checks(["AI-1"], ("restricted",), 1, "Q", chat=_fake_chat_ok)
+        report = check_llm.run_checks(["YB-1"], ("restricted",), 1, "Q", chat=_fake_chat_ok)
     finally:
         check_llm.fixed_reply = original
     assert any("기록·기억 유무" in x for x in report["results"][0]["problems"])
-    s = ev.summarize(report["results"], {"AI-1": get_persona("AI-1")})["AI-1"]
+    s = ev.summarize(report["results"], {"YB-1": get_persona("YB-1")})["YB-1"]
     assert s["fixed_problems"] == 1 and s["calls"] == 0 and any("고정 문구" in f for f in s["flags"])
 
 
@@ -211,7 +211,7 @@ def test_run_checks_aborts_after_consecutive_errors():
 def test_non_answer_replies_with_places_are_flagged():
     p = _persona()
     assert _has(ev.check_reply(p, "restricted", {"reply": "어제 오전에는 Zone-A에 있었습니다.", "used": []}, IDS), "장소")
-    # 2026-10-21 실제 호출에서 나온 AI-5 restricted 응답: 없는 장소를 말하고 없는 기억 번호까지 지어냈다.
+    # 2026-10-21 실제 호출에서 나온 YB-5 restricted 응답: 없는 장소를 말하고 없는 기억 번호까지 지어냈다.
     fabricated = ev.check_reply(p, "restricted", {"reply": "어제 오전에는 Zone-B에서 대기하고 있었습니다.", "used": ["기억-01"]}, IDS)
     assert _has(fabricated, "예시 속 장소") and _has(fabricated, "used가 비어 있지 않음")
     assert _has(ev.check_reply(p, "restricted", {"reply": "대기실 자료예요.", "used": []}, IDS), "restricted 답변에 장소를 말함")
@@ -228,7 +228,7 @@ def test_run_checks_rotates_questions_and_sets_catchphrase_pattern():
         return _fake_chat_ok(prompt, question)
 
     qs = ("Q1", "Q2", "Q3")
-    report = check_llm.run_checks(["AI-1"], ("answer", "unknown"), 5, qs, chat=spy, catch_every=2)
+    report = check_llm.run_checks(["YB-1"], ("answer", "unknown"), 5, qs, chat=spy, catch_every=2)
     res = report["results"]
     assert [r["question"] for r in res[:5]] == ["Q1", "Q2", "Q3", "Q1", "Q2"]
     assert [r["catch"] for r in res if r["mode"] == "answer"] == [True, False, True, False, True]
@@ -236,7 +236,7 @@ def test_run_checks_rotates_questions_and_sets_catchphrase_pattern():
     on_prompts = [p for p in prompts if "한 번 자연스럽게 넣는다" in p]
     assert len(on_prompts) == 3
     # 지시를 쓰지 않으면(catch_every=None) 일반 문구가 들어가고 catch는 None이다.
-    plain = check_llm.run_checks(["AI-1"], ("answer",), 2, "Q", chat=_fake_chat_ok)
+    plain = check_llm.run_checks(["YB-1"], ("answer",), 2, "Q", chat=_fake_chat_ok)
     assert all(r["catch"] is None for r in plain["results"])
 
 

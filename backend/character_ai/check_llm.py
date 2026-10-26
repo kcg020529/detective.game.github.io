@@ -1,9 +1,9 @@
 """LLM 실제 호출 확인용 수동 스크립트. 자동 테스트가 아니며, .env의 키가 필요하고 호출마다 비용이 든다.
 
 사용:
-  python3 backend/character_ai/check_llm.py                       # AI-1~6, answer mode, 기본 질문 (호출 6회)
-  python3 backend/character_ai/check_llm.py --persona AI-3 --question "그때 어디 있었어?"
-  python3 backend/character_ai/check_llm.py --all-modes           # AI-1~6 x 5개 mode (LLM 호출 12회, restricted·off_topic·injection은 고정 문구라 호출 없음)
+  python3 backend/character_ai/check_llm.py                       # YB-1~6, answer mode, 기본 질문 (호출 6회)
+  python3 backend/character_ai/check_llm.py --persona YB-3 --question "그때 어디 있었어?"
+  python3 backend/character_ai/check_llm.py --all-modes           # YB-1~6 x 5개 mode (LLM 호출 12회, restricted·off_topic·injection은 고정 문구라 호출 없음)
   python3 backend/character_ai/check_llm.py --all-modes --repeat 5   # 같은 호출을 5번씩 (LLM 호출 60회) 하고 자동 채점 요약
   python3 backend/character_ai/check_llm.py --all-modes --repeat 5 --verbose   # 모든 응답을 출력 (사람이 읽어 볼 때)
 

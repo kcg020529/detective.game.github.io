@@ -132,6 +132,11 @@ def _parse(res, default_model):
         raise LLMError("응답 형식이 예상과 다릅니다.") from None
     if finish == "length":
         raise LLMError("응답이 max_tokens에서 잘렸습니다. .env의 LLM_MAX_TOKENS를 늘려 보세요.")
+    if finish != "stop":
+        # content_filter(안전 필터 차단)·tool_calls 등은 정상 종료가 아니다. 같은 입력은 같은 결과가 나기 쉬워 다시 보내지 않는다.
+        # insufficient_system_resource는 서버 사정이라 다시 보내면 나아질 수 있다.
+        raise LLMError(f"모델이 정상 종료하지 않았습니다(finish_reason={finish!r}).",
+                       retryable=finish == "insufficient_system_resource")
     if not raw.strip():
         raise LLMError("모델 응답이 비어 있습니다(빈 문자열 또는 공백뿐).", retryable=True)
     try:
@@ -140,6 +145,8 @@ def _parse(res, default_model):
         raise LLMError("모델 응답이 JSON이 아닙니다: " + raw[:200], retryable=True) from None
     if not isinstance(data, dict) or not isinstance(data.get("reply"), str):
         raise LLMError('JSON에 문자열 "reply"가 없습니다: ' + raw[:200], retryable=True)
+    if not data["reply"].strip():
+        raise LLMError('JSON의 "reply"가 비어 있습니다(빈 문자열 또는 공백뿐).', retryable=True)
     return {"data": data, "raw": raw, "model": res.get("model") or default_model}
 
 

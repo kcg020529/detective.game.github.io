@@ -5,9 +5,11 @@
 1. LLM은 DeepSeek `deepseek-flash` 한 가지로 정했다. 테스트 비용과 시간 때문이다.
    - 공급자·모델·키는 루트 `.env`에서 읽고, `.gitignore`가 `.env`를 제외한다. 예시는 `.env.example`.
 2. `backend/character_ai/llm_client.py`의 `chat_json(system_prompt, user_message)`로 호출해 JSON 응답을 받는다.
-   - 빈 응답, JSON 아님, 429/500/503, 연결 실패, 시간 초과는 기본 1회 다시 보낸다(`.env`의 `LLM_RETRIES`, 0~5).
-   - 키·잔액·요청 오류와 응답 잘림은 다시 보내지 않고 바로 `LLMError`로 알린다. 메시지에서 키는 가린다.
-3. 가짜 응답(mock) 테스트 **14건 통과**. 실제 API 호출은 아니다.
+   - 빈 응답(`reply`가 빈 문자열·공백뿐인 경우 포함), JSON 아님, 429/500/503, 연결 실패, 시간 초과, `finish_reason`이 `insufficient_system_resource`인 응답은 기본 1회 다시 보낸다(`.env`의 `LLM_RETRIES`, 0~5).
+   - 키·잔액·요청 오류와 응답 잘림, 정상 종료(`finish_reason`이 `stop`)가 아닌 응답(`content_filter` 등)은 다시 보내지 않고 바로 `LLMError`로 알린다. 메시지에서 키는 가린다.
+3. 가짜 응답(mock) 테스트 **17건 통과**. 실제 API 호출은 아니다.
+   - 2026-10-26 리뷰 반영으로 `finish_reason`·빈 `reply` 검사와 테스트 3건을 추가했다. 이 변경 후 실제 API 호출은 다시 하지 않았다(아래 4번 289회는 변경 전 결과).
+   - `Jinja2`, `PyYAML`을 `backend/requirements.txt`에 추가했다(`prompt_render.py` 사용). 빈 가상환경에서 두 줄만 설치하면 렌더링 테스트가 통과함을 확인했다.
    - `python3 -I backend/character_ai/tests/test_llm_client.py`
 4. 실제 API 호출을 5차례, 합계 **289회** 했다 (진행 중).
    - 실패는 3차의 빈 JSON 1건뿐이다.
@@ -16,13 +18,13 @@
 6. 호출 입출력 형식 (팀 공유용). import 방식은 임시다.
 
    ```python
-   system_prompt = render_actor_prompt("AI-1", "answer",          # AI-1~6, "answer" | "unknown"
+   system_prompt = render_actor_prompt("YB-1", "answer",          # YB-1~6, "answer" | "unknown"
        memory=[{"id": "m1", "text": "..."}],                      # answer에서만 사용
        history=[{"speaker": "조사자", "text": "..."}],             # 참고 자료로만 사용
        use_catchphrase=None)                                      # True 켬 / False 끔 / None 일반 문구
    result = chat_json(system_prompt, "조사자의 질문")
    # → {"data": {"reply": "...", "used": ["m1"]}, "usage": {...}, "model": "...", "attempts": 1}
-   fixed_reply("AI-1", "restricted")   # → {"reply": "고정 문구", "used": []}  (LLM 호출 없음)
+   fixed_reply("YB-1", "restricted")   # → {"reply": "고정 문구", "used": []}  (LLM 호출 없음)
    ```
 
    | mode | 뜻 | 처리 |
@@ -47,11 +49,12 @@
    - 말버릇은 호출 측이 턴마다 `use_catchphrase`로 켜고 끈다.
 3. 프롬프트 렌더링 mock 테스트 **20건 통과** (LLM 호출 없음).
    - `python3 -I backend/character_ai/tests/test_prompt_render.py`
-4. 캐릭터 ID는 `AI-1`~`AI-6`을 유지한다. 프론트의 `YB-1`~`YB-6`은 따르지 않는다. A02 결과가 나오면 맞춘다.
+4. 캐릭터 ID는 `YB-1`~`YB-6`을 쓴다(2026-10-26 변경). 처음에는 `AI-1`~`AI-6`이었고 번호만 1:1로 옮겼다. 이름·성격은 A02 결과가 나오면 맞춘다.
+   - 아래 실제 호출 결과(289회 등)는 `AI-n` 표기일 때의 것이다. 바꾼 뒤에는 실제 호출을 다시 하지 않았고, 설명 속 `AI-n`도 같은 캐릭터의 `YB-n`으로 읽으면 된다.
 5. 실제 호출로 말투와 동작을 확인했다 (진행 중).
    - 말버릇: 켠 턴 사용 6명 모두 3/3, 끈 턴 0/7 (4차).
    - 모름 답변의 거절 말투(30건 중): 3차 5건 → 4차 11건 → 5차 3건(금지 줄 추가 후). 실행마다 변동이 커서 한 줄의 효과라고 단정하지 않는다.
-   - 남은 것: AI-1·AI-6의 거절 말투, AI-6의 머뭇거림(확실한 기억도 불확실한 듯 말함).
+   - 남은 것: YB-1·YB-6의 거절 말투, YB-6의 머뭇거림(확실한 기억도 불확실한 듯 말함).
    - **자동 점검은 거절 말투를 못 잡는다.** "규칙 위반 0건"이 문제없음이라는 뜻이 아니다.
 6. 자동 채점 규칙 `eval_rules.py`와 확인 스크립트 `check_llm.py`를 만들었다. mock 테스트 **19건 통과**.
    - `python3 -I backend/character_ai/tests/test_eval_rules.py`
@@ -70,7 +73,7 @@
 # D 후속/팀 합의
 
 - **신호 계약 (G·C·F):** 누가 어떤 기준으로 `restricted`, `off_topic`, `injection`을 정해 넘기는지. 가드레일 방식이 정해진 뒤 합의한다.
-- **다듬기:** AI-1·AI-6 거절 표현을 `avoid`에 넣을지, 점검에 거절 표현을 경보로 넣을지, 실제 모름 질문("남이 한 일")을 시험 질문에 넣을지, 반복률을 mode별·문장 단위로 낼지.
-- **AI-6 머뭇거림 (D03):** 서버가 정한 태도로 사실의 확실도를 통제할지.
+- **다듬기:** YB-1·YB-6 거절 표현을 `avoid`에 넣을지, 점검에 거절 표현을 경보로 넣을지, 실제 모름 질문("남이 한 일")을 시험 질문에 넣을지, 반복률을 mode별·문장 단위로 낼지.
+- **YB-6 머뭇거림 (D03):** 서버가 정한 태도로 사실의 확실도를 통제할지.
 - **프론트(찬규):** 역할명(관리자·보안 분석가·개발자)이 MASTER의 prof/grad/std와 다르고, 안내문이 "Day 1~3"인데 MASTER는 Day 1~6이다.
 - **용범(A02)·선영:** 페르소나 값 확정, 신호 형식 합의. `.env.example`이 다른 팀원 파일과 겹치지 않는지 확인.

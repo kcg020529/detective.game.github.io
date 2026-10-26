@@ -4,3 +4,5 @@ uvicorn>=0.30,<1
 PyMySQL>=1.1,<2
 pytest>=8,<9
 httpx>=0.27,<1
+Jinja2>=3,<4
+PyYAML>=6,<7
