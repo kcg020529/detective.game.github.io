@@ -12,6 +12,7 @@ const ctx = canvas.getContext('2d');
 const playParams = new URLSearchParams(window.location.search);
 const requestedPlay = 'c';
 const skipToPlay = playParams.get('skip') === '1';
+const fastLoad = playParams.get('fast') === '1';
 let mountedPlay = null;
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -909,6 +910,15 @@ async function startLoading() {
   startScene();
   render();
   loadTimer = setInterval(tick, 70);
+
+  // 개발용 지름길: 로딩을 바로 100으로
+  if (fastLoad && !skipToPlay) {
+    clearInterval(loadTimer);
+    progress = 100;
+    stages.forEach((_, i) => enterStage(i));
+    render();
+    finish();
+  }
 
   // 개발용 지름길: Mock 계정 첫 Save로 조사 화면을 바로 엶
   if (skipToPlay) {
