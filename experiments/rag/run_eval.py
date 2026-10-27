@@ -30,6 +30,11 @@ BASE_FIELDS = {'record_id', 'record_type', 'test_id', 'day', 'location_ids', 'in
 VARIANT_ORDER = {'filtered': 0, 'broad': 1, 'plain': 2}
 
 
+def _metric_sort_key(item):
+    category, role, variant = item[0]
+    return category, role, VARIANT_ORDER.get(variant, len(VARIANT_ORDER))
+
+
 def _git(*args):
     try:
         return subprocess.check_output(['git', *args], cwd=ROOT, text=True, stderr=subprocess.DEVNULL).strip()
@@ -128,7 +133,7 @@ def _print_table(rows):
     table_rows = [('overall', 'all', 'all', _metrics(rows))]
     table_rows.extend((category, role, variant, _metrics(group))
                       for (category, role, variant), group in sorted(
-                          groups.items(), key=lambda item: (item[0][0], item[0][1], VARIANT_ORDER[item[0][2]])))
+                          groups.items(), key=_metric_sort_key))
     headers = ('category', 'role', 'variant', 'hit@1', 'hit@3', 'hit@5', 'MRR', 'n', 'unans', 'avg ms')
     print(' | '.join(headers))
     print('-+-'.join('-' * len(value) for value in headers))
@@ -141,26 +146,72 @@ def _print_table(rows):
         print(' | '.join(values))
 
 
-def build_report(rows, violations, leftovers, cases, name, qdrant_url, text_mode):
+def _extra_metrics(rows):
+    rows_by_id = {row['id']: row for row in rows}
+    extra = []
+    for role in sorted({row['role'] for row in rows}):
+        role_rows = [row for row in rows if row['role'] == role]
+        twins = [row for row in role_rows if row['category'] == 'twin' and row['gold_visible']]
+        twin_confusions = [row for row in twins if row['rank_first_gold'] != 1 and row.get('top_summary')
+                           and row['top_summary'] in row.get('gold_summaries', [])]
+        mixed = [row for row in role_rows if row['category'] == 'mixed_type' and row['gold_visible']]
+        type_confusions = [row for row in mixed if row.get('top_record_type')
+                           and row['top_record_type'] not in row.get('gold_record_types', [])]
+        noisy_drops = []
+        for row in role_rows:
+            if row['category'] != 'noisy' or not row.get('clean_id') or not row['gold_visible']:
+                continue
+            clean = rows_by_id.get(row['clean_id'])
+            if clean is None or not clean['gold_visible']:
+                continue
+            noisy_hit = row['rank_first_gold'] is not None and row['rank_first_gold'] <= 5
+            clean_hit = clean['rank_first_gold'] is not None and clean['rank_first_gold'] <= 5
+            noisy_drops.append(int(noisy_hit) - int(clean_hit))
+        offtopic = [row for row in role_rows if row['category'] == 'offtopic']
+        extra.append({
+            'role': role,
+            'twin_confusion@1': round(len(twin_confusions) / len(twins), 4) if twins else None,
+            'type_confusion@1': round(len(type_confusions) / len(mixed), 4) if mixed else None,
+            'noise_drop': round(sum(noisy_drops) / len(noisy_drops), 4) if noisy_drops else None,
+            'nonempty_rate': round(sum(bool(row['returned_ids']) for row in offtopic) / len(offtopic), 4)
+            if offtopic else None,
+        })
+    return extra
+
+
+def _print_extra_table(extra):
+    print('extra metrics')
+    headers = ('role', 'twin_confusion@1', 'type_confusion@1', 'noise_drop', 'nonempty_rate')
+    print(' | '.join(headers))
+    print('-+-'.join('-' * len(value) for value in headers))
+    for row in extra:
+        print(' | '.join(str(row[key]) if row[key] is not None else '—' for key in headers))
+
+
+def build_report(rows, violations, leftovers, cases, name, config):
     category_counts = defaultdict(lambda: {'answerable': 0, 'unanswerable': 0})
     for row in rows:
         bucket = category_counts[row['category']]
         bucket['answerable' if row['gold_visible'] else 'unanswerable'] += 1
     anomalies = [category for category, count in sorted(category_counts.items())
-                 if count['answerable'] == 0 and category != 'guard']
+                 if count['answerable'] == 0 and category not in ('guard', 'offtopic')]
     metrics = defaultdict(list)
     for row in rows:
         metrics[(row['category'], row['role'], row['variant'])].append(row)
+    internal_fields = {'top_summary', 'gold_summaries', 'top_record_type', 'gold_record_types'}
+    extra = _extra_metrics(rows)
     return {
-        'run_name': name, 'config': _config(qdrant_url, text_mode),
+        'run_name': name, 'config': config,
         'case_count': len(cases), 'base_case_counts': {
             category: len({case['question'] for case in cases if case['category'] == category})
             for category in sorted({case['category'] for case in cases})},
         'overall': _metrics(rows),
         'metrics': [{'category': category, 'role': role, 'variant': variant, **_metrics(group)}
                     for (category, role, variant), group in sorted(
-                        metrics.items(), key=lambda item: (item[0][0], item[0][1], VARIANT_ORDER[item[0][2]]))],
-        'cases': rows, 'acl_violations': violations, 'leftover_eval_users': leftovers,
+                        metrics.items(), key=_metric_sort_key)],
+        'cases': [{key: value for key, value in row.items() if key not in internal_fields} for row in rows],
+        'acl_violations': violations, 'leftover_eval_users': leftovers,
+        'extra': extra,
         'anomalies': anomalies,
     }
 
@@ -235,6 +286,15 @@ def run(name='baseline'):
                     'gold_ids': case['gold_ids'], 'gold_visible': gold_visible,
                     'rank_first_gold': rank, 'returned_ids': found_ids,
                     'signal': result.signal, 'latency_ms': round(latency_ms, 3),
+                    'clean_id': case.get('clean_id'),
+                    'top_record_type': records_by_id.get(found_ids[0], {}).get('record_type') if found_ids else None,
+                    'top_summary': records_by_id.get(found_ids[0], {}).get('summary') if found_ids else None,
+                    'gold_record_types': sorted({records_by_id.get(record_id, {}).get('record_type')
+                                                 for record_id in gold_visible
+                                                 if records_by_id.get(record_id, {}).get('record_type')}),
+                    'gold_summaries': sorted({records_by_id.get(record_id, {}).get('summary')
+                                              for record_id in gold_visible
+                                              if records_by_id.get(record_id, {}).get('summary')}),
                 })
     finally:
         try:
@@ -258,7 +318,8 @@ def run(name='baseline'):
     _print_table(rows)
     for violation in violations:
         print('ACL VIOLATION ' + json.dumps(violation, ensure_ascii=False))
-    report = build_report(rows, violations, leftovers, cases, name, qdrant_url, text_mode)
+    report = build_report(rows, violations, leftovers, cases, name, _config(qdrant_url, text_mode))
+    _print_extra_table(report['extra'])
     return finish_report(report, RESULTS / f'{name}.json')
 
 
