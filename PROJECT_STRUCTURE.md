@@ -47,9 +47,11 @@ ai-hide-and-seek/
 │   ├── F-access-control/
 │   │   ├── PLAN.md
 │   │   └── RESULT.md
-│   ├── G-guardrails/             # G-1 Input / G-2 Output의 PLAN·RESULT 공유
+│   ├── G-1-input-guardrail/          # 선영 Input Guardrail
 │   │   ├── PLAN.md
 │   │   └── RESULT.md
+│   ├── G-2-output-guardrail/          # 형주 Output Guardrail (기록 준비 중)
+│   │   └── .gitkeep
 │   ├── H-audit/
 │   │   ├── PLAN.md
 │   │   └── RESULT.md
@@ -122,7 +124,7 @@ ai-hide-and-seek/
 ## 2. 대분류별 PLAN / RESULT 경로
 
 - 개발 기록은 `parts/<대분류>/PLAN.md`와 `parts/<대분류>/RESULT.md`로 관리한다.
-- 관리 체계는 A~O 15개 코드·16개 작업 영역이다. G-1/G-2는 `parts/G-guardrails/` 한 쌍을 공유하고 제목에 영역·담당을 표시하며 G 전체에서 고유한 `G01` 등의 번호를 사용한다. 번호를 별도 코드로 바꾸거나 기존 기록을 초기화하지 않는다.
+- 관리 체계는 A~O 15개 코드·16개 작업 영역이다. G-1 Input과 G-2 Output은 `parts/G-1-input-guardrail/`·`parts/G-2-output-guardrail/`에 따로 기록하고 G 전체에서 고유한 `G01` 등의 Part ID를 사용한다. 폴더 번호 때문에 기존 Part ID나 기록을 바꾸지 않는다.
 - L은 `parts/L-input-guardrail-tests/`, M은 `parts/M-output-guardrail-tests/`를 사용한다. 2026-10-26 담당 범위에 맞춰 각각 `L-attack-tests`, `M-leakage-tests`에서 이름을 변경했다. M에는 출력 가드와 응답 품질 실험 기록을 함께 둔다. N(`N-evaluation`)은 전원 통합 보안 성능 비교·평가의 기록 위치이며, 이전에 계획했던 Planner 정확도 실험은 별도 대분류 없이 C에서 간단히 확인한다. 문서화는 독립 업무가 아니다. 대시보드는 `O-dashboard`(이전 `O-documentation` 폴더명 변경)를 사용한다.
 - O(보안 대시보드·Grafana)의 기록 경로는 `parts/O-dashboard/`다. PLAN/RESULT는 실제 작업이 생기면 만든다.
 - `A01`, `B02`, `E03`과 같은 Part ID는 **문서 내부 기능 구분용 라벨·목차**이며 별도의 Part 디렉터리를 만들지 않는다.
@@ -194,7 +196,7 @@ parts/E-rag/
 ## 6. 개발 환경과 유연성
 
 - 핵심 게임과 보안 실험은 Docker Compose를 이용해 로컬에서 실행 가능한 구조를 지향한다. Kubernetes와 AWS 배포 내용은 각 환경 폴더에 둔다.
-- 현재 Compose는 MariaDB·Qdrant 두 서비스만 정의한다. FastAPI·프론트엔드·Grafana를 포함한 로컬 전체 실행, Kubernetes·AWS 배포는 구현 목표이며 완료 상태가 아니다.
+- 기본 Compose는 MariaDB·Qdrant 두 서비스만 정의한다. 별도 `infrastructure/docker/docker-compose.grafana.yml`과 `infrastructure/docker/grafana/`에 로컬 감사 대시보드를 추가했다. FastAPI·프론트엔드를 포함한 로컬 전체 실행, Kubernetes·AWS 배포는 구현 목표이며 완료 상태가 아니다.
 - 실제 API·DB·LLM 연동을 우선한다. Mock을 필수 개발 단계로 두지 않는다.
 - 담당자는 `backend/`, `frontend/`, `database/`, `experiments/`, `infrastructure/`, `tests/` 내부의 구체적인 파일명·세부 폴더 구성·개발 순서를 자율적으로 결정할 수 있다.
 - 이 문서의 트리 밖에 기능별 폴더가 추가될 수 있다. 다른 담당자의 구현과 충돌하는 공통 구조를 변경할 때에만 필요한 범위로 조율한다.
