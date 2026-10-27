@@ -61,7 +61,19 @@ def _manifest_is_current(connection, qdrant, dataset):
         raise RagUnavailable('INDEX_STALE') from None
 
 
-def search_records(conn, *, user_id, save_id, character_id, dataset, plan, qdrant, embedder):
+# 검색 결과가 비었을 때의 이유. 비었다는 사실만으로 접근 불가라고 단정하지 않도록 둘을 나눠 돌려준다.
+SIGNAL_OK = 'ok'
+SIGNAL_NO_ALLOWED = 'no_allowed_records'  # F가 이 Save·AI에게 허용한 기록이 하나도 없음 (Qdrant는 부르지 않음)
+SIGNAL_NO_MATCH = 'no_match'              # 허용된 기록은 있지만 질문과 맞는 것이 없음 (재확인에서 걸러진 경우 포함)
+
+
+def search_records(conn, **kwargs):
+    """허용된 기록만 순위대로 돌려준다. 이유가 필요하면 search_with_signal을 쓴다."""
+    return search_with_signal(conn, **kwargs)[0]
+
+
+def search_with_signal(conn, *, user_id, save_id, character_id, dataset, plan, qdrant, embedder):
+    """(기록 목록, 신호). 신호는 SIGNAL_* 중 하나."""
     parsed = validate_plan(plan)
     try:
         if embedder.count_tokens(parsed['query']) > CHUNK_MAX_TOKENS:
@@ -79,7 +91,7 @@ def search_records(conn, *, user_id, save_id, character_id, dataset, plan, qdran
     except (PolicyDenied, PolicyUnavailable):
         raise
     if not scope.disclosures:
-        return []
+        return [], SIGNAL_NO_ALLOWED
     if not _manifest_is_current(conn, qdrant, dataset):
         raise RagUnavailable('INDEX_STALE')
 
@@ -114,11 +126,12 @@ def search_records(conn, *, user_id, save_id, character_id, dataset, plan, qdran
         if group.hits and group.id not in ranked_ids:
             ranked_ids.append(group.id)
     if not ranked_ids:
-        return []
+        return [], SIGNAL_NO_MATCH
     try:
         resolved = repository.resolve(user_id=user_id, save_id=save_id, character_id=character_id,
                                        dataset=dataset, record_ids=ranked_ids)
-        return resolved[:parsed['limit']]
+        records = resolved[:parsed['limit']]
+        return records, (SIGNAL_OK if records else SIGNAL_NO_MATCH)
     except (PolicyDenied, PolicyUnavailable):
         raise
 

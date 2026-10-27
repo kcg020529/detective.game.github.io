@@ -40,7 +40,7 @@ def table_checksums(connection):
     return result
 
 
-def record_points(connection, dataset, embedder):
+def record_points(connection, dataset, embedder, text_mode='header'):
     with connection.cursor() as cursor:
         cursor.execute('SELECT dataset, record_id, record_type, test_id, day, summary, content '
                        'FROM game_records WHERE dataset = %s ORDER BY record_id', (dataset,))
@@ -72,11 +72,25 @@ def record_points(connection, dataset, embedder):
             'day': record['day'], 'test_id': record['test_id'],
             'location_ids': locs, 'related_ai_ids': sorted({ai for _, ai in ais}),
         }
+        header = f"{record['record_type']} Day {record['day']} {record['test_id']}시험"
+        if locs:
+            header += f" | 장소 {', '.join(locs)}"
+        header += f" | AI {', '.join(ai for kind, ai in ais if kind == 'involved')}"
         for kind, source in (
             ('meta', meta), ('summary', record.get('summary') or ''),
             ('content', '\n'.join(part for part in (record.get('summary') or '', record.get('content') or '') if part)),
         ):
-            chunks = chunk_text(source, embedder.count_tokens) if source else []
+            if source and text_mode == 'header' and kind in ('summary', 'content'):
+                prefix = header + ' | '
+                token_count = embedder.count_tokens
+                if token_count(prefix) >= CHUNK_MAX_TOKENS:
+                    raise ValueError(f'header exceeds chunk token budget for {rid}')
+                body_token_count = lambda text: token_count(prefix + text)
+                chunks = [prefix + chunk for chunk in chunk_text(
+                    source, body_token_count, overlap_tokens=min(
+                        CHUNK_OVERLAP_TOKENS, CHUNK_MAX_TOKENS - token_count(prefix) - 1))]
+            else:
+                chunks = chunk_text(source, embedder.count_tokens) if source else []
             if chunks:
                 record_counts[kind] += 1
             for number, chunk in enumerate(chunks):
@@ -85,13 +99,15 @@ def record_points(connection, dataset, embedder):
     return records, texts, payloads, record_counts
 
 
-def index_dataset(connection, qdrant, dataset, embedder):
+def index_dataset(connection, qdrant, dataset, embedder, text_mode='header'):
+    if text_mode not in ('plain', 'header'):
+        raise ValueError('text_mode must be plain or header')
     collection = COLLECTIONS[dataset]
     manifest_id = str(uuid.uuid5(uuid.NAMESPACE_URL, f'kervion-rag-manifest:{dataset}'))
     if qdrant.collection_exists(MANIFEST):
         qdrant.delete(collection_name=MANIFEST, points_selector=models.PointIdsList(points=[manifest_id]), wait=True)
     initial_checksums = table_checksums(connection)
-    records, texts, payloads, record_counts = record_points(connection, dataset, embedder)
+    records, texts, payloads, record_counts = record_points(connection, dataset, embedder, text_mode)
     vectors = embedder.embed_documents(texts)
     if len(vectors) != len(payloads):
         raise RuntimeError('Embedding count does not match indexed chunks')
@@ -118,11 +134,13 @@ def index_dataset(connection, qdrant, dataset, embedder):
     manifest = {
         'dataset': dataset, 'checksums': initial_checksums, 'model_name': MODEL_NAME,
         'max_tokens': CHUNK_MAX_TOKENS, 'overlap_tokens': CHUNK_OVERLAP_TOKENS,
+        'text_mode': text_mode,
         'record_count': len(records), 'record_counts': record_counts, 'point_counts': counts,
     }
     qdrant.upsert(collection_name=MANIFEST, points=[models.PointStruct(
         id=manifest_id, vector=[0.0], payload=manifest)], wait=True)
     print(f'dataset={dataset} records={len(records)}')
+    print(f'text_mode={text_mode}')
     for kind in ('meta', 'summary', 'content'):
         print(f'{kind} records={record_counts[kind]} points={counts[kind]}')
     print(f'max_tokens_per_chunk={max((embedder.count_tokens(text) for text in texts), default=0)}')
@@ -133,12 +151,13 @@ def main(argv=None):
     parser.add_argument('--dataset', required=True, choices=COLLECTIONS)
     parser.add_argument('--env-file')
     parser.add_argument('--qdrant-url')
+    parser.add_argument('--text-mode', choices=('plain', 'header'), default='header')
     args = parser.parse_args(argv)
     load_env(args.env_file)
     connection = connect_db()
     qdrant = QdrantClient(url=args.qdrant_url or os.getenv('QDRANT_URL', 'http://127.0.0.1:6333'))
     try:
-        index_dataset(connection, qdrant, args.dataset, FastEmbedder())
+        index_dataset(connection, qdrant, args.dataset, FastEmbedder(), args.text_mode)
     finally:
         qdrant.close()
         connection.close()

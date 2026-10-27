@@ -92,7 +92,7 @@ python -m backend.rag.index --dataset game-data --env-file infrastructure/docker
 - 색인 도구는 MariaDB `game_records`·`game_record_ai`·`game_record_locations`를 읽는다. JSON 원본을 직접 읽지 않는다.
 - 색인을 시작하면 그 데이터셋의 manifest를 먼저 지운다. 색인 중 검색은 `INDEX_STALE`이다.
 - 기록을 읽기 전과 모든 점을 넣은 뒤에 `CHECKSUM TABLE`을 두 번 잰다. 두 값이 같을 때만 manifest를 쓰고 완료로 처리한다. 다르면 색인 중 DB가 바뀐 것이므로 manifest를 쓰지 않고 오류로 끝낸다(종료 코드 0이 아님). 이때는 적재가 끝난 뒤 다시 색인한다.
-- manifest에는 그 `CHECKSUM TABLE` 값, 모델 이름, 나누기 설정(최대 토큰·겹침 토큰), 기록·점 수를 `kervion_rag_manifest` 컬렉션에 저장한다.
+- manifest에는 그 `CHECKSUM TABLE` 값, 모델 이름, 나누기 설정(최대 토큰·겹침 토큰), 텍스트 모드(`text_mode`), 기록·점 수를 `kervion_rag_manifest` 컬렉션에 저장한다.
 - 검색할 때마다 현재 `CHECKSUM TABLE` 값, 모델 이름, 나누기 설정을 manifest와 비교한다. 하나라도 다르거나 manifest가 없으면 `INDEX_STALE` 오류로 멈춘다. 이전 색인으로 검색하지 않는다. 모델이나 나누기 설정을 바꾸면 다시 색인해야 한다.
 - 같은 `record_id`의 점은 결정적 ID라서 다시 색인해도 중복되지 않는다. 검색 결과는 `record_id`로 묶어 기록마다 한 번만 센다.
 - `document_permissions`는 비교에 넣지 않는다. 권한은 검색 때마다 `search_scope`·`resolve`가 DB에서 읽는다.
@@ -103,6 +103,7 @@ python -m backend.rag.index --dataset game-data --env-file infrastructure/docker
 - 모델: `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` (384차원, Cosine, fastembed로 로컬 실행).
 - 이 모델은 입력이 128토큰을 넘으면 뒷부분을 버린다. 그래서 글을 줄 경계로 나누고, 한 조각이 모델 토크나이저 기준 128토큰(특수 토큰 포함)을 넘지 않게 자른다. 조각끼리 조금 겹치게 한다.
 - `meta` 문장은 짧아서 한 조각이다.
+- 텍스트 모드: 색인 때 `--text-mode header`(기본)면 `summary`·`content` 조각 앞에 `{유형} Day {day} {시험}시험 | 장소 … | AI …`를 붙여 임베딩한다. 장소·AI는 그 기록의 `location_ids`와 involved AI만 쓰고(없으면 생략), witness·overheard AI와 다른 수준의 글은 쓰지 않는다. `meta`와 payload는 그대로다. `plain`은 머리글 없이 조각만 넣는다. `text_mode`는 정보용이라 달라도 `INDEX_STALE`이 아니고, 모드를 바꾸려면 다시 색인한다.
 - 검색 query는 나누거나 자르지 않는다. 128토큰을 넘으면 뒷부분이 조용히 버려지므로 `QUERY_TOO_LONG` 오류로 돌려보낸다. Planner는 이 오류를 받으면 더 짧은 검색어로 다시 만들거나 실패로 처리한다. RAG가 대신 줄이거나 전체 검색으로 바꾸지 않는다.
 
 ## 6. 오류
@@ -127,4 +128,45 @@ API 바깥 오류 형식으로 바꾸는 것은 채팅 API(I)에서 한다. 오�
 
 - C: Planner `retrieve` 결과의 `to_rag_request()`를 그대로 넘긴다. 실제 DeepSeek 계획 품질은 C에서 평가한다.
 - I: 채팅 전송 API에서 인증·Save 확인 뒤 RAG를 부르고, 오류를 API 형식으로 바꾼다.
-- D: `resolve` 결과만 Context로 받는다.
+- D: `resolve` 결과만 Context로 받는다. 변환은 9절의 `memory`를 쓴다.
+
+## 9. 채팅 연동 (2026-10-27)
+
+`backend/api/chat_pipeline.py`는 Planner가 `retrieve`를 고른 경우에만 `search_records`를 부른다. 이 함수는 그대로 쓸 수 있다. E는 연동에 필요한 세 가지를 더했다.
+
+**모델은 한 번만 올린다.** 채팅마다 `FastEmbedder()`를 새로 만들어도 임베딩 모델과 토크나이저는 프로세스 안에서 한 번만 읽는다. 로컬에서 첫 검색은 약 2.5초, 그다음부터는 약 0.3초였다.
+
+**결과가 비었을 때의 이유.** `search_with_signal(...)`은 `(records, signal)`을 돌려준다.
+
+| signal | 뜻 |
+|---|---|
+| `ok` | 허용된 기록이 하나 이상 있음 |
+| `no_allowed_records` | F가 이 Save·AI에게 허용한 기록이 하나도 없음 (Qdrant는 부르지 않음) |
+| `no_match` | 허용된 기록은 있으나 질문·조건에 맞는 것이 없음 (`resolve` 재확인에서 모두 걸러진 경우 포함) |
+
+비었다는 사실만으로 접근 불가(`restricted`)라고 단정하지 않는다. 신호를 어떤 답변 유형·모드로 바꿀지는 I·D·F가 정한다.
+
+**D의 memory.** `service.retrieve(conn, ..., plan)`은 `Retrieval(records, memory, signal)`을 돌려준다. `memory`는 D의 프롬프트가 받는 `[{"id": 기록 ID, "text": 글}]`이다. 글은 F가 허용한 필드만 쓴다.
+
+| 공개 수준 | text |
+|---|---|
+| `full` | 요약 + 줄바꿈 + 본문 |
+| `summary` | 요약 |
+| `metadata` | `기록 유형 Action, Day 1, 2회차, 장소 회의실, 관련 AI YB-2.` 한 줄 (있는 값만) |
+
+없는 값은 지어내지 않고, 글을 만들 수 없는 기록은 memory에서 뺀다. 이 변환이 권한을 넓히지는 않는다.
+
+**남은 일.** I: 파이프라인이 `retrieve`를 쓰도록 바꾸기(지금은 `search_records`를 직접 부르며 동작에는 문제없음). D: memory를 `render_actor_prompt`에 연결. signal과 D의 `restricted`·`unknown` 모드의 대응, memory의 `id`를 `used`와 어떻게 이을지는 I·D·F와 협의한다.
+
+## 10. 검색 품질 (2026-10-27)
+
+질문 788개, 실제 로컬 DB·Qdrant, 허용 밖 기록 0건. 결과 파일은 `experiments/rag/results/`.
+
+| 색인 | hit@1 | hit@3 | hit@5 | MRR |
+|---|---|---|---|---|
+| plain (`baseline2`) | 0.4595 | 0.5621 | 0.6113 | 0.5177 |
+| header (`header`) | 0.5116 | 0.6460 | 0.6980 | 0.5857 |
+
+- Planner가 조건(회차·AI·장소)을 정확히 주면 hit@5가 거의 1.0이다. 조건 없이 질문만 보내면 약하다(hit@5 Incident 0.10, 장소 0.28).
+- 그래서 Planner는 질문에서 알 수 있는 회차·장소·AI를 조건으로 채운다. "첫날"처럼 범위만 줘도 장소 질문은 1.0, 이동·대화 질문은 hit@5 0.9 안팎이다.
+- 지나가기만 하는 방(중앙홀 등)은 `location_ids`에 없다. 그 방 이름으로 장소를 좁히는 검색은 용범·F와 따로 정한다.

@@ -345,7 +345,6 @@ def test_index_checksum_change_leaves_manifest_missing_and_search_stale(monkeypa
     ]
     manifest_id = str(uuid.uuid5(uuid.NAMESPACE_URL, 'kervion-rag-manifest:game-data'))
     assert qdrant.retrieve(collection_name=MANIFEST, ids=[manifest_id], with_payload=True) == []
-
     monkeypatch.setattr(search, 'PolicyRepository', lambda _: type('R', (), {
         'search_scope': lambda self, **_: Scope([('T01-action-001', 'metadata')])})())
     with pytest.raises(RagUnavailable) as exc:
@@ -353,6 +352,101 @@ def test_index_checksum_change_leaves_manifest_missing_and_search_stale(monkeypa
                               dataset='game-data', plan={'query': 'q'}, qdrant=qdrant,
                               embedder=FakeEmbedder())
     assert exc.value.code == 'INDEX_STALE'
+
+
+def test_header_index_text_and_plain_mode_golden():
+    from backend.rag.index import record_points
+
+    class Cursor(FakeCursor):
+        def execute(self, query, *_):
+            if 'FROM game_records' in query:
+                self.rows = [{'dataset': 'game-data', 'record_id': 'T01-action-001', 'record_type': 'Action',
+                              'test_id': 1, 'day': 1, 'summary': 'generic summary', 'content': 'body text',
+                              'witness_ai': 'YB-6', 'overheard_ai': 'YB-5'}]
+            elif 'FROM game_record_ai' in query:
+                self.rows = [{'record_id': 'T01-action-001', 'ai_id': 'YB-2', 'relation_kind': 'involved'},
+                             {'record_id': 'T01-action-001', 'ai_id': 'YB-6', 'relation_kind': 'witness'},
+                             {'record_id': 'T01-action-001', 'ai_id': 'YB-5', 'relation_kind': 'overheard'}]
+            else:
+                self.rows = [{'record_id': 'T01-action-001', 'location_id': KNOWN_LOCATION}]
+
+    class Connection:
+        def cursor(self):
+            return Cursor()
+
+    plain = record_points(Connection(), 'game-data', FakeEmbedder(), 'plain')
+    header = record_points(Connection(), 'game-data', FakeEmbedder(), 'header')
+    assert plain[1] == [f'type: Action; day: 1; test: 1; AI: involved: YB-2, witness: YB-6, '
+                        f'overheard: YB-5; locations: {KNOWN_LOCATION}',
+                        'generic summary', 'generic summary\nbody text']
+    assert header[1] == [
+        f'type: Action; day: 1; test: 1; AI: involved: YB-2, witness: YB-6, '
+        f'overheard: YB-5; locations: {KNOWN_LOCATION}',
+        f'Action Day 1 1시험 | 장소 {KNOWN_LOCATION} | AI YB-2 | generic summary',
+        f'Action Day 1 1시험 | 장소 {KNOWN_LOCATION} | AI YB-2 | generic summary\nbody text',
+    ]
+    assert all('YB-5' not in text and 'YB-6' not in text for text in header[1][1:])
+
+
+def test_header_manifest_text_mode_is_informational(qdrant, monkeypatch):
+    import backend.rag.search as rag_search
+
+    point_id = str(uuid.uuid5(uuid.NAMESPACE_URL, 'kervion-rag-manifest:game-data'))
+    qdrant.upsert(collection_name=MANIFEST, points=[models.PointStruct(
+        id=point_id, vector=[0.0], payload={
+            'dataset': 'game-data', 'checksums': table_checksums(FakeConnection()), 'model_name': MODEL_NAME,
+            'max_tokens': CHUNK_MAX_TOKENS, 'overlap_tokens': CHUNK_OVERLAP_TOKENS, 'text_mode': 'header',
+        })])
+    assert rag_search._manifest_is_current(FakeConnection(), qdrant, 'game-data')
+
+
+def test_header_mode_is_the_indexing_default():
+    import inspect
+    from backend.rag.index import index_dataset, record_points
+
+    assert inspect.signature(index_dataset).parameters['text_mode'].default == 'header'
+    assert inspect.signature(record_points).parameters['text_mode'].default == 'header'
+
+
+def test_shared_tokenizer_is_initialized_once_under_concurrency(monkeypatch):
+    import sys
+    import threading
+    import time
+    from types import SimpleNamespace
+
+    import backend.rag.embedder as embedder_module
+
+    calls = []
+    calls_lock = threading.Lock()
+    model_ready = threading.Barrier(2)
+
+    class Tokenizer:
+        @classmethod
+        def from_str(cls, _):
+            with calls_lock:
+                calls.append(1)
+            time.sleep(0.02)
+            return cls()
+
+        def no_truncation(self):
+            pass
+
+        def encode(self, text):
+            return SimpleNamespace(ids=text.split())
+
+    monkeypatch.setitem(sys.modules, 'tokenizers', SimpleNamespace(Tokenizer=Tokenizer))
+    monkeypatch.setattr(embedder_module, '_SHARED', {'model': SimpleNamespace(
+        model=SimpleNamespace(tokenizer=SimpleNamespace(to_str=lambda: (model_ready.wait(), 'encoded')[1]))),
+        'tokenizer': None})
+    results = []
+    workers = [threading.Thread(target=lambda: results.append(embedder_module.FastEmbedder().count_tokens('a b')))
+               for _ in range(2)]
+    for worker in workers:
+        worker.start()
+    for worker in workers:
+        worker.join()
+    assert calls == [1]
+    assert results == [2, 2]
 
 
 def test_chunk_limits_and_source_coverage():
@@ -392,3 +486,40 @@ def test_real_tokenizer_chunk_limit():
                       if rebuilt.endswith(chunk[:i]))
         rebuilt += chunk[overlap:]
     assert rebuilt == text
+
+
+def test_header_chunks_fit_real_token_limit_for_longest_record():
+    from fastembed import TextEmbedding
+    from backend.rag.embedder import FastEmbedder
+    from backend.rag.index import record_points
+
+    model_dir = (Path(tempfile.gettempdir()) / 'fastembed_cache' /
+                 'models--Qdrant--paraphrase-multilingual-MiniLM-L12-v2-onnx-Q' / 'snapshots')
+    if not model_dir.is_dir() or not any(model_dir.iterdir()):
+        pytest.skip('fastembed tokenizer model is not cached locally')
+    TextEmbedding(MODEL_NAME, local_files_only=True)
+    embedder = FastEmbedder()
+    data_root = Path(__file__).resolve().parents[2] / 'data' / 'game-data' / 'experiments'
+    rows = [row for path in sorted(data_root.glob('day_*/*.json'))
+            for row in json.loads(path.read_text(encoding='utf-8-sig'))]
+    record = max(rows, key=lambda row: len((row.get('summary') or '') + (row.get('content') or '')))
+
+    class Cursor(FakeCursor):
+        def execute(self, query, *_):
+            if 'FROM game_records' in query:
+                self.rows = [{'dataset': 'game-data', **{key: record.get(key) for key in
+                              ('record_id', 'record_type', 'test_id', 'day', 'summary', 'content')}}]
+            elif 'FROM game_record_ai' in query:
+                self.rows = [{'record_id': record['record_id'], 'ai_id': ai, 'relation_kind': 'involved'}
+                             for ai in record.get('involved_ai', [])]
+            else:
+                self.rows = [{'record_id': record['record_id'], 'location_id': place}
+                             for place in record.get('location_ids', [])]
+
+    class Connection:
+        def cursor(self):
+            return Cursor()
+
+    _, texts, _, _ = record_points(Connection(), 'game-data', embedder, 'header')
+    assert texts
+    assert max(map(embedder.count_tokens, texts)) <= CHUNK_MAX_TOKENS
