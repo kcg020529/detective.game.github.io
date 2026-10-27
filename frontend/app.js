@@ -82,9 +82,13 @@ function text(str, x, y, color, size = 3, weight = 500) {
 
 // 방 위치 (픽셀 좌표). lightAt: 불이 켜지기 시작한 시각
 const rooms = {
-  observe: { x: 12, y: 20, w: 66, h: 26, label: '관찰실', lightAt: null },
-  server: { x: 80, y: 20, w: 68, h: 26, label: '서버실', lightAt: null },
-  arena: { x: 12, y: 50, w: 136, h: 30, label: '실험 구역', lightAt: null },
+  meeting: { x: 12, y: 12, w: 44, h: 19, label: '회의실', lightAt: null },
+  archive: { x: 58, y: 12, w: 44, h: 19, label: '기록실', lightAt: null },
+  comms: { x: 104, y: 12, w: 44, h: 19, label: '통신실', lightAt: null },
+  hall: { x: 12, y: 34, w: 136, h: 24, label: '중앙홀', lightAt: null },
+  storage: { x: 12, y: 61, w: 44, h: 19, label: '창고', lightAt: null },
+  power: { x: 58, y: 61, w: 44, h: 19, label: '전력실', lightAt: null },
+  server: { x: 104, y: 61, w: 44, h: 19, label: '서버실', lightAt: null },
   restricted: { x: 12, y: 86, w: 136, h: 24, label: '제한 구역', state: 'idle' },
 };
 
@@ -101,11 +105,11 @@ const rocks = Array.from({ length: 40 }, (_, i) => ({
 }));
 
 const leds = [];
-for (let r = 0; r < 5; r++) {
+for (let r = 0; r < 3; r++) {
   for (let k = 0; k < 4; k++) {
     leds.push({
-      x: 85 + r * 12 + (k % 2) * 3,
-      y: 29 + k * 4,
+      x: 108 + r * 13 + (k % 2) * 5,
+      y: 68 + k * 2,
       color: (r + k) % 3 === 0 ? C.ledAmber : C.ledGreen,
       period: 1400 + ((r * 7 + k * 5) % 9) * 260,
       phase: (r * 3 + k) * 400,
@@ -115,11 +119,10 @@ for (let r = 0; r < 5; r++) {
 
 // 실험 구역 소품: 로봇이 뒤로 지나가면 가려짐 (술래잡기)
 const props = [
-  { type: 'crate', x: 32, w: 9, h: 8 },
-  { type: 'crate', x: 41, w: 7, h: 6 },
-  { type: 'pillar', x: 70, w: 6, h: 26 },
-  { type: 'crate', x: 104, w: 9, h: 9 },
-  { type: 'plant', x: 134, w: 7, h: 11 },
+  { type: 'plant', x: 22, w: 7, h: 10 },
+  { type: 'pillar', x: 42, w: 5, h: 14 },
+  { type: 'pillar', x: 91, w: 5, h: 16 },
+  { type: 'bench', x: 119, w: 18, h: 4 },
 ];
 
 const botColors = ['#7fb3d5', '#e59a8c', '#9ccf8e', '#d8b4e2', '#e8cf7a', '#8fd0c8'];
@@ -132,7 +135,7 @@ const bots = botColors.map((color, i) => ({
   shownAt: null,
 }));
 
-const ARENA_FLOOR = 78; // 실험 구역 바닥 y
+const ARENA_FLOOR = 56; // 중앙홀 바닥 y
 const BOT_W = 5;
 const BOT_H = 7;
 
@@ -192,104 +195,178 @@ function drawGround() {
 }
 
 function drawShell(now) {
-  px(8, 16, 144, 4, C.slab); // 지붕
-  px(10, 20, 2, 94, C.shell); // 왼쪽 벽
-  px(148, 20, 2, 94, C.shell); // 오른쪽 벽
-  px(78, 20, 2, 26, C.shell); // 3층 칸막이
-  px(10, 46, 140, 4, C.slab); // 3층 바닥
-  px(10, 80, 140, 6, C.slab); // 지상 바닥
-  px(10, 110, 140, 4, C.slab); // 지하 바닥
+  px(8, 8, 144, 4, C.slab);
+  px(10, 8, 2, 106, C.shell);
+  px(148, 8, 2, 106, C.shell);
+  px(10, 31, 140, 3, C.slab);
+  px(10, 58, 140, 3, C.slab);
+  px(10, 80, 140, 6, C.slab);
+  px(10, 110, 140, 4, C.slab);
+  px(56, 12, 2, 19, C.shell);
+  px(102, 12, 2, 19, C.shell);
+  px(56, 61, 2, 19, C.shell);
+  px(102, 61, 2, 19, C.shell);
 
-  // 지붕 위 실외기와 안테나
-  px(26, 11, 14, 5, C.shell);
-  px(28, 12, 10, 1, C.slab);
-  px(28, 14, 10, 1, C.slab);
-  px(130, 5, 1, 11, C.shell);
-  px(127, 8, 7, 1, C.shell);
-  // 평소엔 천천히 깜빡이고, 누르면 잠깐 밝게 빛남
+  // 옥상 실외기와 통신 안테나
+  px(24, 3, 16, 5, C.shell);
+  px(26, 4, 12, 1, C.slab);
+  px(26, 6, 12, 1, C.slab);
+  px(131, -5, 1, 13, C.shell);
+  px(127, 0, 9, 1, C.shell);
   const sinceClick = now - antennaFlashAt;
   const flash = sinceClick < 700 ? 1 - sinceClick / 700 : 0;
   const idle = reduceMotion ? 0.8 : 0.35 + 0.5 * (0.5 + 0.5 * Math.sin(now / 900));
   if (flash > 0) {
     ctx.globalAlpha = flash * 0.35;
-    px(127, 1, 7, 6, '#ff8a6e');
+    px(127, -5, 9, 6, '#ff8a6e');
   }
   ctx.globalAlpha = Math.max(idle, flash);
-  px(129, 3, 3, 2, '#d9584a');
+  px(129, -5, 5, 2, '#d9584a');
   ctx.globalAlpha = 1;
 }
 
 function drawRoomBase(room) {
   px(room.x, room.y, room.w, room.h, C.wall);
   px(room.x, room.y + room.h - 2, room.w, 2, C.floor);
-  // 벽 아래쪽 걸레받이
   px(room.x, room.y + room.h - 3, room.w, 1, C.wallShade);
 }
 
-function drawObserve(now) {
-  const r = rooms.observe;
+function drawMeeting() {
+  const r = rooms.meeting;
   drawRoomBase(r);
-  // 실험 구역을 내려다보는 관찰창
-  px(52, 24, 22, 12, C.slab);
-  px(53, 25, 20, 10, C.glass);
-  px(55, 26, 3, 1, '#b8d3d6');
-  // 책상과 모니터 세 대
-  px(16, 38, 32, 2, C.deskTop);
-  px(18, 40, 2, 4, C.desk);
-  px(44, 40, 2, 4, C.desk);
-  for (let i = 0; i < 3; i++) {
-    const mx = 18 + i * 10;
-    px(mx, 31, 8, 6, C.slab);
-    const glow = reduceMotion ? 1 : 0.75 + 0.25 * Math.sin(now / 1300 + i * 2);
-    ctx.globalAlpha = glow;
-    px(mx + 1, 32, 6, 4, i === 1 ? C.screenDim : C.screen);
-    ctx.globalAlpha = 1;
-    px(mx + 3, 37, 2, 1, C.slab);
+  px(15, 17, 14, 6, C.slab);
+  px(16, 18, 12, 4, C.glass);
+  px(18, 19, 3, 1, C.wallShade);
+  px(23, 19, 5, 1, C.wallShade);
+  px(31, 23, 22, 2, C.deskTop);
+  px(33, 25, 2, 3, C.desk);
+  px(49, 25, 2, 3, C.desk);
+  for (const x of [34, 41, 48]) {
+    px(x, 21, 4, 1, C.desk);
+    px(x + 1, 22, 2, 1, C.deskTop);
+    px(x + 1, 26, 2, 2, C.desk);
   }
-  // 의자
-  px(30, 41, 5, 1, C.slab);
-  px(32, 42, 1, 2, C.slab);
+}
+
+function drawArchive() {
+  const r = rooms.archive;
+  drawRoomBase(r);
+  for (const x of [61, 88]) {
+    px(x, 17, 10, 11, C.rack);
+    px(x, 17, 10, 1, C.rackEdge);
+    for (let row = 0; row < 3; row++) {
+      const y = 19 + row * 3;
+      px(x + 1, y + 2, 8, 1, C.rackEdge);
+      px(x + 1, y, 2, 2, C.deskTop);
+      px(x + 4, y, 2, 2, C.screenDim);
+      px(x + 7, y, 2, 2, C.ledAmber);
+    }
+  }
+  px(76, 21, 1, 7, C.desk);
+  px(82, 21, 1, 7, C.desk);
+  for (let y = 22; y < 28; y += 2) px(77, y, 5, 1, C.deskTop);
+}
+
+function drawComms(now) {
+  const r = rooms.comms;
+  drawRoomBase(r);
+  px(131, 8, 1, 14, C.rackEdge);
+  px(128, 21, 4, 1, C.rackEdge);
+  px(110, 22, 25, 6, C.rack);
+  px(111, 21, 23, 1, C.rackEdge);
+  px(112, 23, 6, 4, C.rackEdge);
+  px(113, 24, 4, 2, C.slab);
+  px(120, 23, 6, 4, C.rackEdge);
+  px(121, 24, 4, 2, C.slab);
+  px(123, 24, 1, 1, C.amber);
+  for (let i = 0; i < 4; i++) {
+    const on = reduceMotion || Math.floor(now / 420 + i) % 2 === 0;
+    if (on) px(137 + i * 2, 20 - i * 2, 1, i + 1, i === 3 ? C.ledAmber : C.ledGreen);
+  }
+}
+
+function drawHallBase() {
+  const r = rooms.hall;
+  drawRoomBase(r);
+  for (let x = r.x; x < r.x + r.w; x += 4) px(x, ARENA_FLOOR, 2, 1, C.tile);
+  for (let x = r.x + 2; x < r.x + r.w; x += 8) px(x, ARENA_FLOOR - 4, 1, 1, C.wallShade);
+}
+
+function drawCrate(x, floor, w, h) {
+  const top = floor - h;
+  px(x, top, w, h, C.crate);
+  px(x, top, w, 1, C.crateEdge);
+  px(x, top, 1, h, C.crateEdge);
+  px(x + w - 1, top, 1, h, C.crateEdge);
+  px(x + 1, top + Math.floor(h / 2), w - 2, 1, C.crateEdge);
+}
+
+function drawStorage() {
+  const r = rooms.storage;
+  const floor = r.y + r.h - 2;
+  drawRoomBase(r);
+  drawCrate(16, floor, 10, 8);
+  drawCrate(26, floor, 8, 5);
+  px(38, 67, 13, 1, C.rackEdge);
+  px(39, 68, 1, 9, C.rack);
+  px(50, 68, 1, 9, C.rack);
+  for (const x of [40, 44, 48]) {
+    px(x, 70, 2, 5, C.deskTop);
+    px(x, 71, 1, 3, C.desk);
+  }
+}
+
+function drawPower(now) {
+  const r = rooms.power;
+  drawRoomBase(r);
+  px(67, 68, 25, 10, C.rack);
+  px(67, 68, 25, 1, C.rackEdge);
+  px(67, 68, 1, 10, C.rackEdge);
+  px(82, 70, 7, 1, C.rackEdge);
+  px(81, 71, 9, 3, C.rackEdge);
+  px(82, 72, 7, 1, C.glass);
+  px(84, 72, 3, 1, C.amber);
+  px(87, 72, 1, 1, C.dark);
+  px(70, 71, 7, 4, C.slab);
+  px(71, 72, 1, 1, C.ledGreen);
+  px(75, 72, 1, 1, C.ledAmber);
+  px(66, 78, 28, 1, C.caution);
+  for (let x = 66; x < 94; x += 4) px(x, 78, 2, 1, C.dark);
+  const lamp = reduceMotion ? 0.9 : 0.5 + 0.4 * (0.5 + 0.5 * Math.sin(now / 1700));
+  ctx.globalAlpha = lamp;
+  px(94, 64, 5, 3, C.amber);
+  ctx.globalAlpha = 1;
+  px(95, 67, 1, 2, C.rackEdge);
+  px(65, 77, 3, 1, C.rackEdge);
+  px(64, 76, 1, 1, C.rackEdge);
 }
 
 function drawServer(now) {
   const r = rooms.server;
   drawRoomBase(r);
-  for (let i = 0; i < 5; i++) {
-    const rx = 84 + i * 12;
-    px(rx, 26, 9, 18, C.rack);
-    px(rx, 26, 9, 1, C.rackEdge);
-    for (let k = 0; k < 4; k++) px(rx + 1, 28 + k * 4, 7, 1, C.rackEdge);
+  for (let i = 0; i < 3; i++) {
+    const rx = 107 + i * 13;
+    px(rx, 67, 9, 11, C.rack);
+    px(rx, 67, 9, 1, C.rackEdge);
+    for (let k = 0; k < 4; k++) px(rx + 1, 69 + k * 2, 7, 1, C.rackEdge);
   }
   for (const led of leds) {
     const on = reduceMotion || ((now + led.phase) % led.period) < led.period * 0.6;
     if (on) px(led.x, led.y, 1, 1, led.color);
   }
-  // 바닥 케이블
-  px(84, 44, 58, 1, C.rack);
-}
-
-function drawArenaBase() {
-  const r = rooms.arena;
-  drawRoomBase(r);
-  // 바닥 타일
-  for (let x = r.x; x < r.x + r.w; x += 4) px(x, ARENA_FLOOR, 2, 1, C.tile);
-  // 벽에 붙은 실험 번호판
-  px(118, 54, 18, 7, C.slab);
-  px(119, 55, 16, 5, '#cfd6cc');
 }
 
 function drawProps() {
   for (const p of props) {
     const top = ARENA_FLOOR - p.h;
-    if (p.type === 'crate') {
-      px(p.x, top, p.w, p.h, C.crate);
-      px(p.x, top, p.w, 1, C.crateEdge);
-      px(p.x, top, 1, p.h, C.crateEdge);
-      px(p.x + p.w - 1, top, 1, p.h, C.crateEdge);
-      px(p.x + 1, top + Math.floor(p.h / 2), p.w - 2, 1, C.crateEdge);
-    } else if (p.type === 'pillar') {
+    if (p.type === 'pillar') {
       px(p.x, top, p.w, p.h, C.pillar);
       px(p.x + p.w - 2, top, 2, p.h, C.pillarShade);
+    } else if (p.type === 'bench') {
+      px(p.x, top, p.w, 2, C.deskTop);
+      px(p.x + 1, top + 2, p.w - 2, 1, C.desk);
+      px(p.x + 2, top + 3, 2, 1, C.rackEdge);
+      px(p.x + p.w - 4, top + 3, 2, 1, C.rackEdge);
     } else if (p.type === 'plant') {
       px(p.x + 1, ARENA_FLOOR - 4, 5, 4, C.pot);
       px(p.x, top, 7, 4, C.leaf);
@@ -323,8 +400,8 @@ function drawBot(bot, now) {
   ctx.globalAlpha = 1;
 }
 
-// 로봇과 캐릭터가 함께 쓰는 걷기: 목표 지점까지 걷고, 잠깐 쉬고, 새 목표를 고름
-function updateWalker(bot, dt, width, r = rooms.arena) {
+// 로봇과 캐릭터가 함께 쓰는 걷기: 목표 지점까지 걷고 잠깐 쉰 뒤 새 목표를 고릅니다.
+function updateWalker(bot, dt, width, r = rooms.hall) {
   if (reduceMotion) return;
   if (Math.abs(bot.target - bot.x) <= 0.5) {
     bot.wait -= dt;
@@ -403,12 +480,12 @@ function drawChar(ch, now, alpha, floorY) {
 /* ---------- 역할 선택 2안: 역할에 따라 볼 수 있는 구역만 열림 ---------- */
 // 화면 연출용 대응표. 실제 권한 규칙(역할 × 문서 등급)은 서버 정책이 정하며 이 표와 무관함
 const ROLE_ACCESS = {
-  prof: ['arena', 'observe', 'server', 'restricted'],
-  grad: ['arena', 'observe', 'server'],
-  std: ['arena', 'observe'],
+  prof: ['hall', 'meeting', 'storage', 'comms', 'archive', 'power', 'server', 'restricted'],
+  grad: ['hall', 'meeting', 'storage', 'comms', 'archive', 'power'],
+  std: ['hall', 'meeting', 'storage', 'comms'],
 };
 let sceneRole = null; // 역할 선택 화면에서 고른 역할 (없으면 null)
-const veil = { observe: 0, server: 0, arena: 0 }; // 1이면 잠겨서 어두움
+const veil = { meeting: 0, archive: 0, comms: 0, hall: 0, storage: 0, power: 0, server: 0 };
 let restrictedOpen = 0; // 1이면 제한 구역이 열림
 
 function updateAccess(dt) {
@@ -613,7 +690,7 @@ function drawRestricted(now) {
 }
 
 function drawLabels(now) {
-  for (const key of ['observe', 'server', 'arena']) {
+  for (const key of ['meeting', 'archive', 'comms', 'hall', 'storage', 'power', 'server']) {
     const room = rooms[key];
     const lit = lightLevel(room, now) > 0.5 && veil[key] < 0.5;
     text(room.label, room.x + 2, room.y + 1.5, lit ? C.label : C.labelDim);
@@ -657,22 +734,23 @@ function drawScene(now, dt) {
   drawShell(now);
 
   updateAccess(dt);
-  drawObserve(now);
-  darken(rooms.observe, lightLevel(rooms.observe, now));
-  drawLock(rooms.observe, veil.observe);
-  drawServer(now);
-  darken(rooms.server, lightLevel(rooms.server, now));
-  drawLock(rooms.server, veil.server);
-
-  drawArenaBase();
+  drawMeeting();
+  drawArchive();
+  drawComms(now);
+  drawHallBase();
   for (const bot of bots) {
     if (bot.shownAt === null) continue;
-    updateWalker(bot, dt, BOT_W);
+    updateWalker(bot, dt, BOT_W, rooms.hall);
     drawBot(bot, now);
   }
   drawProps();
-  darken(rooms.arena, lightLevel(rooms.arena, now));
-  drawLock(rooms.arena, veil.arena);
+  drawStorage();
+  drawPower(now);
+  drawServer(now);
+  for (const key of Object.keys(veil)) {
+    darken(rooms[key], lightLevel(rooms[key], now));
+    drawLock(rooms[key], veil[key]);
+  }
 
   drawRestricted(now);
   const r = rooms.restricted;
@@ -689,7 +767,7 @@ function drawScene(now, dt) {
   // 잠금 검사가 끝난 제한 구역은 서버실과 같은 자물쇠로 표시 (열리면 사라짐)
   if (rooms.restricted.state === 'checked') drawLock(rooms.restricted, 1 - restrictedOpen, false);
   if (showLabels) drawLabels(now);
-  if (showLabels && lightLevel(rooms.arena, now) > 0.5) drawBotLabels(now);
+  if (showLabels && lightLevel(rooms.hall, now) > 0.5) drawBotLabels(now);
   ctx.restore();
 }
 
@@ -699,7 +777,7 @@ function drawScene(now, dt) {
 let labWallpaper = null;
 function labWallpaperUrl() {
   if (labWallpaper !== null) return labWallpaper;
-  const litRooms = ['observe', 'server', 'arena'];
+  const litRooms = Object.keys(veil);
   const lights = litRooms.map((key) => rooms[key].lightAt);
   const shown = bots.map((bot) => bot.shownAt);
   try {
@@ -730,7 +808,7 @@ window.Play.labWallpaperUrl = labWallpaperUrl;
 function startScene() {
   cancelAnimationFrame(frameId);
   lastTime = 0;
-  for (const key of ['observe', 'server', 'arena']) rooms[key].lightAt = null;
+  for (const key of Object.keys(veil)) rooms[key].lightAt = null;
   rooms.restricted.state = 'idle';
   bots.forEach((bot, i) => {
     bot.shownAt = null;
@@ -773,9 +851,9 @@ function toScene(event) {
   };
 }
 
-// 안테나 둘레를 넉넉히 잡음 (안테나 기둥 x 130, 꼭대기 y 3)
+// 안테나 기둥 x 131, 꼭대기 y -5
 function onAntenna({ x, y }) {
-  return x >= 123 && x <= 138 && y >= -1 && y <= 17;
+  return x >= 124 && x <= 138 && y >= -7 && y <= 9;
 }
 
 // 맨 왼쪽 캐비닛의 빨간 봉인 테이프 (방 기준 x 11~17, y 13) 둘레. 제한 구역이 열려 있을 때만
@@ -805,9 +883,13 @@ canvas.addEventListener('mousemove', (event) => {
 
 // 로딩 단계: 방 하나씩. weight는 진행률에서 차지하는 비중
 const stages = [
-  { room: 'server', text: '연구소 서버를 켜는 중', weight: 1 },
-  { room: 'observe', text: '관찰실 모니터를 켜는 중', weight: 1 },
-  { room: 'arena', text: 'YB-1부터 YB-6까지 깨우는 중', weight: 1.6 },
+  { room: 'power', text: '전력실 전원을 넣는 중', weight: 1 },
+  { room: 'server', text: '서버를 켜는 중', weight: 1 },
+  { room: 'comms', text: '통신망을 연결하는 중', weight: 1 },
+  { room: 'archive', text: '실험 기록을 불러오는 중', weight: 1 },
+  { room: 'meeting', text: '회의실 불을 켜는 중', weight: 1 },
+  { room: 'storage', text: '창고를 점검하는 중', weight: 1 },
+  { room: 'hall', text: 'YB-1부터 YB-6까지 깨우는 중', weight: 1.6 },
   { room: 'restricted', text: '제한 구역을 잠그는 중', weight: 1 },
 ];
 
@@ -852,8 +934,8 @@ function enterStage(index) {
 
 // 실험 구역 단계 동안 AI가 한 명씩 나타남
 function showBots() {
-  const arena = stages.find((s) => s.room === 'arena');
-  const ratio = (progress - arena.start) / (arena.end - arena.start);
+  const hall = stages.find((s) => s.room === 'hall');
+  const ratio = (progress - hall.start) / (hall.end - hall.start);
   const count = Math.max(0, Math.min(bots.length, Math.ceil(ratio * bots.length)));
   bots.forEach((bot, i) => {
     if (i < count && bot.shownAt === null) bot.shownAt = performance.now();
