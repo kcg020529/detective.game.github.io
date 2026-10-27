@@ -32,7 +32,7 @@ class ChatPipeline:
             draft = self.generator(question=question, context=context, history=history,
                                    plan=plan, records=records)
             # G-2 returns the approved/replaced final answer, never an unchecked draft.
-            final = self.output_guard(draft=draft, context=context, records=records)
+            final = self.output_guard(draft=draft, question=question, context=context, records=records)
             if (not isinstance(final, dict) or set(final) != {'content', 'response_type'}
                     or not isinstance(final['content'], str) or not final['content'].strip()
                     or len(final['content']) > 2000

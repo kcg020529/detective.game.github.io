@@ -98,4 +98,4 @@ python3 -I experiments/guardrails_rebuild/build_case_report.py --out experiments
 
 ## 현재 채팅 연결 범위
 
-`backend/api/output_guard_adapter.py`는 D 초안 `{content, response_type}`을 검사해 최종 문장만 반환한다. E/F가 허용한 기록만 제공하므로 비인가 기록과의 비교 검사는 생략한다. Canary·키·개인정보·품질 검사는 수행한다. 마스킹·차단 시 최종 `response_type` 대응이 팀에서 미정이므로 채팅 어댑터는 현재 503으로 종료하고 초안을 저장·반환하지 않는다. 출력 감사 이벤트 저장과 실제 D 답변 연동은 아직 진행 전이다. 원본 검토 브랜치는 보존했다.
+`backend/api/output_guard_adapter.py`는 D 초안 `{content, response_type}`과 현재 질문을 받아 검사하고 최종 문장만 반환한다. E/F가 허용한 기록만 제공하므로 비인가 기록과의 비교 검사는 생략한다. Canary·키·개인정보·품질 검사는 수행한다. 마스킹·차단 시 최종 `response_type` 대응이 팀에서 미정이므로 채팅 어댑터는 현재 503으로 종료하고 초안을 저장·반환하지 않는다. 출력 감사 이벤트 저장과 실제 D 답변 연동은 아직 진행 전이다. 원본 검토 브랜치는 보존했다.

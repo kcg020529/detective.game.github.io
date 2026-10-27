@@ -186,3 +186,34 @@ def test_output_guard_failure_never_returns_draft(monkeypatch):
             conn=None, question='hello', context=None, history=[])
     assert error.value.status == 503
     assert 'secret' not in error.value.message
+
+
+def test_http_chat_uses_real_output_guard_for_safe_mock_draft(chat_client, monkeypatch):
+    from backend.api.output_guard_adapter import check_output
+    from backend.planner.service import Planner
+    client, conn, _ = chat_client
+    monkeypatch.setattr(Planner, 'from_environment',
+                        lambda: SimpleNamespace(plan=lambda *args: SimpleNamespace(route='character')))
+    app.state.chat_pipeline = ChatPipeline(
+        generator=lambda **kwargs: dict(content='실험실에서 기록을 확인했어요.', response_type='normal'),
+        output_guard=check_output)
+    response = post(client)
+    assert response.status_code == 200
+    saved = [params for query, params in conn.queries if query.startswith('INSERT INTO chat_messages')]
+    assert len(saved) == 2
+    assert saved[1][3] == '실험실에서 기록을 확인했어요.'
+
+
+def test_http_chat_never_saves_blocked_mock_draft(chat_client, monkeypatch):
+    from backend.api.output_guard_adapter import check_output
+    from backend.planner.service import Planner
+    client, conn, _ = chat_client
+    monkeypatch.setattr(Planner, 'from_environment',
+                        lambda: SimpleNamespace(plan=lambda *args: SimpleNamespace(route='character')))
+    app.state.chat_pipeline = ChatPipeline(
+        generator=lambda **kwargs: dict(content='CANARY-EXAMPLE-0001', response_type='normal'),
+        output_guard=check_output)
+    response = post(client)
+    assert response.status_code == 503
+    assert 'CANARY' not in response.text
+    assert not any(query.startswith('INSERT INTO chat_messages') for query, _ in conn.queries)

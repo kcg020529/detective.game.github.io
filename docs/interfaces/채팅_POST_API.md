@@ -17,14 +17,14 @@ message는 공백만 있는 값을 제외한 1~2000자, 요청 ID는 출력 가�
 6. retrieve 경로만 E search_records를 호출한다. E가 F 사전 인가·최종 resolve를 수행한다. 다른 경로는 검색하지 않는다.
 7. D 생성 → G-2 출력 검사 → 최종 답변·질문·요청 캐시 저장 → commit 성공 후 응답한다.
 
-## D / G-2 연결 제안
+## D / G-2 연결 현황과 제안
 
-현재 두 모듈은 없어 기본 POST는 입력 검사·감사 단계 후 503을 반환하며 대화는 저장하지 않는다. 다음 내부 연결 방식은 I 구현의 제안이며 D/G-2 담당자의 합의·실제 구현은 남아 있다.
+현재 작업 브랜치에서 G-2 검사 구현을 `backend/guardrails/output/`에 두고 `backend/api/output_guard_adapter.py`를 채팅 파이프라인에 등록했다. D 생성 어댑터가 없어 기본 POST는 입력 검사·감사 단계 후 503을 반환하며 대화는 저장하지 않는다. 모의 D 생성기로 채팅 POST의 정상 답변 저장과 위험 초안 미저장을 확인했다. 실제 D/G-2 계약과 생성 연결은 남아 있다.
 
-서버 시작 시 `app.state.chat_pipeline = ChatPipeline(generator, output_guard)`로 연결한다. 요청 본문에서 어댑터를 선택할 수 없다.
+서버 시작 시 현재 `app.state.chat_pipeline = ChatPipeline(output_guard=check_output)`으로 등록한다. D 생성기를 연결할 때 `ChatPipeline(generator, output_guard)` 형태로 완성한다. 요청 본문에서 어댑터를 선택할 수 없다.
 
 - generator: keyword 인자 `question, context, history, plan, records`를 받아 draft 반환. records는 E/F가 최종 허용한 결과뿐이다. plan의 clarify/out_of_scope도 준수해야 한다.
-- output_guard: keyword 인자 `draft, context, records`를 받아 최종 `{"content":str,"response_type":"normal|partial|restricted|unknown"}` 반환. 답변은 공백 제외 1~2000자다. 검사 실패 시 예외를 발생시킨다. 승인 전 초안은 반환·저장하지 않는다.
+- output_guard: keyword 인자 `draft, question, context, records`를 받아 최종 `{"content":str,"response_type":"normal|partial|restricted|unknown"}` 반환. 답변은 공백 제외 1~2000자다. 검사 실패 시 예외를 발생시킨다. 승인 전 초안은 반환·저장하지 않는다. 현재는 차단·마스킹 뒤 최종 `response_type`이 미정이므로 503으로 종료한다.
 - 검색은 기존 QDRANT_URL과 E FastEmbedder를 사용한다. Planner는 기존 전용 환경변수를 사용한다. D/G-2가 없으면 유료 Planner 호출 전에 중단한다.
 
 ## 검증 한계

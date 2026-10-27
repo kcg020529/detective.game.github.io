@@ -67,3 +67,5 @@
 4. Save 행 잠금으로 동일 Save 요청을 직렬화하고 질문·AI 답변·요청 응답 캐시를 같은 트랜잭션에 저장함. 재전송은 기존 응답을 반환하고 다른 질문·AI·Day endpoint의 요청 ID 충돌은 409임. 기존 advance-day도 endpoint 충돌을 검사하도록 보완함. DB 의존성을 function scope로 통일하고 FastAPI 최소 버전을 0.121로 높여 commit 실패 후 성공 응답이 나가던 문제를 수정함.
 5. WSL `python -m pytest tests -q -rs`: 105 passed, 22 skipped, 경고 1건. 추가 `tests/test_chat_post.py` 12개는 서버 context·쌍 저장·중복·충돌·권한 거부·경고 commit 후 장애·입력 검증·미연결 503·commit 실패·검색 결과 전달·출력 검사 실패를 검증함. DB 없는 모의 연결/어댑터 검사이며 실제 MariaDB 동시성·감사 영속성·롤백이나 LLM/Qdrant 실행 증거는 아님. skip은 DB 연결 불가·_test DB 미설정·모델 캐시 없음임. 실제 DB 및 D/G-2·프론트 전체 검증은 미수행임.
 6. `docs/interfaces/채팅_POST_API.md`에 요청·응답·실패·감사 트랜잭션·연결 제안·검증 한계를 작성함. D/G-2 인터페이스 담당자 합의, 긴 모델 호출 동안 Save 잠금 운영 검토는 후속 작업임.
+
+2026-10-27 현재 작업 브랜치에서 G-2 Output Guard를 `backend/api/output_guard_adapter.py`로 채팅 파이프라인에 등록했다. 현재 질문을 검사에 전달하고, 모의 D 생성기로 POST의 정상 답변 저장·위험 초안 미저장을 확인했다. D 생성 어댑터 부재로 실제 채팅 POST는 여전히 503이며, 차단·마스킹의 최종 `response_type`, 출력 감사 저장, 전체 비인가 기록 대조는 미연결이다.
