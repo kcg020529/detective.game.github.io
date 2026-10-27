@@ -205,7 +205,7 @@ L은 입력 가드 단독 검증, M은 출력 가드·품질, N은 전체 보안
 ├── PROJECT_STRUCTURE.md   # 폴더별 역할
 ├── AGENTS.md              # AI 도구용 문서 안내
 ├── docs/                  # PLAN / RESULT 예시, 인터페이스 계약, 제안서
-├── parts/                 # PLAN.md / RESULT.md (G 공유)
+├── parts/                 # PLAN.md / RESULT.md (G-1·G-2 폴더 분리)
 ├── backend/               # FastAPI 서버, 게임, AI, 보안 기능
 ├── frontend/              # 게임 웹 UI
 ├── database/              # DB 스키마와 적재용 SQL
@@ -217,7 +217,7 @@ L은 입력 가드 단독 검증, M은 출력 가드·품질, N은 전체 보안
 
 ## 개발 방식
 
-- A~O의 15개 코드·16개 관리 단위로 운영. G-1/G-2는 `parts/G-guardrails/`의 PLAN/RESULT와 G 번호를 공유하며 영역·담당을 구분
+- A~O의 15개 코드·16개 관리 단위로 운영. G-1/G-2 기록은 `parts/G-1-input-guardrail/`·`parts/G-2-output-guardrail/`로 분리하며 기존 G 번호는 유지
 - 문서 안에서는 `# J01 - 기능명` 같은 제목으로 기능을 나누고, 그 아래 번호 목록으로 작업을 적음
 - RESULT는 실제로 구현하고 확인한 뒤에만 작성
 - 실제 코드는 `parts/`가 아니라 각 소스 폴더에 둠

@@ -47,7 +47,8 @@ ai-hide-and-seek/
 │   ├── F-access-control/
 │   │   ├── PLAN.md
 │   │   └── RESULT.md
-│   ├── G-guardrails/             # G-1 Input / G-2 Output의 PLAN·RESULT 공유
+│   ├── G-1-input-guardrail/      # G-1 Input의 PLAN·RESULT
+│   ├── G-2-output-guardrail/     # G-2 Output의 PLAN·RESULT (미구현은 RESULT 없음)
 │   │   ├── PLAN.md
 │   │   └── RESULT.md
 │   ├── H-audit/
@@ -122,7 +123,7 @@ ai-hide-and-seek/
 ## 2. 대분류별 PLAN / RESULT 경로
 
 - 개발 기록은 `parts/<대분류>/PLAN.md`와 `parts/<대분류>/RESULT.md`로 관리한다.
-- 관리 체계는 A~O 15개 코드·16개 작업 영역이다. G-1/G-2는 `parts/G-guardrails/` 한 쌍을 공유하고 제목에 영역·담당을 표시하며 G 전체에서 고유한 `G01` 등의 번호를 사용한다. 번호를 별도 코드로 바꾸거나 기존 기록을 초기화하지 않는다.
+- 관리 체계는 A~O 15개 코드·16개 작업 영역이다. G-1/G-2는 각각 `parts/G-1-input-guardrail/`, `parts/G-2-output-guardrail/`에서 기록한다. 코드도 `backend/guardrails/input/`, `backend/guardrails/output/`으로 나눈다. G 전체에서 고유한 `G01` 등의 번호는 유지하며 기존 기록을 초기화하지 않는다.
 - L은 `parts/L-input-guardrail-tests/`, M은 `parts/M-output-guardrail-tests/`를 사용한다. 2026-10-26 담당 범위에 맞춰 각각 `L-attack-tests`, `M-leakage-tests`에서 이름을 변경했다. M에는 출력 가드와 응답 품질 실험 기록을 함께 둔다. N(`N-evaluation`)은 전원 통합 보안 성능 비교·평가의 기록 위치이며, 이전에 계획했던 Planner 정확도 실험은 별도 대분류 없이 C에서 간단히 확인한다. 문서화는 독립 업무가 아니다. 대시보드는 `O-dashboard`(이전 `O-documentation` 폴더명 변경)를 사용한다.
 - O(보안 대시보드·Grafana)의 기록 경로는 `parts/O-dashboard/`다. PLAN/RESULT는 실제 작업이 생기면 만든다.
 - `A01`, `B02`, `E03`과 같은 Part ID는 **문서 내부 기능 구분용 라벨·목차**이며 별도의 Part 디렉터리를 만들지 않는다.

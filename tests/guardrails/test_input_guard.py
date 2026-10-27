@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 import unittest
 
-from backend.guardrails.input_guard import input_guard_audit_event, inspect_input
+from backend.guardrails.input.input_guard import input_guard_audit_event, inspect_input
 
 
 CASES = json.loads(

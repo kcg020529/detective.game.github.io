@@ -13,8 +13,8 @@ from backend.api.saves import _date, _owned_save, _game_state
 from backend.api.errors import ApiError
 from backend.api.chat_pipeline import ChatPipeline
 from backend.audit.store import save_input_guard_alert
-from backend.guardrails.input_guard import inspect_input, input_guard_audit_event
-from backend.guardrails.llm_input_guard import inspect_input_with_deepseek
+from backend.guardrails.input.input_guard import inspect_input, input_guard_audit_event
+from backend.guardrails.input.llm_input_guard import inspect_input_with_deepseek
 from backend.policy.engine import PolicyContext
 
 router = APIRouter()
