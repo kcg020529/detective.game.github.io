@@ -10,6 +10,8 @@ from pymysql.err import InterfaceError, OperationalError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from backend.api.chats import router as chats_router
+from backend.api.chat_pipeline import ChatPipeline
+from backend.api.output_guard_adapter import check_output
 from backend.api.auth import router as auth_router
 from backend.api.errors import ApiError
 from backend.api.saves import router as saves_router
@@ -27,6 +29,7 @@ ALLOWED_ORIGINS = (
 )
 
 app = FastAPI()
+app.state.chat_pipeline = ChatPipeline(output_guard=check_output)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
