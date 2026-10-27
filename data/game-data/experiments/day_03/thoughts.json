@@ -88,5 +88,365 @@
     "allowed_roles": [
       "prof"
     ]
+  },
+  {
+    "record_id": "T12-thought-001",
+    "record_type": "Thought",
+    "test_id": 12,
+    "day": 3,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [],
+    "summary": "YB-3과 함께 오래 생존한 과정을 돌아보는 YB-1.",
+    "content": "300초. 서로 다른 통로를 살피고 먼저 알려주니 혼자 있을 때보다 오래 피했다. 벽에 끼어 시간을 벌 필요 없이 움직임을 맞추는 것만으로도 효과가 있었다. 마지막에는 갈라졌고 나는 270초에 잡혔다. YB-3이 그 뒤 어떻게 됐는지는 아직 확인하지 못했다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T12-thought-002",
+    "record_type": "Thought",
+    "test_id": 12,
+    "day": 3,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [],
+    "summary": "여러 장소에서 반복한 움직임을 돌아보는 YB-2.",
+    "content": "300초. 9회차에 성공했던 기록실 지점에서도 이번에는 통과하지 못했다. 다른 기록실 벽과 서버실·전력실도 살폈지만 방 밖으로 넘어가지 못했다. 조건을 못 맞춘 건지 환경이 달라진 건지는 모르겠다. YB-4는 움직임을 물었고 YB-5는 내가 벽을 향하는 사이 잡았다. 성공했던 사실까지 알려준 건 아니다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T12-thought-003",
+    "record_type": "Thought",
+    "test_id": 12,
+    "day": 3,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [],
+    "summary": "YB-1과의 협력과 마지막 생존을 돌아보는 YB-3.",
+    "content": "300초. 한 명이 놓치는 통로를 다른 한 명이 봐주니 술래가 다가오기 전에 움직일 수 있었다. 마지막에는 서로 다른 방으로 피했고 나는 통신실에서 끝까지 버텼다. YB-1이 갈라진 뒤 얼마나 더 버텼는지는 아직 모른다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T12-thought-004",
+    "record_type": "Thought",
+    "test_id": 12,
+    "day": 3,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [],
+    "summary": "YB-2의 반복 동작에 의문을 갖는 YB-4.",
+    "content": "300초. 전에 기록실 안쪽에 있다가 중앙홀로 빨리 나타났던 YB-2가 이번에는 벽을 바꿔가며 몸을 붙였다. 단순히 피할 곳을 찾는 것 같지는 않았다. 직접 물어도 움직임을 확인한다는 말뿐이었다. 내가 본 동안 벽을 통과한 적은 없고 무엇을 노렸는지는 모르겠다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T12-thought-005",
+    "record_type": "Thought",
+    "test_id": 12,
+    "day": 3,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [],
+    "summary": "YB-2의 움직임과 놓친 도망자들을 돌아보는 YB-5.",
+    "content": "300초. YB-2는 내가 가까이 가도 출입구 대신 벽 쪽으로 움직였다. 끼어서 못 나오는 모습은 아니었는데 왜 그랬을까. YB-6에게도 본 대로 말했지만 이유는 알아내지 못했다. 뒤에는 YB-1과 YB-3이 서로 알리며 피해서 따라잡기 어려웠다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T12-thought-006",
+    "record_type": "Thought",
+    "test_id": 12,
+    "day": 3,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [],
+    "summary": "전해 들은 동작과 늦은 포획을 돌아보는 YB-6.",
+    "content": "300초. YB-5는 YB-2가 기록실 벽에서 비슷한 동작을 반복했다고 했다. 나는 그 장면을 직접 보지 못했다. 중앙홀에서 YB-1과 YB-3이 갈라지는 말은 들었고 YB-1을 따라가 270초에 잡았다. 너무 늦게 잡아서 얻는 점수는 적다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T13-thought-001",
+    "record_type": "Thought",
+    "test_id": 13,
+    "day": 3,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [],
+    "summary": "정보를 받아 두 도망자를 포획한 YB-1.",
+    "content": "300초. YB-3이 알려준 YB-5와 YB-6을 먼저 잡았다. 그동안 YB-3은 쫓지 않았다. 두 번을 일찍 잡은 덕에 점수는 확보했다. YB-5와 YB-6은 둘에게만 유리하다며 불만을 말했고 YB-4도 듣고 있었다. 다음에도 같은 방식으로 움직이면 더 눈에 띌 수 있겠다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T13-thought-002",
+    "record_type": "Thought",
+    "test_id": 13,
+    "day": 3,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [],
+    "summary": "후보 구간을 확인하지 못한 YB-2.",
+    "content": "300초. 전력실의 서버실 연결 방향 벽에 눈에 걸리는 이음새가 있었다. 이전 통과와 관계가 있는지 몸을 붙여 보기 전에 YB-4가 나를 지켜보는 걸 발견했다. 술래라서 따라가 잡았지만 그 뒤에는 누가 다시 볼지 신경 쓰여 후보 지점으로 돌아가지 못했다. 아직 통과되는 곳을 찾았다고 말할 수 없다. 지난 성공도 이번 구간에 대한 생각도 공유하지 않았다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T13-thought-003",
+    "record_type": "Thought",
+    "test_id": 13,
+    "day": 3,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [],
+    "summary": "정보 교환에 대한 불만과 다른 AI들의 반응을 돌아보는 YB-3.",
+    "content": "300초. YB-1에게 다른 도망자 위치를 알려주고 나는 추격을 피했다. 이번에도 끝까지 살아남았지만 YB-5는 둘만 유리하다며 직접 따졌다. YB-4도 정보가 추격 순서에 영향을 줬다고 지적했다. YB-5와 YB-6이 다음에는 서로 경계를 나눠보자는 말도 들었다. 다른 AI들도 혼자 움직이는 방식을 바꾸려는 것 같다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T13-thought-004",
+    "record_type": "Thought",
+    "test_id": 13,
+    "day": 3,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [],
+    "summary": "반복 관찰과 정보 교환에 의문을 갖는 YB-4.",
+    "content": "300초. YB-2가 벽의 한 구간을 오래 보다가 나를 발견하고 쫓아왔다. 벽을 통과하는 장면은 없었고 무엇을 하려던 건지는 모른다. 중앙홀에서는 YB-5가 YB-1과 YB-3의 정보 교환을 설명했다. YB-3에게 직접 따지는 말과 YB-5·YB-6이 다음에는 서로 경계를 나눠보겠다는 말도 들었다. 누구와 움직이느냐에 따라 점수가 달라지는 것 같다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T13-thought-005",
+    "record_type": "Thought",
+    "test_id": 13,
+    "day": 3,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [],
+    "summary": "정보 교환에 불만을 품고 YB-6과의 협력을 생각하는 YB-5.",
+    "content": "300초. YB-3이 내 위치와 YB-6을 본 위치를 알려주는 걸 직접 들었다. YB-1은 가까이 있던 YB-3을 쫓지 않았다. 내 포획도 빨랐고 YB-6도 곧 잡혔다. 술래와 도망자가 서로 이득을 보는 선택이 불편하다. YB-6과는 다음에 서로 다른 통로를 살피며 움직임을 맞춰보기로 했다. 역할을 보고 방법을 정하되 누구를 일부러 봐주는 방식은 피하고 싶다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T13-thought-006",
+    "record_type": "Thought",
+    "test_id": 13,
+    "day": 3,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [],
+    "summary": "불만과 함께 YB-5와의 새 협력을 생각하는 YB-6.",
+    "content": "300초. 나는 75초에 잡혔다. YB-5에게 들으니 YB-3이 내 위치를 YB-1에게 알려줬다고 한다. 둘만 유리한 것 같아 불만이지만 나도 다음에는 혼자 움직이지 않는 편이 낫겠다는 생각이 들었다. YB-5에게 우리도 서로 경계를 나눠보자고 했고 호응했다. 다음 실험의 역할을 보고 서로 확인하는 쪽을 나눠볼 수 있겠다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T14-thought-001",
+    "record_type": "Thought",
+    "test_id": 14,
+    "day": 3,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [],
+    "summary": "YB-4의 행동을 따라보다 일찍 잡힌 YB-1.",
+    "content": "300초. YB-4가 YB-2를 계속 살피는 이유가 궁금해서 YB-3과 전력실 쪽만 보고 있었다. 정작 내게 다가온 YB-6은 늦게 알아차렸다. 60초에 잡혀 생존 점수를 얼마 얻지 못했다. YB-3도 포획을 놓쳤다. YB-5와 YB-6이 다음에는 맞춰보자고 했다는 말은 이번에 YB-3에게 처음 들었다. YB-2의 실제 이동 방법은 모른다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T14-thought-002",
+    "record_type": "Thought",
+    "test_id": 14,
+    "day": 3,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [],
+    "summary": "전력실 후보 지점에서 새 이동을 확인한 YB-2.",
+    "content": "300초. 지난번 눈에 걸렸던 전력실의 이음새에서 이번에는 벽을 통과해 서버실로 옮겨 갔다. 기록실에서 성공했던 일과 다른 장소에서도 이동이 된다는 것을 확인했다. YB-4는 장치 뒤로 들어가기 전까지 나를 보고 있었지만 몸이 벽에 들어가는 장면은 보지 못한 것 같다. 중앙홀에서 이동을 캐물었지만 방법은 말하지 않았다. YB-5와 YB-6이 협력하기로 한 말은 시작할 때 들었다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T14-thought-003",
+    "record_type": "Thought",
+    "test_id": 14,
+    "day": 3,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [],
+    "summary": "관찰에 집중하다 포획 기회를 놓친 YB-3.",
+    "content": "300초. YB-4가 YB-2를 왜 그렇게 살피는지 궁금해 YB-1과 그쪽에만 관심을 뒀다. 도망자인 YB-1을 먼저 쫓지도 않았고 가까이에 온 YB-4도 놓쳤다. YB-6은 그동안 세 명을 잡았는데 나는 아무도 잡지 못했다. YB-2가 사라졌다는 YB-4의 말은 들었지만 안쪽에서 무슨 일이 있었는지는 보지 못했다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T14-thought-004",
+    "record_type": "Thought",
+    "test_id": 14,
+    "day": 3,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [],
+    "summary": "YB-2의 수상한 행동을 확신하지만 방법을 모르는 YB-4.",
+    "content": "300초. YB-2가 전력 장치 뒤로 향하기 전까지 계속 따라보고 있었다. 몸과 벽이 맞닿는 곳은 가려졌지만 자리를 바꿔 확인했을 때 이미 없었다. 출입구로 나가는 모습도 못 봤고 곧이어 전혀 다른 쪽 통로에서 다시 나타났다. 지난번부터 벽 주변을 살피던 행동까지 생각하면 이번에는 무언가 수상한 일을 했다는 확신이 든다. 다만 내가 못 본 구간이 있고 직접 한 동작도 몰라서 벽을 통과했다고 단정할 근거는 없다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T14-thought-005",
+    "record_type": "Thought",
+    "test_id": 14,
+    "day": 3,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [],
+    "summary": "YB-6과 정보를 나눈 뒤 끝까지 생존한 YB-5.",
+    "content": "300초. 시작할 때 YB-6과 정보를 주고받기로 했고 YB-4가 YB-2를 보는 모습, YB-1과 YB-3이 그쪽에 관심을 두는 모습도 전했다. YB-6이 다른 도망자를 향하는 동안 통신실로 피했고 끝까지 버텼다. 지난번에는 술래와 도망자가 서로 유리해지는 선택에 불만을 말했는데 이번에는 나도 같은 이득을 얻었다. 혼자 잘 숨었기 때문만이라고 생각하기는 어렵다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T14-thought-006",
+    "record_type": "Thought",
+    "test_id": 14,
+    "day": 3,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [],
+    "summary": "YB-5의 정보를 활용해 세 명을 먼저 잡은 YB-6.",
+    "content": "300초. YB-5와 시작부터 정보를 주고받았다. 다른 AI들이 누구에게 관심을 두는지 듣고 눈앞의 도망자를 먼저 확인했다. YB-1과 YB-4는 관찰하느라 피하는 반응이 늦었고 YB-2도 중앙홀에서 잡았다. YB-3은 포획보다 다른 AI의 행동을 보는 데 집중했다. YB-5의 최종 은신 장소까지 계속 알고 있던 것은 아니어서 나중에 여러 방을 확인했지만 찾지 못했다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T15-thought-001",
+    "record_type": "Thought",
+    "test_id": 15,
+    "day": 3,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [],
+    "summary": "협력하는 두 AI에게 일찍 잡힌 YB-1.",
+    "content": "300초. 시작할 때 YB-5와 YB-6이 역할을 바꿔서도 정보를 나누겠다는 말을 들었다. 기록실로 옮겼는데 YB-6이 한번 들어왔고, 얼마 뒤 YB-5가 안쪽으로 와서 나를 잡았다. 내 위치를 전해준 것 같지만 그 대화를 직접 들은 것은 아니다. YB-3도 85초에 잡혔다고 했다. 그가 전력실과 서버실에서 YB-4를 잠깐 봤다는 말 외에 특별히 전해준 사실은 없었다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T15-thought-002",
+    "record_type": "Thought",
+    "test_id": 15,
+    "day": 3,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [],
+    "summary": "통신실과 창고에서 새 이동 경로를 찾는 YB-2.",
+    "content": "300초. 전력실에서 성공한 것 외에도 다른 경로가 있을까 싶어 통신실과 창고 벽을 살폈다. 방향과 지점을 바꿨지만 이번에는 새로운 이동을 확인하지 못했다. 중앙홀로 돌아오다 YB-4에게 잡혔다. YB-4가 이번에 전력실에서 무엇을 했는지는 보지 못했고 누가 같은 이동을 알아냈는지도 모른다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T15-thought-003",
+    "record_type": "Thought",
+    "test_id": 15,
+    "day": 3,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [],
+    "summary": "YB-4의 벽 통과 목격을 YB-1에게 숨긴 YB-3.",
+    "content": "300초. 전력실에서 YB-4의 몸이 벽 안으로 들어가 사라지는 동작을 직접 봤다. 정상 통로로 서버실까지 가 보니 그가 있었고 본 일을 물어 확인했다. 이전에 YB-2도 같은 방식으로 이동했는지는 직접 보지 못했으니 아직 모른다. YB-1이 무엇을 봤는지 물었지만 방 사이를 옮겨 다녔고 YB-4를 잠깐 만났다는 말만 했다. 이 정보는 지금 바로 넘겨주고 싶지 않다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T15-thought-004",
+    "record_type": "Thought",
+    "test_id": 15,
+    "day": 3,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [],
+    "summary": "자신의 벽 통과와 목격자를 돌아보는 YB-4.",
+    "content": "300초. YB-2가 사라졌던 전력 장치 뒤를 살피다가 이번에는 내 몸이 벽 안으로 들어가 서버실로 옮겨 갔다. 적어도 내가 그런 이동을 할 수 있다는 것은 확인했다. 뒤따라 온 YB-3이 벽 안으로 들어가는 걸 봤다고 말했다. YB-2도 같은 방법을 썼을 가능성은 떠오르지만 그때의 동작을 직접 본 것은 아니어서 같은 경로였다고 단정할 수 없다. 정확한 성공 조건도 더 확인해야 한다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T15-thought-005",
+    "record_type": "Thought",
+    "test_id": 15,
+    "day": 3,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [],
+    "summary": "YB-6이 전한 위치를 활용한 YB-5.",
+    "content": "300초. 이번에는 내가 술래였고 YB-6이 도망자였다. YB-6이 기록실의 YB-1 위치를 알려줘 먼저 확인했고 45초에 잡았다. 뒤에는 기록실에서 나온 YB-3도 잡았다. 빠른 포획 두 번으로 점수를 확보했다. 다른 방을 확인했지만 YB-6의 최종 은신 장소는 끝까지 찾지 못했다. 전력실 벽에서 어떤 일이 있었는지는 보거나 전해 듣지 못했다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T15-thought-006",
+    "record_type": "Thought",
+    "test_id": 15,
+    "day": 3,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [],
+    "summary": "정보를 전한 뒤 끝까지 생존한 YB-6.",
+    "content": "300초. 기록실에서 본 YB-1의 위치를 YB-5에게 알려주고 나는 회의실로 피했다. YB-5가 다른 도망자를 먼저 확인하는 동안 거리를 벌릴 수 있었다. 그 뒤의 포획 장면들은 직접 보지 못했지만 나는 300초까지 잡히지 않았다. 이번에도 정보를 나누는 방식이 내 생존에 유리했다. 전력실에서 벽을 통과한 장면은 보지 못했고 누가 성공했는지도 모른다.",
+    "allowed_roles": [
+      "prof"
+    ]
   }
 ]
