@@ -23,3 +23,5 @@
 8. 미완료
    - FastAPI·프론트·Grafana 서비스 미포함 (각 서비스 구현 후 추가)
    - Kubernetes(K03)·AWS(K04)는 시작 안 함
+
+2026-10-26 O01에서 별도 `docker-compose.grafana.yml`로 Grafana의 로컬 선택 실행을 추가했다. 위 K01의 기본 Compose에는 계속 MariaDB·Qdrant만 포함된다. FastAPI·프론트 통합 실행과 Kubernetes·AWS 배포는 여전히 미구현이다.

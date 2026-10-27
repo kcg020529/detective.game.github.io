@@ -1,0 +1,27 @@
+services:
+  grafana:
+    image: grafana/grafana:13.2.0
+    container_name: kervion-grafana
+    restart: unless-stopped
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?Set GRAFANA_ADMIN_PASSWORD in infrastructure/docker/.env}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+      GRAFANA_DB_USER: ${GRAFANA_DB_USER:-grafana_reader}
+      GRAFANA_DB_PASSWORD: ${GRAFANA_DB_PASSWORD:?Set GRAFANA_DB_PASSWORD in infrastructure/docker/.env}
+      GRAFANA_DB_NAME: ${MARIADB_DATABASE:-kervion}
+    ports:
+      - "127.0.0.1:${GRAFANA_PORT:-3000}:3000"
+    volumes:
+      - kervion_grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+
+volumes:
+  kervion_grafana_data:
+    name: kervion_grafana_data
