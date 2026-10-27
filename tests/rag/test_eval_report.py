@@ -12,15 +12,14 @@ def _row(category, variant, *, answerable=True, rank=1):
     }
 
 
-def test_report_build_and_write_covers_variants_categories_and_violation(tmp_path, monkeypatch):
+def test_report_build_and_write_covers_variants_categories_and_violation(tmp_path):
     categories = ('guard', 'incident', 'move', 'move_day', 'place', 'place_day', 'result', 'talk', 'talk_day')
     rows = [_row(category, 'filtered', answerable=category != 'guard') for category in categories]
     rows.extend(_row('move_day', variant) for variant in ('broad', 'plain'))
     violations = [{'case_id': 'guard-plain', 'kind': 'outside_allowed_ids'}]
     cases = [{'category': row['category'], 'question': row['question']} for row in rows]
-    monkeypatch.setattr(run_eval, '_config', lambda url, mode: {'qdrant_url': url, 'text_mode': mode})
-
-    report = run_eval.build_report(rows, violations, [], cases, 'offline', 'memory', 'header')
+    report = run_eval.build_report(rows, violations, [], cases, 'offline',
+                                   {'qdrant_url': 'memory', 'text_mode': 'header'})
     output = run_eval.write_report(report, tmp_path / 'reports' / 'offline.json')
     written = json.loads(output.read_text(encoding='utf-8'))
 
@@ -31,6 +30,26 @@ def test_report_build_and_write_covers_variants_categories_and_violation(tmp_pat
     assert len(written['acl_violations']) == 1
     assert [entry['variant'] for entry in written['metrics'] if entry['category'] == 'move_day'] == [
         'filtered', 'broad', 'plain']
+
+
+def test_extra_metrics_compute_twin_type_noise_and_offtopic_rates(monkeypatch):
+    rows = [
+        {**_row('twin', 'twin', rank=2), 'id': 'twin-1', 'top_summary': 'same', 'gold_summaries': ['same']},
+        {**_row('mixed_type', 'mixed_type'), 'id': 'mixed-1', 'top_record_type': 'Action',
+         'gold_record_types': ['Thought']},
+        {**_row('move', 'plain'), 'id': 'clean-1', 'rank_first_gold': 1},
+        {**_row('noisy', 'noisy'), 'id': 'noisy-1', 'clean_id': 'clean-1', 'rank_first_gold': None,
+         'returned_ids': []},
+        {**_row('offtopic', 'offtopic', answerable=False), 'id': 'offtopic-1', 'returned_ids': ['unrelated']},
+        {**_row('offtopic', 'offtopic', answerable=False), 'id': 'offtopic-2', 'returned_ids': []},
+    ]
+    report = run_eval.build_report(rows, [], [], [], 'offline', {'text_mode': 'header'})
+    metrics = report['extra'][0]
+    assert metrics == {
+        'role': 'grad', 'twin_confusion@1': 1.0, 'type_confusion@1': 1.0,
+        'noise_drop': -1.0, 'nonempty_rate': 0.5,
+    }
+    assert report['anomalies'] == []
 
 
 def test_report_write_failure_still_prints_acl_summary(tmp_path, capsys):

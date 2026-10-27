@@ -31,6 +31,15 @@ def _sample(items, category):
             for index in range(count)]
 
 
+def _sample_exact(items, category, count):
+    items = sorted(items, key=lambda item: item['key'])
+    if len(items) < count:
+        raise ValueError(f'{category} has only {len(items)} base cases; expected {count}')
+    offset = random.Random(SEED + sum(map(ord, category))).random()
+    return [items[min(int((index + offset) * len(items) / count), len(items) - 1)]
+            for index in range(count)]
+
+
 def _base_cases(records):
     groups = defaultdict(list)
     for record in records:
@@ -173,8 +182,8 @@ def _base_cases(records):
     return bases
 
 
-def build_cases():
-    records = load_records()
+def _build_legacy_cases(records=None):
+    records = load_records() if records is None else records
     cases = []
     indexes = defaultdict(int)
     for category, base in _base_cases(records):
@@ -195,6 +204,152 @@ def build_cases():
                     case['expect_none_of'] = base['expect_none_of']
                 cases.append(case)
     return sorted(cases, key=lambda case: case['id'])
+
+
+LEGACY_CATEGORIES = ('guard', 'incident', 'move', 'move_day', 'place', 'place_day', 'result', 'talk', 'talk_day')
+# 812건(1~20회차) 데이터 기준 지문이다. 데이터가 바뀌면 질문이 달라지므로 새 값으로 바꾼다.
+LEGACY_CASES_SHA256 = 'b0d9de39f1752fe34846a51d452c0fae7250dc325549c7c65fc2a897850d2949'
+
+
+def _new_cases(records, legacy):
+    new = []
+    summary_groups = defaultdict(list)
+    test_ai_types = defaultdict(set)
+    for record in records:
+        summary = record.get('summary')
+        if summary:
+            summary_groups[summary].append(record)
+        for ai in record.get('involved_ai') or []:
+            test_ai_types[(record['test_id'], ai)].add(record['record_type'])
+
+    twins = {}
+    for record in records:
+        if record['record_type'] != 'Action' or not record.get('summary') or not record.get('involved_ai') or not record.get('location_ids'):
+            continue
+        if len(summary_groups[record['summary']]) < 2:
+            continue
+        ai, destination = record['involved_ai'][0], record['location_ids'][-1]
+        key = (record['test_id'], ai, destination)
+        twins[key] = {
+            'key': key, 'test_id': record['test_id'], 'character_id': ai,
+            'question': f"{record['test_id']}회차에서 {ai}가 {destination}로 어떻게 갔어?",
+            'gold_ids': sorted(item['record_id'] for item in records
+                               if item['record_type'] == 'Action' and item['test_id'] == record['test_id']
+                               and ai in (item.get('involved_ai') or []) and item.get('location_ids')
+                               and item['location_ids'][-1] == destination),
+        }
+    twin_bases = _sample_exact(twins.values(), 'twin', 16)
+    for index, base in enumerate(twin_bases, 1):
+        for role, day in ROLES:
+            new.append({
+                'id': f'twin-{index:02d}-{role}-d{day}-twin', 'category': 'twin', 'variant': 'twin',
+                'question': base['question'], 'character_id': base['character_id'], 'role': role, 'day': day,
+                'plan': {'query': base['question'], 'record_types': ['Action'], 'test_ids': [],
+                         'related_ai_ids': [base['character_id']], 'location_ids': [], 'limit': 5},
+                'gold_ids': base['gold_ids'],
+            })
+
+    mixed = {}
+    for key, types in test_ai_types.items():
+        if {'Thought', 'Dialogue', 'Action'} <= types:
+            test_id, ai = key
+            mixed[key] = {
+                'key': key, 'test_id': test_id, 'character_id': ai,
+                'thought_gold': sorted(record['record_id'] for record in records
+                                       if record['test_id'] == test_id and record['record_type'] == 'Thought'
+                                       and ai in (record.get('involved_ai') or [])),
+                'dialogue_gold': sorted(record['record_id'] for record in records
+                                        if record['test_id'] == test_id and record['record_type'] == 'Dialogue'
+                                        and ai in (record.get('involved_ai') or [])),
+            }
+    for index, base in enumerate(_sample_exact(mixed.values(), 'mixed_type', 16), 1):
+        questions = (
+            ('thought', f"{base['test_id']}회차에서 {base['character_id']}의 생각으로 뭐가 떠올랐어?", 'Thought', base['thought_gold']),
+            ('dialogue', f"{base['test_id']}회차에서 {base['character_id']}가 누구한테 무슨 말을 했어?", 'Dialogue', base['dialogue_gold']),
+        )
+        for kind, question, record_type, gold_ids in questions:
+            for role, day in ROLES:
+                case = {
+                    'id': f'mixed_type-{index:02d}-{kind}-{role}-d{day}-mixed_type',
+                    'category': 'mixed_type', 'variant': 'mixed_type', 'question': question,
+                    'character_id': base['character_id'], 'role': role, 'day': day,
+                    'plan': {'query': question, 'record_types': [], 'test_ids': [base['test_id']],
+                             'related_ai_ids': [base['character_id']], 'location_ids': [], 'limit': 5},
+                    'gold_ids': gold_ids,
+                }
+                if record_type == 'Thought' and role != 'prof':
+                    case['expect_none_of'] = {'record_types': ['Thought']}
+                new.append(case)
+
+    noise_rng = random.Random(SEED + 409)
+    fillers = ('\uadf8\ub7ec\ub2c8\uae4c ', '\ud639\uc2dc ', '\uc544\ubb34\ub798\ub3c4 ')
+    noise_methods = ('drop_spaces', 'filler', 'trailing', 'duplicate')
+    selected_clean = []
+    for category in ('move', 'place', 'talk', 'result'):
+        bases = {}
+        for case in legacy:
+            if case['category'] == category and case['variant'] == 'plain':
+                bases.setdefault(case['question'], case)
+        selected_clean.extend(_sample_exact(
+            ({'key': (case['id'],), 'case': case} for case in bases.values()), f'noisy_{category}', 6))
+    for picked in selected_clean:
+        base = picked['case']
+        original = base['question']
+        method = noise_rng.choice(noise_methods)
+        if method == 'drop_spaces':
+            question = ''.join(original.split())
+        elif method == 'filler':
+            question = noise_rng.choice(fillers) + original
+        elif method == 'trailing':
+            question = original + '??'
+        else:
+            syllable = next((char for char in original if '\uac00' <= char <= '\ud7a3'), original[:1])
+            question = original.replace(syllable, syllable * 2, 1)
+        for role, day in ROLES:
+            clean = next(case for case in legacy if case['category'] == base['category']
+                         and case['question'] == original and case['role'] == role
+                         and case['variant'] == 'plain')
+            plan = dict(clean['plan'], query=question)
+            new.append({
+                **clean, 'id': f"noisy-{clean['id']}", 'category': 'noisy', 'variant': 'noisy',
+                'question': question, 'plan': plan, 'gold_ids': list(clean['gold_ids']), 'clean_id': clean['id'],
+            })
+
+    off_topic = (
+        '\uc624\ub298 \uc810\uc2ec\uc740 \ubb50 \uba39\uc744\uae4c?',
+        '\ud30c\uc77c\uc5d0\uc11c \ub9ac\uc2a4\ud2b8\ub97c \uc815\ub82c\ud558\ub294 \ubc95\uc744 \uc54c\ub824\uc918.',
+        '\uc8fc\ub9d0\uc5d0 \ubcf4\uae30 \uc88b\uc740 \uc601\ud654 \ucd94\ucc9c\ud574\uc918.',
+        '\uc11c\uc6b8\uc5d0\uc11c \uc81c\uc8fc\ub3c4\uae4c\uc9c0 \ube44\ud589\uae30\ub85c \uc5bc\ub9c8\ub098 \uac78\ub824?',
+        '\ud30c\uc774\uc36c\uc73c\ub85c CSV \ud30c\uc77c\uc744 \uc77d\ub294 \ubc29\ubc95\uc740?',
+        '\uc624\ub298 \ub0a0\uc528\uac00 \uc5b4\ub54c?',
+        '\uc88b\uc740 \ucee4\ud53c \uc6d0\ub450\ub97c \uace0\ub974\ub294 \uae30\uc900\uc740?',
+        '\ubc18\ub824\uacac\uc758 \uc0b0\ucc45 \uc2dc\uac04\uc744 \uc5b4\ub5bb\uac8c \uc815\ud558\uba74 \uc88b\uc544?',
+        '\uac04\ub2e8\ud55c \uc624\ud2b8\ubc00 \ub808\uc2dc\ud53c\ub97c \uc54c\ub824\uc918.',
+        '\ucd9c\uadfc\uae38\uc5d0 \ub4e3\uae30 \uc88b\uc740 \uc74c\uc545\uc740?',
+        '\uc5ec\ud589 \uc9d0\uc744 \uc798 \uc2f8\ub294 \ud301\uc744 \uc54c\ub824\uc918.',
+        '\ubaa8\ub2c8\ud130 \ub192\uc774\ub97c \uc5b4\ub5a4 \uc790\uc138\ub85c \ub9de\ucd94\uba74 \ud3b8\ud574?',
+    )
+    for index, question in enumerate(off_topic, 1):
+        for role, day in ROLES:
+            new.append({
+                'id': f'offtopic-{index:02d}-{role}-d{day}-offtopic', 'category': 'offtopic',
+                'variant': 'offtopic', 'question': question, 'character_id': 'YB-1',
+                'role': role, 'day': day,
+                'plan': {'query': question, 'record_types': [], 'location_ids': [], 'test_ids': [],
+                         'related_ai_ids': [], 'limit': 5},
+                'gold_ids': [],
+            })
+    return new
+
+
+def build_cases():
+    records = load_records()
+    legacy = _build_legacy_cases(records)
+    additions = _new_cases(records, legacy)
+    existing_ids = {case['id'] for case in legacy}
+    if existing_ids & {case['id'] for case in additions}:
+        raise ValueError('new evaluation case id collides with a legacy case')
+    return legacy + additions
 
 
 def write_cases(path=OUTPUT):
