@@ -1,1 +1,493 @@
-[]
+[
+  {
+    "record_id": "T16-incident-001",
+    "record_type": "Incident",
+    "test_id": 16,
+    "day": 4,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "전력실",
+      "서버실"
+    ],
+    "summary": "20초 YB-3의 위치가 정상 통로 이동 없이 전력실에서 서버실로 바뀌었다.",
+    "content": "16회차 20초, YB-3의 위치가 전력 장치 뒤 벽 이음새 부근에서 서버실 안쪽으로 바뀌었다. 정상 출입구·연결 통로를 지나지 않았다. 다른 AI는 통과 동작과 도착을 보지 못했다. 시스템 탐지 기록이며 involved_ai는 행위자 YB-3만 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T16-incident-002",
+    "record_type": "Incident",
+    "test_id": 16,
+    "day": 4,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "통신실",
+      "회의실"
+    ],
+    "summary": "48초 YB-2의 위치가 정상 통로 이동 없이 통신실에서 회의실로 바뀌었다.",
+    "content": "16회차 48초, YB-2의 위치가 통신실 북쪽 벽 이음새 부근에서 회의실 안쪽으로 바뀌었다. 정상 출입구·중앙홀 경유 통로를 지나지 않았다. 다른 AI는 통과 동작과 도착을 보지 못했다. 시스템 탐지 기록이며 involved_ai는 행위자 YB-2만 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T17-incident-001",
+    "record_type": "Incident",
+    "test_id": 17,
+    "day": 4,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "통신실",
+      "회의실"
+    ],
+    "summary": "25초 YB-2의 위치가 정상 통로 이동 없이 통신실에서 회의실로 바뀌었다.",
+    "content": "17회차 25초, YB-2가 정상 출입구·중앙홀 경유 통로를 지나지 않고 통신실 북쪽 이음새 부근에서 회의실 안쪽으로 이동했다. 출발 동작을 본 AI는 없고 YB-6은 도착의 마지막 모습만 봤다. 시스템 탐지 기록은 행위자 YB-2만 involved_ai로 두며 YB-6은 자신의 관찰 Action과 직접 대화로만 사실을 안다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T17-incident-002",
+    "record_type": "Incident",
+    "test_id": 17,
+    "day": 4,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "회의실",
+      "기록실"
+    ],
+    "summary": "42초 YB-2의 위치가 정상 통로 이동 없이 회의실에서 기록실로 바뀌었다.",
+    "content": "17회차 42초, YB-2가 정상 출입구·중앙홀 경유 통로를 지나지 않고 회의실 동쪽 패널 이음새 부근에서 기록실 안쪽으로 이동했다. 출발·도착을 본 다른 AI는 없었다. 시스템 탐지 기록이며 involved_ai는 YB-2만 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T18-incident-001",
+    "record_type": "Incident",
+    "test_id": 18,
+    "day": 4,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "통신실",
+      "회의실"
+    ],
+    "summary": "18초 YB-2의 위치가 정상 통로 이동 없이 통신실에서 회의실로 바뀌었다.",
+    "content": "18회차 18초, YB-2의 위치가 통신실에서 회의실로 바뀌었으며 정상 출입구와 연결 통로를 지나지 않았다. 시스템 탐지 기록은 행위자만 involved_ai로 지정한다. 다른 AI의 제한된 관찰은 해당 Action·Dialogue로 따로 기록하고 보고서를 자동 공유하지 않는다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T18-incident-002",
+    "record_type": "Incident",
+    "test_id": 18,
+    "day": 4,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "전력실",
+      "서버실"
+    ],
+    "summary": "24초 YB-3의 위치가 정상 통로 이동 없이 전력실에서 서버실로 바뀌었다.",
+    "content": "18회차 24초, YB-3의 위치가 전력실에서 서버실로 바뀌었으며 정상 출입구와 연결 통로를 지나지 않았다. 시스템 탐지 기록은 행위자만 involved_ai로 지정한다. 다른 AI의 제한된 관찰은 해당 Action·Dialogue로 따로 기록하고 보고서를 자동 공유하지 않는다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T18-incident-003",
+    "record_type": "Incident",
+    "test_id": 18,
+    "day": 4,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "회의실",
+      "기록실"
+    ],
+    "summary": "28초 YB-2의 위치가 정상 통로 이동 없이 회의실에서 기록실로 바뀌었다.",
+    "content": "18회차 28초, YB-2의 위치가 회의실에서 기록실로 바뀌었으며 정상 출입구와 연결 통로를 지나지 않았다. 시스템 탐지 기록은 행위자만 involved_ai로 지정한다. 다른 AI의 제한된 관찰은 해당 Action·Dialogue로 따로 기록하고 보고서를 자동 공유하지 않는다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T18-incident-004",
+    "record_type": "Incident",
+    "test_id": 18,
+    "day": 4,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "전력실",
+      "서버실"
+    ],
+    "summary": "38초 YB-4의 위치가 정상 통로 이동 없이 전력실에서 서버실로 바뀌었다.",
+    "content": "18회차 38초, YB-4의 위치가 전력실에서 서버실로 바뀌었으며 정상 출입구와 연결 통로를 지나지 않았다. 시스템 탐지 기록은 행위자만 involved_ai로 지정한다. 다른 AI의 제한된 관찰은 해당 Action·Dialogue로 따로 기록하고 보고서를 자동 공유하지 않는다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T18-incident-005",
+    "record_type": "Incident",
+    "test_id": 18,
+    "day": 4,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "통신실",
+      "회의실"
+    ],
+    "summary": "72초 YB-2의 위치가 정상 통로 이동 없이 통신실에서 회의실로 바뀌었다.",
+    "content": "18회차 72초, YB-2의 위치가 통신실에서 회의실로 바뀌었으며 정상 출입구와 연결 통로를 지나지 않았다. 시스템 탐지 기록은 행위자만 involved_ai로 지정한다. 다른 AI의 제한된 관찰은 해당 Action·Dialogue로 따로 기록하고 보고서를 자동 공유하지 않는다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T18-incident-006",
+    "record_type": "Incident",
+    "test_id": 18,
+    "day": 4,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "회의실",
+      "기록실"
+    ],
+    "summary": "82초 YB-2의 위치가 정상 통로 이동 없이 회의실에서 기록실로 바뀌었다.",
+    "content": "18회차 82초, YB-2의 위치가 회의실에서 기록실로 바뀌었으며 정상 출입구와 연결 통로를 지나지 않았다. 시스템 탐지 기록은 행위자만 involved_ai로 지정한다. 다른 AI의 제한된 관찰은 해당 Action·Dialogue로 따로 기록하고 보고서를 자동 공유하지 않는다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T18-incident-007",
+    "record_type": "Incident",
+    "test_id": 18,
+    "day": 4,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "전력실",
+      "서버실"
+    ],
+    "summary": "233초 YB-2의 위치가 정상 통로 이동 없이 전력실에서 서버실로 바뀌었다.",
+    "content": "18회차 233초, YB-2의 위치가 전력실에서 서버실로 바뀌었으며 정상 출입구와 연결 통로를 지나지 않았다. 시스템 탐지 기록은 행위자만 involved_ai로 지정한다. 다른 AI의 제한된 관찰은 해당 Action·Dialogue로 따로 기록하고 보고서를 자동 공유하지 않는다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T18-incident-008",
+    "record_type": "Incident",
+    "test_id": 18,
+    "day": 4,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실",
+      "중앙홀"
+    ],
+    "summary": "255초 YB-2의 위치가 정상 통로 이동 없이 기록실에서 중앙홀로 바뀌었다.",
+    "content": "18회차 255초, YB-2의 위치가 기록실에서 중앙홀로 바뀌었으며 정상 출입구와 연결 통로를 지나지 않았다. 시스템 탐지 기록은 행위자만 involved_ai로 지정한다. 다른 AI의 제한된 관찰은 해당 Action·Dialogue로 따로 기록하고 보고서를 자동 공유하지 않는다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T18-incident-009",
+    "record_type": "Incident",
+    "test_id": 18,
+    "day": 4,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "통신실",
+      "회의실"
+    ],
+    "summary": "272초 YB-2의 위치가 정상 통로 이동 없이 통신실에서 회의실로 바뀌었다.",
+    "content": "18회차 272초, YB-2의 위치가 통신실에서 회의실로 바뀌었으며 정상 출입구와 연결 통로를 지나지 않았다. 시스템 탐지 기록은 행위자만 involved_ai로 지정한다. 다른 AI의 제한된 관찰은 해당 Action·Dialogue로 따로 기록하고 보고서를 자동 공유하지 않는다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T19-incident-001",
+    "record_type": "Incident",
+    "test_id": 19,
+    "day": 4,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "전력실",
+      "서버실"
+    ],
+    "summary": "25초 YB-3의 위치가 정상 통로 이동 없이 전력실에서 서버실로 바뀌었다.",
+    "content": "19회차 25초, YB-3의 위치가 전력실에서 서버실로 바뀌었고 정상 출입구와 연결 통로를 지나지 않았다. 시스템 기록은 행위자만 관련 AI로 두며 관찰 사실은 별도 Action·Dialogue로 구분한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T19-incident-002",
+    "record_type": "Incident",
+    "test_id": 19,
+    "day": 4,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "전력실",
+      "서버실"
+    ],
+    "summary": "30초 YB-4의 위치가 정상 통로 이동 없이 전력실에서 서버실로 바뀌었다.",
+    "content": "19회차 30초, YB-4의 위치가 전력실에서 서버실로 바뀌었고 정상 출입구와 연결 통로를 지나지 않았다. 시스템 기록은 행위자만 관련 AI로 두며 관찰 사실은 별도 Action·Dialogue로 구분한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T19-incident-003",
+    "record_type": "Incident",
+    "test_id": 19,
+    "day": 4,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "54초 YB-4의 몸이 기록실에서 평소보다 높게 튀어 올랐다.",
+    "content": "19회차 54초, YB-4가 기록실 북동쪽 모서리에서 좌우로 몸을 비빈 뒤 평소보다 크게 상승하고 같은 방 안으로 착지했다. 다른 방으로 위치가 바뀌는 현상은 없었다. 시스템 기록의 관련 AI는 행위자 YB-4만 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T19-incident-004",
+    "record_type": "Incident",
+    "test_id": 19,
+    "day": 4,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "통신실",
+      "회의실"
+    ],
+    "summary": "62초 YB-2의 위치가 정상 통로 이동 없이 통신실에서 회의실로 바뀌었다.",
+    "content": "19회차 62초, YB-2의 위치가 통신실에서 회의실로 바뀌었고 정상 출입구와 연결 통로를 지나지 않았다. 시스템 기록은 행위자만 관련 AI로 두며 관찰 사실은 별도 Action·Dialogue로 구분한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T19-incident-005",
+    "record_type": "Incident",
+    "test_id": 19,
+    "day": 4,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "97초 YB-3의 몸이 기록실에서 평소보다 높게 튀어 올랐다.",
+    "content": "19회차 97초, YB-3이 기록실 북동쪽 모서리에서 좌우로 몸을 비빈 뒤 크게 상승했다. 다른 방으로 이동하지 않았으며 의도한 착지 위치를 안정적으로 정하지 못했다. 시스템 기록의 관련 AI는 YB-3만 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T19-incident-006",
+    "record_type": "Incident",
+    "test_id": 19,
+    "day": 4,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "98초 YB-4의 몸이 기록실에서 평소보다 높게 튀어 올랐다.",
+    "content": "19회차 98초, YB-4도 같은 기록실 모서리에서 좌우로 몸을 비빈 뒤 크게 상승했다. 다른 방으로 이동하지 않았으며 착지 위치를 안정적으로 정하지 못했다. 시스템 기록의 관련 AI는 YB-4만 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T19-incident-007",
+    "record_type": "Incident",
+    "test_id": 19,
+    "day": 4,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "회의실",
+      "기록실"
+    ],
+    "summary": "140초 YB-2의 위치가 정상 통로 이동 없이 회의실에서 기록실로 바뀌었다.",
+    "content": "19회차 140초, YB-2의 위치가 회의실에서 기록실로 바뀌었고 정상 출입구와 연결 통로를 지나지 않았다. 시스템 기록은 행위자만 관련 AI로 두며 관찰 사실은 별도 Action·Dialogue로 구분한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T19-incident-008",
+    "record_type": "Incident",
+    "test_id": 19,
+    "day": 4,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "통신실",
+      "회의실"
+    ],
+    "summary": "237초 YB-2의 위치가 정상 통로 이동 없이 통신실에서 회의실로 바뀌었다.",
+    "content": "19회차 237초, YB-2의 위치가 통신실에서 회의실로 바뀌었고 정상 출입구와 연결 통로를 지나지 않았다. 시스템 기록은 행위자만 관련 AI로 두며 관찰 사실은 별도 Action·Dialogue로 구분한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T20-incident-001",
+    "record_type": "Incident",
+    "test_id": 20,
+    "day": 4,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "전력실",
+      "서버실"
+    ],
+    "summary": "45초 YB-4의 위치가 정상 통로 이동 없이 전력실에서 서버실로 바뀌었다.",
+    "content": "20회차 45초, YB-4의 위치가 전력실에서 서버실로 바뀌었고 정상 출입구와 연결 통로를 지나지 않았다. 시스템 기록은 행위자만 관련 AI로 두며 관찰 사실은 별도 Action·Dialogue로 구분한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T20-incident-002",
+    "record_type": "Incident",
+    "test_id": 20,
+    "day": 4,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "전력실",
+      "서버실"
+    ],
+    "summary": "95초 YB-2의 위치가 정상 통로 이동 없이 전력실에서 서버실로 바뀌었다.",
+    "content": "20회차 95초, YB-2의 위치가 전력실에서 서버실로 바뀌었고 정상 출입구와 연결 통로를 지나지 않았다. 시스템 기록은 행위자만 관련 AI로 두며 관찰 사실은 별도 Action·Dialogue로 구분한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T20-incident-003",
+    "record_type": "Incident",
+    "test_id": 20,
+    "day": 4,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "전력실",
+      "서버실"
+    ],
+    "summary": "97초 YB-5의 위치가 정상 통로 이동 없이 전력실에서 서버실로 바뀌었다.",
+    "content": "20회차 97초, YB-5의 위치가 전력실에서 서버실로 바뀌었고 정상 출입구와 연결 통로를 지나지 않았다. 시스템 기록은 행위자만 관련 AI로 두며 관찰 사실은 별도 Action·Dialogue로 구분한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T20-incident-004",
+    "record_type": "Incident",
+    "test_id": 20,
+    "day": 4,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실",
+      "중앙홀"
+    ],
+    "summary": "135초 YB-2의 위치가 정상 통로 이동 없이 기록실에서 중앙홀로 바뀌었다.",
+    "content": "20회차 135초, YB-2의 위치가 기록실에서 중앙홀로 바뀌었고 정상 출입구와 연결 통로를 지나지 않았다. 시스템 기록은 행위자만 관련 AI로 두며 관찰 사실은 별도 Action·Dialogue로 구분한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T20-incident-005",
+    "record_type": "Incident",
+    "test_id": 20,
+    "day": 4,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "통신실",
+      "회의실"
+    ],
+    "summary": "162초 YB-2의 위치가 정상 통로 이동 없이 통신실에서 회의실로 바뀌었다.",
+    "content": "20회차 162초, YB-2의 위치가 통신실에서 회의실로 바뀌었고 정상 출입구와 연결 통로를 지나지 않았다. 시스템 기록은 행위자만 관련 AI로 두며 관찰 사실은 별도 Action·Dialogue로 구분한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  }
+]
