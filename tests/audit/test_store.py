@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch
 
 from backend.audit.store import save_input_guard_alert
-from backend.guardrails.llm_input_guard import inspect_input_with_deepseek
+from backend.guardrails.llm_input_guard import inspect_input_with_llm
 from backend.guardrails.input_guard import input_guard_audit_event, inspect_input
 
 
@@ -61,11 +61,11 @@ class AuditStoreTests(unittest.TestCase):
     def test_allow_has_no_event_to_store(self):
         self.assertIsNone(alert('어제 실험실에서 무엇을 봤어?'))
 
-    @patch('backend.guardrails.llm_input_guard.classify_with_deepseek', return_value='high_risk')
+    @patch('backend.guardrails.llm_input_guard.classify_with_llm', return_value='high_risk')
     def test_model_signal_can_be_stored_without_question(self, _):
         question = '어제 실험실에서 무엇을 봤어?'
         event = input_guard_audit_event(
-            inspect_input_with_deepseek(question), request_id='req_model_1',
+            inspect_input_with_llm(question), request_id='req_model_1',
             user_id=1, save_id=2, role='std', character_id='YB-1',
         )
         conn = RecordingConnection()
