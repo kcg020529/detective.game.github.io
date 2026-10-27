@@ -10,6 +10,7 @@
   const appInfo = {
     messenger: { label: 'YB 메신저', icon: 'chat' },
     notebook: { label: '수첩', icon: 'note' },
+    map: { label: '지도', icon: 'map' },
     accuse: { label: '지목', icon: 'scale' },
   };
 
@@ -183,9 +184,6 @@
   }
 
   const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  const clamp01 = (value) => Math.max(0, Math.min(1, value));
-  const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
-  const easeIn = (t) => t * t * t;
 
   function roleScope(role) {
     return { prof: '교수 전용 대화까지', grad: '보안 관련 대화까지', std: '일반 대화만' }[role] || '일반 대화만';
@@ -262,20 +260,93 @@
     await wait(170);
     card.animate([{ translate: '0 0' }, { translate: '0 .5cqw' }, { translate: '0 0' }], { duration: 160 });
     setReader(root, '#70c6a5', '승인됨');
-    // 승인 뒤 잠깐 멈춘 사이에 모니터 화면을 그림으로 떠 둠 (모서리로 빨려 드는 전환에 씀)
-    const [snapshot] = await Promise.all([snapshotMonitor(root), wait(650)]);
+    await insertCard(state, { card, reader: root.querySelector('[data-reader]'), screen });
     if (!isLiveState(state)) return;
-    completeSessionRead(state, index, snapshot);
+    // 애니메이션으로만 잡힌 위치·어둡기를 스타일로 굳힘 (바탕화면으로 넘어갈 때 쓰는 화면 복사본이 같은 모습이 되도록)
+    root.getAnimations({ subtree: true }).forEach((animation) => {
+      try { animation.commitStyles(); } catch (error) { /* 굳힐 수 없는 것은 무시 */ }
+      animation.cancel();
+    });
+    completeSessionRead(state, index);
   }
 
-  async function completeSessionRead(state, index, snapshot = null) {
+  // 승인 뒤 카드를 리더기에 꽂는 연출 (약 2초)
+  // 잠깐 쉼 → 카드가 리더기 크기로 줄며 슬롯 위로 → 잠깐 맞춤 → 윗판 뒤로 꽂힘 → 딸깍·초록 빛 → 단말기 화면이 꺼짐
+  async function insertCard(state, { card, reader, screen }) {
+    const REST_AFTER_APPROVE = 420; // 승인 도장 뒤, 카드가 움직이기 전 쉬는 시간
+    const HOVER_OVER_READER = 260; // 리더기 위에서 맞추는 시간
+    const CARD_WIDTH_RATIO = 0.75; // 슬롯 폭 대비 카드 폭
+    const STUB = 0.3; // 다 꽂았을 때 슬롯 위로 남는 카드 윗부분 비율
+    const plateTop = reader.querySelector('.c-reader-top').getBoundingClientRect().top + 2; // 이 선 아래는 리더기 속
+    const slot = reader.querySelector('.c-reader-slot').getBoundingClientRect();
+    const status = reader.querySelector('[data-reader-status]');
+    const leds = reader.querySelectorAll('.c-reader-leds i');
+
+    await wait(REST_AFTER_APPROVE);
     if (!isLiveState(state)) return;
-    const box = state.root.getBoundingClientRect();
-    const monitor = state.root.querySelector('.c-entry-monitor')?.getBoundingClientRect();
-    const fallback = state.root.querySelector('.c-entry-monitor')?.cloneNode(true);
-    const area = monitor && { x: monitor.left - box.left, y: monitor.top - box.top, w: monitor.width, h: monitor.height };
+
+    // 날아오기 애니메이션을 걷어내고 위치를 직접 정함 (겹쳐 쓰면 크기 변화에 이동량이 같이 줄어 슬롯과 어긋남)
+    const now = card.getBoundingClientRect();
+    card.getAnimations().forEach((animation) => animation.cancel());
+    card.style.transform = 'none';
+    const layout = card.getBoundingClientRect();
+    const lx = layout.left + layout.width / 2;
+    const ly = layout.top + layout.height / 2;
+    const fit = Math.min(1, (slot.width * CARD_WIDTH_RATIO) / card.offsetWidth);
+    const height = card.offsetHeight * fit;
+    const ox = now.left + now.width / 2 - lx;
+    const oy = now.top + now.height / 2 - ly;
+    const dx = slot.left + slot.width / 2 - lx;
+    const dy = plateTop - 4 - height / 2 - ly;
+
+    screen.querySelector('.c-scan-readout')?.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' });
+    await card.animate([
+      { translate: `${ox}px ${oy}px`, scale: '1.35', rotate: '0deg' },
+      { translate: `${ox + (dx - ox) * 0.7}px ${oy + (dy - oy) * 0.7}px`, scale: String(fit + (1.35 - fit) * 0.25), rotate: '-4deg', offset: 0.7 },
+      { translate: `${dx}px ${dy}px`, scale: String(fit), rotate: '0deg' },
+    ], { duration: 360, easing: 'cubic-bezier(.3,.7,.3,1)', fill: 'forwards' }).finished;
+    await wait(HOVER_OVER_READER);
+    if (!isLiveState(state)) return;
+
+    // 카드 아래쪽부터 리더기 윗판 뒤로 들어감
+    status.textContent = '카드 삽입 중…';
+    const slide = { duration: 380, easing: 'cubic-bezier(.5,0,.75,1)', fill: 'forwards' };
+    card.animate([{ translate: `${dx}px ${dy}px` }, { translate: `${dx}px ${dy + height * (1 - STUB) + 4}px` }], slide);
+    await card.animate([{ clipPath: 'inset(-10% -10% 0% -10%)' }, { clipPath: `inset(-10% -10% ${(1 - STUB) * 100}% -10%)` }], slide).finished;
+    if (!isLiveState(state)) return;
+
+    // 딸깍: 리더기가 한 번 흔들리고 LED가 커지며 초록 빛이 번짐
+    status.textContent = '접속 중…';
+    reader.animate([{ translate: '0 0' }, { translate: '0 .4cqw' }, { translate: '0 0' }], { duration: 110, easing: 'steps(3)' });
+    leds.forEach((led) => led.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.9)' }, { transform: 'scale(1)' }], { duration: 300 }));
+    const glow = reader.animate([
+      { boxShadow: '.45cqw .45cqw 0 #0c1116, 0 0 0 0 rgba(112,198,165,0)' },
+      { boxShadow: '.45cqw .45cqw 0 #0c1116, 0 0 3.2cqw 1.4cqw rgba(112,198,165,.9)', offset: 0.4 },
+      { boxShadow: '.45cqw .45cqw 0 #0c1116, 0 0 1.4cqw .5cqw rgba(112,198,165,.45)' },
+    ], { duration: 520, fill: 'forwards' });
+    await wait(320);
+    if (!isLiveState(state)) return;
+
+    // 단말기 화면이 꺼짐 (어두운 막이 5단계로 내려앉음)
+    const dim = document.createElement('div');
+    Object.assign(dim.style, { position: 'absolute', inset: '0', zIndex: '30', background: '#050708', opacity: '0', pointerEvents: 'none' });
+    screen.append(dim);
+    await dim.animate([{ opacity: 0 }, { opacity: 0.94 }], { duration: 280, easing: 'steps(5, end)', fill: 'forwards' }).finished;
+    await glow.finished;
+  }
+
+  async function completeSessionRead(state, index) {
+    if (!isLiveState(state)) return;
+    const leaving = state.root.querySelector('.c-entry-shell')?.cloneNode(true);
     const overwrite = state.mode === 'new' && Boolean(state.context.saves[index]);
-    const waitTimer = setTimeout(() => { if (isLiveState(state)) { state.readingText = '기록 불러오는 중…'; renderSession(state); } }, 300);
+    const waitTimer = setTimeout(() => {
+      if (!isLiveState(state)) return;
+      state.readingText = '기록 불러오는 중…';
+      const readerStatus = state.root.querySelector('[data-reader-status]');
+      // 연출 뒤에는 화면을 다시 그리지 않고 글자만 바꿈 (다시 그리면 꺼진 화면이 카드 화면으로 되돌아감)
+      if (readerStatus && !reduceMotion) readerStatus.textContent = state.readingText;
+      else renderSession(state);
+    }, 300);
     try {
       await state.context.onStart?.(index, state.mode, overwrite, () => isLiveState(state));
     } catch (error) {
@@ -304,159 +375,13 @@
     clearTimeout(waitTimer);
     if (!isLiveState(state)) return;
     if (state.entry) finishEntry(state);
+    // 단말기 화면에서 바탕화면으로: 잠깐 겹쳐 두었다가 흐려지며 사라짐 (전환 연출은 따로 정할 예정)
+    if (!leaving || reduceMotion) return;
     const cover = document.createElement('div');
     cover.className = 'c-entry-cover';
+    cover.append(leaving);
     state.root.append(cover);
-    if (snapshot && area) genieCanvas(cover, snapshot, area, box.width, box.height).then(() => cover.remove());
-    else if (fallback && !reduceMotion) { cover.append(fallback); genie(cover).then(() => cover.remove()); }
-    else cover.remove();
-  }
-
-  // 모니터 화면을 캔버스 그림으로 뜸. 라이브러리가 없거나 1.5초 안에 못 뜨면 null
-  async function snapshotMonitor(root) {
-    const monitor = root.querySelector('.c-entry-monitor');
-    if (!window.html2canvas || !monitor) return null;
-    // 애니메이션으로만 잡힌 카드·도장 위치를 스타일로 굳혀야 그림에도 남음
-    monitor.getAnimations({ subtree: true }).forEach((animation) => {
-      try {
-        if (animation.effect?.getComputedTiming().fill !== 'none') animation.commitStyles();
-      } catch (error) {
-        // 굳힐 수 없는 애니메이션은 무시
-      }
-      animation.cancel();
-    });
-    try {
-      const shot = window.html2canvas(monitor, {
-        backgroundColor: null,
-        logging: false,
-        scale: Math.min(1.5, window.devicePixelRatio || 1),
-        // 복사본에서 CSS 애니메이션이 처음부터 다시 돌면 화면이 흐리게 찍히므로 끔
-        onclone: (doc) => {
-          const style = doc.createElement('style');
-          style.textContent = '*, *::before, *::after { animation: none !important; transition: none !important; }';
-          doc.head.append(style);
-        },
-      });
-      return await Promise.race([shot, wait(1500).then(() => null)]);
-    } catch (error) {
-      return null;
-    }
-  }
-
-  const lerp = (a, b, t) => a + (b - a) * t;
-  const smoothstep = (t) => t * t * (3 - 2 * t);
-
-  // 맥 창 최소화(지니) 효과: 화면 그림을 가로 줄 단위로 다시 그리며
-  // 1) 가장자리가 S자 곡선으로 휘어 아래가 좁은 깔때기가 되고 2) 줄들이 깔때기를 따라 오른쪽 아래 모서리로 빨려 들어감
-  function genieCanvas(cover, image, area, width, height) {
-    const ratio = window.devicePixelRatio || 1;
-    const canvas = document.createElement('canvas');
-    canvas.className = 'c-genie-canvas';
-    canvas.width = Math.round(width * ratio);
-    canvas.height = Math.round(height * ratio);
-    cover.append(canvas);
-    const ctx = canvas.getContext('2d');
-    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-    const scaleY = image.height / area.h;
-    const targetRight = width - width * 0.015;
-    const targetLeft = targetRight - width * 0.05;
-    const targetBottom = height - height * 0.01;
-    const step = 1;
-    const rows = Math.ceil(area.h / step);
-    const ys = new Float64Array(rows + 1);
-    return new Promise((resolve) => {
-      const start = performance.now();
-      function tick(now) {
-        const t = clamp01((now - start) / 900);
-        const bend = easeInOut(clamp01(t / 0.45));
-        const slide = clamp01((t - 0.15) / 0.85);
-        for (let i = 0; i <= rows; i += 1) {
-          const v = Math.min(1, (i * step) / area.h);
-          const p = easeIn(clamp01(slide * 1.4 - (1 - v) * 0.4));
-          ys[i] = lerp(area.y + v * area.h, targetBottom, p);
-        }
-        ctx.clearRect(0, 0, width, height);
-        for (let i = 0; i < rows; i += 1) {
-          const y0 = ys[i];
-          const y1 = ys[i + 1];
-          const k = smoothstep(clamp01(((y0 + y1) / 2 - area.y) / (targetBottom - area.y))) * bend;
-          const left = lerp(area.x, targetLeft, k);
-          const right = lerp(area.x + area.w, targetRight, k);
-          const srcH = Math.min(step, area.h - i * step) * scaleY;
-          if (srcH <= 0 || right - left < 0.5) continue;
-          ctx.drawImage(image, 0, i * step * scaleY, image.width, srcH, left, y0, right - left, Math.max(0.5, y1 - y0) + 0.5);
-        }
-        canvas.style.opacity = String(1 - clamp01((t - 0.9) / 0.1));
-        if (t < 1 && cover.isConnected) requestAnimationFrame(tick);
-        else resolve();
-      }
-      requestAnimationFrame(tick);
-    });
-  }
-
-  // 사각형(0,0)-(w,h)을 네 꼭짓점 [왼위, 오른위, 오른아래, 왼아래]로 옮기는 원근 변환(matrix3d)
-  function quadMatrix(w, h, [[x0, y0], [x1, y1], [x2, y2], [x3, y3]]) {
-    const dx1 = x1 - x2;
-    const dx2 = x3 - x2;
-    const dx3 = x0 - x1 + x2 - x3;
-    const dy1 = y1 - y2;
-    const dy2 = y3 - y2;
-    const dy3 = y0 - y1 + y2 - y3;
-    let g = 0;
-    let k = 0;
-    if (Math.abs(dx3) > 1e-9 || Math.abs(dy3) > 1e-9) {
-      const den = dx1 * dy2 - dx2 * dy1;
-      g = (dx3 * dy2 - dx2 * dy3) / den;
-      k = (dx1 * dy3 - dx3 * dy1) / den;
-    }
-    const a = x1 - x0 + g * x1;
-    const b = x3 - x0 + k * x3;
-    const d = y1 - y0 + g * y1;
-    const e = y3 - y0 + k * y3;
-    return `matrix3d(${a / w}, ${d / w}, 0, ${g / w}, ${b / h}, ${e / h}, 0, ${k / h}, 0, 0, 1, 0, ${x0}, ${y0}, 0, 1)`;
-  }
-
-  // 맥 창 최소화처럼 화면 전체가 오른쪽 아래 모서리로 모아지며 줄어듦.
-  // 화면 한 장을 그대로 비틀어(아래쪽이 먼저 좁아짐) 내용이 깔때기처럼 눌려 들어가게 함
-  function genie(cover) {
-    // 어두운 바깥 여백은 빼고 모니터(창)만 빨려 들어가게 함
-    const monitor = cover.querySelector('.c-entry-monitor');
-    const base = cover.getBoundingClientRect();
-    const box = monitor.getBoundingClientRect();
-    monitor.classList.add('is-leaving');
-    cover.replaceChildren(monitor);
-    Object.assign(cover.style, {
-      inset: 'auto',
-      left: `${box.left - base.left}px`,
-      top: `${box.top - base.top}px`,
-      width: `${box.width}px`,
-      height: `${box.height}px`,
-      transformOrigin: '0 0',
-      willChange: 'transform',
-    });
-    const w = box.width;
-    const h = box.height;
-    return new Promise((resolve) => {
-      const start = performance.now();
-      function tick(now) {
-        const t = clamp01((now - start) / 780);
-        // 아래 변이 먼저, 위 변이 살짝 늦게 오른쪽 아래로 모임 (차이가 크면 원근이 과해져 내용이 한쪽으로 뭉개짐)
-        const bottom = easeInOut(clamp01(t / 0.8));
-        const top = easeInOut(clamp01((t - 0.07) / 0.93));
-        const drop = easeInOut(clamp01((t - 0.03) / 0.97));
-        const topY = h * 0.97 * drop;
-        cover.style.transform = quadMatrix(w, h, [
-          [w * 0.96 * top, topY],
-          [w, topY],
-          [w, h],
-          [w * 0.98 * bottom, h],
-        ]);
-        cover.style.opacity = String(1 - clamp01((t - 0.86) / 0.14));
-        if (t < 1 && cover.isConnected) requestAnimationFrame(tick);
-        else resolve();
-      }
-      requestAnimationFrame(tick);
-    });
+    cover.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 280, easing: 'ease-out' }).finished.then(() => cover.remove());
   }
 
   function finishEntry(state) {
@@ -742,6 +667,7 @@
     const windows = [
       ['messenger', 'YB 메신저', '15cqw', '8cqw', '58cqw', '57cqw', buildMessenger()],
       ['notebook', '수첩', '20cqw', '20cqw', '42cqw', '45cqw', buildNotebook()],
+      ['map', '지도', '14cqw', '3cqw', '70cqw', '56cqw', `<div class="c-map" data-map>${window.Play.map.markup()}</div>`],
       ['accuse', '지목', '29cqw', '25cqw', '42cqw', '37cqw', buildAccuse()],
     ];
     windows.forEach(([key, title, left, top, width, height, content]) => {
@@ -758,6 +684,7 @@
       windowEl.innerHTML = `<div class="c-window-bar" data-drag-handle><span class="c-window-title">${title}</span><span class="c-window-actions"><button type="button" data-window-min="${key}" aria-label="최소화">_</button><button type="button" data-window-close="${key}" aria-label="닫기">×</button></span></div><div class="c-window-body" data-window-body>${content}</div><span class="c-window-resize" data-resize-handle aria-hidden="true"></span>`;
       layer.append(windowEl);
       state.windows.set(key, windowEl);
+      if (key === 'map') window.Play.map.bind(windowEl);
     });
   }
 
@@ -1049,7 +976,7 @@
     });
     const yb = data.ybs[state.activeYb];
     const head = windowEl.querySelector('[data-chat-head]');
-    head.innerHTML = `<strong>${yb.id}</strong><span>${escapeHtml(yb.roomLabel)} · ${escapeHtml(yb.trait)}</span>`;
+    head.innerHTML = `<strong>${yb.id}</strong><span>${escapeHtml(yb.trait)}</span>`;
     const log = windowEl.querySelector('[data-chat-log]');
     const history = state.histories[state.activeYb];
     const older = state.hasMoreChats[state.activeYb] ? `<button type="button" class="c-load-older" data-load-older ${state.chatOlderLoading[state.activeYb] ? 'disabled' : ''}>${state.chatOlderWaitVisible[state.activeYb] ? '불러오는 중…' : '이전 대화 더 보기'}</button>` : '';

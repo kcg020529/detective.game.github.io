@@ -251,10 +251,48 @@
 /* 판독 뒤 바탕화면 위에 잠시 남는 출입증 화면 (모서리로 빨려 들어감) */
 .c-entry-cover { position: absolute; z-index: 200; inset: 0; transform-origin: 100% 100%; pointer-events: none; }
 .c-entry-cover .c-entry-shell { width: 100%; height: 100%; }
-.c-genie-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-.c-entry-monitor.is-leaving { width: 100%; height: 100%; max-width: none; max-height: none; }
 @media (prefers-reduced-motion: reduce) { .play-c *, .play-c *::before, .play-c *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; } }
 .c-connection { position: absolute; z-index: 55; top: 0; left: 0; right: 0; padding: .45cqw .8cqw; border-bottom: 1px solid var(--amber); background: #1b3032; color: #f2ecd2; font-size: calc(.8cqw * var(--c-text, 1)); }
 .c-connection[hidden] { display: none; }
 .c-connection button, [data-chat-error] button, [data-retry-chat], [data-retry-load] { color: inherit; text-decoration: underline; background: transparent; border: 0; cursor: pointer; font: inherit; }
 [data-chat-error]:empty { display: none; }
+
+/* 지도 앱: 연구실 코르크 게시판에 붙인 손그림 지도 */
+.c-icon-map { background: #4f7a6b; }
+.c-icon-map i:nth-child(1) { top: .5cqw; left: .45cqw; width: .8cqw; height: 2.2cqw; background: #d7e2d0; }
+.c-icon-map i:nth-child(2) { top: .35cqw; left: 1.25cqw; width: .8cqw; height: 2.2cqw; background: #b9c8b4; }
+.c-icon-map i:nth-child(3) { top: .5cqw; left: 2.05cqw; width: .8cqw; height: 2.2cqw; background: #d7e2d0; }
+.c-icon-map i:nth-child(4) { top: 1.2cqw; left: 1.45cqw; width: .45cqw; height: .45cqw; background: #f0a63a; box-shadow: 0 .45cqw 0 #f0a63a; }
+.c-map { position: relative; width: 100%; height: 100%; min-height: 0; overflow: hidden; container-type: size; }
+.c-map-board { position: absolute; inset: 0; display: grid; place-items: center; background-color: #7a5a3a;
+  background-image: radial-gradient(circle at 20% 30%, rgba(0,0,0,.18) 0 1px, transparent 2px), radial-gradient(circle at 70% 60%, rgba(255,230,190,.1) 0 1px, transparent 2px), radial-gradient(circle at 40% 80%, rgba(0,0,0,.14) 0 1px, transparent 2px);
+  background-size: 7px 7px, 11px 11px, 5px 5px;
+  box-shadow: inset 0 0 0 8px #4a3420, inset 0 0 0 10px #2e2014, inset 0 0 36px rgba(0,0,0,.45); }
+.c-map-pin { position: absolute; left: 4%; top: 6%; width: 12px; height: 12px; border-radius: 50%; background: #c8553d; box-shadow: inset -2px -3px 0 rgba(0,0,0,.25), 1px 2px 2px rgba(0,0,0,.4); }
+.c-map-paper { position: relative; width: min(86cqw, calc(80cqh * 1.5)); aspect-ratio: 3 / 2; background-color: #f6f1e3;
+  background-image: linear-gradient(rgba(70,120,160,.16) 1px, transparent 1px), linear-gradient(90deg, rgba(70,120,160,.16) 1px, transparent 1px);
+  background-size: 2.4% 3.6%; box-shadow: 0 8px 20px rgba(0,0,0,.5); transform: rotate(-1.2deg); }
+.c-map-paper::before { content: ''; position: absolute; left: 5%; top: 0; bottom: 0; width: 1px; background: rgba(200,70,70,.35); }
+/* 테이프: 네 모서리에 반씩 걸침 */
+.c-map-tape { position: absolute; z-index: 1; width: 12%; height: 6.5%; background: rgba(236,226,180,.8); box-shadow: 0 1px 2px rgba(0,0,0,.18); }
+.c-map-tape.is-tl { left: -5%; top: -2.2%; transform: rotate(-38deg); }
+.c-map-tape.is-tr { right: -5%; top: -2.2%; transform: rotate(38deg); }
+.c-map-tape.is-bl { left: -5%; bottom: -2.2%; transform: rotate(38deg); }
+.c-map-tape.is-br { right: -5%; bottom: -2.2%; transform: rotate(-38deg); }
+.c-map-paper svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.c-map-pen { fill: none; stroke: #2f2b26; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; filter: url(#c-map-rough); }
+.c-map-pen-l { fill: none; stroke: #2f2b26; stroke-width: 1.6; stroke-linecap: round; filter: url(#c-map-rough); opacity: .8; }
+.c-map-bolt { stroke: #c99a1e; }
+.c-map-gap { fill: none; stroke: #f6f1e3; stroke-width: 6; }
+.c-map-hatch { fill: url(#c-map-hatch); }
+.c-map-hand { font-family: 'Gaegu', cursive; fill: #2a2622; }
+.c-map-hand-b { font-size: 34px; font-weight: 700; }
+.c-map-hand-s { font-size: 22px; fill: #5a5148; }
+.c-map-title { font-size: 32px; }
+.c-map-room { cursor: pointer; outline: none; }
+.c-map-hit { fill: transparent; }
+.c-map-room:hover .c-map-hit, .c-map-room.is-on .c-map-hit { fill: rgba(240,166,58,.2); }
+.c-map-room:focus-visible .c-map-hit { fill: rgba(240,166,58,.2); stroke: #f0a63a; stroke-width: 3; }
+/* 낙서·글자는 마우스를 막지 않음 (방 영역만 반응) */
+.c-map-paper svg > :not(.c-map-room), .c-map-room .c-map-pen { pointer-events: none; }
+.c-map-hit { pointer-events: all; }
