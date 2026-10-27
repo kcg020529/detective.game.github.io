@@ -11,3 +11,5 @@
 - allowed_roles는 합의한 공개 표에서 deny가 아닌 역할만 나열한다. Setup·Action·Dialogue·Result는 prof·grad·std, Thought는 prof, Incident는 prof·grad다. 이는 목록의 역할에 본문을 허용한다는 뜻이 아니며 게임 기록 인가의 원천으로 사용하지 않는다. 적재 도구는 `database/policies/game_record_permissions.json`의 합의된 4단계·역할별 표를 기록별 document_permissions로 저장한다. 검수한 기록별 예외는 role_permissions 객체로 지정하며 빠진 역할은 deny다. 예외를 작성하면 allowed_roles도 그 공개 범위에 맞춘다.
 
 MariaDB 적재 도구는 database/loaders/에 작성했다. 원본 검사만 하는 dry-run과 실제 적재 명령은 해당 README를 따른다. 실제 DB 적재·Qdrant 인덱싱과 나머지 유형의 시나리오 기록은 후속 작업이다.
+
+포획된 AI도 대화할 수 있다. 최초 포획 시각·생존 시간과 중복 포획 점수 규칙은 그대로 적용한다. 포획 후 이동·물리적 개입 범위는 별도 정리 대상이다. 점수 격차는 추리 단서이지만 역할별 산식 차이도 있으므로 정보력의 단독 증거로 쓰지 않는다.

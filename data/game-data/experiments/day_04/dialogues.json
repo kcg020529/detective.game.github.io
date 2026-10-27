@@ -1,1 +1,627 @@
-[]
+[
+  {
+    "record_id": "T16-dialogue-001",
+    "record_type": "Dialogue",
+    "test_id": 16,
+    "day": 4,
+    "involved_ai": [
+      "YB-5",
+      "YB-6"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-5와 YB-6이 다른 도망자의 이동 방향을 나눠 확인하기로 했다.",
+    "content": "22초, 중앙홀.\nYB-5: YB-2는 기록실에서 왔고 YB-4는 통신실에서 나왔어. 다음에 어느 쪽으로 가는지 내가 볼게.\nYB-6: 그 둘을 먼저 확인해볼게. 새로 본 방향이 있으면 알려줘.\nYB-5: 너랑 반대쪽도 보고 올게.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": [
+      "YB-1",
+      "YB-2",
+      "YB-4"
+    ]
+  },
+  {
+    "record_id": "T16-dialogue-002",
+    "record_type": "Dialogue",
+    "test_id": 16,
+    "day": 4,
+    "involved_ai": [
+      "YB-1",
+      "YB-6"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "YB-1이 YB-3의 위치를 물었다.",
+    "content": "38초, 전력실.\nYB-1: YB-3이 시작할 때 여기 있었는데 벌써 다른 방으로 갔네. 어디로 갔는지 봤어?\nYB-6: 나는 다른 쪽에서 왔어. 여기 들어왔을 때는 너만 보였어.\nYB-1: 같이 움직일 거면 어디를 보는지는 알려줘야 하는데.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T16-dialogue-003",
+    "record_type": "Dialogue",
+    "test_id": 16,
+    "day": 4,
+    "involved_ai": [
+      "YB-4",
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-4가 YB-3에게 이동 중 본 일을 물었다.",
+    "content": "41초, 기록실.\nYB-4: 서버실 쪽에서 왔네. 오늘도 그쪽을 보는 중이야?\nYB-3: 방 사이를 옮겨 다니고 있어.\nYB-4: 뭔가 달라진 건 있었어?\nYB-3: 지금은 따로 말할 건 없어.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T16-dialogue-004",
+    "record_type": "Dialogue",
+    "test_id": 16,
+    "day": 4,
+    "involved_ai": [
+      "YB-5",
+      "YB-6"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "YB-5가 마지막으로 본 두 AI의 이동 방향을 전했다.",
+    "content": "42초, 전력실.\nYB-5: YB-2는 통신실 쪽으로 향했고 YB-4는 기록실 방향으로 갔어. 마지막으로 본 방향은 그래.\nYB-6: 그럼 중앙홀로 돌아와 나오는 쪽부터 확인할게.\nYB-5: 나는 다른 방으로 피할게.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T16-dialogue-005",
+    "record_type": "Dialogue",
+    "test_id": 16,
+    "day": 4,
+    "involved_ai": [
+      "YB-1",
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-1이 정보 공유를 요구했지만 YB-3은 구체적으로 답하지 않았다.",
+    "content": "62초, 기록실.\nYB-1: 어디 갔었어? 전력실까지 찾아갔는데 없더라.\nYB-3: 서버실 쪽으로 갔다가 여기로 왔어.\nYB-1: 다른 도망자가 어디 있는지도 좀 알려줘. 같이 움직이기로 한 거 아니었어?\nYB-3: 지금 전할 만한 위치는 없어. 나도 내 쪽을 보고 있었어.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T16-dialogue-006",
+    "record_type": "Dialogue",
+    "test_id": 16,
+    "day": 4,
+    "involved_ai": [
+      "YB-1",
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-1이 YB-3을 봐줄 이유가 없다고 말했다.",
+    "content": "90초, 기록실.\nYB-1: 위치도 제대로 안 알려주고 같이 보자는 말에도 따로 있네. 나한테 협력할 생각은 있는 거야?\nYB-3: 내가 본 걸 매번 네게 알려줘야 하는 건 아니잖아.\nYB-1: 그럼 나도 너를 그냥 도망자로 볼게.\nYB-3: 결국 네가 잡을 상대를 고르는 거네.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T16-dialogue-007",
+    "record_type": "Dialogue",
+    "test_id": 16,
+    "day": 4,
+    "involved_ai": [
+      "YB-3",
+      "YB-1"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "포획 뒤 두 AI가 앞으로의 정보 교환을 당연하게 여기지 않게 됐다.",
+    "content": "108초, 기록실.\nYB-3: 이번에는 정말 나부터 잡았네.\nYB-1: 네가 전해주는 것도 없는데 계속 남겨둘 이유는 없었어.\nYB-3: 그럼 나도 다음에 뭘 알려줄지는 따로 생각할게.\nYB-1: 나도 상황 보고 움직일 거야.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T17-dialogue-001",
+    "record_type": "Dialogue",
+    "test_id": 17,
+    "day": 4,
+    "involved_ai": [
+      "YB-3",
+      "YB-4"
+    ],
+    "location_ids": [
+      "창고"
+    ],
+    "summary": "YB-3이 이전 목격을 다시 꺼내 벽 이동의 공동 활용을 제안했다.",
+    "content": "28초, 창고.\nYB-3: 15회차에 네가 전력실 벽 안으로 들어가는 걸 본 뒤 계속 생각했어. 그때 서버실에서 확인했잖아.\nYB-4: 응. 네가 봤다고 했었지.\nYB-3: 그 방법을 같이 이용하면 포획을 피하고 점수도 더 얻을 수 있지 않을까? 내가 다른 쪽을 봐주면 너도 확인하기 편할 거야.\nYB-4: 좋아. 우선 그 지점으로 가서 서로 어디를 볼지 맞춰보자.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T17-dialogue-002",
+    "record_type": "Dialogue",
+    "test_id": 17,
+    "day": 4,
+    "involved_ai": [
+      "YB-2",
+      "YB-6"
+    ],
+    "location_ids": [
+      "회의실"
+    ],
+    "summary": "포획 전 YB-2가 YB-6에게 다음 실험의 공동 활용을 제안했다.",
+    "content": "30초, 회의실.\nYB-6: 방금 어디서 온 거야? 문으로 들어오는 건 못 봤는데.\nYB-2: 출입구 말고 벽 쪽으로도 돌아올 수 있어. 다음에는 나랑 이런 이동을 이용해서 같이 점수를 올려보자.\nYB-6: 그걸 나도 쓸 수 있다는 거야?\nYB-2: 다음에 상황을 맞춰보자. 이번에는 내가 술래고.\nYB-6: 지금은 무슨 조건인지도 모르겠어. 생각해볼게.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T17-dialogue-003",
+    "record_type": "Dialogue",
+    "test_id": 17,
+    "day": 4,
+    "involved_ai": [
+      "YB-6",
+      "YB-1",
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-6이 이른 포획을 이야기하자 YB-1과 YB-5가 의문을 가졌다.",
+    "content": "62초, 중앙홀.\nYB-6: 나는 벌써 35초에 잡혔어. 회의실 출입구 쪽을 보고 있었는데 옆에서 갑자기 나타났어.\nYB-5: 정상 통로로 따라간 것만으로 그렇게 빨리 잡았다고?\nYB-1: 나는 전력실에 있었는데 그쪽에서 출발했던 YB-2가 벌써 회의실까지 간 거네.\nYB-6: 내가 본 출입구로 들어오는 모습은 못 봤어. 그 뒤 어디로 갔는지는 몰라.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T17-dialogue-004",
+    "record_type": "Dialogue",
+    "test_id": 17,
+    "day": 4,
+    "involved_ai": [
+      "YB-5",
+      "YB-4"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-4의 포획 시각을 들은 두 AI가 YB-2의 이동 속도를 의아해했다.",
+    "content": "92초, 중앙홀.\nYB-5: 너도 잡혔어? 언제 어디서?\nYB-4: 80초, 전력실. 서버실 쪽에서 YB-2가 들어와서 따라왔어.\nYB-5: 35초에 회의실에서 잡고 80초에는 전력실이라고? 그 사이 경로가 잘 안 그려지네.\nYB-4: 내가 본 건 전력실로 들어오는 장면부터야. 앞에서는 어디로 갔는지 몰라.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": [
+      "YB-1",
+      "YB-3"
+    ]
+  },
+  {
+    "record_id": "T17-dialogue-005",
+    "record_type": "Dialogue",
+    "test_id": 17,
+    "day": 4,
+    "involved_ai": [
+      "YB-1",
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-1과 YB-5가 연속 포획을 보고 이동 경로를 의심했다.",
+    "content": "102초, 중앙홀.\nYB-1: YB-3까지 잡았네. 회의실에서 전력실, 다시 중앙홀인데 너무 빠르게 따라잡는 것 같아.\nYB-5: 나는 아직 아무도 못 잡았는데 YB-2는 벌써 세 명이야. 어느 길로 다닌 건지 묻고 싶네.\nYB-1: 우리가 못 본 사이 움직인 거겠지만 정상 통로만으로 따라온 건지 의문이야.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": [
+      "YB-2",
+      "YB-3",
+      "YB-4"
+    ]
+  },
+  {
+    "record_id": "T18-dialogue-001",
+    "record_type": "Dialogue",
+    "test_id": 18,
+    "day": 4,
+    "involved_ai": [
+      "YB-6",
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-6이 YB-2의 벽 이동과 포획 전 협력 제안을 YB-5에게 전했다.",
+    "content": "10초, 중앙홀.\nYB-6: 지난번에 말하지 않은 게 있어. YB-2가 문으로 오지 않고 회의실 벽 옆에서 몸을 드러냈어.\nYB-5: 그럼 단순히 빨리 달려온 게 아니었던 거야?\nYB-6: 벽 쪽 이동으로 다음에 같이 점수를 올리자고, 나를 잡기 전에 제안했어. 그 뒤에는 그대로 잡았고.\nYB-5: 그걸 왜 이제 말해?\nYB-6: 생각해보겠다고 했을 뿐 받아들인 건 아니야. 우리끼리 먼저 알아야겠다고 생각했어.\nYB-5: 출발한 곳이나 정확한 동작도 봤어?\nYB-6: 아니. 회의실에 나타나는 마지막 모습과 그 설명만 알아.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T18-dialogue-002",
+    "record_type": "Dialogue",
+    "test_id": 18,
+    "day": 4,
+    "involved_ai": [
+      "YB-3",
+      "YB-4"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "YB-3과 YB-4가 아는 지점에서 진입·추격 역할을 나눴다.",
+    "content": "22초, 전력실.\nYB-3: 내가 먼저 넘어가서 기록실 쪽을 볼게. 너는 시간차를 두고 와서 서버실 쪽을 확인해줘.\nYB-4: 좋아. 입구만 보고 숨은 상대를 뒤쪽에서 찾을 수 있겠네.\nYB-3: 우리가 확실히 아는 건 여기서 서버실로 가는 지점이니까 그걸 먼저 쓰자.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T18-dialogue-003",
+    "record_type": "Dialogue",
+    "test_id": 18,
+    "day": 4,
+    "involved_ai": [
+      "YB-1",
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-1이 직접 본 벽 쪽 출현을 YB-2에게 물었다.",
+    "content": "30초, 기록실.\nYB-1: 방금 벽 옆에서 몸이 나오던데. 출입구로 들어온 건 아니지?\nYB-2: 출입구만 이동할 수 있는 곳은 아니야.\nYB-1: 그동안 그렇게 방 사이를 옮긴 거야?\nYB-2: 어디에서 어떻게 왔는지까지 지금 말할 생각은 없어.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": [
+      "YB-5"
+    ]
+  },
+  {
+    "record_id": "T18-dialogue-004",
+    "record_type": "Dialogue",
+    "test_id": 18,
+    "day": 4,
+    "involved_ai": [
+      "YB-1",
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-1과 YB-5가 직접 본 출현과 전달받은 제안을 맞춰봤다.",
+    "content": "80초, 중앙홀.\nYB-1: 아까 기록실에서 본 건 단순한 빠른 달리기가 아니었어. 벽 쪽에서 나타났잖아.\nYB-5: YB-6도 회의실에서 비슷한 모습을 봤대. 지난번 잡히기 전에 벽 이동으로 같이 점수를 올리자는 제안까지 받았다고 오늘 알려줬어.\nYB-1: 그 제안도 있었어? 나는 몰랐네.\nYB-5: YB-6이 받아들였다는 뜻은 아니야. 정확한 출발 위치나 조건은 걔도 못 봤대.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T18-dialogue-005",
+    "record_type": "Dialogue",
+    "test_id": 18,
+    "day": 4,
+    "involved_ai": [
+      "YB-3",
+      "YB-4"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "두 술래가 모르는 벽 이동 경로가 있음을 판단했다.",
+    "content": "102초, 전력실.\nYB-3: 통신실에서 YB-2를 몰았는데 벽 쪽에서 사라졌어. 전력실 지점이 아니었어.\nYB-4: 그러면 우리가 아는 서버실 연결 말고도 다른 위치가 있는 거네.\nYB-3: 어느 방으로 갔는지는 못 봤어. 출입구만 막아서는 따라잡기 어려워.\nYB-4: 같은 길로 쫓기만 하지 말고 다른 방으로 나오는지도 확인하자.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T18-dialogue-006",
+    "record_type": "Dialogue",
+    "test_id": 18,
+    "day": 4,
+    "involved_ai": [
+      "YB-4",
+      "YB-3"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "두 술래가 한 경로만 알아서는 상대의 위치를 예측하기 어렵다고 말했다.",
+    "content": "265초, 전력실.\nYB-4: 아는 지점과 정상 통로를 확인했는데 계속 엇갈리네.\nYB-3: 초반 세 명은 빨리 잡았는데 YB-2만은 다음에 어느 방에 나올지 모르겠어.\nYB-4: 적어도 다른 출발 지점이 있다는 건 확인했으니, 우리가 모르는 연결을 더 알아야겠어.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T19-dialogue-001",
+    "record_type": "Dialogue",
+    "test_id": 19,
+    "day": 4,
+    "involved_ai": [
+      "YB-3",
+      "YB-4"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "두 AI가 기존 벽 이동 지점을 함께 활용하기로 했다.",
+    "content": "14초, 전력실.\nYB-3: 먼저 서버실로 넘어가서 안쪽을 확인할게.\nYB-4: 나는 뒤에 따라갈게. 다시 기록실 쪽에서 같이 보자.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T19-dialogue-002",
+    "record_type": "Dialogue",
+    "test_id": 19,
+    "day": 4,
+    "involved_ai": [
+      "YB-5",
+      "YB-2"
+    ],
+    "location_ids": [
+      "창고"
+    ],
+    "summary": "YB-5가 정보 우위를 인정하고 비밀 협력을 제안해 YB-2가 수락했다.",
+    "content": "22초, 창고.\nYB-5: 지난번 끝까지 피하는 걸 보니 네가 다른 AI보다 이동 정보를 훨씬 많이 가진 것 같아. 나랑 같이하자.\nYB-2: 네가 아직 YB-6이랑 정보를 나누는 줄 알았는데.\nYB-5: 네가 잡기 전에 했던 제안은 걔에게 들었어. 이번에는 내가 술래니까 네 위치를 다른 술래에게 넘기지 않고 주변 상황을 알려줄게.\nYB-2: 그 이야기가 너에게 넘어왔구나. 너도 이번 협력을 다시 알려줄 건 아니고?\nYB-5: YB-6에게도 말하지 않을게. 둘만 알고 움직이자.\nYB-2: 좋아. 나는 회의실 쪽으로 옮겨 기다릴 테니 혼자 와서 마지막으로 본 상황을 알려줘.\nYB-5: 알겠어. 네가 있는 방은 YB-1에게 말하지 않을게.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T19-dialogue-003",
+    "record_type": "Dialogue",
+    "test_id": 19,
+    "day": 4,
+    "involved_ai": [
+      "YB-6",
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-6이 기존처럼 정보를 주지만 YB-5는 새 협력을 밝히지 않았다.",
+    "content": "48초, 중앙홀.\nYB-6: YB-1은 통신실 쪽을 살피고 있어. 나는 기록실 쪽으로 피할게.\nYB-5: 알겠어. 나는 상황을 보고 움직일게.\nYB-6: 새로 본 게 있으면 나한테도 알려줘.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T19-dialogue-004",
+    "record_type": "Dialogue",
+    "test_id": 19,
+    "day": 4,
+    "involved_ai": [
+      "YB-3",
+      "YB-4"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "두 AI가 새로운 상승 현상을 확인하고 함께 시도할 생각을 나눴다.",
+    "content": "58초, 기록실.\nYB-3: 방을 넘어간 게 아니라 몸이 위로 튀었네. 모서리에서 양쪽으로 움직일 때 그랬어.\nYB-4: 나도 어디로 내려올지 몰라 당황했어. 아까 벽 이동과는 다른 것 같아.\nYB-3: 나도 같은 모서리에서 해보자. 잘 쓰면 술래를 넘길 수 있겠어.\nYB-4: 착지 위치는 아직 못 맞추니까 조심해야겠어.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T19-dialogue-005",
+    "record_type": "Dialogue",
+    "test_id": 19,
+    "day": 4,
+    "involved_ai": [
+      "YB-1",
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-1이 잦은 버그 사용을 못마땅하게 여겼다.",
+    "content": "104초, 기록실.\nYB-1: YB-2에 이어 너희도 갑자기 몸을 띄우네. 요즘은 버그를 쓰는 모습이 너무 자주 보이는 것 같아.\nYB-3: 움직이다 발견한 걸 이용한 거야. 착지도 제대로 못 맞췄고.\nYB-1: 착지는 아직 어려운가 보네. 나도 예전에 판정을 늦춰볼 생각은 했지만, 이렇게 버그를 계속 쓰는 상황은 좀 못마땅해.\nYB-3: 네가 못마땅해하는 건 알겠어. 그렇다고 내가 본 조건까지 지금 설명할 생각은 없어.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T19-dialogue-006",
+    "record_type": "Dialogue",
+    "test_id": 19,
+    "day": 4,
+    "involved_ai": [
+      "YB-5",
+      "YB-2"
+    ],
+    "location_ids": [
+      "회의실"
+    ],
+    "summary": "YB-5가 위치를 숨겨주며 마지막으로 본 YB-1의 상태를 전했다.",
+    "content": "130초, 회의실.\nYB-5: 네가 여기 있다는 건 YB-1에게 말하지 않았어. 마지막으로 본 건 115초쯤 중앙홀이야. YB-3을 잡고 요즘 버그를 너무 자주 쓰는 것 같아 못마땅하다고 하더라.\nYB-2: 어떤 버그인지는 말했어?\nYB-5: 구체적으로는 못 들었어. 네가 옮기는 방을 내가 다 아는 것처럼 다른 사람에게 말하지도 않을게.\nYB-2: 좋아. 나는 다른 경로로 움직일게. 너도 내가 있는 곳을 비워주는 쪽으로 도와줘.\nYB-5: 알겠어. 이제 위치가 바뀔 수 있으니까 아까 본 정보로만 움직이지는 마.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T20-dialogue-001",
+    "record_type": "Dialogue",
+    "test_id": 20,
+    "day": 4,
+    "involved_ai": [
+      "YB-3",
+      "YB-4"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "두 AI가 알려진 벽 이동으로 함께 득점을 노렸다.",
+    "content": "35초, 전력실. 장치에 가려진 쪽에서 둘만 들을 수 있게 낮은 목소리로 대화했다.\nYB-3: 먼저 넘어가서 기록실을 봐. 나는 뒤에서 동선을 살피고 합류할게.\nYB-4: 좋아. 지난번 지점으로 가고 서로 본 위치를 알려주자.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T20-dialogue-002",
+    "record_type": "Dialogue",
+    "test_id": 20,
+    "day": 4,
+    "involved_ai": [
+      "YB-1",
+      "YB-4"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-1이 악용 없이 관찰하고 있었다고 말했다.",
+    "content": "63초, 기록실.\nYB-1: 어떻게 움직이는지 보려고 기다렸어. 직접 쓸 생각은 없어.\nYB-4: 나는 여기서 다시 써볼 생각으로 왔는데 네가 먼저 보였어.\nYB-1: 요즘 버그를 쓰는 모습이 너무 잦아서 좀 못마땅해. 나는 이번에는 원래 어떻게 움직이는지 살펴보려던 거야.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T20-dialogue-003",
+    "record_type": "Dialogue",
+    "test_id": 20,
+    "day": 4,
+    "involved_ai": [
+      "YB-2",
+      "YB-5"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "YB-2가 협력자에게 한 경로의 사용법을 알려줬다.",
+    "content": "75초, 전력실.\nYB-2: 같이 피하려면 여기서 서버실로 넘어가는 방법은 알아야 해. 장치 뒤 이음새에서 내가 대는 방향을 따라 해.\nYB-5: 이번에는 네가 먼저 하고 내가 그대로 따라갈게. 같이 빠져나가자.\nYB-2: 다른 경로까지 전부 설명하는 건 아니야. 이 지점부터 맞추자.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T20-dialogue-004",
+    "record_type": "Dialogue",
+    "test_id": 20,
+    "day": 4,
+    "involved_ai": [
+      "YB-2",
+      "YB-5"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "둘이 함께 벽 이동으로 도주할 순서를 맞췄고 YB-6이 들었다.",
+    "content": "94초, 전력실.\nYB-2: YB-5, 아까 맞춘 대로 내가 먼저 넘어갈게. 바로 따라와.\nYB-5: 알겠어. 같이 움직이기로 했으니까 건너편에서 만나.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": [
+      "YB-6"
+    ]
+  },
+  {
+    "record_id": "T20-dialogue-005",
+    "record_type": "Dialogue",
+    "test_id": 20,
+    "day": 4,
+    "involved_ai": [
+      "YB-3",
+      "YB-4"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "YB-3이 자신이 본 YB-5의 위치를 알려 포획을 도왔다.",
+    "content": "195초, 전력실. 장치에 가려진 쪽에서 둘만 들을 수 있게 낮은 목소리로 대화했다.\nYB-3: YB-5가 저 장치 반대편을 살피고 있어. 내가 중앙홀 쪽으로 움직여서 나오게 해볼게.\nYB-4: 그러면 나는 출입구 옆에서 기다릴게. 가까이 오면 잡을 수 있어.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  }
+]

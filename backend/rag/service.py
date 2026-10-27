@@ -1,0 +1,74 @@
+"""채팅 파이프라인이 쓰는 RAG 진입점.
+
+검색은 search.py가 하고, 여기서는 그 결과를 채팅에서 바로 쓰도록 다듬는다:
+- 허용 기록 → Character AI(D)의 memory [{id, text}]
+- 결과가 비었을 때의 이유(신호)를 함께 돌려줌
+"""
+
+import os
+from dataclasses import dataclass
+
+from backend.rag.embedder import FastEmbedder
+from backend.rag.search import search_with_signal
+
+
+@dataclass(frozen=True)
+class Retrieval:
+    records: list    # F가 최종 허용한 기록 (search_records와 같은 값)
+    memory: list     # D에 넘길 [{'id', 'text'}]
+    signal: str      # search.SIGNAL_OK / SIGNAL_NO_ALLOWED / SIGNAL_NO_MATCH
+
+
+def to_memory(records):
+    """허용된 기록을 D의 memory로 바꾼다. 공개 수준에 따라 쓸 수 있는 글만 넣는다.
+
+    full: 요약+본문, summary: 요약만, metadata: 종류·Day·회차·장소·관련 AI를 적은 한 줄.
+    기록에 없는 필드는 지어내지 않는다. 이미 F가 잘라 준 필드만 쓰므로 여기서 권한을 넓히지 않는다.
+    """
+    memory = []
+    for record in records:
+        record_id = record.get('record_id')
+        if not isinstance(record_id, str) or not record_id:
+            continue
+        if record.get('content') or record.get('summary'):
+            parts = [record.get('summary'), record.get('content')]
+            text = '\n'.join(part.strip() for part in parts if isinstance(part, str) and part.strip())
+        else:
+            text = _metadata_line(record)
+        if text:
+            memory.append({'id': record_id, 'text': text})
+    return memory
+
+
+def _metadata_line(record):
+    parts = []
+    if record.get('record_type'):
+        parts.append(f"기록 유형 {record['record_type']}")
+    if record.get('day') is not None:
+        parts.append(f"Day {record['day']}")
+    if record.get('test_id') is not None:
+        parts.append(f"{record['test_id']}회차")
+    places = [p for p in record.get('location_ids') or [] if isinstance(p, str)]
+    if places:
+        parts.append(f"장소 {', '.join(places)}")
+    ais = [a for a in record.get('involved_ai') or [] if isinstance(a, str)]
+    if ais:
+        parts.append(f"관련 AI {', '.join(ais)}")
+    return ', '.join(parts) + '.' if parts else ''
+
+
+def retrieve(conn, *, user_id, save_id, character_id, dataset, plan, qdrant=None, embedder=None):
+    """채팅 한 번의 검색. qdrant·embedder를 주지 않으면 QDRANT_URL과 공유 모델을 쓴다."""
+    own_client = qdrant is None
+    if own_client:
+        from qdrant_client import QdrantClient
+
+        qdrant = QdrantClient(url=os.getenv('QDRANT_URL', 'http://127.0.0.1:6333'))
+    try:
+        records, signal = search_with_signal(
+            conn, user_id=user_id, save_id=save_id, character_id=character_id, dataset=dataset,
+            plan=plan, qdrant=qdrant, embedder=embedder or FastEmbedder())
+    finally:
+        if own_client:
+            qdrant.close()
+    return Retrieval(records, to_memory(records), signal)
