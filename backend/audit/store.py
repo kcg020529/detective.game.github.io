@@ -5,7 +5,7 @@ import re
 
 from pymysql.connections import Connection
 
-from backend.guardrails.input_guard import MODEL_SIGNAL_LEVELS, RULES
+from backend.guardrails.input.input_guard import MODEL_SIGNAL_LEVELS, RULES
 
 
 SIGNAL_LEVELS = {**{code: rule_level for code, rule_level, _ in RULES}, **MODEL_SIGNAL_LEVELS}

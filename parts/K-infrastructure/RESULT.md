@@ -24,4 +24,23 @@
    - FastAPI·프론트·Grafana 서비스 미포함 (각 서비스 구현 후 추가)
    - Kubernetes(K03)·AWS(K04)는 시작 안 함
 
-2026-10-26 O01에서 별도 `docker-compose.grafana.yml`로 Grafana의 로컬 선택 실행을 추가했다. 위 K01의 기본 Compose에는 계속 MariaDB·Qdrant만 포함된다. FastAPI·프론트 통합 실행과 Kubernetes·AWS 배포는 여전히 미구현이다.
+# K02 - 앱 전체 Docker Compose 실행
+
+1. `infrastructure/docker/`
+   - `Dockerfile.backend`: `python:3.12-slim`, 백엔드·RAG·적재 도구 패키지 설치, 비루트 사용자. API와 도구 셋이 같은 이미지(`kervion-backend:local`) 하나를 씀
+   - `docker-compose.yml`에 `api`(uvicorn `--reload`, `backend/` 연결), `web`(`nginx:1.27-alpine`, `frontend/` 읽기 전용 연결, 127.0.0.1:`WEB_PORT`, 기본 8080) 추가. 도구 `migrate`·`load-data`·`rag-index`는 `tools` 프로필이라 `up`에서는 안 뜸
+   - 도구는 `database/`·`data/`·`backend/`를 읽기 전용으로 연결해 `git pull` 뒤 다시 빌드하지 않아도 새 파일을 씀. 임베딩 모델은 `fastembed_cache` 볼륨에 한 번만 받음
+   - `nginx.conf`: `/api/` → `api:8000`, `/config.js`가 `window.KERVION_API_BASE = '/api/v1'`을 돌려줌, html·js·css 캐시 끔. 처음엔 MIME 표가 빠져 css·js가 `text/plain`으로 나가 화면이 깨졌음 → `mime.types` 포함으로 고침
+   - `migrate.py`: `database/schemas/mariadb`, `database/migrations/mariadb`의 SQL을 파일 이름 순으로 적용하고 `schema_migrations`에 기록. 이미 표가 다 있는 예전 DB는 다시 만들지 않고 적용됨으로 기록. 실패하면 기록하지 않음
+   - `.env.example`: `WEB_PORT`, 나중에 쓸 DeepSeek 키 자리(값 없음). `README.md`: 전체 실행·갱신·초기화·문제 해결
+2. 프론트: `frontend/config.js`(주석만, GitHub Pages·일반 정적 실행은 Mock 그대로)와 `index.html`에서 `api.js` 앞에 불러오기. Compose에서만 nginx가 API 주소로 바꿔 줌
+3. 확인
+   - 빈 볼륨 별도 프로젝트: 모두 healthy → `migrate` 12개+이관 1개 적용, 두 번째는 모두 건너뜀 → `load-data` 302건·권한 906행 → `rag-index` meta 302·summary 302·content 317점, 두 번째 실행은 모델을 다시 받지 않음 → 브라우저에서 회원가입·새 수사·바탕화면까지, API 호출은 `/api/v1`, 콘솔 오류 없음. 확인 후 시험용 컨테이너·볼륨 삭제
+   - 기존 로컬 DB: `migrate`가 001~012를 적용됨으로 기록하고 이관 SQL 적용, 사용자·Save·기록·권한 행 수 그대로
+   - 실제 마우스 클릭으로 회원가입 → 새 수사 → 기록 칸 클릭 → 바탕화면 진입 확인 (nginx MIME 수정 후)
+   - `backend/` 파일을 건드리면 uvicorn이 다시 시작됨, `frontend/` 수정은 새로고침으로 반영
+4. 남은 것
+   - Grafana(O)·채팅 전송 API는 생기면 추가
+   - Kubernetes(K03)·AWS(K04)
+
+2026-10-26 O01에서 별도 `docker-compose.grafana.yml`로 Grafana 로컬 선택 실행을 추가했다. 기본 Compose의 FastAPI·프론트엔드 구성은 K02에 기록되어 있다. Grafana와 앱 전체의 통합 실행 검증은 별도 확인이 필요하다. Kubernetes·AWS 배포는 미구현이다.

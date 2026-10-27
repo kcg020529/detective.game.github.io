@@ -1,5 +1,19 @@
 name: kervion
 
+x-backend-environment: &backend-environment
+  MARIADB_HOST: mariadb
+  MARIADB_PORT: "3306"
+  MARIADB_DATABASE: ${MARIADB_DATABASE:-kervion}
+  MARIADB_USER: ${MARIADB_USER:-kervion}
+  MARIADB_PASSWORD: ${MARIADB_PASSWORD:?MARIADB_PASSWORD must be set}
+  QDRANT_URL: http://qdrant:6333
+
+x-backend-image: &backend-image
+  image: kervion-backend:local
+  build:
+    context: ../..
+    dockerfile: infrastructure/docker/Dockerfile.backend
+
 services:
   mariadb:
     image: mariadb:11.4.13
@@ -42,8 +56,86 @@ services:
       retries: 10
       start_period: 10s
 
+  api:
+    <<: *backend-image
+    command: ["uvicorn", "backend.api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    environment:
+      <<: *backend-environment
+      WATCHFILES_FORCE_POLLING: "true"
+      KERVION_ALLOWED_ORIGINS: "http://127.0.0.1:${WEB_PORT:-8080},http://localhost:${WEB_PORT:-8080}"
+      KERVION_COOKIE_SAMESITE: ${KERVION_COOKIE_SAMESITE:-lax}
+      KERVION_COOKIE_SECURE: ${KERVION_COOKIE_SECURE:-false}
+    volumes:
+      - ../../backend:/app/backend:ro
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/openapi.json', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  web:
+    image: nginx:1.27-alpine
+    ports:
+      - "127.0.0.1:${WEB_PORT:-8080}:80"
+    volumes:
+      - ../../frontend:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      api:
+        condition: service_healthy
+
+  migrate:
+    profiles: ["tools"]
+    <<: *backend-image
+    command: ["python", "-m", "infrastructure.docker.migrate"]
+    environment: *backend-environment
+    volumes:
+      - ../../database:/app/database:ro
+      - ../../data:/app/data:ro
+      - ../../infrastructure/docker/migrate.py:/app/infrastructure/docker/migrate.py:ro
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+  load-data:
+    profiles: ["tools"]
+    <<: *backend-image
+    command: ["python", "database/loaders/load_mariadb.py", "--dataset", "game-data"]
+    environment: *backend-environment
+    volumes:
+      - ../../database:/app/database:ro
+      - ../../data:/app/data:ro
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+  rag-index:
+    profiles: ["tools"]
+    <<: *backend-image
+    command: ["python", "-m", "backend.rag.index", "--dataset", "game-data"]
+    environment:
+      <<: *backend-environment
+      FASTEMBED_CACHE_PATH: /home/app/.cache/fastembed
+    volumes:
+      - fastembed_cache:/home/app/.cache/fastembed
+      - ../../backend:/app/backend:ro
+      - ../../database:/app/database:ro
+      - ../../data:/app/data:ro
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+
 volumes:
   kervion_mariadb_data:
     name: kervion_mariadb_data
   qdrant_storage:
     name: qdrant_storage
+  fastembed_cache:

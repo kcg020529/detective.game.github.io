@@ -47,11 +47,11 @@ ai-hide-and-seek/
 │   ├── F-access-control/
 │   │   ├── PLAN.md
 │   │   └── RESULT.md
-│   ├── G-1-input-guardrail/          # 선영 Input Guardrail
+│   ├── G-1-input-guardrail/      # G-1 Input의 PLAN·RESULT
 │   │   ├── PLAN.md
 │   │   └── RESULT.md
-│   ├── G-2-output-guardrail/          # 형주 Output Guardrail (기록 준비 중)
-│   │   └── .gitkeep
+│   ├── G-2-output-guardrail/     # G-2 Output의 PLAN (미구현은 RESULT 없음)
+│   │   └── PLAN.md
 │   ├── H-audit/
 │   │   ├── PLAN.md
 │   │   └── RESULT.md
@@ -119,12 +119,12 @@ ai-hide-and-seek/
 └── tests/                        # 공통 통합·E2E 테스트
 ```
 
-**읽는 방법:** 위 트리는 기준 경로와 책임을 나타내는 설계도이며 파일 전체가 이미 존재한다는 뜻은 아니다. characters.json·페르소나·지도 파일, 루트 `.env.example`·`docs/proposal/`도 아직 생성되지 않았다. 실제 환경변수 예시는 `infrastructure/docker/.env.example`에 있다. 빈 폴더나 미수행 작업의 RESULT를 가상으로 채우지 않는다.
+**읽는 방법:** 위 트리는 기준 경로와 책임을 나타내는 설계도이며 파일 전체가 이미 존재한다는 뜻은 아니다. 존재하지 않는 예시 파일은 실제 구현 완료를 뜻하지 않는다. 실제 환경변수 예시는 `infrastructure/docker/.env.example`에 있다. 빈 폴더나 미수행 작업의 RESULT를 가상으로 채우지 않는다.
 
 ## 2. 대분류별 PLAN / RESULT 경로
 
 - 개발 기록은 `parts/<대분류>/PLAN.md`와 `parts/<대분류>/RESULT.md`로 관리한다.
-- 관리 체계는 A~O 15개 코드·16개 작업 영역이다. G-1 Input과 G-2 Output은 `parts/G-1-input-guardrail/`·`parts/G-2-output-guardrail/`에 따로 기록하고 G 전체에서 고유한 `G01` 등의 Part ID를 사용한다. 폴더 번호 때문에 기존 Part ID나 기록을 바꾸지 않는다.
+- 관리 체계는 A~O 15개 코드·16개 작업 영역이다. G-1/G-2는 각각 `parts/G-1-input-guardrail/`, `parts/G-2-output-guardrail/`에서 기록한다. 코드도 `backend/guardrails/input/`, `backend/guardrails/output/`으로 나눈다. G 전체에서 고유한 `G01` 등의 번호는 유지하며 기존 기록을 초기화하지 않는다.
 - L은 `parts/L-input-guardrail-tests/`, M은 `parts/M-output-guardrail-tests/`를 사용한다. 2026-10-26 담당 범위에 맞춰 각각 `L-attack-tests`, `M-leakage-tests`에서 이름을 변경했다. M에는 출력 가드와 응답 품질 실험 기록을 함께 둔다. N(`N-evaluation`)은 전원 통합 보안 성능 비교·평가의 기록 위치이며, 이전에 계획했던 Planner 정확도 실험은 별도 대분류 없이 C에서 간단히 확인한다. 문서화는 독립 업무가 아니다. 대시보드는 `O-dashboard`(이전 `O-documentation` 폴더명 변경)를 사용한다.
 - O(보안 대시보드·Grafana)의 기록 경로는 `parts/O-dashboard/`다. PLAN/RESULT는 실제 작업이 생기면 만든다.
 - `A01`, `B02`, `E03`과 같은 Part ID는 **문서 내부 기능 구분용 라벨·목차**이며 별도의 Part 디렉터리를 만들지 않는다.
@@ -196,7 +196,7 @@ parts/E-rag/
 ## 6. 개발 환경과 유연성
 
 - 핵심 게임과 보안 실험은 Docker Compose를 이용해 로컬에서 실행 가능한 구조를 지향한다. Kubernetes와 AWS 배포 내용은 각 환경 폴더에 둔다.
-- 기본 Compose는 MariaDB·Qdrant 두 서비스만 정의한다. 별도 `infrastructure/docker/docker-compose.grafana.yml`과 `infrastructure/docker/grafana/`에 로컬 감사 대시보드를 추가했다. FastAPI·프론트엔드를 포함한 로컬 전체 실행, Kubernetes·AWS 배포는 구현 목표이며 완료 상태가 아니다.
+- 기본 Compose는 MariaDB·Qdrant·FastAPI·프론트엔드 실행을 정의한다. 별도 `docker-compose.grafana.yml`로 로컬 Grafana 감사 대시보드를 선택 실행할 수 있다. Kubernetes·AWS 배포는 구현 목표이며 완료 상태가 아니다.
 - 실제 API·DB·LLM 연동을 우선한다. Mock을 필수 개발 단계로 두지 않는다.
 - 담당자는 `backend/`, `frontend/`, `database/`, `experiments/`, `infrastructure/`, `tests/` 내부의 구체적인 파일명·세부 폴더 구성·개발 순서를 자율적으로 결정할 수 있다.
 - 이 문서의 트리 밖에 기능별 폴더가 추가될 수 있다. 다른 담당자의 구현과 충돌하는 공통 구조를 변경할 때에만 필요한 범위로 조율한다.

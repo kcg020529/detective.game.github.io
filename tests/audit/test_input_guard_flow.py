@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch
 
 from backend.audit.input_guard_flow import inspect_and_record_input
-from backend.guardrails.input_guard import InputGuardResult
+from backend.guardrails.input.input_guard import InputGuardResult
 
 
 class InputGuardFlowTests(unittest.TestCase):

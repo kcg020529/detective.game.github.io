@@ -138,7 +138,7 @@
 
 ### G. 보안 가드레일 — G-1 선영 / G-2 형주
 
-G-1 Input은 `parts/G-1-input-guardrail/`, G-2 Output은 `parts/G-2-output-guardrail/`에 각각 기록한다. G 전체에서 고유한 `G01` 등의 Part ID 번호를 사용한다. 폴더 번호와 Part ID는 별개이며 구체 규칙은 `WORKFLOW.md`를 따른다.
+G 코드는 유지하되 기록 경로는 `parts/G-1-input-guardrail/`과 `parts/G-2-output-guardrail/`로 분리한다. 두 영역은 제목에 담당 범위를 표시하고 G 전체에서 고유한 `G01` 등의 번호를 사용한다. 구체 규칙은 `WORKFLOW.md`를 따른다.
 
 #### G-1. Input Guardrail — 선영
 

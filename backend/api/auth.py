@@ -75,7 +75,7 @@ def _set_cookie(response: Response, token: str) -> None:
 
 
 @router.post("/signup", status_code=201)
-def signup(payload: Signup, conn: Connection = Depends(get_db)):
+def signup(payload: Signup, conn: Connection = Depends(get_db, scope='function')):
     username = normalized_username(payload.username)
     validate_password(payload.password)
     if payload.role not in ROLES:
@@ -110,7 +110,7 @@ def signup(payload: Signup, conn: Connection = Depends(get_db)):
 
 
 @router.post("/login")
-def login(payload: Login, conn: Connection = Depends(get_db)):
+def login(payload: Login, conn: Connection = Depends(get_db, scope='function')):
     username = normalized_username(payload.username)
     if not payload.password:
         raise ApiError(422, "VALIDATION_ERROR", "비밀번호를 입력해 주세요.")
@@ -134,7 +134,7 @@ def login(payload: Login, conn: Connection = Depends(get_db)):
 
 
 @router.get("/me")
-def me(user_id: int = Depends(current_user_id), conn: Connection = Depends(get_db)):
+def me(user_id: int = Depends(current_user_id), conn: Connection = Depends(get_db, scope='function')):
     with conn.cursor() as cursor:
         cursor.execute("SELECT username FROM users WHERE user_id = %s", (user_id,))
         user = cursor.fetchone()
@@ -144,7 +144,7 @@ def me(user_id: int = Depends(current_user_id), conn: Connection = Depends(get_d
 
 
 @router.post("/logout", status_code=204)
-def logout(request: Request, conn: Connection = Depends(get_db)):
+def logout(request: Request, conn: Connection = Depends(get_db, scope='function')):
     token = request.cookies.get(COOKIE_NAME)
     if token:
         with conn.cursor() as cursor:

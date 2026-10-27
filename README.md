@@ -20,7 +20,7 @@
 - 로그인 후 새 게임마다 역할을 자유롭게 선택해 Save를 시작하고, 6개 AI와 1:1 대화 (별도 조사관 AI 없음)
 - Day 1 ~ Day 6 구성, Day가 지날수록 조사할 수 있는 실험 기록 증가
 - 다음 날 버튼으로 진행하며 서버가 Save 소유권과 Day 6 상한을 확인하는 구조. 조사 Token은 사용하지 않음
-- 회원가입·로그인·로그아웃·세션과 Save/Load·메모·Day 진행·채팅 기록 조회는 서버 API가 구현됨. 채팅 보내기·AI 답변은 미구현이며, 서버 주소가 없으면 화면은 Mock으로 동작
+- 회원가입·로그인·로그아웃·세션과 Save/Load·메모·Day 진행·채팅 기록 조회 및 전송 POST가 구현됨. 전송 API는 입력 가드·감사 저장과 Planner·RAG 호출을 연결하지만 D 캐릭터 생성·G-2 출력 검사 미연결 상태에서는 503을 반환함. 서버 주소가 없으면 화면은 Mock으로 동작
 - AI 응답은 미리 작성·검수한 30회 실험 기록 기반 (AI가 실시간으로 사건을 만들어내는 구조 아님)
 
 | Day | 그날 새로 열리는 실험 | 누적 |
@@ -205,7 +205,7 @@ L은 입력 가드 단독 검증, M은 출력 가드·품질, N은 전체 보안
 ├── PROJECT_STRUCTURE.md   # 폴더별 역할
 ├── AGENTS.md              # AI 도구용 문서 안내
 ├── docs/                  # PLAN / RESULT 예시, 인터페이스 계약, 제안서
-├── parts/                 # PLAN.md / RESULT.md (G 공유)
+├── parts/                 # PLAN.md / RESULT.md (G-1·G-2 폴더 분리)
 ├── backend/               # FastAPI 서버, 게임, AI, 보안 기능
 ├── frontend/              # 게임 웹 UI
 ├── database/              # DB 스키마와 적재용 SQL
@@ -217,7 +217,7 @@ L은 입력 가드 단독 검증, M은 출력 가드·품질, N은 전체 보안
 
 ## 개발 방식
 
-- A~O의 15개 코드·16개 관리 단위로 운영. G-1 Input과 G-2 Output은 `parts/G-1-input-guardrail/`·`parts/G-2-output-guardrail/`에서 각각 기록하며 G Part ID 번호는 중복 없이 사용
+- A~O의 15개 코드·16개 관리 단위로 운영. G-1/G-2 기록은 `parts/G-1-input-guardrail/`·`parts/G-2-output-guardrail/`로 분리하며 기존 G 번호는 유지
 - 문서 안에서는 `# J01 - 기능명` 같은 제목으로 기능을 나누고, 그 아래 번호 목록으로 작업을 적음
 - RESULT는 실제로 구현하고 확인한 뒤에만 작성
 - 실제 코드는 `parts/`가 아니라 각 소스 폴더에 둠
@@ -252,8 +252,8 @@ L은 입력 가드 단독 검증, M은 출력 가드·품질, N은 전체 보안
 | 프론트엔드 | HTML/CSS/JS 화면. `frontend/play/api.js`로 서버 주소가 있으면 HTTP, 없으면 Mock으로 동작. Save·메모·Day 진행·채팅 기록의 부분 연동은 I01·I02 RESULT에 기록되어 있다. 현재 로그인 API는 구현됐지만 채팅 보내기·지목 API가 없어 서버만으로 전체 플레이는 불가능하다. |
 | MariaDB | 초기 SQL 001~012 및 Python JSON 검증·적재 도구가 있다. 로컬 MariaDB에서 Save·계정 API와 감사 테이블을 확인했다. 게임 기록 적재 → 검색 연동은 미검증이다. |
 | 콘텐츠 | 30회 Setup과 1~11회 중심의 작성 기록 존재. 전체 30회 콘텐츠 완료를 뜻하지 않음 |
-| Docker | 기본 Compose에 MariaDB·Qdrant 두 서비스가 있다. 별도 Compose 파일로 로컬 Grafana 감사 대시보드를 선택 실행할 수 있다. 전체 앱 실행 구성은 미구현 |
-| 서버 | `backend/api/`에 FastAPI 회원가입·로그인·로그아웃·세션, Save·메모·Day 진행, 채팅 기록 읽기 API가 있다. 채팅 전송 API는 없다. 로컬 MariaDB에서 기존 `tests/api` 15개를 통과했으며 계정 기능의 별도 통합 테스트는 I03 RESULT를 따른다. |
+| Docker | 기본 Compose에 MariaDB·Qdrant·FastAPI·프론트엔드가 있다. Grafana는 별도 Compose 파일로 로컬에서 선택 실행할 수 있다. |
+| 서버 | `backend/api/`에 인증·Save·메모·Day 진행·채팅 조회/전송 API가 있다. 채팅 POST는 I04로 추가했으며 D/G-2 연결 전에는 503이다. 실제 DB 채팅 POST 통합 검증은 남아 있다. 계약은 [채팅 POST API](docs/interfaces/채팅_POST_API.md), 검증은 I RESULT를 따른다. |
 | 검색·보안 | `backend/planner/`에 DeepSeek 질문 분류·검색 계획과 JSON 검증을 구현했고 실제 API 질문 16개 초기 평가를 통과했다. 전체 정확도·E/RAG 연결은 후속 검증 대상이다. `backend/policy/`에 순수 인가·필드 투영·MariaDB 재검증 어댑터가 있고, `backend/guardrails/`에는 규칙 기반 Input Guard·DeepSeek 추가 판정, `backend/audit/`에는 경고 저장 함수가 있다. 실제 채팅·Planner·Policy·Qdrant·감사 전체 흐름은 미연동이다. |
 | 배포·평가 | Kubernetes/AWS 및 보안 비교 실험은 자리만 있으며 실행·검증 완료로 볼 수 없음 |
 
@@ -261,7 +261,7 @@ L은 입력 가드 단독 검증, M은 출력 가드·품질, N은 전체 보안
 
 전체 서비스 실행과 실험 재현 안내는 구현 진행 후 추가 예정.
 
-- 앱을 포함한 전체 Docker Compose 실행 (Grafana는 별도 Compose 파일로 로컬 실행 가능)
+- Grafana를 포함한 전체 실행 검증 및 운영 배포 구성
 - 실제 DB 적재·조회 및 Qdrant 인덱싱 연동 검증
 - 공격 / 방어 실험 재현 방법
 - 실행 환경 제약

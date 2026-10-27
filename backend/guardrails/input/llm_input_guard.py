@@ -5,7 +5,7 @@ import os
 
 import httpx
 
-from backend.guardrails.input_guard import InputGuardResult, inspect_input
+from backend.guardrails.input.input_guard import InputGuardResult, inspect_input
 
 
 DEEPSEEK_CHAT_URL = "https://api.deepseek.com/chat/completions"
