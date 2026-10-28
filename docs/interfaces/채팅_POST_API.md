@@ -48,3 +48,11 @@ I05 생성기와 선영 작업 브랜치의 G-2 어댑터가 기본 서버에 �
 
 - 2026-10-28 첫 실호출 범위: 사용자 승인에 따라 **이전 대화는 Planner와 D 어느 쪽에도 전송하지 않는다.** Planner에는 현재 질문과 서버의 역할·Day·캐릭터 ID, D에는 현재 질문·캐릭터 설정과 F가 허용한 memory(answer 모드일 때)를 전달한다. 서버는 이전 대화의 Save·캐릭터 범위는 로컬에서 검증한다. D가 돌려준 `used`는 `resolve_used`로 거른다. injection 모드는 쓰지 않는다. 빈 답은 오류(503)로 처리한다.
 - 로컬에서 실제 Planner·DeepSeek·RAG로 확인(출력 가드 자리에 시험용 통과 함수): 기록 질문 normal, 이어지는 질문 normal, 무관한 질문·권한 밖 속마음 unknown.
+
+## 출력 가드 연결 상태 (G-2 병합 후, 2026-10-28)
+
+- `main.py`가 `ChatPipeline(generator=make_generator(), output_guard=check_output)`로 가드를 연결한다. 가드는 `mask`→`partial`, 유출 차단→안전 문구 `restricted`로 바꾸고, 깨진 응답·품질 차단은 503으로 중단한다. 판정 이벤트는 `audit_events`에 저장된다.
+- 가드에는 데이터셋 전체 기록(카탈로그, 300초 캐시), 이번 요청의 허용 id, 역할 수준으로 잘린 필드(`#withheld`), D 프롬프트 문장, 실제 DeepSeek 키(메모리에서만)를 넘긴다.
+- 모드는 기본 `shadow`(설정 파일). 환경변수 `KERVION_OUTPUT_GUARD_MODE=enforce|shadow`로 바꾼다. Canary·키·개인정보·깨진 응답은 shadow에서도 항상 적용한다.
+- **enforce는 아직 켜지 않는다.** 실제 DeepSeek 84건(prof·grad·std × 28문항, Day 1 저장)에서 enforce는 28건(33%)을 안전 문구로 바꿨다. 사유는 거의 `context_leak`이고 `prompt_leak`·`irrelevant`가 일부 겹쳤다. 정상 답변("안녕, 기분 어때?", 장소·이동 답변)도 막혔다: 장소 이름, `YB-n`, "갔어요" 같은 일반 어휘가 다른 기록의 고유 어휘로 세어진다. 장소·AI 이름을 일반 어휘로 빼면 오프라인 재현에서 19건→13건으로 줄었지만 해결되지는 않는다. 임계값·일반 어휘 보강은 G-2(선영)의 튜닝 과제로 넘긴다.
+- shadow 실행(같은 84건): 응답 유형 unknown 41, normal 31(나머지는 평가 스크립트의 JSON 절단), 평균 지연 약 1.8초.
