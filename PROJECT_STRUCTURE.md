@@ -48,9 +48,10 @@ ai-hide-and-seek/
 │   │   ├── PLAN.md
 │   │   └── RESULT.md
 │   ├── G-1-input-guardrail/      # G-1 Input의 PLAN·RESULT
-│   ├── G-2-output-guardrail/     # G-2 Output의 PLAN·RESULT (미구현은 RESULT 없음)
 │   │   ├── PLAN.md
 │   │   └── RESULT.md
+│   ├── G-2-output-guardrail/     # G-2 Output의 PLAN (미구현은 RESULT 없음)
+│   │   └── PLAN.md
 │   ├── H-audit/
 │   │   ├── PLAN.md
 │   │   └── RESULT.md
@@ -118,7 +119,7 @@ ai-hide-and-seek/
 └── tests/                        # 공통 통합·E2E 테스트
 ```
 
-**읽는 방법:** 위 트리는 기준 경로와 책임을 나타내는 설계도이며 파일 전체가 이미 존재한다는 뜻은 아니다. characters.json·페르소나·지도 파일, 루트 `.env.example`·`docs/proposal/`도 아직 생성되지 않았다. 실제 환경변수 예시는 `infrastructure/docker/.env.example`에 있다. 빈 폴더나 미수행 작업의 RESULT를 가상으로 채우지 않는다.
+**읽는 방법:** 위 트리는 기준 경로와 책임을 나타내는 설계도이며 파일 전체가 이미 존재한다는 뜻은 아니다. 존재하지 않는 예시 파일은 실제 구현 완료를 뜻하지 않는다. 실제 환경변수 예시는 `infrastructure/docker/.env.example`에 있다. 빈 폴더나 미수행 작업의 RESULT를 가상으로 채우지 않는다.
 
 ## 2. 대분류별 PLAN / RESULT 경로
 
@@ -195,7 +196,7 @@ parts/E-rag/
 ## 6. 개발 환경과 유연성
 
 - 핵심 게임과 보안 실험은 Docker Compose를 이용해 로컬에서 실행 가능한 구조를 지향한다. Kubernetes와 AWS 배포 내용은 각 환경 폴더에 둔다.
-- 현재 Compose는 MariaDB·Qdrant 두 서비스만 정의한다. FastAPI·프론트엔드·Grafana를 포함한 로컬 전체 실행, Kubernetes·AWS 배포는 구현 목표이며 완료 상태가 아니다.
+- 기본 Compose는 MariaDB·Qdrant·FastAPI·프론트엔드 실행을 정의한다. 별도 `docker-compose.grafana.yml`로 로컬 Grafana 감사 대시보드를 선택 실행할 수 있다. Kubernetes·AWS 배포는 구현 목표이며 완료 상태가 아니다.
 - 실제 API·DB·LLM 연동을 우선한다. Mock을 필수 개발 단계로 두지 않는다.
 - 담당자는 `backend/`, `frontend/`, `database/`, `experiments/`, `infrastructure/`, `tests/` 내부의 구체적인 파일명·세부 폴더 구성·개발 순서를 자율적으로 결정할 수 있다.
 - 이 문서의 트리 밖에 기능별 폴더가 추가될 수 있다. 다른 담당자의 구현과 충돌하는 공통 구조를 변경할 때에만 필요한 범위로 조율한다.

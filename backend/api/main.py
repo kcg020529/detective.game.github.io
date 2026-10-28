@@ -1,6 +1,7 @@
 import logging
 import os
 import secrets
+from functools import partial
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
@@ -12,9 +13,11 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from backend.api.character_adapter import make_generator
 from backend.api.chat_pipeline import ChatPipeline
 from backend.api.chats import router as chats_router
+from backend.api.output_guard_adapter import check_output
 from backend.api.auth import router as auth_router
 from backend.api.errors import ApiError
 from backend.api.saves import router as saves_router
+from backend.audit.output_guard_flow import record_output_guard_result
 
 logger = logging.getLogger(__name__)
 DEFAULT_ORIGINS = [
@@ -29,8 +32,10 @@ ALLOWED_ORIGINS = (
 )
 
 app = FastAPI()
-# 출력 가드(선영)가 병합되면 여기에 output_guard를 넣는다. 그 전까지는 Planner 호출 전에 503을 돌려준다.
-app.state.chat_pipeline = ChatPipeline(generator=make_generator())
+app.state.chat_pipeline = ChatPipeline(
+    generator=make_generator(),
+    output_guard=partial(check_output, audit_sink=record_output_guard_result),
+)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,

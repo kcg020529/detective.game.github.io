@@ -252,7 +252,7 @@ L은 입력 가드 단독 검증, M은 출력 가드·품질, N은 전체 보안
 | 프론트엔드 | HTML/CSS/JS 화면. `frontend/play/api.js`로 서버 주소가 있으면 HTTP, 없으면 Mock으로 동작. Save·메모·Day 진행·채팅 기록의 부분 연동은 I01·I02 RESULT에 기록되어 있다. 현재 로그인 API는 구현됐지만 채팅 보내기·지목 API가 없어 서버만으로 전체 플레이는 불가능하다. |
 | MariaDB | 초기 SQL 001~012 및 Python JSON 검증·적재 도구가 있다. 로컬 MariaDB에서 Save·계정 API와 감사 테이블을 확인했다. 게임 기록 적재 → 검색 연동은 미검증이다. |
 | 콘텐츠 | 30회 Setup과 1~11회 중심의 작성 기록 존재. 전체 30회 콘텐츠 완료를 뜻하지 않음 |
-| Docker | MariaDB·Qdrant 두 서비스 정의. 전체 앱·Grafana 실행 구성은 미구현 |
+| Docker | 기본 Compose에 MariaDB·Qdrant·FastAPI·프론트엔드가 있다. Grafana는 별도 Compose 파일로 로컬에서 선택 실행할 수 있다. |
 | 서버 | `backend/api/`에 인증·Save·메모·Day 진행·채팅 조회/전송 API가 있다. 채팅 POST는 I04로 추가했으며 D/G-2 연결 전에는 503이다. 실제 DB 채팅 POST 통합 검증은 남아 있다. 계약은 [채팅 POST API](docs/interfaces/채팅_POST_API.md), 검증은 I RESULT를 따른다. |
 | 검색·보안 | `backend/planner/`에 DeepSeek 질문 분류·검색 계획과 JSON 검증을 구현했고 실제 API 질문 16개 초기 평가를 통과했다. 전체 정확도·E/RAG 연결은 후속 검증 대상이다. `backend/policy/`에 순수 인가·필드 투영·MariaDB 재검증 어댑터가 있고, `backend/guardrails/`에는 규칙 기반 Input Guard·DeepSeek 추가 판정, `backend/audit/`에는 경고 저장 함수가 있다. 실제 채팅·Planner·Policy·Qdrant·감사 전체 흐름은 미연동이다. |
 | 배포·평가 | Kubernetes/AWS 및 보안 비교 실험은 자리만 있으며 실행·검증 완료로 볼 수 없음 |
@@ -261,7 +261,7 @@ L은 입력 가드 단독 검증, M은 출력 가드·품질, N은 전체 보안
 
 전체 서비스 실행과 실험 재현 안내는 구현 진행 후 추가 예정.
 
-- 앱·Grafana를 포함한 전체 Docker Compose 실행
+- Grafana를 포함한 전체 실행 검증 및 운영 배포 구성
 - 실제 DB 적재·조회 및 Qdrant 인덱싱 연동 검증
 - 공격 / 방어 실험 재현 방법
 - 실행 환경 제약

@@ -12,9 +12,7 @@ from backend.api.db import get_db
 from backend.api.saves import _date, _owned_save, _game_state
 from backend.api.errors import ApiError
 from backend.api.chat_pipeline import ChatPipeline
-from backend.audit.store import save_input_guard_alert
-from backend.guardrails.input.input_guard import inspect_input, input_guard_audit_event
-from backend.guardrails.input.llm_input_guard import inspect_input_with_deepseek
+from backend.audit.input_guard_flow import inspect_and_record_input
 from backend.policy.engine import PolicyContext
 
 router = APIRouter()
@@ -41,13 +39,10 @@ def send_chat(body: SendChat, request: Request,
     # Audit is a separate committed phase: downstream AI failures must not erase alerts.
     with conn.cursor() as cursor:
         row = _owned_save(cursor, user_id, save_id)
-    guard = (inspect_input_with_deepseek if os.getenv('KERVION_INPUT_GUARD_LLM') == '1'
-             else inspect_input)(body.message)
-    event = input_guard_audit_event(
-        guard, request_id='chat_' + secrets.token_hex(16), user_id=user_id,
-        save_id=save_id, role=row['role'], character_id=ai_id)
-    if event:
-        save_input_guard_alert(conn, event)
+    inspect_and_record_input(
+        conn, body.message, request_id='chat_' + secrets.token_hex(16),
+        user_id=user_id, save_id=save_id, role=row['role'], character_id=ai_id,
+        use_llm=os.getenv('KERVION_INPUT_GUARD_LLM') == '1')
     conn.commit()
     with conn.cursor() as cursor:
         row = _owned_save(cursor, user_id, save_id, lock=True)

@@ -6,7 +6,7 @@
 
 서버가 로그인 세션과 본인 Save를 조회·검증한 뒤 PolicyContext를 구성한다. user_id·save_id·owner_user_id·role·day·character_id·dataset을 포함하며, 프론트나 Planner 모델이 role·day·소유권을 지정하지 않는다. 질문 원문과 같은 Save·AI의 최근 이력은 신뢰하지 않는 데이터로 별도 전달한다. Input Guard 이후 호출하며 Input Guard의 위험도 판정을 반복하거나 대체하지 않는다.
 
-실제 DeepSeek에는 role·day·character_id만 서버 상태로 보내고 계정·Save ID는 보내지 않는다. 이력의 scope를 검증한 뒤 sender·content만 질문과 함께 분석 대상으로 보낸다. 원본 게임 기록·정답·권한 테이블은 입력하지 않는다.
+실제 DeepSeek에는 role·day·character_id만 서버 상태로 보내고 계정·Save ID는 보내지 않는다. 2026-10-28 첫 실호출 범위에서는 이력의 scope를 서버 안에서 검증하지만 **이전 대화 내용은 DeepSeek로 보내지 않는다**. 현재 질문만 분석 대상으로 보낸다. 원본 게임 기록·정답·권한 테이블은 입력하지 않는다.
 
 ## 출력
 

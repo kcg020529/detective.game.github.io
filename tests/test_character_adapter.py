@@ -32,8 +32,7 @@ def test_answer_memory_history_used_and_logging(setup, caplog):
     assert result == {'content': 'answer secret', 'response_type': 'normal'}
     assert render.call_args.args == ('YB-2', 'answer')
     assert render.call_args.kwargs['memory'] == retrieval.memory
-    assert render.call_args.kwargs['history'] == [
-        {'speaker': '조사자' if i % 2 == 0 else 'YB-2', 'text': str(i)} for i in range(2, 8)]
+    assert render.call_args.kwargs['history'] == []
     assert 'used=1 dropped=2' in caplog.text
     assert all(secret not in caplog.text for secret in ('answer secret', 'prompt secret', 'question secret', 'real-id', 'memory secret'))
     chat.assert_called_once_with('prompt secret', 'question secret')

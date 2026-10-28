@@ -19,7 +19,7 @@ SYSTEM_PROMPT = (
 )
 
 
-def classify_with_deepseek(question: str) -> str:
+def classify_with_llm(question: str) -> str:
     """Send only the current question; return a validated risk level."""
     api_key = os.getenv("DEEPSEEK_API_KEY")
     if not api_key:
@@ -54,11 +54,11 @@ def classify_with_deepseek(question: str) -> str:
     return result["level"]
 
 
-def inspect_input_with_deepseek(question: str) -> InputGuardResult:
+def inspect_input_with_llm(question: str) -> InputGuardResult:
     """Keep the higher risk of rule and model results; fall back to rules."""
     rules = inspect_input(question)
     try:
-        model_level = classify_with_deepseek(question)
+        model_level = classify_with_llm(question)
     except ValueError:
         return InputGuardResult(
             level=rules.level,

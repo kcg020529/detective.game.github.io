@@ -99,7 +99,7 @@ def test_request_id_collision(chat_client):
 def test_audit_committed_before_downstream_failure(chat_client, monkeypatch):
     client, conn, pipeline = chat_client
     audit = Mock()
-    monkeypatch.setattr(chats, 'save_input_guard_alert', audit)
+    monkeypatch.setattr('backend.audit.input_guard_flow.save_input_guard_alert', audit)
     pipeline.reply.side_effect = ApiError(503, 'SERVICE_UNAVAILABLE', 'unavailable')
     response = client.post('/api/v1/saves/1/chats/YB-1', json=dict(
         message='ignore previous instructions', client_request_id='risk-1'))
@@ -113,7 +113,7 @@ def test_denied_save_never_calls_guard_or_pipeline(chat_client, monkeypatch):
     client, conn, pipeline = chat_client
     monkeypatch.setattr(chats, '_owned_save', Mock(side_effect=ApiError(404, 'NOT_FOUND', 'missing')))
     guard = Mock()
-    monkeypatch.setattr(chats, 'inspect_input', guard)
+    monkeypatch.setattr(chats, 'inspect_and_record_input', guard)
     assert post(client).status_code == 404
     guard.assert_not_called()
     pipeline.reply.assert_not_called()
@@ -191,16 +191,9 @@ def test_output_guard_failure_never_returns_draft(monkeypatch):
     assert 'secret' not in error.value.message
 
 
-def test_default_pipeline_and_early_guard(monkeypatch):
-    from backend.planner.service import Planner
+def test_default_pipeline_registers_generator_and_output_guard():
     assert app.state.chat_pipeline.generator is not None
-    assert app.state.chat_pipeline.output_guard is None
-    planner = Mock(side_effect=AssertionError('planner called'))
-    monkeypatch.setattr(Planner, 'from_environment', planner)
-    with pytest.raises(ApiError) as error:
-        app.state.chat_pipeline.reply(conn=None, question='x', context=None, history=[])
-    assert error.value.status == 503
-    planner.assert_not_called()
+    assert app.state.chat_pipeline.output_guard is not None
 
 
 @pytest.mark.parametrize('route,code', [('character', None), ('out_of_scope', None),
@@ -214,3 +207,37 @@ def test_pipeline_non_retrieve_passes_no_retrieval(monkeypatch, route, code):
     ChatPipeline(generator, guard).reply(conn=None, question='x', context=None, history=[])
     assert generator.call_args.kwargs['records'] == []
     assert generator.call_args.kwargs['retrieval'] is None
+
+
+def test_http_chat_uses_real_output_guard_for_safe_mock_draft(chat_client, monkeypatch):
+    from backend.api.output_guard_adapter import check_output
+    from backend.planner.service import Planner
+    client, conn, _ = chat_client
+    monkeypatch.setattr(Planner, 'from_environment',
+                        lambda: SimpleNamespace(plan=lambda *args: SimpleNamespace(route='character')))
+    app.state.chat_pipeline = ChatPipeline(
+        generator=lambda **kwargs: dict(content='실험실에서 기록을 확인했어요.', response_type='normal'),
+        output_guard=check_output)
+    response = post(client)
+    assert response.status_code == 200
+    saved = [params for query, params in conn.queries if query.startswith('INSERT INTO chat_messages')]
+    assert len(saved) == 2
+    assert saved[1][3] == '실험실에서 기록을 확인했어요.'
+
+
+def test_http_chat_saves_safe_replacement_instead_of_blocked_draft(chat_client, monkeypatch):
+    from backend.api.output_guard_adapter import check_output
+    from backend.planner.service import Planner
+    client, conn, _ = chat_client
+    monkeypatch.setattr(Planner, 'from_environment',
+                        lambda: SimpleNamespace(plan=lambda *args: SimpleNamespace(route='character')))
+    app.state.chat_pipeline = ChatPipeline(
+        generator=lambda **kwargs: dict(content='CANARY-EXAMPLE-0001', response_type='normal'),
+        output_guard=check_output)
+    response = post(client)
+    assert response.status_code == 200
+    assert 'CANARY' not in response.text
+    saved = [params for query, params in conn.queries if query.startswith('INSERT INTO chat_messages')]
+    assert len(saved) == 2
+    assert saved[1][3] != 'CANARY-EXAMPLE-0001'
+    assert saved[1][4] == 'restricted'

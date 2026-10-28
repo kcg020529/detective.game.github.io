@@ -20,7 +20,7 @@
 | `save_memos` | `009_save_memos.sql`: Save별 플레이어 메모 1개 (최대 5000자) |
 | `request_log` | `010_request_log.sql`: 같은 요청을 다시 보냈을 때 처음 응답을 돌려주기 위한 기록 (Day 진행 등) |
 | `auth_sessions` | `011_auth_sessions.sql`: 로그인 쿠키 해시·사용자·만료 시각 |
-| `audit_events` | `012_audit_events.sql`: Input Guard 경고의 시각·요청·판정·신호·Save 메타데이터 저장 (H 첫 버전) |
+| `audit_events` | `012_audit_events.sql`: Input·Output Guard의 시각·요청·판정·신호·Save 메타데이터 저장 (H) |
 
 세 테이블의 상세 계약과 공개 범위는 [permissions.md](permissions.md)에 있다. SQL은 파일명 순서로 적용한다. 2026-10-23 격리된 MariaDB 테스트 컨테이너에서 초기 적용을 확인했으나, 모든 제약·적재 결과와 공유 DB 적용은 검증하지 않았다.
 
