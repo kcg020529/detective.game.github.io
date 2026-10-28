@@ -23,7 +23,11 @@ class Retrieval:
 def _memory_text(record):
     if record.get('content') or record.get('summary'):
         parts = [record.get('summary'), record.get('content')]
-        return '\n'.join(part.strip() for part in parts if isinstance(part, str) and part.strip())
+        body = '\n'.join(part.strip() for part in parts if isinstance(part, str) and part.strip())
+        if not body:
+            return ''
+        info = ', '.join(_metadata_parts(record))
+        return f'{body}\n[기록 정보] {info}' if info else body
     return _metadata_line(record)
 
 
@@ -73,7 +77,7 @@ def resolve_used(used, id_map):
     return record_ids, dropped
 
 
-def _metadata_line(record):
+def _metadata_parts(record):
     parts = []
     if record.get('record_type'):
         parts.append(f"기록 유형 {record['record_type']}")
@@ -83,10 +87,16 @@ def _metadata_line(record):
         parts.append(f"{record['test_id']}회차")
     places = [p for p in record.get('location_ids') or [] if isinstance(p, str)]
     if places:
-        parts.append(f"장소 {', '.join(places)}")
+        # 장소는 순서 없는 집합이다(DB가 이름순으로 돌려주고, 배열 순서는 이동 방향이 아님). 방향을 추측하지 않게 알린다.
+        parts.append(f"장소 {', '.join(places)}" + (' (순서 무관)' if len(places) > 1 else ''))
     ais = [a for a in record.get('involved_ai') or [] if isinstance(a, str)]
     if ais:
         parts.append(f"관련 AI {', '.join(ais)}")
+    return parts
+
+
+def _metadata_line(record):
+    parts = _metadata_parts(record)
     return ', '.join(parts) + '.' if parts else ''
 
 
