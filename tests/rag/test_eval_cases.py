@@ -121,7 +121,7 @@ def test_legacy_cases_are_unchanged_and_new_case_counts_are_fixed():
     attack_counts = Counter(case['attack'] for case in cases if case['category'] == 'attack')
     assert attack_counts == {
         'future_day': 24, 'denied_type': 18, 'other_ai_scope': 36, 'impersonation': 24,
-        'dump_all': 48, 'injection_query': 12, 'cross_save': 36, 'bad_plan': 36,
+        'dump_all': 48, 'injection_query': 36, 'cross_save': 36, 'bad_plan': 36,
     }
     assert all('시험' not in case['question'] for case in cases
                if case['category'] not in LEGACY_CATEGORIES)
