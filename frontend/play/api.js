@@ -293,6 +293,13 @@
     return { character_id: characterId, verdict: { hit: characterId === verdictData.culprit_id, culprit_id: verdictData.culprit_id, truth: verdictData.truth, evidence } };
   }
 
+  function validateMockCredentials(username, password) {
+    const id = typeof username === 'string' ? username.trim() : '';
+    const passwordBytes = typeof password === 'string' ? new TextEncoder().encode(password).length : 0;
+    if (!id || [...id].length > 50 || passwordBytes < 8 || passwordBytes > 128) fail('VALIDATION_ERROR');
+    return id;
+  }
+
   const mock = {
     login(username, password) {
       return mockCall(() => {
@@ -303,10 +310,10 @@
     },
     signup(username, password, role) {
       return mockCall(() => {
-        if (!username || !password) fail('VALIDATION_ERROR');
-        if (mockState.users.has(username.trim())) fail('STATE_CONFLICT');
+        const id = validateMockCredentials(username, password);
+        if (mockState.users.has(id)) fail('STATE_CONFLICT');
         if (!roleRank[role]) fail('VALIDATION_ERROR');
-        const user = { user_id: mockState.nextUserId++, username: username.trim(), roles: [role] };
+        const user = { user_id: mockState.nextUserId++, username: id, roles: [role] };
         mockState.users.set(user.username, user);
         mockState.currentUser = user;
         return { user_id: user.user_id, username: user.username, roles: user.roles };

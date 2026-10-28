@@ -1101,6 +1101,19 @@ function setFieldError(input, errorEl, message) {
   input.setAttribute('aria-invalid', message ? 'true' : 'false');
 }
 
+function signupIdError(id) {
+  if (!id) return '아이디를 입력하세요.';
+  return [...id].length <= 50 ? '' : '아이디는 1~50자로 입력해 주세요.';
+}
+
+function signupPasswordError(password) {
+  if (!password) return '비밀번호를 입력하세요.';
+  const bytes = new TextEncoder().encode(password).length;
+  if (bytes < 8) return '비밀번호는 8자 이상 입력해 주세요.';
+  if (bytes > 128) return '비밀번호가 너무 깁니다. 128바이트(영문 기준 128자) 이하로 입력해 주세요.';
+  return '';
+}
+
 // 오른쪽 연구소 장면은 그대로 두고 왼쪽만 로그인 폼으로 바꿈
 startButton.addEventListener('click', showLogin);
 
@@ -1127,17 +1140,25 @@ loginView.addEventListener('submit', async (event) => {
 
   const id = idInput.value.trim();
   const pw = pwInput.value;
-  setFieldError(idInput, idError, id ? '' : '아이디를 입력하세요.');
-  setFieldError(pwInput, pwError, pw ? '' : '비밀번호를 입력하세요.');
-  if (!id) return idInput.focus();
-  if (!pw) return pwInput.focus();
   if (signupMode) {
-    setFieldError(confirmInput, confirmError, confirmInput.value === pw ? '' : '비밀번호가 일치하지 않습니다.');
-    if (confirmInput.value !== pw) return confirmInput.focus();
+    const idMessage = signupIdError(id);
+    const passwordMessage = signupPasswordError(pw);
+    const confirmMessage = pw && confirmInput.value !== pw ? '비밀번호가 일치하지 않습니다.' : '';
+    setFieldError(idInput, idError, idMessage);
+    setFieldError(pwInput, pwError, passwordMessage);
+    setFieldError(confirmInput, confirmError, confirmMessage);
+    if (idMessage) return idInput.focus();
+    if (passwordMessage) return pwInput.focus();
+    if (confirmMessage) return confirmInput.focus();
     signupPendingId = id;
     showRoleSelect('signup');
     return;
   }
+
+  setFieldError(idInput, idError, id ? '' : '아이디를 입력하세요.');
+  setFieldError(pwInput, pwError, pw ? '' : '비밀번호를 입력하세요.');
+  if (!id) return idInput.focus();
+  if (!pw) return pwInput.focus();
 
   loginSubmit.setAttribute('aria-busy', 'true');
   loginSubmit.disabled = true;
@@ -1243,8 +1264,20 @@ roleView.addEventListener('submit', async (event) => {
       showSignup();
       setFieldError(idInput, idError, '이미 있는 아이디입니다.');
     } else if (error.status === 422 || error.code === 'VALIDATION_ERROR' || error.code === 'INVALID_REQUEST') {
-      showSignup();
-      setFieldError(idInput, idError, error.message);
+      const message = error.message || window.Api.messageFor(error.code);
+      if (message.includes('비밀번호')) {
+        showSignup();
+        setFieldError(idInput, idError, '');
+        setFieldError(confirmInput, confirmError, '');
+        setFieldError(pwInput, pwError, signupPasswordError(pwInput.value) || '비밀번호를 확인해 주세요.');
+        pwInput.focus();
+      } else if (message.includes('아이디')) {
+        showSignup();
+        setFieldError(pwInput, pwError, '');
+        setFieldError(confirmInput, confirmError, '');
+        setFieldError(idInput, idError, signupIdError(signupPendingId));
+        idInput.focus();
+      } else roleError.textContent = message;
     } else if (error.code === 'AUTH_REQUIRED') expireSession();
     else roleError.textContent = error.message || window.Api.messageFor(error.code);
   } finally {
