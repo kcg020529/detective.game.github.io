@@ -1110,7 +1110,7 @@ function signupPasswordError(password) {
   if (!password) return '비밀번호를 입력하세요.';
   const bytes = new TextEncoder().encode(password).length;
   if (bytes < 8) return '비밀번호는 8자 이상 입력해 주세요.';
-  if (bytes > 128) return '비밀번호가 너무 깁니다. 128바이트(영문 기준 128자) 이하로 입력해 주세요.';
+  if (bytes > 128) return '비밀번호가 너무 깁니다. 영문 128자(한글은 42자) 이하로 입력해 주세요.';
   return '';
 }
 
