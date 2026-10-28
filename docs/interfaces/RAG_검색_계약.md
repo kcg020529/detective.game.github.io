@@ -146,7 +146,9 @@ API 바깥 오류 형식으로 바꾸는 것은 채팅 API(I)에서 한다. 오�
 
 비었다는 사실만으로 접근 불가(`restricted`)라고 단정하지 않는다. 신호를 어떤 답변 유형·모드로 바꿀지는 I·D·F가 정한다.
 
-**D의 memory.** `service.retrieve(conn, ..., plan)`은 `Retrieval(records, memory, signal)`을 돌려준다. `memory`는 D의 프롬프트가 받는 `[{"id": 기록 ID, "text": 글}]`이다. 글은 F가 허용한 필드만 쓴다.
+**D의 memory.** `service.retrieve(conn, ..., plan)`은 `Retrieval(records, memory, signal, id_map)`을 돌려준다. `memory`는 D의 프롬프트가 받는 `[{"id": "m1", "text": 글}, ...]`이고, 글은 F가 허용한 필드만 쓴다. `id`는 실제 기록 ID가 아니라 검색 순위대로 매긴 임시 번호(`m1, m2…`)다. 모델이 답변에 기록 ID를 그대로 말하는 것을 막고 D의 `used` 검사(`m<번호>`)와 맞추기 위해서다. 번호와 기록 ID의 대응은 `id_map`(`{"m1": "T03-action-002", ...}`)에 있고 D에는 보내지 않는다. 글을 만들 수 없는 기록은 번호를 차지하지 않는다. `records`는 그대로 실제 기록 ID를 가진다.
+
+**`used` 확인.** D가 돌려준 `used`는 `resolve_used(used, id_map)`로 거른다. 넘긴 번호 안에 있는 것만 기록 ID로 되돌리고(순서 유지, 중복 제거), 나머지(모르는 번호, 실제 기록 ID, 문자열이 아닌 값)는 버린 목록으로 따로 돌려준다. 입력이 이상해도 예외를 내지 않는다. `used`는 "어느 기록을 썼나" 표시일 뿐 권한 근거가 아니다.
 
 | 공개 수준 | text |
 |---|---|
@@ -156,7 +158,7 @@ API 바깥 오류 형식으로 바꾸는 것은 채팅 API(I)에서 한다. 오�
 
 없는 값은 지어내지 않고, 글을 만들 수 없는 기록은 memory에서 뺀다. 이 변환이 권한을 넓히지는 않는다.
 
-**남은 일.** I: 파이프라인이 `retrieve`를 쓰도록 바꾸기(지금은 `search_records`를 직접 부르며 동작에는 문제없음). D: memory를 `render_actor_prompt`에 연결. signal과 D의 `restricted`·`unknown` 모드의 대응, memory의 `id`를 `used`와 어떻게 이을지는 I·D·F와 협의한다.
+**남은 일.** I: 파이프라인이 `retrieve`를 쓰도록 바꾸기(지금은 `search_records`를 직접 부르며 동작에는 문제없음). D: memory를 `render_actor_prompt`에 연결하고, D의 `used`는 위 `resolve_used`로 거른다. signal과 D의 `restricted`·`unknown` 모드의 대응은 I·D·F와 협의한다.
 
 ## 10. 검색 품질 (2026-10-27)
 

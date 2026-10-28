@@ -107,3 +107,17 @@
 4. 남은 것
    - 용범이 합친 Action과 단순 경유 표현을 정리한 뒤 평가 질문을 다시 만들어 이동 정답 규칙(마지막 장소 = 도착지)이 맞는지 확인
    - 공통 규칙 검색 방식은 보류
+
+# E06 - D에 넘기는 memory 번호(m1…)와 used 확인
+
+1. `backend/rag/service.py`
+   - `build_memory(records)` → `(memory, id_map)`: 글 만드는 규칙은 `to_memory`와 같고 id만 `m1, m2…`. 쓸 수 없는 기록은 번호를 차지하지 않음
+   - `Retrieval`에 `id_map` 추가, `retrieve()`는 번호가 매겨진 memory를 돌려줌. `records`와 `to_memory`는 그대로
+   - `resolve_used(used, id_map)` → `(기록 ID 목록, 버린 값)`: 넘긴 번호만 되돌리고 중복·순서 정리, 이상한 입력도 예외 없음, 실제 기록 ID는 유효하지 않음
+2. 확인
+   - `pytest tests/rag tests/test_policy_engine.py`: 88개 통과, 5개 건너뜀
+   - 실제 로컬 DB·Qdrant로 임시 Save(대학원생, Day 3) 검색: `m1~m4`가 `T03-action-002, 008, 005, 007`로 되돌아가고, memory의 id·글에 실제 기록 ID가 없음. `used = [m2, m1, m2, m99, 실제 기록 ID]` → 기록 ID 2개와 버린 값 2개. 임시 사용자 남지 않음
+   - 대학원생이 Thought만 묻는 경우의 신호는 `no_match`다(허용 유형에 없어 걸러짐). 권한 불가(`restricted`)로 볼지는 용범(F)·형주(D)와 정할 일
+3. 남은 것
+   - 연결: 파이프라인에서 `retrieve`와 `resolve_used`를 부르는 것(용범·선영), D mode 규칙
+   - metadata 한 줄 기록 문장 보강은 형주의 실제 호출 결과를 본 뒤

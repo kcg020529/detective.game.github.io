@@ -6,7 +6,7 @@
 """
 
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from backend.rag.embedder import FastEmbedder
 from backend.rag.search import search_with_signal
@@ -17,6 +17,14 @@ class Retrieval:
     records: list    # F가 최종 허용한 기록 (search_records와 같은 값)
     memory: list     # D에 넘길 [{'id', 'text'}]
     signal: str      # search.SIGNAL_OK / SIGNAL_NO_ALLOWED / SIGNAL_NO_MATCH
+    id_map: dict = field(default_factory=dict)
+
+
+def _memory_text(record):
+    if record.get('content') or record.get('summary'):
+        parts = [record.get('summary'), record.get('content')]
+        return '\n'.join(part.strip() for part in parts if isinstance(part, str) and part.strip())
+    return _metadata_line(record)
 
 
 def to_memory(records):
@@ -30,14 +38,39 @@ def to_memory(records):
         record_id = record.get('record_id')
         if not isinstance(record_id, str) or not record_id:
             continue
-        if record.get('content') or record.get('summary'):
-            parts = [record.get('summary'), record.get('content')]
-            text = '\n'.join(part.strip() for part in parts if isinstance(part, str) and part.strip())
-        else:
-            text = _metadata_line(record)
+        text = _memory_text(record)
         if text:
             memory.append({'id': record_id, 'text': text})
     return memory
+
+
+def build_memory(records):
+    memory, id_map = [], {}
+    for record in records:
+        record_id = record.get('record_id')
+        if not isinstance(record_id, str) or not record_id:
+            continue
+        text = _memory_text(record)
+        if text:
+            memory_id = f'm{len(memory) + 1}'
+            memory.append({'id': memory_id, 'text': text})
+            id_map[memory_id] = record_id
+    return memory, id_map
+
+
+def resolve_used(used, id_map):
+    if not isinstance(used, (list, tuple)):
+        return ([], []) if used is None else ([], [used])
+    record_ids, dropped, seen = [], [], set()
+    for memory_id in used:
+        if isinstance(memory_id, str) and memory_id in id_map:
+            record_id = id_map[memory_id]
+            if record_id not in seen:
+                record_ids.append(record_id)
+                seen.add(record_id)
+        else:
+            dropped.append(memory_id)
+    return record_ids, dropped
 
 
 def _metadata_line(record):
@@ -71,4 +104,5 @@ def retrieve(conn, *, user_id, save_id, character_id, dataset, plan, qdrant=None
     finally:
         if own_client:
             qdrant.close()
-    return Retrieval(records, to_memory(records), signal)
+    memory, id_map = build_memory(records)
+    return Retrieval(records, memory, signal, id_map)
