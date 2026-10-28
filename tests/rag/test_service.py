@@ -3,7 +3,7 @@ import types
 
 from backend.rag import embedder as embedder_module
 from backend.rag import search
-from backend.rag.service import Retrieval, retrieve, to_memory
+from backend.rag.service import Retrieval, build_memory, resolve_used, retrieve, to_memory
 
 from test_rag import FakeConnection, FakeEmbedder, add_point, qdrant, run_search  # noqa: F401 (qdrant는 fixture)
 
@@ -54,6 +54,31 @@ def test_memory_skips_unusable_records_and_invents_nothing():
     assert to_memory([]) == []
 
 
+def test_build_memory_uses_consecutive_opaque_ids_and_preserves_text_and_order():
+    records = [
+        {'record_id': 'first', 'summary': 'one'},
+        {'record_type': 'Action'},
+        {'record_id': 'no-text'},
+        {'record_id': 'third', 'content': 'three'},
+    ]
+    memory, id_map = build_memory(records)
+    assert memory == [{'id': 'm1', 'text': 'one'}, {'id': 'm2', 'text': 'three'}]
+    assert id_map == {'m1': 'first', 'm2': 'third'}
+    assert [item['text'] for item in memory] == [item['text'] for item in to_memory(records)]
+    memory_ids = {item['id'] for item in memory}
+    assert all(record['record_id'] not in memory_ids for record in records
+               if isinstance(record.get('record_id'), str))
+
+
+def test_resolve_used_maps_valid_ids_and_drops_invalid_values():
+    mapping = {'m1': 'T01-action-004', 'm2': 'T01-action-005'}
+    assert resolve_used(['m2', 'm1', 'm2', 'm99', 'T01-action-004', None, 3], mapping) == (
+        ['T01-action-005', 'T01-action-004'], ['m99', 'T01-action-004', None, 3])
+    assert resolve_used(None, mapping) == ([], [])
+    assert resolve_used('m1', mapping) == ([], ['m1'])
+    assert resolve_used([], mapping) == ([], [])
+
+
 def test_signal_no_allowed_records_does_not_touch_qdrant(monkeypatch, qdrant):
     monkeypatch.setattr(search, 'PolicyRepository', fake_repository([]))
     assert run_signal(qdrant) == ([], search.SIGNAL_NO_ALLOWED)
@@ -93,9 +118,28 @@ def test_retrieve_bundles_records_memory_and_signal(monkeypatch, qdrant):
     got = retrieve(FakeConnection(), user_id=1, save_id=1, character_id='YB-2', dataset='game-data',
                    plan={'query': 'q'}, qdrant=qdrant, embedder=FakeEmbedder())
     assert isinstance(got, Retrieval) and got.signal == search.SIGNAL_OK
-    assert got.memory == [{'id': 'T01-action-001', 'text': '안전한 요약'}]
+    assert [item['id'] for item in got.memory] == ['m1']
+    assert got.id_map == {'m1': 'T01-action-001'}
+    assert [record['record_id'] for record in got.records] == ['T01-action-001']
+    assert got.memory == [{'id': 'm1', 'text': '안전한 요약'}]
     # 밖에서 받은 qdrant는 닫지 않음 (호출한 쪽 것)
     assert qdrant.collection_exists(search.COLLECTIONS['game-data'])
+
+
+def test_retrieve_no_allowed_records_has_empty_memory_and_map(monkeypatch, qdrant):
+    monkeypatch.setattr(search, 'PolicyRepository', fake_repository([]))
+    got = retrieve(FakeConnection(), user_id=1, save_id=1, character_id='YB-2', dataset='game-data',
+                   plan={'query': 'q'}, qdrant=qdrant, embedder=FakeEmbedder())
+    assert got.signal == search.SIGNAL_NO_ALLOWED
+    assert got.memory == [] and got.id_map == {}
+
+
+def test_retrieve_no_match_has_empty_memory_and_map(monkeypatch, qdrant):
+    monkeypatch.setattr(search, 'PolicyRepository', fake_repository([('T01-action-001', 'metadata')]))
+    got = retrieve(FakeConnection(), user_id=1, save_id=1, character_id='YB-2', dataset='game-data',
+                   plan={'query': 'q'}, qdrant=qdrant, embedder=FakeEmbedder())
+    assert got.signal == search.SIGNAL_NO_MATCH
+    assert got.memory == [] and got.id_map == {}
 
 
 def test_embedder_model_is_loaded_once_across_instances(monkeypatch):
