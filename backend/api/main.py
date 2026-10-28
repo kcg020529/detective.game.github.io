@@ -9,6 +9,8 @@ from fastapi.responses import JSONResponse
 from pymysql.err import InterfaceError, OperationalError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+from backend.api.character_adapter import make_generator
+from backend.api.chat_pipeline import ChatPipeline
 from backend.api.chats import router as chats_router
 from backend.api.auth import router as auth_router
 from backend.api.errors import ApiError
@@ -27,6 +29,8 @@ ALLOWED_ORIGINS = (
 )
 
 app = FastAPI()
+# 출력 가드(선영)가 병합되면 여기에 output_guard를 넣는다. 그 전까지는 Planner 호출 전에 503을 돌려준다.
+app.state.chat_pipeline = ChatPipeline(generator=make_generator())
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,

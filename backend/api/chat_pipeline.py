@@ -17,20 +17,22 @@ class ChatPipeline:
         try:
             plan = Planner.from_environment().plan(question, context, history)
             records = []
+            retrieval = None
             if plan.route == 'retrieve':
                 from qdrant_client import QdrantClient
                 from backend.rag.embedder import FastEmbedder
-                from backend.rag.search import search_records
+                from backend.rag.service import retrieve
                 qdrant = QdrantClient(url=os.getenv('QDRANT_URL', 'http://127.0.0.1:6333'))
                 try:
-                    records = search_records(
+                    retrieval = retrieve(
                         conn, user_id=context.user_id, save_id=context.save_id,
                         character_id=context.character_id, dataset=context.dataset,
                         plan=plan.search.to_rag_request(), qdrant=qdrant, embedder=FastEmbedder())
                 finally:
                     qdrant.close()
+                records = retrieval.records
             draft = self.generator(question=question, context=context, history=history,
-                                   plan=plan, records=records)
+                                   plan=plan, records=records, retrieval=retrieval)
             # G-2 returns the approved/replaced final answer, never an unchecked draft.
             final = self.output_guard(draft=draft, context=context, records=records)
             if (not isinstance(final, dict) or set(final) != {'content', 'response_type'}
