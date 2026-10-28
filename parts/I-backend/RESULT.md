@@ -67,3 +67,16 @@
 4. Save 행 잠금으로 동일 Save 요청을 직렬화하고 질문·AI 답변·요청 응답 캐시를 같은 트랜잭션에 저장함. 재전송은 기존 응답을 반환하고 다른 질문·AI·Day endpoint의 요청 ID 충돌은 409임. 기존 advance-day도 endpoint 충돌을 검사하도록 보완함. DB 의존성을 function scope로 통일하고 FastAPI 최소 버전을 0.121로 높여 commit 실패 후 성공 응답이 나가던 문제를 수정함.
 5. WSL `python -m pytest tests -q -rs`: 105 passed, 22 skipped, 경고 1건. 추가 `tests/test_chat_post.py` 12개는 서버 context·쌍 저장·중복·충돌·권한 거부·경고 commit 후 장애·입력 검증·미연결 503·commit 실패·검색 결과 전달·출력 검사 실패를 검증함. DB 없는 모의 연결/어댑터 검사이며 실제 MariaDB 동시성·감사 영속성·롤백이나 LLM/Qdrant 실행 증거는 아님. skip은 DB 연결 불가·_test DB 미설정·모델 캐시 없음임. 실제 DB 및 D/G-2·프론트 전체 검증은 미수행임.
 6. `docs/interfaces/채팅_POST_API.md`에 요청·응답·실패·감사 트랜잭션·연결 제안·검증 한계를 작성함. D/G-2 인터페이스 담당자 합의, 긴 모델 호출 동안 Save 잠금 운영 검토는 후속 작업임.
+
+# I05 - 캐릭터 AI 연결(생성기)과 파이프라인 정리 — 찬규
+
+1. `backend/api/character_adapter.py` `make_generator()`: 경로·조회 상태별로 D 모드와 응답 유형을 정함(표는 `docs/interfaces/채팅_POST_API.md` "현재 연결 상태"). 반환은 `{"content","response_type"}` 두 키
+2. `backend/api/chat_pipeline.py`: retrieve 경로에서 `backend.rag.service.retrieve` 사용, 생성기에 `records`와 `retrieval` 전달. 출력 가드 호출·최종 검증·503 처리는 그대로
+3. `backend/api/main.py`: 서버 시작 때 `ChatPipeline(generator=make_generator())` 등록. 출력 가드가 없으므로 지금은 Planner 호출 전에 503
+4. 확인
+   - `pytest tests`: 162개 통과, 21개 건너뜀(생성기 단위 시험·파이프라인 시험 추가)
+   - 로컬에서 실제 Planner·DeepSeek·RAG로 4질문 확인(출력 가드 자리에 시험용 통과 함수, 임시 Save는 지움)
+   - 코드 작성 중 한국어 문자열이 `?`로 깨진 것(사용자에게 보이는 clarify 문구, 화자 이름 `조사자`)을 찾아 고침. 시험이 깨진 문자열끼리 비교해 통과하던 것도 실제 문구로 바꿈
+5. 남은 것
+   - 출력 가드 연결(선영 PR 병합 뒤 `main.py` 한 줄), 마스킹은 partial·전체 차단은 안전한 안내로 대체하는 대응
+   - `out_of_scope` 유형, clarify를 D가 맡을지, 권한 불가(`no_allowed_records`)를 restricted로 볼지는 팀 확인
