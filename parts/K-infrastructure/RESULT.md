@@ -43,4 +43,10 @@
    - Grafana(O)·채팅 전송 API는 생기면 추가
    - Kubernetes(K03)·AWS(K04)
 
+# K03 - 채팅용 DeepSeek 키를 Compose에 전달
+
+1. `docker-compose.yml` `api`: `DEEPSEEK_API_KEY`, `DEEPSEEK_MODEL`, `DEEPSEEK_PLANNER_API_KEY`, `DEEPSEEK_PLANNER_MODEL`(기본 deepseek-flash)을 `.env`에서 전달. 기본값은 빈 값
+2. `.env.example`: 주석이던 두 키를 빈 값으로 살리고 설명 한 줄. 실제 값은 `.env`에만
+3. README: 키를 채워야 채팅이 동작한다는 안내, 예전 이미지는 Jinja2·PyYAML이 없어 다시 빌드 필요
+
 2026-10-26 O01에서 별도 `docker-compose.grafana.yml`로 Grafana 로컬 선택 실행을 추가했다. 기본 Compose의 FastAPI·프론트엔드 구성은 K02에 기록되어 있다. Grafana와 앱 전체의 통합 실행 검증은 별도 확인이 필요하다. Kubernetes·AWS 배포는 미구현이다.

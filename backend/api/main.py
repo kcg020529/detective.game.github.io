@@ -9,8 +9,8 @@ from fastapi.responses import JSONResponse
 from pymysql.err import InterfaceError, OperationalError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from backend.api.chats import router as chats_router
 from backend.api.chat_pipeline import ChatPipeline
+from backend.api.chats import router as chats_router
 from backend.api.output_guard_adapter import check_output
 from backend.api.auth import router as auth_router
 from backend.api.errors import ApiError

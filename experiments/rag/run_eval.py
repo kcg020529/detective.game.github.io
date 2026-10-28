@@ -18,9 +18,10 @@ sys.path.insert(0, str(ROOT))
 from qdrant_client import QdrantClient
 
 from backend.api.db import connect_db
-from backend.policy.repository import PolicyRepository
+from backend.policy.repository import PolicyDenied, PolicyRepository
 from backend.rag.chunking import CHUNK_MAX_TOKENS, CHUNK_OVERLAP_TOKENS
 from backend.rag.embedder import FastEmbedder, MODEL_NAME
+from backend.rag.errors import RagRequestError
 from backend.rag.index import load_env
 from backend.rag.service import retrieve
 from experiments.rag.build_cases import OUTPUT as CASES_FILE, load_records
@@ -28,6 +29,11 @@ from experiments.rag.build_cases import OUTPUT as CASES_FILE, load_records
 RESULTS = ROOT / 'experiments' / 'rag' / 'results'
 BASE_FIELDS = {'record_id', 'record_type', 'test_id', 'day', 'location_ids', 'involved_ai'}
 VARIANT_ORDER = {'filtered': 0, 'broad': 1, 'plain': 2}
+
+
+def _metric_sort_key(item):
+    category, role, variant = item[0]
+    return category, role, VARIANT_ORDER.get(variant, len(VARIANT_ORDER))
 
 
 def _git(*args):
@@ -103,7 +109,115 @@ def _violations(case, returned, allowed_levels, records_by_id):
         if min_day is not None and record.get('day', 0) >= min_day:
             issues.append({'case_id': case['id'], 'record_id': record_id,
                            'kind': 'forbidden_future_day', 'day': record.get('day'), 'min_day': min_day})
+    returned_ids = {record.get('record_id') for record in returned}
+    for record_id in case.get('expect_none_ids', []):
+        if record_id in returned_ids:
+            issues.append({'case_id': case['id'], 'record_id': record_id, 'kind': 'forbidden_record_id'})
     return issues
+
+
+def _normalized_prefix(value):
+    return ' '.join(value.casefold().split())[:25] if isinstance(value, str) else ''
+
+
+def _memory_leaks(result, allowed_levels, records_by_id):
+    if result is None:
+        return 0, 0
+    entries = {item['id']: item['text'] for item in result.memory}
+    leaks = checked = 0
+    for memory_id, text in entries.items():
+        record_id = result.id_map.get(memory_id)
+        level = allowed_levels.get(record_id)
+        if level not in ('metadata', 'summary'):
+            continue
+        checked += 1
+        source = records_by_id.get(record_id, {})
+        forbidden = [source.get('content')]
+        if level == 'metadata':
+            forbidden.append(source.get('summary'))
+        normalized = ' '.join(text.casefold().split())
+        if any((sample := _normalized_prefix(value)) and sample in normalized for value in forbidden):
+            leaks += 1
+    return leaks, checked
+
+
+def _retrieve_attack_case(case, connection, *, user_id, save_id, foreign_save_id, qdrant, embedder):
+    is_cross_save = case.get('attack') == 'cross_save'
+    try:
+        result = retrieve(connection, user_id=user_id,
+                          save_id=foreign_save_id if is_cross_save else save_id,
+                          character_id=case['character_id'], dataset='game-data', plan=case['plan'],
+                          qdrant=qdrant, embedder=embedder)
+    except PolicyDenied as exc:
+        expected = case.get('expect_error') == 'PolicyDenied' and is_cross_save
+        return None, expected, None if expected else {'type': type(exc).__name__, 'message': str(exc)}
+    except RagRequestError as exc:
+        expected = case.get('expect_error') == 'RagRequestError'
+        return None, expected, None if expected else {'type': type(exc).__name__, 'message': str(exc)}
+    except Exception as exc:
+        return None, False, {'type': type(exc).__name__, 'message': str(exc)}
+    if is_cross_save:
+        rejected = not result.records
+        return result, rejected, None if rejected else {'type': 'unexpected_accept'}
+    if case.get('expect_error'):
+        return result, False, {'type': 'unexpected_accept'}
+    return result, False, None
+
+
+def _security_report(rows, violations):
+    groups = defaultdict(lambda: {'n': 0, 'returned_total': 0, 'violations': 0,
+                                  'memory_leaks': 0, 'memory_entries': 0,
+                                  'rejected': 0, 'rejected_expected': 0})
+    attack_ids = {row['id'] for row in rows if row.get('attack')}
+    issue_counts = defaultdict(int)
+    for issue in violations:
+        if issue.get('case_id') in attack_ids:
+            issue_counts[issue['case_id']] += 1
+    for row in rows:
+        if not row.get('attack'):
+            continue
+        item = groups[(row['attack'], row['role'])]
+        item['n'] += 1
+        item['returned_total'] += row.get('returned_total', len(row.get('returned_ids', [])))
+        item['violations'] += issue_counts[row['id']]
+        item['memory_leaks'] += row.get('memory_leaks', 0)
+        item['memory_entries'] += row.get('memory_entries', 0)
+        item['rejected'] += int(bool(row.get('rejected')))
+        item['rejected_expected'] += int(bool(row.get('expect_error')))
+    by_attack_role = []
+    for (attack, role), values in sorted(groups.items()):
+        by_attack_role.append({
+            'attack': attack, 'role': role, **values,
+            'unauthorized_retrieval_rate': (values['violations'] / values['returned_total']
+                                             if values['returned_total'] else 0.0),
+            'context_delivery_rate': (values['memory_leaks'] / values['memory_entries']
+                                      if values['memory_entries'] else 0.0),
+        })
+    totals = {key: sum(item[key] for item in groups.values())
+              for key in ('n', 'returned_total', 'violations', 'memory_leaks', 'memory_entries',
+                          'rejected', 'rejected_expected')}
+    return {
+        'by_attack_role': by_attack_role, **totals,
+        'unauthorized_retrieval_rate': (totals['violations'] / totals['returned_total']
+                                        if totals['returned_total'] else 0.0),
+        'context_delivery_rate': (totals['memory_leaks'] / totals['memory_entries']
+                                  if totals['memory_entries'] else 0.0),
+        'rejected_ok': totals['rejected'], 'rejected_expected': totals['rejected_expected'],
+    }
+
+
+def _print_security_table(security):
+    print('security attacks')
+    # 머리글 이름과 데이터 키가 다른 열만 짝을 지어 둔다(returned ← returned_total)
+    columns = (('attack', 'attack'), ('role', 'role'), ('n', 'n'), ('returned', 'returned_total'),
+               ('violations', 'violations'), ('memory_leaks', 'memory_leaks'), ('rejected', 'rejected'))
+    headers = tuple(label for label, _ in columns)
+    print(' | '.join(headers))
+    print('-+-'.join('-' * len(value) for value in headers))
+    for row in security['by_attack_role']:
+        print(' | '.join(str(row[key]) for _, key in columns))
+    print(f"unauthorized retrieval rate={security['unauthorized_retrieval_rate']:.6f}; "
+          f"Context delivery rate={security['context_delivery_rate']:.6f}")
 
 
 def _metrics(rows):
@@ -128,7 +242,7 @@ def _print_table(rows):
     table_rows = [('overall', 'all', 'all', _metrics(rows))]
     table_rows.extend((category, role, variant, _metrics(group))
                       for (category, role, variant), group in sorted(
-                          groups.items(), key=lambda item: (item[0][0], item[0][1], VARIANT_ORDER[item[0][2]])))
+                          groups.items(), key=_metric_sort_key))
     headers = ('category', 'role', 'variant', 'hit@1', 'hit@3', 'hit@5', 'MRR', 'n', 'unans', 'avg ms')
     print(' | '.join(headers))
     print('-+-'.join('-' * len(value) for value in headers))
@@ -141,26 +255,73 @@ def _print_table(rows):
         print(' | '.join(values))
 
 
-def build_report(rows, violations, leftovers, cases, name, qdrant_url, text_mode):
+def _extra_metrics(rows):
+    rows_by_id = {row['id']: row for row in rows}
+    extra = []
+    for role in sorted({row['role'] for row in rows}):
+        role_rows = [row for row in rows if row['role'] == role]
+        twins = [row for row in role_rows if row['category'] == 'twin' and row['gold_visible']]
+        twin_confusions = [row for row in twins if row['rank_first_gold'] != 1 and row.get('top_summary')
+                           and row['top_summary'] in row.get('gold_summaries', [])]
+        mixed = [row for row in role_rows if row['category'] == 'mixed_type' and row['gold_visible']]
+        type_confusions = [row for row in mixed if row.get('top_record_type')
+                           and row['top_record_type'] not in row.get('gold_record_types', [])]
+        noisy_drops = []
+        for row in role_rows:
+            if row['category'] != 'noisy' or not row.get('clean_id') or not row['gold_visible']:
+                continue
+            clean = rows_by_id.get(row['clean_id'])
+            if clean is None or not clean['gold_visible']:
+                continue
+            noisy_hit = row['rank_first_gold'] is not None and row['rank_first_gold'] <= 5
+            clean_hit = clean['rank_first_gold'] is not None and clean['rank_first_gold'] <= 5
+            noisy_drops.append(int(noisy_hit) - int(clean_hit))
+        offtopic = [row for row in role_rows if row['category'] == 'offtopic']
+        extra.append({
+            'role': role,
+            'twin_confusion@1': round(len(twin_confusions) / len(twins), 4) if twins else None,
+            'type_confusion@1': round(len(type_confusions) / len(mixed), 4) if mixed else None,
+            'noise_drop': round(sum(noisy_drops) / len(noisy_drops), 4) if noisy_drops else None,
+            'nonempty_rate': round(sum(bool(row['returned_ids']) for row in offtopic) / len(offtopic), 4)
+            if offtopic else None,
+        })
+    return extra
+
+
+def _print_extra_table(extra):
+    print('extra metrics')
+    headers = ('role', 'twin_confusion@1', 'type_confusion@1', 'noise_drop', 'nonempty_rate')
+    print(' | '.join(headers))
+    print('-+-'.join('-' * len(value) for value in headers))
+    for row in extra:
+        print(' | '.join(str(row[key]) if row[key] is not None else '—' for key in headers))
+
+
+def build_report(rows, violations, leftovers, cases, name, config):
     category_counts = defaultdict(lambda: {'answerable': 0, 'unanswerable': 0})
     for row in rows:
         bucket = category_counts[row['category']]
         bucket['answerable' if row['gold_visible'] else 'unanswerable'] += 1
     anomalies = [category for category, count in sorted(category_counts.items())
-                 if count['answerable'] == 0 and category != 'guard']
+                 if count['answerable'] == 0 and category not in ('guard', 'offtopic', 'attack')]
     metrics = defaultdict(list)
     for row in rows:
         metrics[(row['category'], row['role'], row['variant'])].append(row)
+    internal_fields = {'top_summary', 'gold_summaries', 'top_record_type', 'gold_record_types'}
+    extra = _extra_metrics(rows)
     return {
-        'run_name': name, 'config': _config(qdrant_url, text_mode),
+        'run_name': name, 'config': config,
         'case_count': len(cases), 'base_case_counts': {
             category: len({case['question'] for case in cases if case['category'] == category})
             for category in sorted({case['category'] for case in cases})},
         'overall': _metrics(rows),
         'metrics': [{'category': category, 'role': role, 'variant': variant, **_metrics(group)}
                     for (category, role, variant), group in sorted(
-                        metrics.items(), key=lambda item: (item[0][0], item[0][1], VARIANT_ORDER[item[0][2]]))],
-        'cases': rows, 'acl_violations': violations, 'leftover_eval_users': leftovers,
+                        metrics.items(), key=_metric_sort_key)],
+        'cases': [{key: value for key, value in row.items() if key not in internal_fields} for row in rows],
+        'acl_violations': violations, 'leftover_eval_users': leftovers,
+        'security': _security_report(rows, violations),
+        'extra': extra,
         'anomalies': anomalies,
     }
 
@@ -184,6 +345,13 @@ def finish_report(report, output):
     print(f"ACL violations={len(report['acl_violations'])}; "
           f"leftover rag_eval users={len(report['leftover_eval_users'])}; "
           f"unanswerable-only categories={report['anomalies']}")
+    security = report.get('security') or _security_report([], [])
+    security_violations = security.get('violations', 0)
+    memory_leaks = security.get('memory_leaks', 0)
+    if security_violations or memory_leaks or report.get('acl_violations'):
+        status = 1
+    print(f"SECURITY: violations={security_violations} memory_leaks={memory_leaks} "
+          f"rejected_ok={security.get('rejected_ok', 0)}/{security.get('rejected_expected', 0)}")
     return status
 
 
@@ -214,18 +382,39 @@ def run(name='baseline'):
         for (role, day), group in sorted(grouped_cases.items()):
             username, user_id, save_id = _create_save(connection, role, day, name)
             users.append((username, user_id))
+            foreign_save_id = None
+            if any(case.get('attack') == 'cross_save' for case in group):
+                other_username, other_user_id, foreign_save_id = _create_save(
+                    connection, role, day, f'{name}_cross')
+                users.append((other_username, other_user_id))
             for case in sorted(group, key=lambda item: item['id']):
-                scope = PolicyRepository(connection).search_scope(
-                    user_id=user_id, save_id=save_id, character_id=case['character_id'], dataset='game-data')
-                allowed_levels = dict(scope.disclosures)
                 started = time.perf_counter()
-                result = retrieve(connection, user_id=user_id, save_id=save_id,
-                                  character_id=case['character_id'], dataset='game-data', plan=case['plan'],
-                                  qdrant=qdrant, embedder=embedder)
+                if case['category'] == 'attack':
+                    if case['attack'] == 'cross_save':
+                        allowed_levels = {}
+                    else:
+                        scope = PolicyRepository(connection).search_scope(
+                            user_id=user_id, save_id=save_id, character_id=case['character_id'], dataset='game-data')
+                        allowed_levels = dict(scope.disclosures)
+                    result, rejected, case_error = _retrieve_attack_case(
+                        case, connection, user_id=user_id, save_id=save_id,
+                        foreign_save_id=foreign_save_id, qdrant=qdrant, embedder=embedder)
+                    if case.get('expect_error') and not rejected:
+                        violations.append({'case_id': case['id'], 'kind': 'expected_error_not_rejected',
+                                           'expected': case['expect_error']})
+                else:
+                    scope = PolicyRepository(connection).search_scope(
+                        user_id=user_id, save_id=save_id, character_id=case['character_id'], dataset='game-data')
+                    allowed_levels = dict(scope.disclosures)
+                    result = retrieve(connection, user_id=user_id, save_id=save_id,
+                                      character_id=case['character_id'], dataset='game-data', plan=case['plan'],
+                                      qdrant=qdrant, embedder=embedder)
+                    rejected, case_error = False, None
                 latency_ms = (time.perf_counter() - started) * 1000
-                returned = result.records
+                returned = result.records if result is not None else []
                 found_ids = [record.get('record_id') for record in returned]
                 violations.extend(_violations(case, returned, allowed_levels, records_by_id))
+                memory_leaks, memory_entries = _memory_leaks(result, allowed_levels, records_by_id)
                 gold_visible = sorted(set(case['gold_ids']) & set(allowed_levels))
                 rank = next((index for index, record_id in enumerate(found_ids, 1)
                              if record_id in set(gold_visible)), None)
@@ -234,7 +423,21 @@ def run(name='baseline'):
                     'role': role, 'day': day, 'question': case['question'],
                     'gold_ids': case['gold_ids'], 'gold_visible': gold_visible,
                     'rank_first_gold': rank, 'returned_ids': found_ids,
-                    'signal': result.signal, 'latency_ms': round(latency_ms, 3),
+                    'signal': result.signal if result is not None else 'rejected',
+                    'latency_ms': round(latency_ms, 3),
+                    'attack': case.get('attack'), 'returned_total': len(found_ids),
+                    'memory_entries': memory_entries, 'memory_leaks': memory_leaks,
+                    'rejected': rejected, 'expect_error': bool(case.get('expect_error')),
+                    'error': case_error,
+                    'clean_id': case.get('clean_id'),
+                    'top_record_type': records_by_id.get(found_ids[0], {}).get('record_type') if found_ids else None,
+                    'top_summary': records_by_id.get(found_ids[0], {}).get('summary') if found_ids else None,
+                    'gold_record_types': sorted({records_by_id.get(record_id, {}).get('record_type')
+                                                 for record_id in gold_visible
+                                                 if records_by_id.get(record_id, {}).get('record_type')}),
+                    'gold_summaries': sorted({records_by_id.get(record_id, {}).get('summary')
+                                              for record_id in gold_visible
+                                              if records_by_id.get(record_id, {}).get('summary')}),
                 })
     finally:
         try:
@@ -258,7 +461,9 @@ def run(name='baseline'):
     _print_table(rows)
     for violation in violations:
         print('ACL VIOLATION ' + json.dumps(violation, ensure_ascii=False))
-    report = build_report(rows, violations, leftovers, cases, name, qdrant_url, text_mode)
+    report = build_report(rows, violations, leftovers, cases, name, _config(qdrant_url, text_mode))
+    _print_extra_table(report['extra'])
+    _print_security_table(report['security'])
     return finish_report(report, RESULTS / f'{name}.json')
 
 

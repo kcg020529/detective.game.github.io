@@ -113,6 +113,7 @@ Docker Desktop을 실행한 뒤 `infrastructure/docker`에서 최초 한 번 준
 ```powershell
 Copy-Item .env.example .env
 # .env의 MariaDB 비밀번호를 설정한 뒤 실행
+# 채팅을 쓰려면 .env의 DEEPSEEK_API_KEY·DEEPSEEK_PLANNER_API_KEY도 채운다(비우면 채팅만 503)
 
 docker compose up -d
 docker compose run --rm migrate
@@ -132,7 +133,7 @@ docker compose run --rm load-data
 docker compose run --rm rag-index
 ```
 
-프론트와 백엔드 소스는 바인드 마운트되어 저장 후 새로고침하면 반영됩니다. 새 파이썬 패키지를 추가한 경우에만 이미지를 빌드합니다.
+프론트와 백엔드 소스는 바인드 마운트되어 저장 후 새로고침하면 반영됩니다. 새 파이썬 패키지를 추가한 경우에만 이미지를 빌드합니다. 2026-10-27 이전에 만든 이미지에는 캐릭터 AI가 쓰는 Jinja2·PyYAML이 없으므로 한 번 다시 빌드합니다.
 
 ```powershell
 docker compose up -d --build

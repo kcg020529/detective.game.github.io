@@ -55,11 +55,12 @@ def chat_client(monkeypatch):
     app.dependency_overrides[current_user_id] = lambda: 7
     pipeline = Mock()
     pipeline.reply.return_value = dict(content='approved', response_type='normal')
+    original_pipeline = app.state.chat_pipeline
     app.state.chat_pipeline = pipeline
     with TestClient(app, raise_server_exceptions=False) as client:
         yield client, conn, pipeline
     app.dependency_overrides.clear()
-    del app.state.chat_pipeline
+    app.state.chat_pipeline = original_pipeline
 
 
 def post(client, **updates):
@@ -154,7 +155,7 @@ def test_pipeline_retrieve_uses_only_resolved_records(monkeypatch):
     from backend.planner.schema import PlannerResult
     from backend.policy.engine import PolicyContext
     import backend.planner.service as planner_service
-    import backend.rag.search as rag
+    import backend.rag.service as rag
     import qdrant_client
     monkeypatch.setattr(qdrant_client, 'QdrantClient', Mock(return_value=Mock()))
     plan = PlannerResult.model_validate(dict(route='retrieve', clarification_code=None,
@@ -163,14 +164,16 @@ def test_pipeline_retrieve_uses_only_resolved_records(monkeypatch):
     monkeypatch.setattr(planner_service.Planner, 'from_environment',
                         lambda: SimpleNamespace(plan=lambda *args: plan))
     resolved = [dict(record_id='T01-action-001', summary='allowed summary')]
-    search = Mock(return_value=resolved)
-    monkeypatch.setattr(rag, 'search_records', search)
+    retrieval = rag.Retrieval(resolved, [], 'ok', {})
+    search = Mock(return_value=retrieval)
+    monkeypatch.setattr(rag, 'retrieve', search)
     generator = Mock(return_value='draft')
     output = Mock(return_value=dict(content='approved', response_type='partial'))
     ctx = PolicyContext(7, 1, 7, 'std', 2, 'YB-1', 'game-data')
     answer = ChatPipeline(generator, output).reply(conn=None, question='test', context=ctx, history=[])
     assert answer['content'] == 'approved'
     assert generator.call_args.kwargs['records'] == resolved
+    assert generator.call_args.kwargs['retrieval'] is retrieval
     assert output.call_args.kwargs['draft'] == 'draft'
     assert search.call_args.kwargs['user_id'] == 7
 
@@ -186,6 +189,31 @@ def test_output_guard_failure_never_returns_draft(monkeypatch):
             conn=None, question='hello', context=None, history=[])
     assert error.value.status == 503
     assert 'secret' not in error.value.message
+
+
+def test_default_pipeline_and_early_guard(monkeypatch):
+    from backend.planner.service import Planner
+    assert app.state.chat_pipeline.generator is None
+    assert app.state.chat_pipeline.output_guard is not None
+    planner = Mock(side_effect=AssertionError('planner called'))
+    monkeypatch.setattr(Planner, 'from_environment', planner)
+    with pytest.raises(ApiError) as error:
+        app.state.chat_pipeline.reply(conn=None, question='x', context=None, history=[])
+    assert error.value.status == 503
+    planner.assert_not_called()
+
+
+@pytest.mark.parametrize('route,code', [('character', None), ('out_of_scope', None),
+                                       ('clarify', 'AMBIGUOUS_REFERENCE')])
+def test_pipeline_non_retrieve_passes_no_retrieval(monkeypatch, route, code):
+    from backend.planner.service import Planner
+    plan = SimpleNamespace(route=route, clarification_code=code)
+    monkeypatch.setattr(Planner, 'from_environment', lambda: SimpleNamespace(plan=lambda *args: plan))
+    generator = Mock(return_value={'content': 'draft', 'response_type': 'normal'})
+    guard = Mock(return_value={'content': 'approved', 'response_type': 'normal'})
+    ChatPipeline(generator, guard).reply(conn=None, question='x', context=None, history=[])
+    assert generator.call_args.kwargs['records'] == []
+    assert generator.call_args.kwargs['retrieval'] is None
 
 
 def test_http_chat_uses_real_output_guard_for_safe_mock_draft(chat_client, monkeypatch):

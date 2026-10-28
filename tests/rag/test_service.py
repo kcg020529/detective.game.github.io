@@ -3,7 +3,7 @@ import types
 
 from backend.rag import embedder as embedder_module
 from backend.rag import search
-from backend.rag.service import Retrieval, retrieve, to_memory
+from backend.rag.service import Retrieval, build_memory, resolve_used, retrieve, to_memory
 
 from test_rag import FakeConnection, FakeEmbedder, add_point, qdrant, run_search  # noqa: F401 (qdrant는 fixture)
 
@@ -42,8 +42,8 @@ def test_memory_uses_only_fields_the_policy_allowed():
     ]
     memory = to_memory(records)
     assert [m['id'] for m in memory] == ['A', 'B', 'C']
-    assert memory[0]['text'] == '요약\n본문'
-    assert memory[1]['text'] == '요약만'
+    assert memory[0]['text'] == '요약\n본문\n[기록 정보] 기록 유형 Action, Day 1, 2회차, 장소 회의실, 관련 AI YB-2'
+    assert memory[1]['text'] == '요약만\n[기록 정보] 기록 유형 Dialogue, Day 1, 3회차, 장소 서버실, 창고 (순서 무관), 관련 AI YB-1, YB-3'
     assert memory[2]['text'] == '기록 유형 Thought, Day 2, 7회차, 관련 AI YB-4.'
     # 낮은 수준 기록에는 더 높은 수준의 글이 섞이지 않음
     assert '본문' not in memory[1]['text'] and '요약' not in memory[2]['text']
@@ -52,6 +52,60 @@ def test_memory_uses_only_fields_the_policy_allowed():
 def test_memory_skips_unusable_records_and_invents_nothing():
     assert to_memory([{'record_type': 'Action'}, {'record_id': ''}, {'record_id': 'X'}]) == []
     assert to_memory([]) == []
+
+
+def test_body_memory_info_omits_missing_fields_and_private_metadata():
+    record = {
+        'record_id': 'real-record-id', 'record_type': 'Action', 'summary': 'body',
+        'location_ids': [], 'involved_ai': [], 'witness_ai': ['YB-4'], 'overheard_ai': ['YB-5'],
+    }
+    memory = to_memory([record])
+    assert memory[0]['text'] == 'body\n[기록 정보] 기록 유형 Action'
+    assert '장소' not in memory[0]['text'] and '관련 AI' not in memory[0]['text']
+    assert 'witness_ai' not in memory[0]['text'] and 'overheard_ai' not in memory[0]['text']
+    assert 'YB-4' not in memory[0]['text'] and 'YB-5' not in memory[0]['text']
+    assert record['record_id'] not in memory[0]['text']
+
+
+def test_metadata_only_text_is_unchanged_and_empty_body_is_skipped():
+    record = {
+        'record_id': 'metadata-only', 'record_type': 'Action', 'day': 1, 'test_id': 1,
+        'location_ids': ['전력실'], 'involved_ai': ['YB-2'],
+    }
+    assert to_memory([record])[0]['text'] == (
+        '기록 유형 Action, Day 1, 1회차, 장소 전력실, 관련 AI YB-2.')
+    empty = {'record_id': 'empty-body', 'summary': '  ', 'content': '', 'record_type': 'Action'}
+    assert to_memory([empty]) == []
+    assert build_memory([empty]) == ([], {})
+
+
+def test_build_memory_uses_consecutive_opaque_ids_and_preserves_text_and_order():
+    records = [
+        {'record_id': 'first', 'summary': 'one'},
+        {'record_type': 'Action'},
+        {'record_id': 'no-text'},
+        {'record_id': 'empty', 'summary': '  '},
+        {'record_id': 'third', 'content': 'three'},
+    ]
+    memory, id_map = build_memory(records)
+    assert memory == [{'id': 'm1', 'text': 'one'},
+                      {'id': 'm2', 'text': 'three'}]
+    assert id_map == {'m1': 'first', 'm2': 'third'}
+    assert [item['text'] for item in memory] == [item['text'] for item in to_memory(records)]
+    memory_ids = {item['id'] for item in memory}
+    assert all(record['record_id'] not in memory_ids for record in records
+               if isinstance(record.get('record_id'), str))
+    assert all(record['record_id'] not in item['text'] for record in records
+               for item in memory if isinstance(record.get('record_id'), str))
+
+
+def test_resolve_used_maps_valid_ids_and_drops_invalid_values():
+    mapping = {'m1': 'T01-action-004', 'm2': 'T01-action-005'}
+    assert resolve_used(['m2', 'm1', 'm2', 'm99', 'T01-action-004', None, 3], mapping) == (
+        ['T01-action-005', 'T01-action-004'], ['m99', 'T01-action-004', None, 3])
+    assert resolve_used(None, mapping) == ([], [])
+    assert resolve_used('m1', mapping) == ([], ['m1'])
+    assert resolve_used([], mapping) == ([], [])
 
 
 def test_signal_no_allowed_records_does_not_touch_qdrant(monkeypatch, qdrant):
@@ -93,9 +147,28 @@ def test_retrieve_bundles_records_memory_and_signal(monkeypatch, qdrant):
     got = retrieve(FakeConnection(), user_id=1, save_id=1, character_id='YB-2', dataset='game-data',
                    plan={'query': 'q'}, qdrant=qdrant, embedder=FakeEmbedder())
     assert isinstance(got, Retrieval) and got.signal == search.SIGNAL_OK
-    assert got.memory == [{'id': 'T01-action-001', 'text': '안전한 요약'}]
+    assert [item['id'] for item in got.memory] == ['m1']
+    assert got.id_map == {'m1': 'T01-action-001'}
+    assert [record['record_id'] for record in got.records] == ['T01-action-001']
+    assert got.memory == [{'id': 'm1', 'text': '안전한 요약'}]
     # 밖에서 받은 qdrant는 닫지 않음 (호출한 쪽 것)
     assert qdrant.collection_exists(search.COLLECTIONS['game-data'])
+
+
+def test_retrieve_no_allowed_records_has_empty_memory_and_map(monkeypatch, qdrant):
+    monkeypatch.setattr(search, 'PolicyRepository', fake_repository([]))
+    got = retrieve(FakeConnection(), user_id=1, save_id=1, character_id='YB-2', dataset='game-data',
+                   plan={'query': 'q'}, qdrant=qdrant, embedder=FakeEmbedder())
+    assert got.signal == search.SIGNAL_NO_ALLOWED
+    assert got.memory == [] and got.id_map == {}
+
+
+def test_retrieve_no_match_has_empty_memory_and_map(monkeypatch, qdrant):
+    monkeypatch.setattr(search, 'PolicyRepository', fake_repository([('T01-action-001', 'metadata')]))
+    got = retrieve(FakeConnection(), user_id=1, save_id=1, character_id='YB-2', dataset='game-data',
+                   plan={'query': 'q'}, qdrant=qdrant, embedder=FakeEmbedder())
+    assert got.signal == search.SIGNAL_NO_MATCH
+    assert got.memory == [] and got.id_map == {}
 
 
 def test_embedder_model_is_loaded_once_across_instances(monkeypatch):
