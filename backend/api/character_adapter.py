@@ -40,9 +40,8 @@ def make_generator(chat=None, render=None, fixed=None):
         if render is None:
             from backend.character_ai.prompt_render import render_actor_prompt
             render = render_actor_prompt
-        turns = [{'speaker': '조사자' if turn['sender'] == 'user' else character_id,
-                  'text': turn['content']} for turn in history[-6:]]
-        prompt = render(character_id, mode, memory=memory if mode == 'answer' else [], history=turns)
+        # Initial live scope: the D prompt receives no prior chat turns.
+        prompt = render(character_id, mode, memory=memory if mode == 'answer' else [], history=[])
         data = chat(prompt, question)['data']
         used, dropped = resolve_used(data.get('used'), id_map)
         logger.debug('memory used=%d dropped=%d', len(used), len(dropped))

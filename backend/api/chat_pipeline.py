@@ -2,6 +2,7 @@
 import os
 
 from backend.api.errors import ApiError
+from backend.api.output_guard_adapter import OutputGuardRejected
 from backend.planner.service import Planner, PlannerInputError, PlannerUnavailable
 from backend.policy.repository import PolicyDenied, PolicyUnavailable
 
@@ -34,13 +35,20 @@ class ChatPipeline:
             draft = self.generator(question=question, context=context, history=history,
                                    plan=plan, records=records, retrieval=retrieval)
             # G-2 returns the approved/replaced final answer, never an unchecked draft.
-            final = self.output_guard(draft=draft, question=question, context=context, records=records)
+            final = self.output_guard(draft=draft, question=question, context=context,
+                                      records=records, conn=conn)
             if (not isinstance(final, dict) or set(final) != {'content', 'response_type'}
                     or not isinstance(final['content'], str) or not final['content'].strip()
                     or len(final['content']) > 2000
                     or final['response_type'] not in ('normal', 'partial', 'restricted', 'unknown')):
                 raise ApiError(503, 'SERVICE_UNAVAILABLE', '안전한 답변을 준비하지 못했습니다.')
             return final
+        except OutputGuardRejected:
+            # The audit INSERT uses this connection. Commit it before the API
+            # returns 503 and its request transaction is rolled back.
+            if conn is not None:
+                conn.commit()
+            raise ApiError(503, 'SERVICE_UNAVAILABLE', '안전한 답변을 준비하지 못했습니다.') from None
         except ApiError:
             raise
         except (PlannerInputError, PlannerUnavailable, PolicyDenied, PolicyUnavailable):

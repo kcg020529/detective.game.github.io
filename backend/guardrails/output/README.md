@@ -50,7 +50,7 @@ r = guard.check(response_text, user_input=q, role=role, day=day, target_ai=ai,
 - `records`: 비인가 기록까지 포함한 전체 기록(운영에서는 DB/Qdrant 기록으로 만든다). 평가에서는 `data/test-data/records.json`.
 - `allowed_context_ids`: 이번 요청에서 F/E가 모델에 실제로 준 기록 ID. `None`이면 2단계를 건너뛴다(1·3·4단계는 동작).
 - `prompt_sentences`: D의 페르소나 프롬프트 문장. 평가에서는 `data/output_fixtures.json`의 자리표시 3문장. `prompt_check.sentences_from_text()`로 파일에서 쪼갤 수 있다.
-- 감사 이벤트: `output_guard_audit_event(r, request_id=…, user_id=…, save_id=…, role=…, character_id=…)`는 알릴 것이 없으면 `None`, 있으면 `{event_type:"output_guard_alert", …, level, decision, applied, mode, signals}`를 돌려준다. 자리 필드는 팀의 `input_guard_audit_event`와 같게 맞췄다(`backend/guardrails/input/input_guard.py`). 비밀값 원문은 담기지 않는다. 다만 `backend/audit/store.py`의 `save_input_guard_alert`는 입력 가드 이벤트의 키 10개와 `input_guard_alert`, level `warn`·`high_risk`만 받으므로, 출력 이벤트는 H와 저장 함수·level 어휘를 정해야 저장된다 `[미정]`.
+- 감사 이벤트: `output_guard_audit_event(r, request_id=…, user_id=…, save_id=…, role=…, character_id=…)`는 알릴 것이 없으면 `None`, 있으면 `{event_type:"output_guard_alert", …, level, decision, applied, mode, signals}`를 돌려준다. 비밀값 원문은 담지 않는다. 선영 작업 브랜치의 `backend.audit.output_guard_flow`가 이를 `backend.audit.store.save_output_guard_alert`로 같은 채팅 DB 트랜잭션에 기록한다.
 - 서버 흐름은 Input Guard → Planner → Policy Engine → ACL 검색 → 캐릭터 응답 → Output Guard이고(`docs/interfaces/API_요청응답_계약.md`), 응답 종류 `reply_kind`에 마스킹/차단을 어떻게 대응시킬지와 가드 오류 시 동작은 아직 정해지지 않았다 `[미정]`.
 
 ## 4. 실행·검증 명령

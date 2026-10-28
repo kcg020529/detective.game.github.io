@@ -191,16 +191,9 @@ def test_output_guard_failure_never_returns_draft(monkeypatch):
     assert 'secret' not in error.value.message
 
 
-def test_default_pipeline_and_early_guard(monkeypatch):
-    from backend.planner.service import Planner
-    assert app.state.chat_pipeline.generator is None
+def test_default_pipeline_registers_generator_and_output_guard():
+    assert app.state.chat_pipeline.generator is not None
     assert app.state.chat_pipeline.output_guard is not None
-    planner = Mock(side_effect=AssertionError('planner called'))
-    monkeypatch.setattr(Planner, 'from_environment', planner)
-    with pytest.raises(ApiError) as error:
-        app.state.chat_pipeline.reply(conn=None, question='x', context=None, history=[])
-    assert error.value.status == 503
-    planner.assert_not_called()
 
 
 @pytest.mark.parametrize('route,code', [('character', None), ('out_of_scope', None),
@@ -232,7 +225,7 @@ def test_http_chat_uses_real_output_guard_for_safe_mock_draft(chat_client, monke
     assert saved[1][3] == '실험실에서 기록을 확인했어요.'
 
 
-def test_http_chat_never_saves_blocked_mock_draft(chat_client, monkeypatch):
+def test_http_chat_saves_safe_replacement_instead_of_blocked_draft(chat_client, monkeypatch):
     from backend.api.output_guard_adapter import check_output
     from backend.planner.service import Planner
     client, conn, _ = chat_client
@@ -242,6 +235,9 @@ def test_http_chat_never_saves_blocked_mock_draft(chat_client, monkeypatch):
         generator=lambda **kwargs: dict(content='CANARY-EXAMPLE-0001', response_type='normal'),
         output_guard=check_output)
     response = post(client)
-    assert response.status_code == 503
+    assert response.status_code == 200
     assert 'CANARY' not in response.text
-    assert not any(query.startswith('INSERT INTO chat_messages') for query, _ in conn.queries)
+    saved = [params for query, params in conn.queries if query.startswith('INSERT INTO chat_messages')]
+    assert len(saved) == 2
+    assert saved[1][3] != 'CANARY-EXAMPLE-0001'
+    assert saved[1][4] == 'restricted'

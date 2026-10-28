@@ -19,21 +19,22 @@ message는 공백만 있는 값을 제외한 1~2000자, 요청 ID는 출력 가�
 
 ## D / G-2 연결 현황
 
-I05 생성기와 선영 작업 브랜치의 G-2 어댑터는 코드에 있다. 현재 작업 브랜치의 기본 서버에는 G-2만 등록되어 있으며 생성기는 등록하지 않았다. 따라서 기본 POST는 Planner 호출 전에 503을 반환하고 대화는 저장하지 않는다. 실제 외부 LLM 전송 범위와 D/G-2 최종 계약은 별도 확인 대상이다.
+I05 생성기와 선영 작업 브랜치의 G-2 어댑터가 기본 서버에 함께 등록되어 있다. 채팅 요청은 Planner→E/F 검색→D 답변→G-2 검사를 거친다. 설정·검색·검사에 실패하면 503으로 종료하며 초안은 저장하지 않는다. D/G-2의 미확정 응답 유형은 별도 합의 대상이다.
 
-현재 작업 브랜치의 등록은 `ChatPipeline(output_guard=check_output)`이다. 요청 본문에서 어댑터를 선택할 수 없다.
+현재 작업 브랜치의 등록은 `ChatPipeline(generator=make_generator(), output_guard=partial(check_output, audit_sink=record_output_guard_result))`이다. 요청 본문에서 어댑터를 선택할 수 없다.
 
 - generator: keyword 인자 `question, context, history, plan, records, retrieval`을 받아 draft `{"content","response_type"}` 반환. records는 E/F가 최종 허용한 결과뿐이고 retrieval은 retrieve 경로에서만 넘어온다(나머지는 None). plan의 clarify/out_of_scope도 준수해야 한다.
-- output_guard: keyword 인자 `draft, question, context, records`를 받아 최종 `{"content":str,"response_type":"normal|partial|restricted|unknown"}` 반환. 답변은 공백 제외 1~2000자다. 검사 실패 시 예외를 발생시킨다. 승인 전 초안은 반환·저장하지 않는다. 현재 어댑터는 `applied=allow`만 통과시키고 `mask|block`은 503으로 처리한다.
+- output_guard: keyword 인자 `draft, question, context, records, conn`을 받아 최종 `{"content":str,"response_type":"normal|partial|restricted|unknown"}` 반환. 답변은 공백 제외 1~2000자다. 승인 전 초안은 반환·저장하지 않는다. `applied=mask`는 개인정보를 가린 최종 문장과 `partial`, 유출 계열 `applied=block`은 안전 안내문과 `restricted`로 저장한다. 깨진 답변·품질 계열 차단은 503으로 처리한다.
+- 출력 검사에서 기록할 신호가 있으면 `output_guard_alert` 메타데이터를 같은 DB 연결에 INSERT한다. 성공 답변은 채팅과 함께 commit하고, 503으로 중단되는 G-2 결과는 감사 이벤트만 commit한다. 질문·답변·비밀값은 감사 테이블에 넣지 않는다. `signals_json`에는 신호 이름과 decision·applied·mode를 저장한다.
 - 검색은 기존 QDRANT_URL과 E FastEmbedder를 사용한다. Planner는 기존 전용 환경변수를 사용한다. D/G-2가 없으면 유료 Planner 호출 전에 중단한다.
 
 ## 검증 한계
 
-DB 없는 HTTP·실패·중복·어댑터 회귀 검사는 실제 DB 통합 검증이 아니다. 실제 MariaDB 동시 요청·롤백·감사 영속성, Qdrant 검색, D/G-2 및 프론트 전체 동작은 추가 검증이 필요하다. Save 행 잠금이 모델 호출 중 유지되므로 같은 Save의 병렬 요청은 대기한다.
+임시 계정·Save로 실제 MariaDB에 정상·차단 대체·마스킹 답변의 채팅 6줄과 출력 감사 이벤트 2건을 확인하고 임시 데이터를 삭제했다(2026-10-28). Qdrant 기록 질문과 프론트 전체 동작은 추가 검증이 필요하다. Save 행 잠금이 모델 호출 중 유지되므로 같은 Save의 병렬 요청은 대기한다. 현재 G-2의 비인가 기록 비교에는 전체 기록이 들어가지 않아 `context_leak` 검사가 건너뛰어진다.
 
 ## 현재 연결 상태 (I05, 2026-10-28)
 
-- 아래는 I05가 `main`에 추가한 생성기 규칙이다. 현재 선영 작업 브랜치에서는 생성기를 기본 서버에 등록하지 않았으므로 채팅은 Planner 호출 전에 503이다.
+- 아래는 I05가 `main`에 추가한 생성기 규칙이다. 현재 작업 브랜치의 기본 서버에도 연결되어 있다.
 - 생성기 규칙 (팀 흐름도와 용범의 응답 유형 지시를 따르고, 문서에 없는 부분은 임시로 정함):
 
 | 경로·조회 상태 | D 처리 | response_type |
@@ -45,5 +46,5 @@ DB 없는 HTTP·실패·중복·어댑터 회귀 검사는 실제 DB 통합 검�
 | out_of_scope | 고정 문구 `off_topic` | unknown (임시: `out_of_scope` 유형 확정 전) |
 | clarify | 서버 고정 안내(코드별 문구) | unknown (임시: D에 clarify 모드가 생기면 변경) |
 
-- 이전 대화는 최근 6개만 D에 넘기고 `user`는 `조사자`, `ai`는 캐릭터 ID로 바꾼다. D가 돌려준 `used`는 `resolve_used`로 거른다. injection 모드는 쓰지 않는다. 빈 답은 오류(503)로 처리한다.
+- 2026-10-28 첫 실호출 범위: 사용자 승인에 따라 **이전 대화는 Planner와 D 어느 쪽에도 전송하지 않는다.** Planner에는 현재 질문과 서버의 역할·Day·캐릭터 ID, D에는 현재 질문·캐릭터 설정과 F가 허용한 memory(answer 모드일 때)를 전달한다. 서버는 이전 대화의 Save·캐릭터 범위는 로컬에서 검증한다. D가 돌려준 `used`는 `resolve_used`로 거른다. injection 모드는 쓰지 않는다. 빈 답은 오류(503)로 처리한다.
 - 로컬에서 실제 Planner·DeepSeek·RAG로 확인(출력 가드 자리에 시험용 통과 함수): 기록 질문 normal, 이어지는 질문 normal, 무관한 질문·권한 밖 속마음 unknown.

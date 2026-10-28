@@ -1,7 +1,7 @@
 {
   "uid": "kervion-security-audit",
-  "title": "Kervion 입력 보안 감사",
-  "description": "Input Guard 경고 메타데이터만 표시합니다. 질문 원문과 AI 답변은 표시하지 않습니다.",
+  "title": "Kervion 보안 감사",
+  "description": "Input·Output Guard 감사 메타데이터를 표시합니다. 질문 원문과 AI 답변은 표시하지 않습니다.",
   "tags": ["kervion", "security", "audit"],
   "timezone": "browser",
   "schemaVersion": 41,
@@ -18,7 +18,7 @@
       "gridPos": {"x": 0, "y": 0, "w": 24, "h": 3},
       "options": {
         "mode": "markdown",
-        "content": "이 화면은 **저장된 Input Guard 경고(warn·high_risk)**만 집계합니다. allow 질문은 감사 테이블에 저장하지 않으므로 전체 질문 수나 차단율을 뜻하지 않습니다. 현재 채팅 전송 API와 감사 자동 저장은 미연결입니다. 데이터가 없다면 패널은 0 또는 빈 그래프로 보입니다."
+        "content": "Input Guard의 warn·high_risk와 Output Guard의 log·alert만 집계합니다. 통과 후 기록할 신호가 없는 요청은 저장하지 않으므로 전체 요청 수나 차단율이 아닙니다. 질문·답변 원문은 저장하거나 표시하지 않습니다."
       }
     },
     {
@@ -108,6 +108,26 @@
           "rawSql": "SELECT occurred_at AS time, level, character_id, signals_json AS signals FROM audit_events WHERE event_type = 'input_guard_alert' AND $__timeFilter(occurred_at) ORDER BY occurred_at DESC LIMIT 100"
         }
       ],
+      "fieldConfig": {"defaults": {}, "overrides": []},
+      "options": {"showHeader": true, "cellHeight": "sm"}
+    },
+    {
+      "id": 7,
+      "title": "출력 검사 이벤트",
+      "type": "stat",
+      "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"},
+      "gridPos": {"x": 0, "y": 24, "w": 12, "h": 4},
+      "targets": [{"refId": "A", "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"}, "format": "table", "rawQuery": true, "rawSql": "SELECT COUNT(*) AS value FROM audit_events WHERE event_type = 'output_guard_alert' AND $__timeFilter(occurred_at)"}],
+      "fieldConfig": {"defaults": {"unit": "short", "decimals": 0}, "overrides": []},
+      "options": {"reduceOptions": {"values": false, "calcs": ["lastNotNull"]}, "orientation": "auto", "textMode": "auto", "colorMode": "value"}
+    },
+    {
+      "id": 8,
+      "title": "최근 출력 검사 메타데이터",
+      "type": "table",
+      "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"},
+      "gridPos": {"x": 0, "y": 28, "w": 24, "h": 8},
+      "targets": [{"refId": "A", "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"}, "format": "table", "rawQuery": true, "rawSql": "SELECT occurred_at AS time, level, character_id, JSON_EXTRACT(signals_json, '$.signals') AS signals, JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.decision')) AS decision, JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.applied')) AS applied FROM audit_events WHERE event_type = 'output_guard_alert' AND $__timeFilter(occurred_at) ORDER BY occurred_at DESC LIMIT 100"}],
       "fieldConfig": {"defaults": {}, "overrides": []},
       "options": {"showHeader": true, "cellHeight": "sm"}
     }

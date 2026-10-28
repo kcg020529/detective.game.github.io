@@ -82,3 +82,7 @@
    - `out_of_scope` 유형, clarify를 D가 맡을지, 권한 불가(`no_allowed_records`)를 restricted로 볼지는 팀 확인
 
 2026-10-27 선영 작업 브랜치에서 G-2 Output Guard를 `backend/api/output_guard_adapter.py`로 채팅 파이프라인에 연결했다. 현재 질문을 검사에 전달하고, 모의 D 생성기로 POST의 정상 답변 저장·위험 초안 미저장을 확인했다. `mask|block`의 최종 `response_type`, 출력 감사 저장, 전체 비인가 기록 대조는 미연결이다. 2026-10-28 I05 병합 시 생성기의 기본 등록은 외부 LLM 전송 범위 확인 전까지 보류하고 G-2만 등록해 기본 POST는 503을 유지했다.
+
+2026-10-28 선영이 첫 실호출 범위를 현재 질문·역할·Day·캐릭터·F 허용 memory로 승인했다. Planner와 D의 외부 요청에서 이전 대화를 제거하고 기본 서버에 I05 생성기와 G-2를 함께 등록했다. 관련 테스트 46개 통과. 합성 질문 한 건으로 실제 DeepSeek Planner(`character` 경로)→D 답변 생성→G-2(`normal`)를 확인했다. 답변 원문·API 키는 출력하지 않았다. 이 시험은 검색 경로·실제 DB 채팅 저장·프론트 연결을 검증하지 않는다.
+
+2026-10-28 Output Guard 후처리를 연결했다. 개인정보 마스킹은 partial, 유출 계열 전체 차단은 안전 안내문 restricted로 저장한다. 깨진 답변·품질 계열 차단은 503을 유지한다. 임시 계정·Save의 실제 MariaDB에서 정상·대체·마스킹 세 요청이 각각 200, AI `response_type`은 normal·restricted·partial, 사용자/AI 채팅은 총 6줄, 출력 감사 이벤트는 2건임을 확인했다. 임시 데이터는 삭제했다. 기록 검색(Qdrant)·프론트 화면 검증은 별도다.

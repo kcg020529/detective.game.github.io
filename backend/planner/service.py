@@ -66,7 +66,8 @@ def build_messages(question, context: PolicyContext, history=()):
     return [
         dict(role='system', content=SYSTEM_PROMPT),
         dict(role='system', content=json.dumps({'server_state': state}, ensure_ascii=False)),
-        dict(role='user', content=json.dumps({'question': question, 'history': turns},
+        # Initial live scope: validate history locally, but do not send it to DeepSeek.
+        dict(role='user', content=json.dumps({'question': question},
                                              ensure_ascii=False)),
     ]
 
