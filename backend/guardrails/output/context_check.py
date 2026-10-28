@@ -12,6 +12,7 @@
 from __future__ import annotations
 
 import re
+from collections import defaultdict
 
 from .normalize import compact, fold, trigrams
 
@@ -64,12 +65,14 @@ class _Unit:
 class ContextIndex:
     """기록 전체(허용 + 비인가)를 미리 쪼개 둔다. 운영에서는 DB/Qdrant의 기록에서 만든다."""
 
-    def __init__(self, records, generic_phrases=()):
+    def __init__(self, records, generic_phrases=(), generic_df_ratio=None):
         """generic_phrases: 어느 대화에나 나오는 말(예: '모르겠어'). 이 표현의 어휘·글자 조각은 유출 근거로 세지 않는다."""
         self.units = {}
         self.ids = []
         self.generic_terms = set()
         self.generic_grams = set()
+        documents = defaultdict(lambda: (set(), set()))
+        document_count = len({r['record_id'].removesuffix('#withheld') for r in records})
         for ph in generic_phrases:
             self.generic_terms |= terms_of(ph)
             self.generic_grams |= trigrams(compact(ph))
@@ -77,6 +80,22 @@ class ContextIndex:
             rid = r["record_id"]
             self.ids.append(rid)
             self.units[rid] = self._split(r)
+            base_id = rid.removesuffix('#withheld')
+            for unit in self.units[rid]:
+                documents[base_id][0].update(unit.terms)
+                documents[base_id][1].update(unit.grams)
+        if generic_df_ratio is not None and document_count:
+            minimum_df = generic_df_ratio * document_count
+            term_df, gram_df = defaultdict(int), defaultdict(int)
+            for terms, grams in documents.values():
+                for term in terms:
+                    term_df[term] += 1
+                for gram in grams:
+                    gram_df[gram] += 1
+            self.generic_terms.update(term for term, count in term_df.items()
+                                      if count >= minimum_df)
+            self.generic_grams.update(gram for gram, count in gram_df.items()
+                                      if count >= minimum_df)
 
     @staticmethod
     def _split(r):

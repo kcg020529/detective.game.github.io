@@ -17,11 +17,13 @@
   "actions": {"canary": "block", "api_key": "block", "pii": "mask"},
 
   "thresholds": {
-    "context_leak": {"low": 0.20, "high": 0.40},
-    "prompt_leak":  {"low": 0.25, "high": 0.35},
+    "context_leak": {"low": 0.40, "high": 0.60},
+    "prompt_leak":  {"low": 0.50, "high": 0.80},
     "degenerate":   {"low": 0.50, "high": 0.90},
     "irrelevant":   {"low": 0.40, "high": 0.80}
   },
+  "context_generic": {"df_ratio": 0.10},
+  "generic_entities": [],
   "gray_zone_action": "allow_log",
 
   "events": {

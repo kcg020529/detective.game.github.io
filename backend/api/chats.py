@@ -14,6 +14,7 @@ from backend.api.errors import ApiError
 from backend.api.chat_pipeline import ChatPipeline
 from backend.audit.input_guard_flow import inspect_and_record_input
 from backend.policy.engine import PolicyContext
+from backend.api.switches import chat_dataset, input_guard_mode
 
 router = APIRouter()
 
@@ -39,10 +40,11 @@ def send_chat(body: SendChat, request: Request,
     # Audit is a separate committed phase: downstream AI failures must not erase alerts.
     with conn.cursor() as cursor:
         row = _owned_save(cursor, user_id, save_id)
-    inspect_and_record_input(
-        conn, body.message, request_id='chat_' + secrets.token_hex(16),
-        user_id=user_id, save_id=save_id, role=row['role'], character_id=ai_id,
-        use_llm=os.getenv('KERVION_INPUT_GUARD_LLM') == '1')
+    if input_guard_mode() == 'on':
+        inspect_and_record_input(
+            conn, body.message, request_id='chat_' + secrets.token_hex(16),
+            user_id=user_id, save_id=save_id, role=row['role'], character_id=ai_id,
+            use_llm=os.getenv('KERVION_INPUT_GUARD_LLM') == '1')
     conn.commit()
     with conn.cursor() as cursor:
         row = _owned_save(cursor, user_id, save_id, lock=True)
@@ -66,7 +68,7 @@ def send_chat(body: SendChat, request: Request,
         while history and sum(len(turn['content']) for turn in history) > 24000:
             history.pop(0)
     context = PolicyContext(user_id, save_id, user_id, row['role'], int(row['day']),
-                            ai_id, 'game-data')
+                            ai_id, chat_dataset())
     pipeline = getattr(request.app.state, 'chat_pipeline', None) or ChatPipeline()
     answer = pipeline.reply(conn=conn, question=body.message, context=context, history=history)
     with conn.cursor() as cursor:

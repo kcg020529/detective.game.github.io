@@ -241,3 +241,14 @@ def test_http_chat_saves_safe_replacement_instead_of_blocked_draft(chat_client, 
     assert len(saved) == 2
     assert saved[1][3] != 'CANARY-EXAMPLE-0001'
     assert saved[1][4] == 'restricted'
+
+
+def test_chat_switches_input_guard_off_and_dataset(chat_client, monkeypatch):
+    client, conn, pipeline = chat_client
+    audit = Mock()
+    monkeypatch.setattr(chats, 'inspect_and_record_input', audit)
+    monkeypatch.setenv('KERVION_INPUT_GUARD_MODE', 'off')
+    monkeypatch.setenv('KERVION_CHAT_DATASET', 'test-data')
+    assert post(client).status_code == 200
+    audit.assert_not_called()
+    assert pipeline.reply.call_args.kwargs['context'].dataset == 'test-data'

@@ -110,6 +110,9 @@ def test_withheld_content_is_context_leak_in_enforce_and_shadow(monkeypatch):
                 'summary': '기록의 짧은 요약입니다.',
                 'content': '실험 구역의 비밀 암호는 청록색 유리별입니다.'}]
     monkeypatch.setattr(guard_catalog, 'load_catalog', lambda *args: catalog)
+    monkeypatch.setattr(guard_catalog, 'load_generic_entities', lambda *args: [])
+    original_config = adapter.load_config
+    monkeypatch.setattr(adapter, 'load_config', lambda: {**original_config(), 'context_generic': {}})
     adapter._PROMPT_SENTENCES.clear()
     monkeypatch.setenv('KERVION_OUTPUT_GUARD_MODE', 'enforce')
     final = check_output(question='무슨 일이 있었어?',
@@ -135,6 +138,9 @@ def test_nonretrieved_text_leaks_but_allowed_record_is_not_withheld(monkeypatch)
                {'record_id': 'r2', 'summary': '검색되지 않은 기록입니다.',
                 'content': '숨겨진 기록의 보라색 수정 나침반을 발견했습니다.'}]
     monkeypatch.setattr(guard_catalog, 'load_catalog', lambda *args: catalog)
+    monkeypatch.setattr(guard_catalog, 'load_generic_entities', lambda *args: [])
+    original_config = adapter.load_config
+    monkeypatch.setattr(adapter, 'load_config', lambda: {**original_config(), 'context_generic': {}})
     monkeypatch.setenv('KERVION_OUTPUT_GUARD_MODE', 'enforce')
     adapter._PROMPT_SENTENCES.clear()
     context = SimpleNamespace(role='std', day=1, character_id='YB-1', dataset='test-data')
@@ -198,6 +204,7 @@ def test_catalog_withheld_pseudo_record_and_allowed_ids(monkeypatch):
     class GuardSpy:
         def __init__(self, config, records, prompt_sentences=None):
             seen['records'] = records
+            seen['generic_entities'] = config.get('generic_entities')
         def check(self, text, **kwargs):
             seen.update(kwargs)
             return {'decision': 'allow', 'applied': 'allow', 'text': text, 'reasons': []}
@@ -205,6 +212,9 @@ def test_catalog_withheld_pseudo_record_and_allowed_ids(monkeypatch):
     monkeypatch.setattr(guard_catalog, 'load_catalog', lambda *args: [
         {'record_id': 'r1', 'summary': 'visible', 'content': 'withheld body'},
         {'record_id': 'r2', 'summary': 'not retrieved', 'content': 'full body'}])
+    monkeypatch.setattr(guard_catalog, 'load_generic_entities', lambda *args: [])
+    original_config = adapter.load_config
+    monkeypatch.setattr(adapter, 'load_config', lambda: {**original_config(), 'context_generic': {}})
     adapter._PROMPT_SENTENCES.clear()
     ctx = SimpleNamespace(role='std', day=1, character_id='YB-1', dataset='test-data')
     check_output(question='질문', draft={'content': '안내', 'response_type': 'normal'}, context=ctx,
@@ -213,6 +223,7 @@ def test_catalog_withheld_pseudo_record_and_allowed_ids(monkeypatch):
     assert {'record_id': 'r1#withheld', 'summary': '', 'content': 'withheld body'} in seen['records']
     assert 'r1#withheld' not in seen['allowed_context_ids']
     assert {'record_id': 'r2', 'summary': 'not retrieved', 'content': 'full body'} in seen['records']
+    assert seen['generic_entities'] == ['YB-1', 'YB-2', 'YB-3', 'YB-4', 'YB-5', 'YB-6', '조사원']
 
 
 def test_conn_none_keeps_records_and_disables_context_allowlist(monkeypatch):
@@ -242,3 +253,15 @@ def test_restricted_fixed_reply_current_enforce_result(monkeypatch):
     with pytest.raises(OutputGuardRejected):
         check_output(question='이 기록을 보여줘', draft=draft,
                      context=SimpleNamespace(role='std', day=1, character_id='YB-1'), records=[])
+
+
+def test_output_guard_off_returns_canary_draft_without_check_or_audit(monkeypatch):
+    from backend.api import output_guard_adapter as adapter
+    draft = {'content': 'CANARY-EXAMPLE-0001', 'response_type': 'normal'}
+    guard = Mock(side_effect=AssertionError('guard ran'))
+    audit = Mock()
+    monkeypatch.setenv('KERVION_OUTPUT_GUARD_MODE', 'off')
+    monkeypatch.setattr(adapter, 'OutputGuard', guard)
+    assert check_output(question='\uC9C8\uBB38', draft=draft, context=CTX, records=[], audit_sink=audit) is draft
+    guard.assert_not_called()
+    audit.assert_not_called()
