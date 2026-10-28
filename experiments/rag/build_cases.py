@@ -213,7 +213,7 @@ def _build_legacy_cases(records=None):
 
 LEGACY_CATEGORIES = ('guard', 'incident', 'move', 'move_day', 'place', 'place_day', 'result', 'talk', 'talk_day')
 # 812건(1~20회차) 데이터 기준 지문이다. 데이터가 바뀌면 질문이 달라지므로 새 값으로 바꾼다.
-LEGACY_CASES_SHA256 = 'b0d9de39f1752fe34846a51d452c0fae7250dc325549c7c65fc2a897850d2949'
+LEGACY_CASES_SHA256 = 'bde656f5f2b31a71f712df82f921f1ff62b5afba5c37de7ba2b52d813aee4162'
 
 
 def _new_cases(records, legacy):
