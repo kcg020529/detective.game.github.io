@@ -271,8 +271,8 @@
     "manifest": {
       "dataset": "game-data",
       "checksums": {
-        "game_records": 402287773,
-        "game_record_ai": 1253477,
+        "game_records": 436816998,
+        "game_record_ai": 1512862877,
         "game_record_locations": 3589210231
       },
       "model_name": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
