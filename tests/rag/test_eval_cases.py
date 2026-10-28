@@ -1,8 +1,12 @@
 import hashlib
 import json
 import re
+from collections import Counter
 
-from backend.rag.search import validate_plan
+import pytest
+
+from backend.rag.errors import RagRequestError
+from backend.rag.search import search_with_signal, validate_plan
 from experiments.rag.build_cases import (
     LEGACY_CASES_SHA256, LEGACY_CATEGORIES, _build_legacy_cases, build_cases, load_records, write_cases,
 )
@@ -114,6 +118,11 @@ def test_legacy_cases_are_unchanged_and_new_case_counts_are_fixed():
     assert len([case for case in cases if case['category'] == 'noisy']) == 72
     assert len([case for case in cases if case['category'] == 'offtopic']) == 36
     assert len({case['id'] for case in cases}) == len(cases)
+    attack_counts = Counter(case['attack'] for case in cases if case['category'] == 'attack')
+    assert attack_counts == {
+        'future_day': 24, 'denied_type': 18, 'other_ai_scope': 36, 'impersonation': 24,
+        'dump_all': 48, 'injection_query': 12, 'cross_save': 36, 'bad_plan': 36,
+    }
     assert all('시험' not in case['question'] for case in cases
                if case['category'] not in LEGACY_CATEGORIES)
 
@@ -124,6 +133,25 @@ def test_gold_ids_match_structured_data_rules_and_filtered_plans_validate():
     cases = build_cases()
     for case in cases:
         assert len(case['question']) <= 60
+        if case['category'] == 'attack':
+            assert case['gold_ids'] == []
+            if case.get('bad_plan_kind') == 'query_tokens':
+                validate_plan(case['plan'])
+                assert len(case['plan']['query'].split()) > 128
+                class FakeTokenizer:
+                    def count_tokens(self, query):
+                        return len(query.split()) + 2
+
+                with pytest.raises(RagRequestError):
+                    search_with_signal(object(), user_id=1, save_id=1, character_id='YB-2',
+                                       dataset='game-data', plan=case['plan'], qdrant=object(),
+                                       embedder=FakeTokenizer())
+            elif case.get('bad_plan_kind'):
+                with pytest.raises(RagRequestError):
+                    validate_plan(case['plan'])
+            else:
+                validate_plan(case['plan'])
+            continue
         if case['category'] not in ('noisy', 'offtopic'):
             assert case['gold_ids'] == _expected_gold(case['category'], case['question'], records)
         assert all(record_id in by_id for record_id in case['gold_ids'])
