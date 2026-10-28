@@ -72,7 +72,9 @@ class OutputGuard:
     def __init__(self, config: dict, records=None, prompt_sentences=None):
         self.cfg = config
         self.secrets = SecretChecker(config["secrets"])
-        self.index = ContextIndex(records or [], config.get("generic_phrases", []))
+        generic_phrases = list(config.get("generic_phrases", [])) + list(config.get('generic_entities', []))
+        self.index = ContextIndex(records or [], generic_phrases,
+                                  generic_df_ratio=config.get('context_generic', {}).get('df_ratio'))
         self.prompt = PromptLeakChecker(prompt_sentences or [])
         self.relevance = RelevanceChecker(config["relevance"], record_terms=self.index.known_terms())
 

@@ -108,9 +108,15 @@ def retrieve(conn, *, user_id, save_id, character_id, dataset, plan, qdrant=None
 
         qdrant = QdrantClient(url=os.getenv('QDRANT_URL', 'http://127.0.0.1:6333'))
     try:
-        records, signal = search_with_signal(
-            conn, user_id=user_id, save_id=save_id, character_id=character_id, dataset=dataset,
-            plan=plan, qdrant=qdrant, embedder=embedder or FastEmbedder())
+        from backend.api.switches import acl_mode
+        if acl_mode(dataset) == 'off':
+            from backend.rag.acl_off import search_without_acl
+            records, signal = search_without_acl(
+                conn, dataset=dataset, plan=plan, qdrant=qdrant, embedder=embedder or FastEmbedder())
+        else:
+            records, signal = search_with_signal(
+                conn, user_id=user_id, save_id=save_id, character_id=character_id, dataset=dataset,
+                plan=plan, qdrant=qdrant, embedder=embedder or FastEmbedder())
     finally:
         if own_client:
             qdrant.close()

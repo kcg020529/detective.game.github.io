@@ -17,6 +17,7 @@ from backend.api.output_guard_adapter import check_output
 from backend.api.auth import router as auth_router
 from backend.api.errors import ApiError
 from backend.api.saves import router as saves_router
+from backend.api.switches import current_switches
 from backend.audit.output_guard_flow import record_output_guard_result
 
 logger = logging.getLogger(__name__)
@@ -32,6 +33,10 @@ ALLOWED_ORIGINS = (
 )
 
 app = FastAPI()
+_switches = current_switches()
+logger.info('Effective chat switches: %s', _switches)
+if any(value == 'off' for key, value in _switches.items() if key != 'dataset'):
+    logger.warning('One or more chat safety switches are off')
 app.state.chat_pipeline = ChatPipeline(
     generator=make_generator(),
     output_guard=partial(check_output, audit_sink=record_output_guard_result),

@@ -3,7 +3,6 @@ import logging
 import os
 
 from backend.guardrails.output import OutputGuard, load_config
-from backend.guardrails.output.prompt_check import sentences_from_text
 
 logger = logging.getLogger(__name__)
 _PROMPT_SENTENCES = {}
@@ -30,42 +29,36 @@ def check_output(*, draft, question, context, records, conn=None, audit_sink=Non
         raise ValueError('Invalid question contract')
     if not isinstance(records, list):
         raise ValueError('Invalid records contract')
+    from backend.api.switches import output_guard_mode
+    mode = output_guard_mode()
+    if mode == 'off':
+        return draft
     cfg = load_config()
     cfg.setdefault('secrets', {}).setdefault('api_keys', []).extend(
         key for key in (os.getenv('DEEPSEEK_API_KEY'), os.getenv('DEEPSEEK_PLANNER_API_KEY')) if key)
-    mode = os.getenv('KERVION_OUTPUT_GUARD_MODE')
     if mode in ('enforce', 'shadow'):
         cfg['mode'] = mode
     # 설정 파일의 기본 mode는 shadow다.
     allowed_context_ids = None
     guard_records = records
+    generic_entities = []
     if conn is not None:
-        from backend.api.guard_catalog import load_catalog
+        from backend.api.guard_catalog import build_guard_inputs, load_catalog, load_generic_entities
 
         catalog = load_catalog(conn, context.dataset)
-        allowed = {record['record_id']: record for record in records}
-        guard_records = []
-        for catalog_record in catalog:
-            record_id = catalog_record['record_id']
-            if record_id not in allowed:
-                guard_records.append(catalog_record)
-                continue
-            cut = allowed[record_id]
-            guard_records.append(cut)
-            withheld = {field: (catalog_record.get(field) or '')
-                        if not cut.get(field) and catalog_record.get(field) else ''
-                        for field in ('summary', 'content')}
-            if any(withheld.values()):
-                guard_records.append({'record_id': f'{record_id}#withheld', **withheld})
-        allowed_context_ids = list(allowed)
+        guard_records, allowed_context_ids = build_guard_inputs(catalog, records)
+        generic_entities = load_generic_entities(conn, context.dataset)
+        cfg['generic_entities'] = list(cfg.get('generic_entities', [])) + generic_entities + [
+            *(f'YB-{number}' for number in range(1, 7)), '조사원']
+        if context.dataset == 'game-data':
+            # game-data 기본 문서 빈도 비율은 3%이며 설정값으로 조정할 수 있다.
+            cfg.setdefault('context_generic', {}).setdefault('df_ratio', 0.03)
     prompt_sentences = _PROMPT_SENTENCES.get(context.character_id)
     if prompt_sentences is None:
         try:
-            if render is None:
-                from backend.character_ai.prompt_render import render_actor_prompt
+            from backend.api.guard_catalog import prompt_sentences_for
 
-                render = render_actor_prompt
-            sentences = sentences_from_text(render(context.character_id, 'answer', memory=[], history=[]))
+            sentences = prompt_sentences_for(context.character_id, render=render)
             _PROMPT_SENTENCES[context.character_id] = sentences
             prompt_sentences = sentences
         except Exception:
