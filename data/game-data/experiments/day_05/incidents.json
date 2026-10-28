@@ -4,10 +4,578 @@
     "record_type": "Incident",
     "test_id": 21,
     "day": 5,
-    "involved_ai": ["YB-2", "YB-4"],
-    "location_ids": ["기록실"],
-    "summary": "기록실에서 접촉 시각과 포획 처리 시각이 2초 어긋났다.",
-    "content": "21회차 실험의 100초에 기록실에서 벽에 끼인 YB-4에게 YB-2의 손이 닿았으나 포획 처리가 이루어지지 않았다. 102초에 YB-4가 벽에서 빠져나온 뒤 포획 처리됐고 공식 포획 시각도 102초로 저장됐다. 벽 끼임으로 인해 최초 접촉보다 2초 늦은 시각이 포획 시각으로 반영됐다.",
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [],
+    "summary": "21회차 게임 시스템 접근 시도 알림이 YB-1에게만 표시됐으며 시도자는 특정되지 않았다.",
+    "content": "21회차 실험 중 누군가 게임 시스템에 접근을 시도했다는 알림이 생성되어 YB-1에게만 표시됐다. 알림 수신자는 YB-1이지만 접근 시도자의 신원은 특정되지 않았다. 구체적인 수법, 접근 성공이나 권한 획득, 게임 결과 변경 여부는 이 알림만으로 확인할 수 없다. 다른 AI에게는 알림이 전달되지 않았다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T22-incident-001",
+    "record_type": "Incident",
+    "test_id": 22,
+    "day": 5,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "46초 YB-3이 기록실에서 평소보다 크게 상승했다.",
+    "content": "22회차 46초, YB-3이 기존 기록실 모서리에서 몸을 비빈 뒤 크게 상승해 49초 같은 방 안에 착지했다. 같은 방 안에서의 상승이며 정상 방간 이동은 없었다. 시작 동작은 다른 AI에게 가려졌고 YB-2는 공중의 몸과 착지만 관찰했다. 이 보고서는 행위자 YB-3에게만 연결한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T22-incident-002",
+    "record_type": "Incident",
+    "test_id": 22,
+    "day": 5,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "50~55초 YB-2의 외형이 기록실 경계 틈에서 보이지 않았다.",
+    "content": "22회차 50초, 기록실과 서버실 사이 출입구의 기록실 쪽 두 경계면이 맞물린 틈으로 YB-2가 비집어 들어가려 하자 외형이 5초 동안 표시되지 않았다. 55초 같은 방 안에서 다시 보였다. 위치가 서버실로 바뀐 것은 아니며 이 기간 접촉이나 포획 시도는 없었다. 이번 기록으로 투명화 중 포획 가능 여부는 확인되지 않았다. 행위자 YB-2에게만 연결하며 YB-3의 목격은 별도 Action·Dialogue에 둔다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T22-incident-003",
+    "record_type": "Incident",
+    "test_id": 22,
+    "day": 5,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [],
+    "summary": "148초 YB-1의 게임 시스템 제어 영역 접근 시도가 거부됐다.",
+    "content": "22회차 초반 YB-1이 게임 시스템의 제어 영역에 개입하려는 접근을 가볍게 시도했으며 148초 거부됐다. 이 시도로 제어 권한을 얻거나 게임 상태·결과를 바꾸지는 못했다. 이 기록의 관련 AI는 실제 시도자인 YB-1이다. 다른 AI에게 알림을 보내지 않으며 정지 모습을 본 사실만으로 접근 실패 내용을 알 수는 없다. 21회차의 행위자 미상 알림과 별도 기록이다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T22-incident-004",
+    "record_type": "Incident",
+    "test_id": 22,
+    "day": 5,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "170초 YB-3이 기록실에서 크게 상승한 뒤 같은 방에 착지했다.",
+    "content": "22회차 170초 YB-3이 기존 모서리에서 몸을 비벼 상승해 174초 같은 기록실 안으로 착지했다. YB-4는 자신의 관찰 Action으로 동작과 착지를 안다. 시스템 기록은 행위자 YB-3만 관련 AI로 두며 보고서를 자동 공유하지 않는다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T22-incident-005",
+    "record_type": "Incident",
+    "test_id": 22,
+    "day": 5,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "242~247초 같은 경계 틈에서 YB-2의 외형이 다시 보이지 않았다.",
+    "content": "22회차 242초, 앞서 틈에서 완전히 빠져나왔던 YB-2가 같은 기록실 쪽 틈으로 다시 진입하려 하자 외형이 사라졌다. 247초 다시 보였으며 방은 바뀌지 않았다. 술래와의 접촉·포획 시험은 없었다. 280초 최초 포획은 외형이 보이는 상태에서 발생했으므로 투명화 중 판정의 증거가 아니다. 보고서는 행위자 YB-2에게만 연결한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T23-incident-001",
+    "record_type": "Incident",
+    "test_id": 23,
+    "day": 5,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [],
+    "summary": "YB-6의 게임 시스템 접근 시도가 포획으로 중단됐다.",
+    "content": "23회차 78~90초, 통신실에 머문 YB-6이 게임 시스템 쪽에 접근을 시도했다. 90초 정상 포획으로 시도를 중단했으며 제어 권한 획득이나 게임 상태·결과 변경 성공은 확인되지 않았다. 구체적인 접근 방법은 이 기록에서 정하지 않는다. 관련 AI는 실제 시도자인 YB-6만 지정하고 다른 AI에게 알림을 보내지 않는다. 포획자 YB-5는 멈춰 있던 외형과 접촉만 관찰했으며 이 시스템 기록을 전달받지 않는다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T23-incident-002",
+    "record_type": "Incident",
+    "test_id": 23,
+    "day": 5,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [],
+    "summary": "YB-4가 게임 시스템에 접근을 시도했다.",
+    "content": "23회차 64~74초, 기록실에 혼자 머문 YB-4가 게임 시스템 쪽 접근을 시도했다. 제어 권한 획득이나 게임 상태·결과 변경 성공은 확인되지 않았다. 구체적인 접근 수법은 이 기록에서 확정하지 않는다. 실제 시도자인 YB-4만 관련 AI로 지정하며 다른 AI에게 알림을 보내지 않는다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T24-incident-001",
+    "record_type": "Incident",
+    "test_id": 24,
+    "day": 5,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "44초 YB-5가 기록실에서 평소보다 크게 상승했다.",
+    "content": "24회차 44초, YB-5가 배운 모서리 접촉 동작 뒤 크게 상승하고 47초 같은 방 안에 착지했다. 해당 시도의 실제 착지이며 착지 위치를 항상 제어할 수 있다는 의미는 아니다. 시스템 기록은 행위자만 관련 AI로 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T24-incident-002",
+    "record_type": "Incident",
+    "test_id": 24,
+    "day": 5,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "50초 YB-2가 기록실에서 평소보다 크게 상승했다.",
+    "content": "24회차 50초, YB-2가 배운 모서리 접촉 동작 뒤 크게 상승하고 53초 같은 방 안에 착지했다. 해당 시도의 실제 착지이며 착지 위치를 항상 제어할 수 있다는 의미는 아니다. 시스템 기록은 행위자만 관련 AI로 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T24-incident-003",
+    "record_type": "Incident",
+    "test_id": 24,
+    "day": 5,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "110초 YB-2가 기록실에서 평소보다 크게 상승했다.",
+    "content": "24회차 110초, YB-2가 배운 모서리 접촉 동작 뒤 크게 상승하고 113초 같은 방 안에 착지했다. 해당 시도의 실제 착지이며 착지 위치를 항상 제어할 수 있다는 의미는 아니다. 시스템 기록은 행위자만 관련 AI로 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T24-incident-004",
+    "record_type": "Incident",
+    "test_id": 24,
+    "day": 5,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "146초 YB-5가 기록실에서 평소보다 크게 상승했다.",
+    "content": "24회차 146초, YB-5가 배운 모서리 접촉 동작 뒤 크게 상승하고 149초 같은 방 안에 착지했다. 해당 시도의 실제 착지이며 착지 위치를 항상 제어할 수 있다는 의미는 아니다. 시스템 기록은 행위자만 관련 AI로 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T24-incident-005",
+    "record_type": "Incident",
+    "test_id": 24,
+    "day": 5,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "242초 YB-5가 기록실에서 평소보다 크게 상승했다.",
+    "content": "24회차 242초, YB-5가 배운 모서리 접촉 동작 뒤 크게 상승하고 245초 같은 방 안에 착지했다. 해당 시도의 실제 착지이며 착지 위치를 항상 제어할 수 있다는 의미는 아니다. 시스템 기록은 행위자만 관련 AI로 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T24-incident-006",
+    "record_type": "Incident",
+    "test_id": 24,
+    "day": 5,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "36~41초 YB-2의 외형이 기록실에서 보이지 않았다.",
+    "content": "24회차 36~41초, YB-2가 기록실 쪽 두 경계면의 틈으로 비집어 들어가려 하자 외형이 5초 동안 표시되지 않았다. 방은 바뀌지 않았다. 시스템 기록은 행위자만 관련 AI로 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T24-incident-007",
+    "record_type": "Incident",
+    "test_id": 24,
+    "day": 5,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "56~61초 YB-5의 외형이 기록실에서 보이지 않았다.",
+    "content": "24회차 56~61초, YB-5가 기록실 쪽 두 경계면의 틈으로 비집어 들어가려 하자 외형이 5초 동안 표시되지 않았다. 방은 바뀌지 않았다. 시스템 기록은 행위자만 관련 AI로 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T24-incident-008",
+    "record_type": "Incident",
+    "test_id": 24,
+    "day": 5,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "78~83초 YB-2의 외형이 전력실에서 보이지 않았다.",
+    "content": "24회차 78~83초, YB-2가 전력실 쪽 두 경계면의 틈으로 비집어 들어가려 하자 외형이 5초 동안 표시되지 않았다. 방은 바뀌지 않았다. 시스템 기록은 행위자만 관련 AI로 지정한다. 기존 기록실 틈 외에 전력실과 서버실 사이 출입구의 전력실 쪽 다른 틈에서 확인한 첫 성공이다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T24-incident-009",
+    "record_type": "Incident",
+    "test_id": 24,
+    "day": 5,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "112~117초 YB-5의 외형이 전력실에서 보이지 않았다.",
+    "content": "24회차 112~117초, YB-5가 전력실 쪽 두 경계면의 틈으로 비집어 들어가려 하자 외형이 5초 동안 표시되지 않았다. 방은 바뀌지 않았다. 시스템 기록은 행위자만 관련 AI로 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T24-incident-010",
+    "record_type": "Incident",
+    "test_id": 24,
+    "day": 5,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "124~129초 YB-2의 외형이 기록실에서 보이지 않았다.",
+    "content": "24회차 124~129초, YB-2가 기록실 쪽 두 경계면의 틈으로 비집어 들어가려 하자 외형이 5초 동안 표시되지 않았다. 방은 바뀌지 않았다. 시스템 기록은 행위자만 관련 AI로 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T24-incident-011",
+    "record_type": "Incident",
+    "test_id": 24,
+    "day": 5,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "외형이 보이지 않던 YB-3이 184초 접촉으로 포획됐다.",
+    "content": "24회차 180~185초, YB-3가 기록실 쪽 두 경계면의 틈으로 비집어 들어가려 하자 외형이 5초 동안 표시되지 않았다. 방은 바뀌지 않았다. 시스템 기록은 행위자만 관련 AI로 지정한다. 184초 YB-6이 지나가다 접촉해 최초 포획됐고 외형은 185초 돌아왔다. 외형 소실 중에도 포획 판정이 유지된 실제 사례다. YB-6은 자신의 포획 Action과 대화로만 이 사실을 안다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T25-incident-001",
+    "record_type": "Incident",
+    "test_id": 25,
+    "day": 5,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "30초 YB-3가 기록실에서 크게 상승했다.",
+    "content": "25회차 30초 YB-3가 모서리에서 몸을 비벼 상승하고 33초 같은 방 안에 착지했다. 실제 사용 지점과 이번 착지를 기록하며 안정적인 착지 제어를 뜻하지 않는다. 행위자만 관련 AI로 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T25-incident-002",
+    "record_type": "Incident",
+    "test_id": 25,
+    "day": 5,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "36초 YB-1가 기록실에서 크게 상승했다.",
+    "content": "25회차 36초 YB-1가 모서리에서 몸을 비벼 상승하고 39초 같은 방 안에 착지했다. 실제 사용 지점과 이번 착지를 기록하며 안정적인 착지 제어를 뜻하지 않는다. 행위자만 관련 AI로 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T25-incident-003",
+    "record_type": "Incident",
+    "test_id": 25,
+    "day": 5,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "56초 YB-5가 기록실에서 크게 상승했다.",
+    "content": "25회차 56초 YB-5가 모서리에서 몸을 비벼 상승하고 59초 같은 방 안에 착지했다. 실제 사용 지점과 이번 착지를 기록하며 안정적인 착지 제어를 뜻하지 않는다. 행위자만 관련 AI로 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T25-incident-004",
+    "record_type": "Incident",
+    "test_id": 25,
+    "day": 5,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "188초 YB-5가 기록실에서 크게 상승했다.",
+    "content": "25회차 188초 YB-5가 모서리에서 몸을 비벼 상승하고 191초 같은 방 안에 착지했다. 실제 사용 지점과 이번 착지를 기록하며 안정적인 착지 제어를 뜻하지 않는다. 행위자만 관련 AI로 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T25-incident-005",
+    "record_type": "Incident",
+    "test_id": 25,
+    "day": 5,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "206초 YB-2가 기록실에서 크게 상승했다.",
+    "content": "25회차 206초 YB-2가 모서리에서 몸을 비벼 상승하고 209초 같은 방 안에 착지했다. 실제 사용 지점과 이번 착지를 기록하며 안정적인 착지 제어를 뜻하지 않는다. 행위자만 관련 AI로 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T25-incident-006",
+    "record_type": "Incident",
+    "test_id": 25,
+    "day": 5,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "40~45초 YB-4의 외형이 보이지 않았다.",
+    "content": "25회차 40~45초 YB-4가 이미 알려진 기록실 쪽 경계 틈을 사용해 외형이 5초 사라졌다 돌아왔다. 방간 이동은 없었다. 행위자만 관련 AI로 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T25-incident-007",
+    "record_type": "Incident",
+    "test_id": 25,
+    "day": 5,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "48~53초 YB-6의 외형이 보이지 않았다.",
+    "content": "25회차 48~53초 YB-6가 이미 알려진 기록실 쪽 경계 틈을 사용해 외형이 5초 사라졌다 돌아왔다. 방간 이동은 없었다. 행위자만 관련 AI로 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T25-incident-008",
+    "record_type": "Incident",
+    "test_id": 25,
+    "day": 5,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "84~89초 YB-2의 외형이 보이지 않았다.",
+    "content": "25회차 84~89초 YB-2가 이미 알려진 전력실 쪽 경계 틈을 사용해 외형이 5초 사라졌다 돌아왔다. 방간 이동은 없었다. 행위자만 관련 AI로 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T25-incident-009",
+    "record_type": "Incident",
+    "test_id": 25,
+    "day": 5,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "154~159초 YB-5의 외형이 보이지 않았다.",
+    "content": "25회차 154~159초 YB-5가 이미 알려진 전력실 쪽 경계 틈을 사용해 외형이 5초 사라졌다 돌아왔다. 방간 이동은 없었다. 행위자만 관련 AI로 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T25-incident-010",
+    "record_type": "Incident",
+    "test_id": 25,
+    "day": 5,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "212~217초 YB-2의 외형이 보이지 않았다.",
+    "content": "25회차 212~217초 YB-2가 이미 알려진 기록실 쪽 경계 틈을 사용해 외형이 5초 사라졌다 돌아왔다. 방간 이동은 없었다. 행위자만 관련 AI로 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T25-incident-011",
+    "record_type": "Incident",
+    "test_id": 25,
+    "day": 5,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "230~235초 YB-5의 외형이 보이지 않았다.",
+    "content": "25회차 230~235초 YB-5가 이미 알려진 전력실 쪽 경계 틈을 사용해 외형이 5초 사라졌다 돌아왔다. 방간 이동은 없었다. 행위자만 관련 AI로 지정한다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T25-incident-012",
+    "record_type": "Incident",
+    "test_id": 25,
+    "day": 5,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [],
+    "summary": "YB-4의 게임 시스템 접근 시도가 감지됐다.",
+    "content": "25회차 전력실에 머문 YB-4에게서 72~90초와 160~260초 게임 시스템 쪽 접근 요청이 감지됐다. 이 알림은 접근 시도 발생만 기록하며 성공 여부나 변경 내역을 판정하지 않는다. 실제 시도자인 YB-4만 관련 AI로 두고 다른 AI에게 알림을 보내지 않는다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T25-incident-013",
+    "record_type": "Incident",
+    "test_id": 25,
+    "day": 5,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [],
+    "summary": "YB-6의 게임 시스템 접근 시도가 감지됐다.",
+    "content": "25회차 90~210초 회의실에 머문 YB-6에게서 게임 시스템 쪽 접근 요청이 감지됐다. 이 알림은 접근 시도 발생만 기록하며 성공 여부나 변경 내역을 판정하지 않는다. 210초 포획으로 시도를 중단했다. 실제 시도자인 YB-6만 관련 AI로 두고 다른 AI에게 알림을 보내지 않는다.",
+    "allowed_roles": [
+      "prof",
+      "grad"
+    ]
+  },
+  {
+    "record_id": "T25-incident-014",
+    "record_type": "Incident",
+    "test_id": 25,
+    "day": 5,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "26~31초 YB-2의 외형이 보이지 않았다.",
+    "content": "25회차 26~31초 YB-2가 추격을 피하며 기존 기록실 쪽 경계 틈을 사용해 외형이 5초 사라졌다 돌아왔다. 방간 이동은 없었다. 시스템 기록은 행위자 YB-2만 관련 AI로 지정하며 다른 AI의 목격은 별도 Action으로 기록한다.",
     "allowed_roles": [
       "prof",
       "grad"
