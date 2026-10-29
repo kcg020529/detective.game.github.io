@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kervion-config
+  labels:
+    app.kubernetes.io/part-of: kervion
+    app.kubernetes.io/name: config
+    app.kubernetes.io/tier: shared
+data:
+  MARIADB_HOST: mariadb
+  MARIADB_PORT: "3306"
+  MARIADB_DATABASE: kervion
+  QDRANT_URL: http://qdrant:6333
+  FASTEMBED_CACHE_PATH: /home/app/.cache/fastembed
+  KERVION_COOKIE_SAMESITE: lax
+  # 기본값 사용, 필요 시 조정.
+  # KERVION_OUTPUT_GUARD_MODE: shadow
+  # KERVION_INPUT_GUARD_MODE: "on"
+  # KERVION_ACL_MODE: "on"
+  # KERVION_CHAT_DATASET: game-data

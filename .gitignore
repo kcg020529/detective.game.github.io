@@ -41,6 +41,12 @@ logs/
 # Kubernetes / 인프라 비밀값
 *secret*.yaml
 *secret*.yml
+infrastructure/kubernetes/secret.yaml
+infrastructure/kubernetes/*.secret.yaml
+!infrastructure/kubernetes/secret.example.yaml
+infrastructure/kubernetes/aws/aws.env
+infrastructure/kubernetes/aws/.env.aws
+/worklog/backups/
 .terraform/
 *.tfstate
 *.tfstate.*

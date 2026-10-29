@@ -1,0 +1,25 @@
+# 환경 값은 overlay에서 지정하고 Job은 이름으로 골라 순서대로 실행한다.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: kervion
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - mariadb.yaml
+  - qdrant.yaml
+  - fastembed-cache-pvc.yaml
+  - api.yaml
+  - web.yaml
+  - jobs/migrate.yaml
+  - jobs/load-data.yaml
+  - jobs/rag-index.yaml
+configMapGenerator:
+  - name: kervion-nginx
+    files:
+      - nginx.conf=../../docker/nginx.conf
+    options:
+      disableNameSuffixHash: true
+      labels:
+        app.kubernetes.io/part-of: kervion
+        app.kubernetes.io/name: nginx
+        app.kubernetes.io/tier: app

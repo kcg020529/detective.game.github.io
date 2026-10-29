@@ -1,0 +1,17 @@
+# 실제 계정·주소는 배포 시 공통 렌더러에서 치환한다.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: kervion
+resources:
+  - ../../base
+  - storageclass-gp3.yaml
+  - ingress.yaml
+images:
+  - name: kervion-backend
+    newName: __ECR_REGISTRY__/kervion-backend
+    newTag: __IMAGE_TAG__
+  - name: kervion-web
+    newName: __ECR_REGISTRY__/kervion-web
+    newTag: __IMAGE_TAG__
+patches:
+  - path: configmap-patch.yaml

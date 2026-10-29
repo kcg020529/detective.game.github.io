@@ -1,0 +1,14 @@
+# 단일 로컬 노드는 RWO로 충분하며, 다중 노드는 RWX 또는 Pod별 캐시가 필요합니다.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fastembed-cache
+  labels:
+    app.kubernetes.io/part-of: kervion
+    app.kubernetes.io/name: fastembed-cache
+    app.kubernetes.io/tier: data
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 1Gi
