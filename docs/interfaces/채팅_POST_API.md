@@ -15,13 +15,13 @@ message는 공백만 있는 값을 제외한 1~2000자, 요청 ID는 출력 가�
 4. Save를 다시 소유권 확인·행 잠금하고 중복 요청을 확인한다. 같은 Save의 Day 진행·덮어쓰기는 답변 처리 트랜잭션과 직렬화된다.
 5. 동일 Save/AI의 최근 이력 최대 12개·합계 24000자를 서버에서 조회해 Planner에 전달한다. dataset은 game-data로 고정한다.
 6. retrieve 경로만 E `backend.rag.service.retrieve`를 호출한다(I05). E가 F 사전 인가·최종 resolve를 수행하고 허용 기록(`records`), D용 memory(`m1…`), 조회 상태(`signal`)를 돌려준다. 다른 경로는 검색하지 않는다.
-7. D 생성 → G-2 출력 검사 → 최종 답변·질문·요청 캐시 저장 → commit 성공 후 응답한다.
+7. D 생성 → G-2 출력 검사 → 최종 답변·질문·요청 캐시 저장 → commit 성공 후 응답한다. 최종 유형이 normal·partial이면 D에 전달된 기록 ID(요약·본문이 있는 것만)를 `chat_message_records`에 같은 트랜잭션으로 저장한다. 최종 지목의 단서 판정이 이 표를 쓴다(I06).
 
 ## D / G-2 연결 현황
 
-I05 생성기와 선영 작업 브랜치의 G-2 어댑터가 기본 서버에 함께 등록되어 있다. 채팅 요청은 Planner→E/F 검색→D 답변→G-2 검사를 거친다. 설정·검색·검사에 실패하면 503으로 종료하며 초안은 저장하지 않는다. D/G-2의 미확정 응답 유형은 별도 합의 대상이다.
+I05 생성기와 G-2 출력 가드가 `main`의 기본 서버에 함께 등록되어 있다. 채팅 요청은 Planner→E/F 검색→D 답변→G-2 검사를 거친다. 설정·검색·검사에 실패하면 503으로 종료하며 초안은 저장하지 않는다. DeepSeek 키가 비어 있어도 503이다.
 
-현재 작업 브랜치의 등록은 `ChatPipeline(generator=make_generator(), output_guard=partial(check_output, audit_sink=record_output_guard_result))`이다. 요청 본문에서 어댑터를 선택할 수 없다.
+현재 등록은 `ChatPipeline(generator=make_generator(), output_guard=partial(check_output, audit_sink=record_output_guard_result))`이다. 요청 본문에서 어댑터를 선택할 수 없다.
 
 - generator: keyword 인자 `question, context, history, plan, records, retrieval`을 받아 draft `{"content","response_type"}` 반환. records는 E/F가 최종 허용한 결과뿐이고 retrieval은 retrieve 경로에서만 넘어온다(나머지는 None). plan의 clarify/out_of_scope도 준수해야 한다.
 - output_guard: keyword 인자 `draft, question, context, records, conn`을 받아 최종 `{"content":str,"response_type":"normal|partial|restricted|unknown"}` 반환. 답변은 공백 제외 1~2000자다. 승인 전 초안은 반환·저장하지 않는다. `applied=mask`는 개인정보를 가린 최종 문장과 `partial`, 유출 계열 `applied=block`은 안전 안내문과 `restricted`로 저장한다. 깨진 답변·품질 계열 차단은 503으로 처리한다.
@@ -30,11 +30,11 @@ I05 생성기와 선영 작업 브랜치의 G-2 어댑터가 기본 서버에 �
 
 ## 검증 한계
 
-임시 계정·Save로 실제 MariaDB에 정상·차단 대체·마스킹 답변의 채팅 6줄과 출력 감사 이벤트 2건을 확인하고 임시 데이터를 삭제했다(2026-10-28). Qdrant 기록 질문과 프론트 전체 동작은 추가 검증이 필요하다. Save 행 잠금이 모델 호출 중 유지되므로 같은 Save의 병렬 요청은 대기한다. 현재 G-2의 비인가 기록 비교에는 전체 기록이 들어가지 않아 `context_leak` 검사가 건너뛰어진다.
+임시 계정·Save로 실제 MariaDB에 정상·차단 대체·마스킹 답변의 채팅 6줄과 출력 감사 이벤트 2건을 확인하고 임시 데이터를 삭제했다(2026-10-28). 2026-10-29에는 Compose와 로컬 Kubernetes 양쪽에서 Qdrant 기록 질문(YB-1에게 25회차 포획 시각 → normal, "90초")과 전달 기록 저장을 확인했다. 단서 S02~S04를 실제 질문으로 역할별로 찾을 수 있는지는 아직 확인하지 않았다. Save 행 잠금이 모델 호출 중 유지되므로 같은 Save의 병렬 요청은 대기한다. G-2 비인가 기록 비교는 아래 "출력 가드 연결 상태"처럼 데이터셋 전체 기록을 받는다.
 
 ## 현재 연결 상태 (I05, 2026-10-28)
 
-- 아래는 I05가 `main`에 추가한 생성기 규칙이다. 현재 작업 브랜치의 기본 서버에도 연결되어 있다.
+- 아래는 I05가 `main`에 추가한 생성기 규칙이며 기본 서버에 연결되어 있다.
 - 생성기 규칙 (팀 흐름도와 용범의 응답 유형 지시를 따르고, 문서에 없는 부분은 임시로 정함):
 
 | 경로·조회 상태 | D 처리 | response_type |
