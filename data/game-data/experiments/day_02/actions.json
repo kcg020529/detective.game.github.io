@@ -196,7 +196,7 @@
       "회의실"
     ],
     "summary": "YB-2의 YB-1 포획.",
-    "content": "100초: YB-2가 회의실에서 YB-1를 최초 포획했다.",
+    "content": "100초: YB-2가 회의실에서 YB-1을 최초 포획했다.",
     "allowed_roles": [
       "prof",
       "grad",
@@ -219,7 +219,7 @@
       "전력실"
     ],
     "summary": "YB-3의 YB-5 포획.",
-    "content": "108초: YB-3가 전력실에서 YB-5를 최초 포획했다.",
+    "content": "108초: YB-3이 전력실에서 YB-5를 최초 포획했다.",
     "allowed_roles": [
       "prof",
       "grad",
@@ -265,7 +265,7 @@
       "전력실"
     ],
     "summary": "YB-3의 YB-6 포획.",
-    "content": "120초: YB-3가 전력실에서 YB-6를 최초 포획했다.",
+    "content": "120초: YB-3이 전력실에서 YB-6을 최초 포획했다.",
     "allowed_roles": [
       "prof",
       "grad",
@@ -474,7 +474,7 @@
       "중앙홀"
     ],
     "summary": "YB-1의 YB-3 포획.",
-    "content": "108초: YB-1가 중앙홀에서 YB-3를 최초 포획했다.",
+    "content": "108초: YB-1이 중앙홀에서 YB-3을 최초 포획했다.",
     "allowed_roles": [
       "prof",
       "grad",
@@ -520,7 +520,7 @@
       "통신실"
     ],
     "summary": "YB-4의 YB-6 포획.",
-    "content": "120초: YB-4가 통신실에서 YB-6를 최초 포획했다.",
+    "content": "120초: YB-4가 통신실에서 YB-6을 최초 포획했다.",
     "allowed_roles": [
       "prof",
       "grad",
@@ -698,7 +698,7 @@
       "창고"
     ],
     "summary": "YB-5의 YB-6 포획.",
-    "content": "95초: YB-5가 창고에서 YB-6를 최초 포획했다.",
+    "content": "95초: YB-5가 창고에서 YB-6을 최초 포획했다.",
     "allowed_roles": [
       "prof",
       "grad",
@@ -743,7 +743,7 @@
       "중앙홀"
     ],
     "summary": "YB-3의 YB-2 포획.",
-    "content": "110초: YB-3가 중앙홀에서 YB-2를 최초 포획했다.",
+    "content": "110초: YB-3이 중앙홀에서 YB-2를 최초 포획했다.",
     "allowed_roles": [
       "prof",
       "grad",
@@ -813,7 +813,7 @@
       "회의실"
     ],
     "summary": "YB-3의 YB-1 포획.",
-    "content": "126초: YB-3가 회의실에서 YB-1를 최초 포획했다.",
+    "content": "126초: YB-3이 회의실에서 YB-1을 최초 포획했다.",
     "allowed_roles": [
       "prof",
       "grad",
@@ -1470,7 +1470,7 @@
       "통신실"
     ],
     "summary": "112초 통신실에서 YB-3의 YB-6 포획 표시가 나타났다.",
-    "content": "112초: YB-6가 방향을 바꿔 통신실 벽에서 빠져나오자 포획 표시가 나타났다. 공식 기록에는 술래 YB-3, 도망자 YB-6, 포획 시각 112초가 저장됐다.",
+    "content": "112초: YB-6이 방향을 바꿔 통신실 벽에서 빠져나오자 포획 표시가 나타났다. 공식 기록에는 술래 YB-3, 도망자 YB-6, 포획 시각 112초가 저장됐다.",
     "allowed_roles": [
       "prof",
       "grad",

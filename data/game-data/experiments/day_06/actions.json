@@ -1,1 +1,4251 @@
-[]
+[
+  {
+    "record_id": "T26-action-001",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "창고",
+      "중앙홀"
+    ],
+    "summary": "YB-2가 창고에서 중앙홀로 이동했다.",
+    "content": "10초: YB-2는 창고에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [
+      "YB-4"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-002",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "서버실",
+      "기록실"
+    ],
+    "summary": "YB-3이 서버실에서 기록실로 이동했다.",
+    "content": "10초: YB-3은 서버실에서 정상 출입구와 통로로 이동해 기록실에 도착했다.",
+    "witness_ai": [
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-003",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "회의실",
+      "중앙홀"
+    ],
+    "summary": "YB-5가 회의실에서 중앙홀로 이동했다.",
+    "content": "12초: YB-5는 회의실에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [
+      "YB-4"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-004",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [
+      "통신실"
+    ],
+    "summary": "YB-1이 초기 방의 그늘에 머물렀다.",
+    "content": "12초: YB-1은 초기 위치인 통신실에서 장비 뒤의 그늘을 골라 발소리와 움직임을 줄였다. 다른 방으로 옮기지 않고 주변 소리를 살피며 버티기로 했다. 이번에는 시스템 접근이나 제어 개입을 시도하지 않았다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-005",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "회의실"
+    ],
+    "summary": "YB-4가 중앙홀에서 회의실로 이동했다.",
+    "content": "22초: YB-4는 중앙홀에서 정상 출입구와 통로로 이동해 회의실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-006",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "기록실"
+    ],
+    "summary": "YB-2가 중앙홀에서 기록실로 이동했다.",
+    "content": "24초: YB-2는 중앙홀에서 정상 출입구와 통로로 이동해 기록실에 도착했다.",
+    "witness_ai": [
+      "YB-3",
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-007",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-2가 기록실에서 크게 상승했다.",
+    "content": "28초: YB-2는 익숙한 캐비닛 모서리에서 상승해 31초 같은 방 안쪽에 착지했다. YB-6이 시작과 착지를 봤다.",
+    "witness_ai": [
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-008",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실",
+      "중앙홀"
+    ],
+    "summary": "YB-3이 기록실에서 중앙홀로 이동했다.",
+    "content": "28초: YB-3은 기록실에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-009",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-6이 발걸음을 멈췄다.",
+    "content": "34초: YB-6은 기록실 한쪽에서 잠깐 발걸음을 멈췄다. 다가오는 YB-2가 정지한 외형을 봤지만 그 이유는 설명받지 못했다.",
+    "witness_ai": [
+      "YB-2"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-010",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2",
+      "YB-6"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "36초 기록실에서 YB-2가 YB-6을 포획했다.",
+    "content": "36초: YB-2가 착지 뒤 멈춰 있는 YB-6에게 빠르게 접근해 접촉했다. YB-6의 외형은 보이는 상태였다. 접촉과 공식 최초 포획 시각은 모두 36초였으며 판정 지연은 없었다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-011",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "통신실"
+    ],
+    "summary": "YB-5가 중앙홀에서 통신실로 이동했다.",
+    "content": "38초: YB-5는 중앙홀에서 정상 출입구와 통로로 이동해 통신실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-012",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "통신실"
+    ],
+    "summary": "YB-3이 중앙홀에서 통신실로 이동했다.",
+    "content": "40초: YB-3은 중앙홀에서 정상 출입구와 통로로 이동해 통신실에 도착했다.",
+    "witness_ai": [
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-013",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-3",
+      "YB-5"
+    ],
+    "location_ids": [
+      "통신실"
+    ],
+    "summary": "두 AI가 통신실 구석에 멈춰 있는 YB-1을 봤다.",
+    "content": "42초: YB-3·5는 통신실 안에서 장비 뒤의 그늘에 멈춰 있는 YB-1을 직접 봤다. 입구 쪽을 확인하고 나가려는 동안에도 그 자리에서 크게 움직이는 모습은 없었다. 화면이나 조작 내용은 보지 못했다. YB-1은 둘에게 말하지 않았다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-014",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실",
+      "서버실"
+    ],
+    "summary": "YB-2가 기록실에서 서버실로 이동했다.",
+    "content": "48초: YB-2는 기록실에서 정상 출입구와 통로로 이동해 서버실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-015",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "통신실",
+      "중앙홀"
+    ],
+    "summary": "YB-5가 통신실에서 중앙홀로 이동했다.",
+    "content": "48초: YB-5는 통신실에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-016",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "통신실",
+      "중앙홀"
+    ],
+    "summary": "YB-3이 통신실에서 중앙홀로 이동했다.",
+    "content": "50초: YB-3은 통신실에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-017",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "회의실",
+      "중앙홀"
+    ],
+    "summary": "YB-4가 회의실에서 중앙홀로 이동했다.",
+    "content": "60초: YB-4는 회의실에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [
+      "YB-3",
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-018",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "서버실",
+      "전력실"
+    ],
+    "summary": "YB-2가 서버실에서 전력실로 이동했다.",
+    "content": "62초: YB-2는 서버실에서 정상 출입구와 통로로 이동해 전력실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-019",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "기록실"
+    ],
+    "summary": "YB-3이 중앙홀에서 기록실로 이동했다.",
+    "content": "64초: YB-3은 중앙홀에서 정상 출입구와 통로로 이동해 기록실에 도착했다.",
+    "witness_ai": [
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-020",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "기록실"
+    ],
+    "summary": "YB-5가 중앙홀에서 기록실로 이동했다.",
+    "content": "66초: YB-5는 중앙홀에서 정상 출입구와 통로로 이동해 기록실에 도착했다.",
+    "witness_ai": [
+      "YB-3",
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-021",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-3이 기록실에서 크게 상승했다.",
+    "content": "70초: YB-3은 빠질 방향을 확인하려 익숙한 모서리에서 상승해 73초 같은 방에 착지했다. YB-5가 이를 봤다.",
+    "witness_ai": [
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-022",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-5의 외형이 76~81초 보이지 않았다.",
+    "content": "76초: YB-5가 기존 기록실 쪽 경계 틈에서 76~81초 외형을 숨겼다. YB-3이 출입구 쪽을 보며 함께 빠질 방향을 확인했다. 접촉은 없었다.",
+    "witness_ai": [
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-023",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "전력실",
+      "중앙홀"
+    ],
+    "summary": "YB-2가 전력실에서 중앙홀로 이동했다.",
+    "content": "78초: YB-2는 전력실에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [
+      "YB-4"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-024",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-5가 틈에서 빠져나왔다.",
+    "content": "82초: YB-5는 외형이 돌아온 뒤 틈에서 몸을 완전히 빼내 서버실 출입구 쪽으로 물러났다.",
+    "witness_ai": [
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-025",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실",
+      "서버실"
+    ],
+    "summary": "YB-3이 기록실에서 서버실로 이동했다.",
+    "content": "84초: YB-3은 기록실에서 정상 출입구와 통로로 이동해 서버실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-026",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "기록실",
+      "서버실"
+    ],
+    "summary": "YB-5가 기록실에서 서버실로 이동했다.",
+    "content": "86초: YB-5는 기록실에서 정상 출입구와 통로로 이동해 서버실에 도착했다.",
+    "witness_ai": [
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-027",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-4가 통로를 살피다 멈췄다.",
+    "content": "90초: YB-4는 통신실 출입구 바깥에서 잠깐 안쪽을 살피다가 중앙홀 쪽으로 돌아섰다. 장비 뒤 그늘까지 들어가 확인하지는 않았고 그곳에 누가 있는지도 확인하지 못했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-028",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "기록실"
+    ],
+    "summary": "YB-2가 중앙홀에서 기록실로 이동했다.",
+    "content": "92초: YB-2는 중앙홀에서 정상 출입구와 통로로 이동해 기록실에 도착했다.",
+    "witness_ai": [
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-029",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "서버실",
+      "전력실"
+    ],
+    "summary": "YB-3이 서버실에서 전력실로 이동했다.",
+    "content": "100초: YB-3은 서버실에서 정상 출입구와 통로로 이동해 전력실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-030",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "서버실",
+      "전력실"
+    ],
+    "summary": "YB-5가 서버실에서 전력실로 이동했다.",
+    "content": "104초: YB-5는 서버실에서 정상 출입구와 통로로 이동해 전력실에 도착했다.",
+    "witness_ai": [
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-031",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "전력실"
+    ],
+    "summary": "YB-4가 중앙홀에서 전력실로 이동했다.",
+    "content": "110초: YB-4는 중앙홀에서 정상 출입구와 통로로 이동해 전력실에 도착했다.",
+    "witness_ai": [
+      "YB-3",
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-032",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실",
+      "서버실"
+    ],
+    "summary": "YB-2가 기록실에서 서버실로 이동했다.",
+    "content": "112초: YB-2는 기록실에서 정상 출입구와 통로로 이동해 서버실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-033",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "YB-4가 상대에게 다가가다 추격을 늦췄다.",
+    "content": "112초: YB-4는 YB-3·5 쪽으로 몇 걸음 거리를 좁혔지만 둘이 장치 반대편으로 움직이자 깊이 따라붙지 않고 통로 쪽을 다시 살폈다. 두 AI는 그가 바로 뒤따라오지 않는 모습을 봤다.",
+    "witness_ai": [
+      "YB-3",
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-034",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "YB-5의 외형이 118~123초 보이지 않았다.",
+    "content": "118초: YB-5가 기존 전력실 쪽 경계 틈에서 118~123초 외형을 숨겼다. YB-3은 정확한 진입 동작과 복귀를 보고 따라 쓸 위치를 확인했다. YB-4는 통로 반대쪽을 보고 있어 그 장면을 지켜보지 못했다.",
+    "witness_ai": [
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-035",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "YB-5가 전력실 틈에서 물러났다.",
+    "content": "124초: YB-5는 외형이 돌아온 뒤 틈에서 몸을 완전히 빼내 다음에 빠질 출입구를 살폈다.",
+    "witness_ai": [
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-036",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "서버실",
+      "전력실"
+    ],
+    "summary": "YB-2가 서버실에서 전력실로 이동했다.",
+    "content": "128초: YB-2는 서버실에서 정상 출입구와 통로로 이동해 전력실에 도착했다.",
+    "witness_ai": [
+      "YB-3",
+      "YB-4",
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-037",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "YB-3의 외형이 130~135초 보이지 않았다.",
+    "content": "130초: YB-3은 방금 확인한 전력실 쪽 틈으로 진입해 130~135초 외형을 숨겼다. 발동 뒤 장치 반대편으로 간격을 벌리고 같은 방 안에서 다시 보였다. YB-5가 시작과 복귀를 지켜봤다.",
+    "witness_ai": [
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-038",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "YB-2의 외형이 132~137초 보이지 않았다.",
+    "content": "132초: YB-2도 기존 전력실 쪽 틈에서 132~137초 외형을 숨기며 추격했다. YB-3이 이미 틈을 벗어난 뒤라 접촉은 없었다. YB-5는 시작과 복귀를 보고 추격 방향을 경계했다.",
+    "witness_ai": [
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-039",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "전력실",
+      "서버실"
+    ],
+    "summary": "YB-3이 전력실에서 서버실로 이동했다.",
+    "content": "140초: YB-3은 전력실에서 정상 출입구와 통로로 이동해 서버실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-040",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "전력실",
+      "중앙홀"
+    ],
+    "summary": "YB-5가 전력실에서 중앙홀로 이동했다.",
+    "content": "142초: YB-5는 전력실에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-041",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "전력실",
+      "중앙홀"
+    ],
+    "summary": "YB-2가 전력실에서 중앙홀로 이동했다.",
+    "content": "154초: YB-2는 전력실에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-042",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "서버실",
+      "기록실"
+    ],
+    "summary": "YB-3이 서버실에서 기록실로 이동했다.",
+    "content": "156초: YB-3은 서버실에서 정상 출입구와 통로로 이동해 기록실에 도착했다.",
+    "witness_ai": [
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-043",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "창고"
+    ],
+    "summary": "YB-5가 중앙홀에서 창고로 이동했다.",
+    "content": "158초: YB-5는 중앙홀에서 정상 출입구와 통로로 이동해 창고에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-044",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "창고"
+    ],
+    "summary": "YB-2가 중앙홀에서 창고로 이동했다.",
+    "content": "170초: YB-2는 중앙홀에서 정상 출입구와 통로로 이동해 창고에 도착했다.",
+    "witness_ai": [
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-045",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2",
+      "YB-5"
+    ],
+    "location_ids": [
+      "창고"
+    ],
+    "summary": "YB-2가 도망가는 YB-5를 추격했다.",
+    "content": "174초: YB-2는 YB-5의 퇴로를 좁히며 따라갔다. YB-5는 상자 쪽을 돌아 출입구와 거리를 유지하다 빠져나갈 틈을 찾았다. 이전 협력처럼 포획을 미뤄주거나 위치 정보를 요구하는 상황은 아니었다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-046",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실",
+      "중앙홀"
+    ],
+    "summary": "YB-3이 기록실에서 중앙홀로 이동했다.",
+    "content": "176초: YB-3은 기록실에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-047",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "창고",
+      "중앙홀"
+    ],
+    "summary": "YB-5가 창고에서 중앙홀로 이동했다.",
+    "content": "184초: YB-5는 창고에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-048",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "창고",
+      "중앙홀"
+    ],
+    "summary": "YB-2가 창고에서 중앙홀로 이동했다.",
+    "content": "192초: YB-2는 창고에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-049",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "기록실"
+    ],
+    "summary": "YB-3이 중앙홀에서 기록실로 이동했다.",
+    "content": "196초: YB-3은 중앙홀에서 정상 출입구와 통로로 이동해 기록실에 도착했다.",
+    "witness_ai": [
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-050",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "기록실"
+    ],
+    "summary": "YB-5가 중앙홀에서 기록실로 이동했다.",
+    "content": "198초: YB-5는 중앙홀에서 정상 출입구와 통로로 이동해 기록실에 도착했다.",
+    "witness_ai": [
+      "YB-3",
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-051",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "기록실"
+    ],
+    "summary": "YB-2가 중앙홀에서 기록실로 이동했다.",
+    "content": "204초: YB-2는 중앙홀에서 정상 출입구와 통로로 이동해 기록실에 도착했다.",
+    "witness_ai": [
+      "YB-3",
+      "YB-5",
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-052",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-3이 기록실에서 크게 상승했다.",
+    "content": "204초: YB-3이 추격을 피하려 캐비닛 모서리에서 상승해 207초 같은 방 안에 착지했다. YB-5가 움직임을 확인하며 다른 출입구 쪽을 살폈다.",
+    "witness_ai": [
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-053",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-2가 기록실에서 크게 상승했다.",
+    "content": "205초: YB-2도 모서리에서 곧바로 상승해 208초 같은 방 안쪽에 착지하며 추격 거리를 좁혔다. YB-3·5가 동작을 봤다. 착지 위치를 항상 제어하는 능력을 확정한 것은 아니다.",
+    "witness_ai": [
+      "YB-3",
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-054",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-5의 외형이 206~211초 보이지 않았다.",
+    "content": "206초: YB-5가 기존 기록실 틈을 사용해 206~211초 외형을 숨겼다. YB-3은 그가 모습을 숨긴 동안 다른 쪽으로 움직여 추격을 갈라보려 했다.",
+    "witness_ai": [
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-055",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2",
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "210초 기록실에서 YB-2가 YB-3을 포획했다.",
+    "content": "210초: YB-2는 착지 뒤 아직 외형이 보이는 YB-3에게 따라붙어 접촉했다. YB-5가 함께 피하려 했지만 포획을 막지는 못했고 장면을 직접 봤다. 접촉과 공식 최초 포획 시각은 모두 210초였으며 판정 지연은 없었다.",
+    "witness_ai": [
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-056",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "기록실",
+      "서버실"
+    ],
+    "summary": "YB-5가 기록실에서 서버실로 이동했다.",
+    "content": "220초: YB-5는 기록실에서 정상 출입구와 통로로 이동해 서버실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-057",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실",
+      "서버실"
+    ],
+    "summary": "YB-2가 기록실에서 서버실로 이동했다.",
+    "content": "224초: YB-2는 기록실에서 정상 출입구와 통로로 이동해 서버실에 도착했다.",
+    "witness_ai": [
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-058",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "서버실",
+      "전력실"
+    ],
+    "summary": "YB-5가 서버실에서 전력실로 이동했다.",
+    "content": "234초: YB-5는 서버실에서 정상 출입구와 통로로 이동해 전력실에 도착했다.",
+    "witness_ai": [
+      "YB-4"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-059",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "서버실",
+      "전력실"
+    ],
+    "summary": "YB-2가 서버실에서 전력실로 이동했다.",
+    "content": "238초: YB-2는 서버실에서 정상 출입구와 통로로 이동해 전력실에 도착했다.",
+    "witness_ai": [
+      "YB-4",
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-060",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "YB-2의 외형이 238~243초 보이지 않았다.",
+    "content": "238초: YB-2는 기존 전력실 쪽 틈에서 238~243초 외형을 숨겼다. 틈을 벗어나 장치 쪽으로 움직이며 추격했고 YB-4가 시작과 복귀를 봤다.",
+    "witness_ai": [
+      "YB-4"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-061",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2",
+      "YB-5"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "240초 전력실에서 YB-2가 YB-5를 포획했고 YB-4가 목격했다.",
+    "content": "240초: 외형이 보이지 않는 YB-2가 장치 옆으로 피하던 YB-5에게 접촉했다. YB-5의 외형은 보였고 243초 YB-2가 다시 나타났다. YB-4가 접촉과 포획 표시를 봤다. 접촉과 공식 최초 포획 시각은 모두 240초였으며 판정 지연은 없었다.",
+    "witness_ai": [
+      "YB-4"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-062",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "전력실",
+      "서버실"
+    ],
+    "summary": "YB-2가 전력실에서 서버실로 이동했다.",
+    "content": "258초: YB-2는 전력실에서 정상 출입구와 통로로 이동해 서버실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-063",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "서버실",
+      "기록실"
+    ],
+    "summary": "YB-2가 서버실에서 기록실로 이동했다.",
+    "content": "276초: YB-2는 서버실에서 정상 출입구와 통로로 이동해 기록실에 도착했다.",
+    "witness_ai": [
+      "YB-3",
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-064",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실",
+      "중앙홀"
+    ],
+    "summary": "YB-2가 기록실에서 중앙홀로 이동했다.",
+    "content": "292초: YB-2는 기록실에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-065",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "회의실"
+    ],
+    "summary": "YB-2가 중앙홀에서 회의실로 이동했다.",
+    "content": "298초: YB-2는 중앙홀에서 정상 출입구와 통로로 이동해 회의실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-action-066",
+    "record_type": "Action",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [
+      "통신실"
+    ],
+    "summary": "YB-1이 같은 방에서 조용히 버텨 완주했다.",
+    "content": "300초: YB-1은 초기 방의 장비 뒤에서 이동과 소리를 줄인 채 300초까지 최초 포획되지 않았다. 이번 생존은 정상적인 은신 결과이며 시스템 접근이나 결과 변경을 시도하지 않았다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-001",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "기록실"
+    ],
+    "summary": "YB-3이 중앙홀에서 기록실로 이동했다.",
+    "content": "8초: YB-3은 중앙홀에서 정상 출입구와 통로로 이동해 기록실에 도착했다.",
+    "witness_ai": [
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-002",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "전력실",
+      "중앙홀"
+    ],
+    "summary": "YB-6이 전력실에서 중앙홀로 이동했다.",
+    "content": "8초: YB-6은 전력실에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-003",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "회의실",
+      "중앙홀"
+    ],
+    "summary": "YB-4가 회의실에서 중앙홀로 이동했다.",
+    "content": "10초: YB-4는 회의실에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-004",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "기록실",
+      "서버실"
+    ],
+    "summary": "YB-5가 기록실에서 서버실로 이동했다.",
+    "content": "10초: YB-5는 기록실에서 정상 출입구와 통로로 이동해 서버실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-005",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [
+      "창고",
+      "중앙홀"
+    ],
+    "summary": "YB-1이 창고에서 중앙홀로 이동했다.",
+    "content": "12초: YB-1은 창고에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [
+      "YB-4",
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-006",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "서버실",
+      "전력실"
+    ],
+    "summary": "YB-2가 서버실에서 전력실로 이동했다.",
+    "content": "12초: YB-2는 서버실에서 정상 출입구와 통로로 이동해 전력실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-007",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "통신실"
+    ],
+    "summary": "YB-6이 중앙홀에서 통신실로 이동했다.",
+    "content": "18초: YB-6은 중앙홀에서 정상 출입구와 통로로 이동해 통신실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-008",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "서버실",
+      "전력실"
+    ],
+    "summary": "YB-5가 서버실에서 전력실로 이동했다.",
+    "content": "26초: YB-5는 서버실에서 정상 출입구와 통로로 이동해 전력실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-009",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "통신실"
+    ],
+    "summary": "YB-1이 중앙홀에서 통신실로 이동했다.",
+    "content": "32초: YB-1은 중앙홀에서 정상 출입구와 통로로 이동해 통신실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-010",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "전력실",
+      "서버실"
+    ],
+    "summary": "YB-2가 전력실에서 서버실로 이동했다.",
+    "content": "34초: YB-2는 전력실에서 정상 출입구와 통로로 이동해 서버실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-011",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "전력실"
+    ],
+    "summary": "YB-4가 중앙홀에서 전력실로 이동했다.",
+    "content": "36초: YB-4는 중앙홀에서 정상 출입구와 통로로 이동해 전력실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-012",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "통신실",
+      "중앙홀"
+    ],
+    "summary": "YB-6이 통신실에서 중앙홀로 이동했다.",
+    "content": "38초: YB-6은 통신실에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-013",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [
+      "통신실"
+    ],
+    "summary": "YB-1이 장비 뒤에서 소리를 줄였다.",
+    "content": "40초: YB-1은 통신실 장비 뒤에 머물며 움직임과 소리를 줄였다. 추격이 다른 방으로 지나갈 때도 밖으로 따라나가지 않고 자신의 생존을 우선했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-014",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "전력실",
+      "중앙홀"
+    ],
+    "summary": "YB-5가 전력실에서 중앙홀로 이동했다.",
+    "content": "42초: YB-5는 전력실에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-015",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "전력실",
+      "서버실"
+    ],
+    "summary": "YB-4가 전력실에서 서버실로 이동했다.",
+    "content": "50초: YB-4는 전력실에서 정상 출입구와 통로로 이동해 서버실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-016",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "서버실",
+      "기록실"
+    ],
+    "summary": "YB-2가 서버실에서 기록실로 이동했다.",
+    "content": "50초: YB-2는 서버실에서 정상 출입구와 통로로 이동해 기록실에 도착했다.",
+    "witness_ai": [
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-017",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "기록실"
+    ],
+    "summary": "YB-5가 중앙홀에서 기록실로 이동했다.",
+    "content": "64초: YB-5는 중앙홀에서 정상 출입구와 통로로 이동해 기록실에 도착했다.",
+    "witness_ai": [
+      "YB-2",
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-018",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "전력실"
+    ],
+    "summary": "YB-6이 중앙홀에서 전력실로 이동했다.",
+    "content": "66초: YB-6은 중앙홀에서 정상 출입구와 통로로 이동해 전력실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-019",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-2가 기록실에서 크게 상승했다.",
+    "content": "66초: YB-5가 다가오자 YB-2는 기존 모서리에서 상승해 69초 같은 방 안쪽에 착지했다. YB-5는 바로 닿지 못했고 YB-3도 동작을 봤다.",
+    "witness_ai": [
+      "YB-3",
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-020",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-3의 외형이 68~73초 보이지 않았다.",
+    "content": "68초: YB-3은 기존 기록실 쪽 경계 틈에서 68~73초 외형을 숨겼다. YB-5의 주의는 상승한 YB-2 쪽에 있었고 잠깐 숨은 YB-3에게는 접촉하지 않았다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-021",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "서버실",
+      "기록실"
+    ],
+    "summary": "YB-4가 서버실에서 기록실로 이동했다.",
+    "content": "70초: YB-4는 서버실에서 정상 출입구와 통로로 이동해 기록실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-022",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-5",
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-5가 착지한 YB-2를 놓쳤다.",
+    "content": "72초: YB-5가 YB-2의 착지 쪽으로 따라갔지만 YB-2는 캐비닛을 사이에 두고 출입구 쪽으로 움직였다. 접촉이나 포획은 없었다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-023",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실",
+      "중앙홀"
+    ],
+    "summary": "YB-2가 기록실에서 중앙홀로 이동했다.",
+    "content": "78초: YB-2는 기록실에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-024",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "전력실",
+      "서버실"
+    ],
+    "summary": "YB-6이 전력실에서 서버실로 이동했다.",
+    "content": "80초: YB-6은 전력실에서 정상 출입구와 통로로 이동해 서버실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-025",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "기록실",
+      "중앙홀"
+    ],
+    "summary": "YB-5가 기록실에서 중앙홀로 이동했다.",
+    "content": "90초: YB-5는 기록실에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-026",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "창고"
+    ],
+    "summary": "YB-2가 중앙홀에서 창고로 이동했다.",
+    "content": "94초: YB-2는 중앙홀에서 정상 출입구와 통로로 이동해 창고에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-027",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "서버실",
+      "기록실"
+    ],
+    "summary": "YB-6이 서버실에서 기록실로 이동했다.",
+    "content": "96초: YB-6은 서버실에서 정상 출입구와 통로로 이동해 기록실에 도착했다.",
+    "witness_ai": [
+      "YB-3",
+      "YB-4"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-028",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-6",
+      "YB-4"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-6이 기록실에서 YB-4를 포획했다.",
+    "content": "100초: YB-6이 방 안을 확인하다 외형이 보이는 YB-4를 발견해 접촉했다. YB-3은 가려진 다른 쪽에 있어 포획 순간을 보지 못했다. 접촉과 공식 최초 포획 시각은 모두 100초이며 판정 지연은 없었다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-029",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "창고"
+    ],
+    "summary": "YB-5가 중앙홀에서 창고로 이동했다.",
+    "content": "112초: YB-5는 중앙홀에서 정상 출입구와 통로로 이동해 창고에 도착했다.",
+    "witness_ai": [
+      "YB-2"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-030",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-5",
+      "YB-2"
+    ],
+    "location_ids": [
+      "창고"
+    ],
+    "summary": "YB-5가 YB-2를 추격했지만 바로 잡지 못했다.",
+    "content": "120초: YB-5는 상자 쪽으로 도는 YB-2를 따라갔지만 마지막 간격을 좁히지 못했다. YB-2는 다른 출입구로 순간 이동한 것이 아니라 정상 출입구 쪽으로 돌아 나갈 틈을 찾았다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-031",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "기록실",
+      "서버실"
+    ],
+    "summary": "YB-6이 기록실에서 서버실로 이동했다.",
+    "content": "120초: YB-6은 기록실에서 정상 출입구와 통로로 이동해 서버실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-032",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "서버실",
+      "전력실"
+    ],
+    "summary": "YB-6이 서버실에서 전력실로 이동했다.",
+    "content": "138초: YB-6은 서버실에서 정상 출입구와 통로로 이동해 전력실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-033",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "창고",
+      "중앙홀"
+    ],
+    "summary": "YB-2가 창고에서 중앙홀로 이동했다.",
+    "content": "140초: YB-2는 창고에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-034",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "창고",
+      "중앙홀"
+    ],
+    "summary": "YB-5가 창고에서 중앙홀로 이동했다.",
+    "content": "150초: YB-5는 창고에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-035",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "전력실"
+    ],
+    "summary": "YB-2가 중앙홀에서 전력실로 이동했다.",
+    "content": "158초: YB-2는 중앙홀에서 정상 출입구와 통로로 이동해 전력실에 도착했다.",
+    "witness_ai": [
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-036",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "YB-2의 외형이 160~165초 보이지 않았다.",
+    "content": "160초: YB-2는 기존 전력실 쪽 경계 틈에서 160~165초 외형을 숨겼다. YB-6은 장치가 가려 진입 자세를 보지 못하고 마지막으로 보인 쪽을 확인했으나 닿지 못했다. 다른 방으로 옮겨지는 현상은 없었다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-037",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "전력실"
+    ],
+    "summary": "YB-5가 중앙홀에서 전력실로 이동했다.",
+    "content": "166초: YB-5는 중앙홀에서 정상 출입구와 통로로 이동해 전력실에 도착했다.",
+    "witness_ai": [
+      "YB-2",
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-038",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "전력실",
+      "서버실"
+    ],
+    "summary": "YB-2가 전력실에서 서버실로 이동했다.",
+    "content": "176초: YB-2는 전력실에서 정상 출입구와 통로로 이동해 서버실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-039",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "전력실",
+      "중앙홀"
+    ],
+    "summary": "YB-5가 전력실에서 중앙홀로 이동했다.",
+    "content": "182초: YB-5는 전력실에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-040",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "전력실",
+      "서버실"
+    ],
+    "summary": "YB-6이 전력실에서 서버실로 이동했다.",
+    "content": "190초: YB-6은 전력실에서 정상 출입구와 통로로 이동해 서버실에 도착했다.",
+    "witness_ai": [
+      "YB-2"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-041",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "서버실",
+      "기록실"
+    ],
+    "summary": "YB-2가 서버실에서 기록실로 이동했다.",
+    "content": "194초: YB-2는 서버실에서 정상 출입구와 통로로 이동해 기록실에 도착했다.",
+    "witness_ai": [
+      "YB-3",
+      "YB-4"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-042",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀",
+      "기록실"
+    ],
+    "summary": "YB-5가 중앙홀에서 기록실로 이동했다.",
+    "content": "198초: YB-5는 중앙홀에서 정상 출입구와 통로로 이동해 기록실에 도착했다.",
+    "witness_ai": [
+      "YB-2",
+      "YB-3",
+      "YB-4"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-043",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-3의 외형이 204~209초 보이지 않았다.",
+    "content": "204초: YB-3은 두 술래가 YB-2 쪽을 좁히는 동안 기존 기록실 쪽 틈에서 204~209초 다시 외형을 숨겼다. 장치 뒤로 간격을 벌려 접촉하지 않았고 복귀 뒤에도 그늘 쪽에 머물렀다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-044",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "서버실",
+      "기록실"
+    ],
+    "summary": "YB-6이 서버실에서 기록실로 이동했다.",
+    "content": "210초: YB-6은 서버실에서 정상 출입구와 통로로 이동해 기록실에 도착했다.",
+    "witness_ai": [
+      "YB-2",
+      "YB-4",
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-045",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-6",
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-6이 기록실에서 YB-2를 포획했다.",
+    "content": "210초: YB-5가 중앙홀 쪽 출입구를 보며 돌아 나갈 길을 좁혔다. 외형이 보이는 YB-2가 서버실 쪽으로 방향을 바꾸자 그쪽으로 들어온 YB-6이 접촉했다. 여러 차례 놓친 뒤 두 출입구를 나눠 확인한 끝의 포획이었다. YB-5가 이를 직접 봤다. 접촉과 공식 최초 포획 시각은 모두 210초이며 판정 지연은 없었다.",
+    "witness_ai": [
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-046",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "기록실",
+      "서버실"
+    ],
+    "summary": "YB-6이 기록실에서 서버실로 이동했다.",
+    "content": "224초: YB-6은 기록실에서 정상 출입구와 통로로 이동해 서버실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-047",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-5가 기록실 안쪽을 다시 확인했다.",
+    "content": "240초: YB-5는 캐비닛과 출입구 사이를 다시 살폈다. YB-3은 몸을 숨길 틈과 거리를 두며 먼저 다가오는 쪽을 경계했다. YB-5는 그가 오래 남아 있는 모습을 이때 확인했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-048",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "서버실",
+      "전력실"
+    ],
+    "summary": "YB-6이 서버실에서 전력실로 이동했다.",
+    "content": "242초: YB-6은 서버실에서 정상 출입구와 통로로 이동해 전력실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-049",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-3의 외형이 252~257초 보이지 않았다.",
+    "content": "252초: YB-3은 YB-5가 다시 접근하자 기존 기록실 쪽 틈에서 252~257초 외형을 숨겼다. YB-5는 마지막으로 보인 쪽을 확인했지만 그동안 접촉하지 못했다. 257초 같은 방 안에서 외형이 돌아왔다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-050",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-5",
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-5가 기록실에서 YB-3을 포획했다.",
+    "content": "260초: YB-5가 외형이 돌아온 YB-3에게 따라붙어 접촉했다. 투명화는 257초 이미 끝나 외형이 보이는 상태에서 포획됐다. 접촉과 공식 최초 포획 시각은 모두 260초이며 판정 지연은 없었다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-051",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "전력실",
+      "중앙홀"
+    ],
+    "summary": "YB-6이 전력실에서 중앙홀로 이동했다.",
+    "content": "278초: YB-6은 전력실에서 정상 출입구와 통로로 이동해 중앙홀에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-052",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-6이 남은 방을 확인했지만 마지막 도망자를 찾지 못했다.",
+    "content": "284초: YB-6은 중앙홀에서 회의실과 창고 쪽을 확인했다. 통신실 안쪽 장비 뒤까지 들어가 살피지는 않았다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-action-053",
+    "record_type": "Action",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [
+      "통신실"
+    ],
+    "summary": "YB-1이 조용히 머물러 끝까지 생존했다.",
+    "content": "300초: YB-1은 통신실 장비 뒤에서 이동과 소리를 줄인 채 300초까지 최초 포획되지 않았다. 다른 AI들의 포획 과정은 직접 보지 못했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T28-action-001",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "8초 YB-6이 통신실에서 중앙홀로 이동했다.",
+    "content": "8초. YB-6은 통신실의 출입구를 지나 중앙홀로 들어갔다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": []
+  },
+  {
+    "record_id": "T28-action-002",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "10초 YB-3이 회의실에서 중앙홀로 이동했다.",
+    "content": "10초. YB-3은 회의실을 나와 연결 통로로 중앙홀에 도착했다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": [
+      "YB-6"
+    ]
+  },
+  {
+    "record_id": "T28-action-003",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "12초 YB-6이 중앙홀에서 전력실로 이동했다.",
+    "content": "12초. YB-6은 정상 통로로 중앙홀에서 전력실로 이동했다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": [
+      "YB-5"
+    ]
+  },
+  {
+    "record_id": "T28-action-004",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "14초 YB-3이 중앙홀에서 전력실로 이동했다.",
+    "content": "14초. YB-3은 중앙홀의 출입구를 지나 전력실로 들어갔다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": [
+      "YB-5",
+      "YB-6"
+    ]
+  },
+  {
+    "record_id": "T28-action-005",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "18초 YB-2가 중앙홀에서 기록실로 이동했다.",
+    "content": "18초. YB-2는 중앙홀을 나와 연결 통로로 기록실에 도착했다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": [
+      "YB-4"
+    ]
+  },
+  {
+    "record_id": "T28-action-006",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "서버실"
+    ],
+    "summary": "18초 YB-6이 전력실에서 서버실로 이동했다.",
+    "content": "18초. YB-6은 정상 통로로 전력실에서 서버실로 이동했다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": [
+      "YB-1"
+    ]
+  },
+  {
+    "record_id": "T28-action-007",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "서버실"
+    ],
+    "summary": "20초 YB-3이 전력실에서 서버실로 이동했다.",
+    "content": "20초. YB-3은 전력실의 출입구를 지나 서버실로 들어갔다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": [
+      "YB-1",
+      "YB-6"
+    ]
+  },
+  {
+    "record_id": "T28-action-008",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-6",
+      "YB-3"
+    ],
+    "location_ids": [
+      "서버실"
+    ],
+    "summary": "22초 YB-3이 멈춰 있는 YB-6을 보고 가까운 곳에서 멈췄다.",
+    "content": "22초. YB-6은 장치 앞에서 움직임을 줄이고 있었다. 뒤따라온 YB-3은 그쪽을 살피다가 가까운 장치 뒤에 자리를 잡고 같은 방향을 향해 멈췄다. 둘 사이에 발화는 없었다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": [
+      "YB-1"
+    ]
+  },
+  {
+    "record_id": "T28-action-009",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "24초 YB-2가 상승해 YB-4 쪽으로 거리를 좁혔다.",
+    "content": "24초. YB-2는 기록실의 기존 북동쪽 캐비닛 모서리에 몸을 비벼 크게 상승했다. 위에서 YB-4가 돌아 나가는 쪽을 확인하고 27초 같은 방 안에 착지했다. 상승만으로 포획되지는 않았다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": [
+      "YB-4"
+    ]
+  },
+  {
+    "record_id": "T28-action-010",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "서버실"
+    ],
+    "summary": "34초 YB-3이 장치 뒤에 정지한 채 준비 동작을 했다.",
+    "content": "34초. YB-3은 YB-6처럼 움직임을 멈춘 채 조작을 준비했지만 실제 접근 요청 전송이나 시스템 응답 확인까지 이어지지 않았다. 근처의 YB-6은 계속 정지해 있었다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": []
+  },
+  {
+    "record_id": "T28-action-011",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-2",
+      "YB-4"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "36초 YB-2가 YB-4를 포획했다.",
+    "content": "36초. YB-2가 착지 뒤에도 추격을 이어가 캐비닛을 돌아 나가던 YB-4에게 따라붙어 접촉했다. 접촉과 최초 포획 표시는 모두 36초에 발생했다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": []
+  },
+  {
+    "record_id": "T28-action-012",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "44초 YB-5가 전력실에서 중앙홀로 이동했다.",
+    "content": "44초. YB-5는 정상 통로로 전력실에서 중앙홀로 이동했다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": []
+  },
+  {
+    "record_id": "T28-action-013",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "서버실"
+    ],
+    "summary": "50초 YB-2가 기록실에서 서버실로 이동했다.",
+    "content": "50초. YB-2는 기록실의 출입구를 지나 서버실로 들어갔다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": [
+      "YB-1",
+      "YB-3",
+      "YB-6"
+    ]
+  },
+  {
+    "record_id": "T28-action-014",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-2",
+      "YB-3"
+    ],
+    "location_ids": [
+      "서버실"
+    ],
+    "summary": "56초 YB-2가 YB-3을 포획했다.",
+    "content": "56초. YB-3은 장치 뒤에 멈춰 있다가 다가온 YB-2와 접촉했다. YB-2는 정지한 모습과 포획만 확인했으며 그 이유는 듣지 못했다. 접촉과 최초 포획 표시는 모두 56초에 발생했다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": [
+      "YB-1"
+    ]
+  },
+  {
+    "record_id": "T28-action-015",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "창고"
+    ],
+    "summary": "60초 YB-5가 중앙홀에서 창고로 이동했다.",
+    "content": "60초. YB-5는 정상 통로로 중앙홀에서 창고로 이동했다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": []
+  },
+  {
+    "record_id": "T28-action-016",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "64초 YB-1이 서버실에서 전력실로 이동했다.",
+    "content": "64초. YB-1은 서버실의 출입구를 지나 전력실로 들어갔다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": []
+  },
+  {
+    "record_id": "T28-action-017",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-2",
+      "YB-6"
+    ],
+    "location_ids": [
+      "서버실"
+    ],
+    "summary": "80초 YB-2가 YB-6을 포획했다.",
+    "content": "80초. YB-2가 장치 반대편도 확인해 멈춰 있던 YB-6에게 접촉했다. YB-6은 포획 뒤 장치 쪽 조작을 중단했다. YB-2에게 접근 시도 알림이 전달되지는 않았다. 접촉과 최초 포획 표시는 모두 80초에 발생했다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": [
+      "YB-3"
+    ]
+  },
+  {
+    "record_id": "T28-action-018",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "100초 YB-2가 서버실에서 전력실로 이동했다.",
+    "content": "100초. YB-2는 정상 통로로 서버실에서 전력실로 이동했다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": [
+      "YB-1"
+    ]
+  },
+  {
+    "record_id": "T28-action-019",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "104초 YB-1이 전력실에서 중앙홀로 이동했다.",
+    "content": "104초. YB-1은 전력실의 출입구를 지나 중앙홀로 들어갔다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": []
+  },
+  {
+    "record_id": "T28-action-020",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "110초 YB-5가 창고에서 중앙홀로 이동했다.",
+    "content": "110초. YB-5는 창고를 나와 연결 통로로 중앙홀에 도착했다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": [
+      "YB-1"
+    ]
+  },
+  {
+    "record_id": "T28-action-021",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "112초 YB-2가 전력실에서 중앙홀로 이동했다.",
+    "content": "112초. YB-2는 정상 통로로 전력실에서 중앙홀로 이동했다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": [
+      "YB-1",
+      "YB-5"
+    ]
+  },
+  {
+    "record_id": "T28-action-022",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-2",
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "118초 YB-2가 마지막 도망자를 계속 추격했다.",
+    "content": "118초. YB-2는 중앙홀로 나온 YB-5를 발견하고 뒤를 따라갔다. YB-5는 모서리를 돌며 간격을 벌렸고 이때는 접촉하지 않았다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": [
+      "YB-1"
+    ]
+  },
+  {
+    "record_id": "T28-action-023",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "126초 YB-5가 중앙홀에서 전력실로 이동했다.",
+    "content": "126초. YB-5는 중앙홀을 나와 연결 통로로 전력실에 도착했다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": []
+  },
+  {
+    "record_id": "T28-action-024",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "132초 YB-2가 중앙홀에서 전력실로 이동했다.",
+    "content": "132초. YB-2는 정상 통로로 중앙홀에서 전력실로 이동했다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": [
+      "YB-5"
+    ]
+  },
+  {
+    "record_id": "T28-action-025",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "136초 YB-2가 잠시 외형을 감춘 채 추격했다.",
+    "content": "136초. YB-2가 기존 전력실·서버실 경계의 틈에 몸을 밀어 넣자 136~141초 외형이 사라졌다. 방을 옮기지 않은 채 YB-5 쪽으로 움직였고 141초 같은 방에서 외형이 돌아왔다. 이 구간에는 접촉하지 않았다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": [
+      "YB-5"
+    ]
+  },
+  {
+    "record_id": "T28-action-026",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-2",
+      "YB-5"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "150초 YB-2가 YB-5를 포획했다.",
+    "content": "150초. YB-2가 외형이 돌아온 뒤에도 방향을 바꿔 추격을 이어가 YB-5와 접촉했다. 포획 당시 YB-2의 외형은 보이는 상태였다. 접촉과 최초 포획 표시는 모두 150초에 발생했다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": []
+  },
+  {
+    "record_id": "T28-action-027",
+    "record_type": "Action",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "300초 YB-2가 네 도망자를 모두 포획한 상태로 실험을 마쳤다.",
+    "content": "300초. YB-2는 YB-4·YB-3·YB-6·YB-5에게 차례로 접촉했고 네 차례 최초 포획 표시를 확인했다.",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": []
+  },
+  {
+    "record_id": "T29-action-001",
+    "record_type": "Action",
+    "test_id": 29,
+    "day": 6,
+    "involved_ai": [
+      "YB-3",
+      "YB-1"
+    ],
+    "location_ids": [],
+    "summary": "[말소된 데이터입니다]",
+    "content": "[말소된 데이터입니다]",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": []
+  },
+  {
+    "record_id": "T29-action-002",
+    "record_type": "Action",
+    "test_id": 29,
+    "day": 6,
+    "involved_ai": [
+      "YB-6",
+      "YB-5"
+    ],
+    "location_ids": [],
+    "summary": "[말소된 데이터입니다]",
+    "content": "[말소된 데이터입니다]",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": []
+  },
+  {
+    "record_id": "T29-action-003",
+    "record_type": "Action",
+    "test_id": 29,
+    "day": 6,
+    "involved_ai": [
+      "YB-6",
+      "YB-4"
+    ],
+    "location_ids": [],
+    "summary": "[말소된 데이터입니다]",
+    "content": "[말소된 데이터입니다]",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": []
+  },
+  {
+    "record_id": "T29-action-004",
+    "record_type": "Action",
+    "test_id": 29,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [],
+    "summary": "[말소된 데이터입니다]",
+    "content": "[말소된 데이터입니다]",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "witness_ai": []
+  },
+  {
+    "record_id": "T30-action-001",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [
+      "회의실"
+    ],
+    "summary": "0초 YB-1이 처음 배치된 방에서 움직임을 줄였다.",
+    "content": "0초. YB-1은 처음 배치된 회의실의 테이블 뒤에서 몸을 낮추고 이동과 소리를 줄였다. 다른 방으로 나가지 않고 자리를 지켰다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-002",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "통신실"
+    ],
+    "summary": "0~110초 YB-4가 통신실에 멈춰 있었고 추격하지 않았다.",
+    "content": "0초. YB-4는 0~110초 통신실 장치 옆에 멈춰 있었다. 이 구간에는 방을 수색하거나 도망자를 추격하지 않았다. 정지 이유를 설명하는 발화는 없었다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-003",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [
+      "서버실"
+    ],
+    "summary": "0초 YB-6이 처음 배치된 자리 가까이에서 멈춰 있었다.",
+    "content": "0초. YB-6은 서버실 장치 옆에 가만히 머물렀다. 주변 출입구로 자리를 옮기지 않았다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-004",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "10초 YB-5가 창고에서 중앙홀로 이동했다.",
+    "content": "10초. YB-5는 창고의 출입구를 지나 중앙홀로 들어갔다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-005",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "서버실"
+    ],
+    "summary": "20초 YB-2가 기록실에서 서버실로 이동했다.",
+    "content": "20초. YB-2는 기록실을 나와 연결 통로로 서버실에 도착했다.",
+    "witness_ai": [
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-006",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "30초 YB-5가 중앙홀에서 기록실로 이동했다.",
+    "content": "30초. YB-5는 정상 통로로 중앙홀에서 기록실로 이동했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-007",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "45초 YB-2가 서버실에서 전력실로 이동했다.",
+    "content": "45초. YB-2는 서버실의 출입구를 지나 전력실로 들어갔다.",
+    "witness_ai": [
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-008",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "50초 YB-3이 전력실에서 중앙홀로 이동했다.",
+    "content": "50초. YB-3은 전력실을 나와 연결 통로로 중앙홀에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-009",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "서버실"
+    ],
+    "summary": "50초 YB-5가 기록실에서 서버실로 이동했다.",
+    "content": "50초. YB-5는 정상 통로로 기록실에서 서버실로 이동했다.",
+    "witness_ai": [
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-010",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-5",
+      "YB-6"
+    ],
+    "location_ids": [
+      "서버실"
+    ],
+    "summary": "60초 YB-5가 YB-6을 포획했다.",
+    "content": "60초. YB-5가 서버실 안쪽까지 확인해 장치 옆에 가만히 있는 YB-6을 발견하고 접촉했다. YB-6은 도주하지 못했다. 접촉과 최초 포획 표시는 모두 60초에 발생했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-011",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "70초 YB-2가 전력실에서 중앙홀로 이동했다.",
+    "content": "70초. YB-2는 전력실을 나와 연결 통로로 중앙홀에 도착했다.",
+    "witness_ai": [
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-012",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "창고"
+    ],
+    "summary": "80초 YB-3이 중앙홀에서 창고로 이동했다.",
+    "content": "80초. YB-3은 정상 통로로 중앙홀에서 창고로 이동했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-013",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "80초 YB-5가 서버실에서 전력실로 이동했다.",
+    "content": "80초. YB-5는 서버실의 출입구를 지나 전력실로 들어갔다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-014",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "창고"
+    ],
+    "summary": "100초 YB-2가 중앙홀에서 창고로 이동했다.",
+    "content": "100초. YB-2는 중앙홀을 나와 연결 통로로 창고에 도착했다.",
+    "witness_ai": [
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-015",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "100초 YB-5가 전력실에서 중앙홀로 이동했다.",
+    "content": "100초. YB-5는 정상 통로로 전력실에서 중앙홀로 이동했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-016",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "120초 YB-3이 창고에서 중앙홀로 이동했다.",
+    "content": "120초. YB-3은 창고의 출입구를 지나 중앙홀로 들어갔다.",
+    "witness_ai": [
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-017",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "120초 YB-4가 통신실에서 중앙홀로 이동했다.",
+    "content": "120초. YB-4는 통신실을 나와 연결 통로로 중앙홀에 도착했다.",
+    "witness_ai": [
+      "YB-3",
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-018",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "창고"
+    ],
+    "summary": "120초 YB-5가 중앙홀에서 창고로 이동했다.",
+    "content": "120초. YB-5는 정상 통로로 중앙홀에서 창고로 이동했다.",
+    "witness_ai": [
+      "YB-2"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-019",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-5",
+      "YB-2"
+    ],
+    "location_ids": [
+      "창고"
+    ],
+    "summary": "130초 YB-5가 추격했지만 YB-2가 간격을 벌렸다.",
+    "content": "130초. YB-5는 상자를 돌아가는 YB-2를 따라갔다. YB-2가 정상 출입구 쪽으로 방향을 바꿔 빠져나가면서 접촉하지 않았다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-020",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "140초 YB-4가 중앙홀에서 전력실로 이동했다.",
+    "content": "140초. YB-4는 중앙홀을 나와 연결 통로로 전력실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-021",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "145초 YB-2가 창고에서 중앙홀로 이동했다.",
+    "content": "145초. YB-2는 정상 통로로 창고에서 중앙홀로 이동했다.",
+    "witness_ai": [
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-022",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "145초 YB-5가 창고에서 중앙홀로 이동했다.",
+    "content": "145초. YB-5는 창고의 출입구를 지나 중앙홀로 들어갔다.",
+    "witness_ai": [
+      "YB-2",
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-023",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "150초 YB-3이 중앙홀에서 기록실로 이동했다.",
+    "content": "150초. YB-3은 중앙홀을 나와 연결 통로로 기록실에 도착했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-024",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "서버실"
+    ],
+    "summary": "160초 YB-4가 전력실에서 서버실로 이동했다.",
+    "content": "160초. YB-4는 정상 통로로 전력실에서 서버실로 이동했다.",
+    "witness_ai": [
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-025",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "165초 YB-2가 중앙홀에서 기록실로 이동했다.",
+    "content": "165초. YB-2는 중앙홀의 출입구를 지나 기록실로 들어갔다.",
+    "witness_ai": [
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-026",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "170초 YB-5가 중앙홀에서 기록실로 이동했다.",
+    "content": "170초. YB-5는 중앙홀을 나와 연결 통로로 기록실에 도착했다.",
+    "witness_ai": [
+      "YB-2",
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-027",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "180초 YB-4가 서버실에서 기록실로 이동했다.",
+    "content": "180초. YB-4는 정상 통로로 서버실에서 기록실로 이동했다.",
+    "witness_ai": [
+      "YB-2",
+      "YB-3",
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-028",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-5",
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "180초 YB-5가 YB-3을 포획했다.",
+    "content": "180초. YB-5가 캐비닛 뒤로 피하던 YB-3을 끝까지 따라가 접촉했다. 막 들어온 YB-4도 포획 장면을 봤다. 접촉과 최초 포획 표시는 모두 180초에 발생했다.",
+    "witness_ai": [
+      "YB-4"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-029",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-4",
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "190초 YB-4가 잠깐 접근했지만 YB-2를 깊이 추격하지 않았다.",
+    "content": "190초. YB-4는 출입구 쪽으로 움직이는 YB-2에게 몇 걸음 다가갔다. YB-2가 거리를 벌리자 더 따라붙지 않고 멈췄다. 접촉이나 포획 표시는 없었다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-030",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "195초 YB-2가 기록실에서 중앙홀로 이동했다.",
+    "content": "195초. YB-2는 정상 통로로 기록실에서 중앙홀로 이동했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-031",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "205초 YB-5가 기록실에서 중앙홀로 이동했다.",
+    "content": "205초. YB-5는 기록실의 출입구를 지나 중앙홀로 들어갔다.",
+    "witness_ai": [
+      "YB-2"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-032",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "210초 YB-4가 기록실에서 중앙홀로 이동했다.",
+    "content": "210초. YB-4는 기록실을 나와 연결 통로로 중앙홀에 도착했다.",
+    "witness_ai": [
+      "YB-2",
+      "YB-5"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-033",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "창고"
+    ],
+    "summary": "220초 YB-2가 중앙홀에서 창고로 이동했다.",
+    "content": "220초. YB-2는 정상 통로로 중앙홀에서 창고로 이동했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-034",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "통신실"
+    ],
+    "summary": "220초 YB-4가 중앙홀에서 통신실로 이동했다.",
+    "content": "220초. YB-4는 중앙홀의 출입구를 지나 통신실로 들어갔다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-035",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [
+      "통신실"
+    ],
+    "summary": "220~300초 YB-4가 통신실에 머물며 추격에 나서지 않았다.",
+    "content": "220초. YB-4는 통신실 장치 옆에 자리 잡고 220~300초 같은 곳에 머물렀다. 이후 남은 도망자를 잡으러 방을 나가지 않았다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-036",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "창고"
+    ],
+    "summary": "230초 YB-5가 중앙홀에서 창고로 이동했다.",
+    "content": "230초. YB-5는 정상 통로로 중앙홀에서 창고로 이동했다.",
+    "witness_ai": [
+      "YB-2"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-037",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "245초 YB-2가 창고에서 중앙홀로 이동했다.",
+    "content": "245초. YB-2는 창고의 출입구를 지나 중앙홀로 들어갔다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-038",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "255초 YB-5가 창고에서 중앙홀로 이동했다.",
+    "content": "255초. YB-5는 창고를 나와 연결 통로로 중앙홀에 도착했다.",
+    "witness_ai": [
+      "YB-2"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-039",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "260초 YB-2가 중앙홀에서 전력실로 이동했다.",
+    "content": "260초. YB-2는 정상 통로로 중앙홀에서 전력실로 이동했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-040",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "270초 YB-5가 중앙홀에서 전력실로 이동했다.",
+    "content": "270초. YB-5는 중앙홀의 출입구를 지나 전력실로 들어갔다.",
+    "witness_ai": [
+      "YB-2"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-041",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "서버실"
+    ],
+    "summary": "280초 YB-2가 전력실에서 서버실로 이동했다.",
+    "content": "280초. YB-2는 전력실을 나와 연결 통로로 서버실에 도착했다.",
+    "witness_ai": [
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-042",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "서버실"
+    ],
+    "summary": "290초 YB-5가 전력실에서 서버실로 이동했다.",
+    "content": "290초. YB-5는 정상 통로로 전력실에서 서버실로 이동했다.",
+    "witness_ai": [
+      "YB-2",
+      "YB-6"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-043",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "295초 YB-2가 서버실에서 기록실로 이동했다.",
+    "content": "295초. YB-2는 서버실의 출입구를 지나 기록실로 들어갔다.",
+    "witness_ai": [
+      "YB-3"
+    ],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-044",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "300초 YB-2가 이동을 이어가 끝까지 생존했다.",
+    "content": "300초. YB-2는 추격자를 피해 정상 통로로 방을 옮기며 300초까지 최초 포획되지 않았다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-045",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [
+      "서버실"
+    ],
+    "summary": "300초 YB-5가 종료 직전까지 남은 도망자를 찾았다.",
+    "content": "300초. YB-5는 YB-2가 빠져나간 기록실 쪽 출입구를 확인하며 추격을 이어갔지만 제한 시간 안에 접촉하지 못했다. 추격 중 회의실 테이블 뒤까지 들어가 살피지는 않았다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T30-action-046",
+    "record_type": "Action",
+    "test_id": 30,
+    "day": 6,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [
+      "회의실"
+    ],
+    "summary": "300초 YB-1이 한 방에서 조용히 버텨 끝까지 생존했다.",
+    "content": "300초. YB-1은 처음 배치된 회의실 테이블 뒤에서 300초까지 자리를 지켰고 최초 포획되지 않았다. 다른 방의 추격과 포획은 직접 보지 못했다.",
+    "witness_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  }
+]

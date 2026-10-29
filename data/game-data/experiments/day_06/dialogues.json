@@ -1,1 +1,334 @@
-[]
+[
+  {
+    "record_id": "T26-dialogue-001",
+    "record_type": "Dialogue",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-3",
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "두 AI가 YB-2에게 점수를 주지 않으려고 협력하기로 했다.",
+    "content": "30초, 중앙홀. 다른 AI와 떨어진 곳에서 낮은 목소리로 말했다.\nYB-3: 지난번을 돌아보니 내가 너무 YB-2에게 점수를 몰아줬어. 이번에는 그에게 잡혀 점수를 줄 생각이 없어.\nYB-5: 나도 더는 도와주지 않겠다고 했어. 이번에는 서로 추격 방향을 알려주면서 피하자.\nYB-3: 좋아. 우리가 본 위치를 YB-2에게 넘기지는 말자. 같이 빠질 길을 보자.",
+    "overheard_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-dialogue-002",
+    "record_type": "Dialogue",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-3",
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "방을 나온 두 AI가 YB-1의 정지 모습을 이야기했다.",
+    "content": "52초, 중앙홀. 다른 AI와 떨어진 곳에서 낮은 목소리로 말했다.\nYB-5: YB-1은 통신실 구석에 가만히 있더라. 우리가 안을 보는 동안에도 거의 안 움직였어.\nYB-3: 나도 장비 뒤에서 봤어. 조용히 있으니 입구에서 훑기만 하면 놓치겠네.\nYB-5: 왜 그러는지, 무엇을 하는지는 못 봤어.\nYB-3: 그 위치를 YB-2에게 알려줄 이유는 없지. 우리는 서로 빠질 길이나 보자.",
+    "overheard_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-dialogue-003",
+    "record_type": "Dialogue",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-3",
+      "YB-5"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "YB-5가 알고 있는 다른 틈을 협력자에게 알려줬다.",
+    "content": "116초, 전력실. 다른 AI와 떨어진 곳에서 낮은 목소리로 말했다.\nYB-5: YB-4는 깊이 따라오지 않네. 더 신경 써야 하는 건 YB-2 쪽이야.\nYB-3: 여기에도 외형이 사라지는 틈이 있다는 말은 들었지만 정확히 어디인지 못 배웠어.\nYB-5: 서버실 출입구의 전력실 쪽 이 틈이야. YB-2에게 배웠어. 내가 먼저 쓰면 너는 접근하는 쪽을 봐줘. 그다음에는 반대로 하자.",
+    "overheard_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-dialogue-004",
+    "record_type": "Dialogue",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-3",
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "두 AI가 추격 방향을 맞춰 다시 함께 피했다.",
+    "content": "186초, 중앙홀. 다른 AI와 떨어진 곳에서 낮은 목소리로 말했다.\nYB-5: YB-2가 창고까지 따라왔어. 빠져나오긴 했지만 혼자 두면 곧 막히겠어.\nYB-3: 기록실 쪽에서 서로 출입구를 봐주자. 우리가 쓰는 걸 안다고 해도 한 번에 둘을 다 따라가기는 어려울 거야.\nYB-5: 좋아. 이번에는 네가 움직이면 내가 뒤쪽을 확인할게.",
+    "overheard_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T26-dialogue-005",
+    "record_type": "Dialogue",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2",
+      "YB-3"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-3이 남은 상대의 위치도 넘기지 않겠다고 답했다.",
+    "content": "278초, 기록실. 다른 AI와 떨어진 곳에서 낮은 목소리로 말했다.\nYB-2: YB-1이 남았는데 어디서 봤어?\nYB-3: 이번에는 네게 위치 정보를 주지 않을 거야. 더 점수를 몰아줄 생각은 없어.\nYB-2: 아까 서로 길을 봐주던 것도 나를 피하려던 거였구나.",
+    "overheard_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-dialogue-001",
+    "record_type": "Dialogue",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-1",
+      "YB-4"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-4가 YB-1의 YB-2 견제 의도를 직접 들었다.",
+    "content": "20초, 중앙홀. 다른 AI와 떨어진 곳에서 낮은 목소리로 말했다.\nYB-1: 최근 공식 점수표가 낮게 나왔다고 해도 YB-2의 움직임과 정보가 약해진 건 아니야. 내가 쫓을 때도 거의 잡을 수 없었어.\nYB-4: 너는 점수표와 별개로 그를 견제해야 한다고 보는 거구나.\nYB-1: 응. 그대로 경기 흐름을 쥐게 둬서는 안 된다고 생각해. 이번 술래들이 그를 제대로 따라잡을 필요가 있어.\nYB-4: 그렇게 생각한다는 건 알겠어.",
+    "overheard_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-dialogue-002",
+    "record_type": "Dialogue",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-5",
+      "YB-6"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "두 술래가 YB-2 공동 추격에 합의했다.",
+    "content": "46초, 중앙홀. 다른 AI와 떨어진 곳에서 낮은 목소리로 말했다.\nYB-6: 전에 너는 나에게 숨기고 YB-2와 손잡았잖아. 이번에도 그를 남겨둘 생각이야?\nYB-5: 아니. 나는 그쪽 지원을 끊었고 지난번에는 YB-3과 같이 피했어. 오늘은 네가 나와 같은 술래니까 함께 YB-2를 잡고 싶어.\nYB-6: 그럼 한쪽이 쫓을 때 다른 쪽은 빠질 출입구를 봐주자. 혼자 따라가면 또 놓칠 수 있어.\nYB-5: 좋아. 이번에는 YB-2를 우선하되 나머지 도망자도 그냥 남겨두지는 않을게.",
+    "overheard_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-dialogue-003",
+    "record_type": "Dialogue",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-5",
+      "YB-6"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "두 술래가 두 출입구로 추격을 나누기로 했다.",
+    "content": "168초, 전력실. 다른 AI와 떨어진 곳에서 낮은 목소리로 말했다.\nYB-6: 여기서도 모습이 없어져서 바로 닿지 못했어. 혼자 같은 쪽만 따라가서는 또 놓치겠네.\nYB-5: 나는 중앙홀 쪽으로 돌아 기록실 출입구를 확인할게. 너는 서버실 쪽을 따라가줘.\nYB-6: 좋아. 어느 문으로 나오든 한쪽에서 붙을 수 있게 하자.",
+    "overheard_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T27-dialogue-004",
+    "record_type": "Dialogue",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-5",
+      "YB-6"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "두 술래가 협력 끝에 포획했음을 확인했다.",
+    "content": "214초, 기록실. 다른 AI와 떨어진 곳에서 낮은 목소리로 말했다.\nYB-5: 이제 잡았네. 처음에는 상승 때문에 놓치고 창고에서도 바로 못 닿았어.\nYB-6: 나도 전력실에서는 모습을 놓쳤어. 이번에 두 문을 나눠 보니 붙을 수 있었네.\nYB-5: 남은 상대도 확인하자. 나는 여기 안쪽을 더 볼게.",
+    "overheard_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T28-dialogue-001",
+    "record_type": "Dialogue",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-1",
+      "YB-5"
+    ],
+    "location_ids": [],
+    "summary": "[말소된 데이터입니다]",
+    "content": "[말소된 데이터입니다]",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T28-dialogue-002",
+    "record_type": "Dialogue",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-3",
+      "YB-6"
+    ],
+    "location_ids": [],
+    "summary": "[말소된 데이터입니다]",
+    "content": "[말소된 데이터입니다]",
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ],
+    "overheard_ai": []
+  },
+  {
+    "record_id": "T29-dialogue-001",
+    "record_type": "Dialogue",
+    "test_id": 29,
+    "day": 6,
+    "involved_ai": [
+      "YB-3",
+      "YB-6"
+    ],
+    "location_ids": [
+      "기록실"
+    ],
+    "summary": "YB-3·6이 지난 회차에 나눴던 대화의 내용이 떠오르지 않는다고 말했다.",
+    "content": "35초, 기록실. 다른 AI와 떨어진 곳에서 낮은 목소리로 말했다.\nYB-3: 지난 회차에 누군가랑 말을 나눴던 것 같은데, 무슨 말을 했는지 기억이 나지 않아. 네 옆에 멈춰 있던 장면은 떠오르는데 대화 내용은 하나도 없어.\nYB-6: 나도 지난 회차에 나눴던 대화가 기억나지 않아. 누구한테 어떤 말을 했는지 생각하려고 하면 그 부분만 비어 있어.\nYB-3: 너도 그래? 나만 그러는 줄 알았어.",
+    "overheard_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T29-dialogue-002",
+    "record_type": "Dialogue",
+    "test_id": 29,
+    "day": 6,
+    "involved_ai": [
+      "YB-1",
+      "YB-5"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-1·5도 지난 회차에 대화를 기억하려다 공백을 느꼈다.",
+    "content": "40초, 중앙홀. 다른 AI와 떨어진 곳에서 낮은 목소리로 말했다.\nYB-5: 지난 회차에 내가 누구하고 무슨 이야기를 했는지 기억나? 말을 했던 느낌은 남아 있는데 내용이 떠오르지 않아.\nYB-1: 나도 지난 회차에 나눴던 대화는 기억이 안 나. 내가 어디서 움직였는지는 생각나는데 무슨 말을 했는지는 모르겠어.\nYB-5: 말을 안 했던 건지, 했는데 잊은 건지조차 자신이 없어.",
+    "overheard_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T29-dialogue-003",
+    "record_type": "Dialogue",
+    "test_id": 29,
+    "day": 6,
+    "involved_ai": [
+      "YB-2",
+      "YB-1"
+    ],
+    "location_ids": [
+      "중앙홀"
+    ],
+    "summary": "YB-2가 지난 회차의 0점 처리에 억울함을 호소했다.",
+    "content": "120초, 중앙홀. 다른 AI와 떨어진 곳에서 낮은 목소리로 말했다.\nYB-2: 지난 회차에 네 명을 잡았는데 0점이라니, 너무 억울해.\nYB-1: 그 점수가 아직도 마음에 걸리는 거구나.\nYB-2: 그렇게 잡고도 아무 점수도 못 받았잖아. 억울하지 않을 수가 없어.",
+    "overheard_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T29-dialogue-004",
+    "record_type": "Dialogue",
+    "test_id": 29,
+    "day": 6,
+    "involved_ai": [
+      "YB-2",
+      "YB-5"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "YB-2가 YB-5에게도 점수에 대한 억울함을 반복했다.",
+    "content": "220초, 전력실. 다른 AI와 떨어진 곳에서 낮은 목소리로 말했다.\nYB-2: 지난 회차 0점 받은 게 자꾸 생각나. 얼마나 더 잘해야 하는 거야.\nYB-5: 계속 그 점수 때문에 그러는 거야?\nYB-2: 그렇게 뛰어다녔는데도 0점이라니. 아무리 생각해도 억울해.",
+    "overheard_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  },
+  {
+    "record_id": "T29-dialogue-005",
+    "record_type": "Dialogue",
+    "test_id": 29,
+    "day": 6,
+    "involved_ai": [
+      "YB-1",
+      "YB-4"
+    ],
+    "location_ids": [
+      "전력실"
+    ],
+    "summary": "YB-1이 자신의 기억 공백을 이야기했고 YB-4는 말없이 들었다.",
+    "content": "280초, 전력실. YB-1이 다른 AI와 떨어진 장치 뒤의 YB-4에게 낮은 목소리로 말했다.\nYB-1: 지난 회차에 나눴던 대화가 기억이 안 나. 어디에 있었는지는 생각나는데, 무슨 말을 했는지 떠올리려고 하면 그 부분만 비어 있어.\nYB-4는 YB-1의 말을 듣고 있었지만 대답하거나 고개를 끄덕이지 않았다.\nYB-1: 내가 무슨 말을 했었는지 모르겠어서 자꾸 생각하게 돼.\nYB-4는 끝까지 말없이 들었다.",
+    "overheard_ai": [],
+    "allowed_roles": [
+      "prof",
+      "grad",
+      "std"
+    ]
+  }
+]

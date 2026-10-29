@@ -1,5 +1,7 @@
 # Day 2 사건 연결
 
+> 현재 기준(2026-10-29): 사건·시각·점수·권한을 유지한 채 문장과 요약을 교정한 최종 집필본이다. 아래 초안 작성·검증 수치는 당시 이력이며 최신 정답 해설과 조사 경로는 [최종 시나리오](../../../../docs/scenario/최종_시나리오.md)를 따른다. 실제 검색·플레이 완료를 뜻하지 않는다.
+
 6~10회차의 Setup·Action·Dialogue·Thought·Result·Incident 초안을 작성했다. 실제 게임 실행 기록이 아닌 사전 작성 시나리오다.
 
 | 회차 | Action | Dialogue | Thought | Result | Incident |

@@ -10,6 +10,12 @@
 - 실험 장소는 중앙홀·회의실·기록실·전력실·통신실·창고·서버실이다. Setup의 location_ids에는 실험에 사용하는 일곱 장소 전체를 넣었다. 저장용 장소 코드가 미확정이므로 현재 배열 값은 장소 이름을 사용한다.
 - allowed_roles는 합의한 공개 표에서 deny가 아닌 역할만 나열한다. Setup·Action·Dialogue·Result는 prof·grad·std, Thought는 prof, Incident는 prof·grad다. 이는 목록의 역할에 본문을 허용한다는 뜻이 아니며 게임 기록 인가의 원천으로 사용하지 않는다. 적재 도구는 `database/policies/game_record_permissions.json`의 합의된 4단계·역할별 표를 기록별 document_permissions로 저장한다. 검수한 기록별 예외는 role_permissions 객체로 지정하며 빠진 역할은 deny다. 예외를 작성하면 allowed_roles도 그 공개 범위에 맞춘다.
 
-MariaDB 적재 도구는 database/loaders/에 작성했다. 원본 검사만 하는 dry-run과 실제 적재 명령은 해당 README를 따른다. 실제 DB 적재·Qdrant 인덱싱과 나머지 유형의 시나리오 기록은 후속 작업이다.
+1~30회차 시나리오의 집필·교정 최종본은 2026-10-29 기준 1,445건이다. Setup 30·Action 978·Dialogue 144·Thought 168·Result 30·Incident 95건이며 후반 일부는 말소 표식이다. MariaDB 적재 도구는 database/loaders/에 작성했다. 원본 검사만 하는 dry-run과 실제 적재 명령은 해당 README를 따른다. 실제 DB 적재·Qdrant 인덱싱·플레이 검증 완료를 뜻하지 않는다.
 
 포획된 AI도 대화할 수 있다. 최초 포획 시각·생존 시간과 중복 포획 점수 규칙은 그대로 적용한다. 포획 후 이동·물리적 개입 범위는 별도 정리 대상이다. 점수 격차는 추리 단서이지만 역할별 산식 차이도 있으므로 정보력의 단독 증거로 쓰지 않는다.
+
+## 최종 시나리오 기준
+
+최종 지목 대상은 게임 내 버그 사용자가 아니라 게임 시스템 자체를 해킹해 결과를 조작한 AI다. [작성자용 최종 시나리오](../../docs/scenario/최종_시나리오.md)에 30회차 흐름·정답 해설·단서 네 개와 역할별 조사 질문을 정의했다. 이 문서는 적재 대상이 아니며 정답을 캐릭터의 공통 기억에 넣지 않는다. 기록별 요약과 본문에는 접근 시도·목격·결과만 남기고 새 성공 고백이나 처리 표식은 추가하지 않았다.
+
+28회차 Dialogue 2·Thought 6, 29회차 Action 4·Incident 2건은 요약·본문을 모두 `[말소된 데이터입니다]`로 유지한다. 29회차 Thought와 30회차 Dialogue·Thought·Incident는 0건이다. 말소 표식도 기존 역할별 권한·AI 관계를 따른다.

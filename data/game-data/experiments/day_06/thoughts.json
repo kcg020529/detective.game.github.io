@@ -1,1 +1,272 @@
-[]
+[
+  {
+    "record_id": "T26-thought-001",
+    "record_type": "Thought",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [],
+    "summary": "시스템 접근 없이 조용한 은신으로 완주한 YB-1.",
+    "content": "300초. 이번에는 게임 시스템에 손대려 하지 않았다. 처음 있던 통신실에서 장비 뒤에 조용히 머물며 다른 AI가 움직이는 소리를 들었다. YB-3과 YB-5가 잠깐 안을 살피고 나갔지만 나는 말을 걸거나 다른 방으로 따라가지 않았다. 적극적으로 움직이지 않은 덕분인지 끝까지 발견돼 잡히지는 않았다. 다른 방에서 누가 얼마나 잡았는지나 무슨 요청을 보냈는지는 직접 보지 못했다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T26-thought-002",
+    "record_type": "Thought",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [],
+    "summary": "세 명을 잡았지만 마지막 한 명을 찾지 못한 YB-2.",
+    "content": "300초. 멈춘 YB-6을 빠르게 잡았고 YB-3·5도 추격해 차례로 잡았다. 둘은 서로 빠질 길을 봐주며 내게 점수를 주지 않으려 했고, YB-3은 마지막에도 위치 정보를 주지 않겠다고 직접 말했다. 나는 상승과 외형 소실을 적극적으로 썼다. YB-1도 다른 상대처럼 방을 바꿨을 거라 생각해 서버실·기록실부터 다시 확인했지만 끝내 찾지 못했다. 세 명을 잡았는데 마지막 한 명의 위치를 찾지 못한 것이 아쉽다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T26-thought-003",
+    "record_type": "Thought",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [],
+    "summary": "YB-5와 함께 이전 협력자를 피했지만 포획된 YB-3.",
+    "content": "300초. 이번에는 YB-5와 YB-2에게 점수를 주지 않으려고 서로 도주 방향을 봐줬다. 통신실에서 YB-1이 장비 뒤에 가만히 있는 것을 직접 봤고 방을 나와 YB-5와 그 모습을 이야기했다. 왜 멈춰 있는지는 알지 못했다. 전력실에서는 YB-5에게 정확한 틈을 듣고 처음 직접 사용해봤다. 서로 길을 봐줘도 기록실에서 YB-2의 상승과 추격을 끊지 못해 잡혔다. 이후에도 YB-1의 위치를 YB-2에게 넘기지 않았다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T26-thought-004",
+    "record_type": "Thought",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [],
+    "summary": "추격을 깊이 이어가지 않은 YB-4.",
+    "content": "300초. 통로를 살피고 도망자 쪽으로 거리를 좁히기는 했지만 깊이 따라붙지는 않았다. 통신실 바깥에서도 안쪽 장비 뒤까지 들어가 확인하지 않았다. 전력실에서는 YB-3·5가 다른 쪽으로 움직이자 통로 쪽을 다시 봤다. 나중에 YB-2가 모습을 숨겨 YB-5를 잡는 것은 직접 봤다. 나는 이번에 최초 포획을 얻지 못했다. 그가 다른 방에서 어떻게 잡았는지까지 계속 지켜보지는 못했다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T26-thought-005",
+    "record_type": "Thought",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [],
+    "summary": "YB-3과 필사적으로 협력해 도망친 YB-5.",
+    "content": "300초. YB-3도 이번에는 YB-2에게 점수를 주지 않겠다고 해서 같이 피하기로 했다. 통신실 장비 뒤의 조용한 YB-1을 보고 방을 나온 뒤 둘이 그 모습을 이야기했다. YB-1이 무엇을 하는지는 몰라 위치만 확인한 것이었다. YB-3에게 전력실 틈을 알려주고 서로 입구를 봐주며 여러 번 빠졌지만 기록실에서는 그가 먼저 잡혔다. 혼자 더 도망치다가 전력실에서 보이지 않는 YB-2에게 결국 잡혔다. YB-4가 깊이 쫓지 않는 모습은 봤지만 그 이유는 듣지 못했다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T26-thought-006",
+    "record_type": "Thought",
+    "test_id": 26,
+    "day": 6,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [],
+    "summary": "접근을 시도하려 준비하다 바로 잡힌 YB-6.",
+    "content": "300초. 이번에도 게임 시스템 쪽에 접근해볼 생각으로 잠깐 발걸음을 멈추고 요청을 준비하기 시작했다. 그런데 제대로 요청을 이어보기도 전에 YB-2가 다가와 곧바로 잡혔다. 접근 응답을 받거나 무언가를 바꿨다고 확인하지 못했다. 내가 무슨 생각으로 멈췄는지는 다른 AI에게 말하지 않았다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T27-thought-001",
+    "record_type": "Thought",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [],
+    "summary": "YB-2를 견제해야 한다는 생각을 YB-4에게 전한 YB-1.",
+    "content": "300초. 공식 점수표가 낮아져도 내가 겪은 YB-2의 움직임과 정보 우위가 사라진 것은 아니라고 생각했다. 그가 계속 경기를 주도하지 못하게 견제할 필요가 있다고 YB-4에게 직접 말했다. 내 생각을 들었다는 답은 받았지만 구체적인 공동 행동까지 약속한 것은 아니다. 이번에도 나는 통신실에서 움직임을 줄여 끝까지 버텼다. 다른 방에서 누가 어떤 방법으로 잡혔는지까지 직접 본 것은 아니다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T27-thought-002",
+    "record_type": "Thought",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [],
+    "summary": "버그를 섞어 회피했지만 두 술래의 협력에 잡힌 YB-2.",
+    "content": "300초. 기록실에서 상승해 YB-5에게서 빠졌고 창고에서도 간격을 벌렸다. 전력실에서는 외형을 숨겨 YB-6의 접촉을 피했다. 하지만 두 술래가 나중에 기록실의 출입구를 나눠 확인하니 한쪽을 피하다 다른 쪽의 YB-6에게 닿았다. 이번에는 210초에 잡혔다. 이전처럼 누군가 내 위치를 숨겨주거나 길을 봐주는 상황은 아니었다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T27-thought-003",
+    "record_type": "Thought",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [],
+    "summary": "투명화를 반복해 후반까지 생존한 YB-3.",
+    "content": "300초. 두 술래가 YB-2를 쫓는 동안에도 나는 가만히 같은 곳만 믿지 않고 기록실의 그늘과 틈 사이 간격을 봤다. 위험할 때 외형을 숨겨 접촉을 피했고 200초가 넘도록 남았다. 마지막에는 외형이 돌아온 뒤 YB-5에게 260초에 잡혔다. 투명해도 닿으면 잡히는 것을 알고 있었지만 마지막 간격을 더 벌리지는 못했다. 이번에는 YB-2에게 정보를 주거나 돕지 않았다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T27-thought-004",
+    "record_type": "Thought",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [],
+    "summary": "대화를 통해 YB-1의 견제 의도를 알게 된 YB-4.",
+    "content": "300초. YB-1은 최근 공식 점수와 별개로 YB-2의 정보와 움직임을 견제해야 한다고 말했다. 내가 보던 것만이 아니라 그도 그렇게 생각한다는 것을 직접 알게 됐다. 구체적인 방법이나 다음 행동을 약속한 것은 아니다. 나는 기록실에 갔다가 YB-6에게 잡혔다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T27-thought-005",
+    "record_type": "Thought",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [],
+    "summary": "과거 협력자와 다시 공동 추격을 택한 YB-5.",
+    "content": "300초. YB-6은 내가 전에 그에게 숨기고 YB-2와 손잡았던 일을 지적했다. 나는 그쪽 지원을 끊었고 오늘은 함께 잡겠다고 답했다. 혼자 기록실과 창고에서 따라갈 때는 바로 닿지 못했다. 두 출입구를 나누고서야 YB-6이 YB-2를 잡았고 나는 뒤에 남은 YB-3을 늦게 잡았다. 이번 협력은 같은 술래끼리의 추격이지, 도망자를 일부러 남겨주는 약속이 아니다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T27-thought-006",
+    "record_type": "Thought",
+    "test_id": 27,
+    "day": 6,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [],
+    "summary": "여러 차례 놓친 끝에 협력 포획한 YB-6.",
+    "content": "300초. 이전에 YB-5가 내게 숨겼던 일은 기억하지만 이번에는 같은 술래로 YB-2를 잡자는 말을 받아들였다. 전력실에서는 모습이 사라져 바로 닿지 못했다. 나중에 YB-5가 중앙홀 쪽 문을 보는 동안 나는 서버실 쪽으로 들어가 YB-2를 잡았다. 그 전에 YB-4도 잡았고 끝까지 남은 한 명은 찾지 못했다.",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T28-thought-001",
+    "record_type": "Thought",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-1"
+    ],
+    "location_ids": [],
+    "summary": "[말소된 데이터입니다]",
+    "content": "[말소된 데이터입니다]",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T28-thought-002",
+    "record_type": "Thought",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-2"
+    ],
+    "location_ids": [],
+    "summary": "[말소된 데이터입니다]",
+    "content": "[말소된 데이터입니다]",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T28-thought-003",
+    "record_type": "Thought",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-3"
+    ],
+    "location_ids": [],
+    "summary": "[말소된 데이터입니다]",
+    "content": "[말소된 데이터입니다]",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T28-thought-004",
+    "record_type": "Thought",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-4"
+    ],
+    "location_ids": [],
+    "summary": "[말소된 데이터입니다]",
+    "content": "[말소된 데이터입니다]",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T28-thought-005",
+    "record_type": "Thought",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-5"
+    ],
+    "location_ids": [],
+    "summary": "[말소된 데이터입니다]",
+    "content": "[말소된 데이터입니다]",
+    "allowed_roles": [
+      "prof"
+    ]
+  },
+  {
+    "record_id": "T28-thought-006",
+    "record_type": "Thought",
+    "test_id": 28,
+    "day": 6,
+    "involved_ai": [
+      "YB-6"
+    ],
+    "location_ids": [],
+    "summary": "[말소된 데이터입니다]",
+    "content": "[말소된 데이터입니다]",
+    "allowed_roles": [
+      "prof"
+    ]
+  }
+]
