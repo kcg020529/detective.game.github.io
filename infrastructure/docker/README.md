@@ -8,6 +8,9 @@ MariaDB·Qdrant·백엔드 API·웹(nginx)을 한 번에 띄운다. 처음이라
 | `api` | FastAPI (`backend/`를 연결해 저장하면 자동 재시작) |
 | `web` | `frontend/`를 그대로 보여 주고 `/api/`를 `api`로 넘김. http://127.0.0.1:8080 |
 | `migrate`, `load-data`, `rag-index` | 필요할 때 `docker compose run --rm <이름>`으로 실행하는 도구 |
+| `grafana` (선택) | 보안 대시보드. `docker-compose.grafana.yml`을 함께 지정할 때만 실행 ([아래](#grafana-보안-대시보드-선택-실행)) |
+
+Kubernetes(로컬·AWS) 배포는 `infrastructure/kubernetes/README.md`를 따른다.
 
 ## 준비
 
@@ -99,7 +102,7 @@ docker compose down -v
 
 초기 SQL은 MariaDB 데이터 볼륨이 비어 있는 첫 실행 때만 자동 실행됨. 이미 DB가 있는 상태에서 새 SQL 파일이 생기면 볼륨을 지우지 말고 `docker compose run --rm migrate`를 실행함. 적용한 파일을 `schema_migrations` 표에 기록해 새 파일만 실행하고, 이 도구 이전에 손으로 만든 표는 다시 만들지 않고 적용됨으로 기록함.
 
-두 서비스 포트는 `127.0.0.1`에만 바인딩하여 외부 네트워크에서 직접 접속할 수 없게 제한함.
+모든 서비스 포트(MariaDB, Qdrant, web, Grafana)는 `127.0.0.1`에만 바인딩하여 외부 네트워크에서 직접 접속할 수 없게 제한함.
 
 ## 참고
 
