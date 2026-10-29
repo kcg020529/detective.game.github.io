@@ -50,3 +50,34 @@
 3. README: 키를 채워야 채팅이 동작한다는 안내, 예전 이미지는 Jinja2·PyYAML이 없어 다시 빌드 필요
 
 2026-10-26 O01에서 별도 `docker-compose.grafana.yml`로 Grafana 로컬 선택 실행을 추가했다. 기본 Compose의 FastAPI·프론트엔드 구성은 K02에 기록되어 있다. Grafana와 앱 전체의 통합 실행 검증은 별도 확인이 필요하다. Kubernetes·AWS 배포는 미구현이다.
+
+# K04 - 로컬 Kubernetes 배포 (Docker Desktop, 2026-10-29)
+
+1. `infrastructure/kubernetes/` (kustomize)
+   - `base/`: namespace, ConfigMap, MariaDB·Qdrant StatefulSet(PVC 5Gi), fastembed 캐시 PVC, api·web Deployment, Job 3개(migrate·load-data·rag-index). nginx 설정은 `infrastructure/docker/nginx.conf`에서 생성해 Compose와 한 파일을 쓴다
+   - `overlays/local/`: 이미지 `:k8s`, web NodePort 30080, http 쿠키. Job도 overlay로 렌더링해 이미지 설정이 Job에까지 적용된다(처음 구현은 Job 이미지가 고정돼 AWS에서 실패할 구조였음)
+   - 스크립트: `deploy.sh <overlay>`(데이터 → Job 순서 대기 → 앱), `reindex.sh`(api를 멈추고 재색인, 실패해도 api 복구), `create-secret.sh`(값 출력 없음), `smoke.sh`, `teardown.sh`(기본은 PVC 유지)
+   - api·web: `preStop` 10초 대기, `maxSurge 1`·`maxUnavailable 0`
+   - nginx: 앞단(ALB)이 보낸 `X-Forwarded-Proto`가 있으면 그대로 전달
+2. 확인 (Docker Desktop kubeadm v1.36, 노드 1개)
+   - 빌드 → 배포: Job 3개 완료(새 테이블 013·014 적용), 기록 1,445건 색인, api·web 정상
+   - smoke: `/` 200, `/config.js` 200, 로그인 전 `/auth/me` 401, 회원가입·Save 201, 채팅 200
+   - 엔딩 흐름(교수 Save): Day 1 지목 409 → Day 6 → YB-1 기록 질문 normal("90초") → YB-4 지목 적중, S01 찾음 → 같은 요청 재전송 같은 응답, 두 번째 지목 409. 학부 Save YB-2 지목은 불일치
+   - api 2개: 같은 흐름 반복, 두 Pod 모두 요청 처리, 로그인·중복 요청·지목 결과 같음
+   - DeepSeek 키를 뺀 Secret: 채팅 503 → 키 복원 후 200
+   - **교체 중 끊김**: preStop 없이 api 교체 시 1,661건 중 502 5건·시간 초과 1건 → preStop·전략 추가 후 api·web 교체 중 2,213건 모두 정상
+   - 롤백: 이미지 교체 → `rollout undo`로 복귀 확인
+   - DB 백업·복원: `mariadb-dump`를 별도 DB로 복원해 기록 1,445·표 18개 등 행 수 일치 확인, 시험 DB 삭제
+   - 메모리 최대값(cgroup `memory.peak`, api가 켜진 상태에서 재색인): rag-index 2.63GiB, api 0.97GiB(임베딩 모델 적재 후), Qdrant 0.16GiB, MariaDB 0.11GiB, 합계 약 3.9GiB → t3.large(약 7GiB 사용 가능)에서 동시 실행 가능
+   - 시험 계정 10개와 Save는 확인 후 삭제
+   - 테스트 287 통과, 21 건너뜀(오프라인)
+3. 고친 문제: `teardown.sh --delete-data`가 Qdrant PVC 이름을 잘못 적어 디스크를 남김 → 수정하고 PVC 이름 테스트 추가
+
+# K05-1 - AWS 배포 준비 (오프라인, 2026-10-29)
+
+1. `overlays/aws/`: ECR 이미지 `:<커밋 SHA>`, gp3 StorageClass(암호화, WaitForFirstConsumer, Delete), ALB Ingress(HTTPS, 80→443, ACM 인증서), https 허용 Origin·Secure 쿠키
+2. `scripts/render.sh`: `aws/aws.env`에서 ECR 주소·도메인·인증서 ARN만 읽어 치환. SHA가 아닌 태그·`latest`·남은 자리표시자는 실패
+3. `aws/cluster.yaml`(eksctl): 서울, 1.36, 공용 서브넷 2개 AZ, NAT 없음, 노드 t3.large 1대 2a 고정, Pod Identity·EBS CSI 애드온, Load Balancer Controller 권한, IMDSv1 끔
+4. `scripts/aws-install-lbc.sh`, `scripts/teardown-aws.sh`(Ingress 먼저 삭제 → ALB 삭제 대기 → 클러스터 삭제 → 남은 자원 출력)
+5. `.github/workflows/ci.yml`: PR·main에서 오프라인 테스트, 이미지 2개 빌드(push 없음), 두 overlay 렌더링. 권한은 읽기 전용
+6. 하지 않은 것: **실제 AWS 생성·배포는 안 했다.** 로컬에 eksctl·helm이 없어 `cluster.yaml`과 차트 버전은 실제 도구로 검증하지 못했다. CI는 GitHub에서 아직 실행되지 않았다

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kervion-config
+data:
+  KERVION_ALLOWED_ORIGINS: http://localhost:30080,http://127.0.0.1:30080
+  KERVION_COOKIE_SECURE: "false"

@@ -1,0 +1,69 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: load-data
+  namespace: kervion
+  labels:
+    app.kubernetes.io/part-of: kervion
+    app.kubernetes.io/name: load-data
+    app.kubernetes.io/tier: job
+spec:
+  backoffLimit: 3
+  ttlSecondsAfterFinished: 3600
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/part-of: kervion
+        app.kubernetes.io/name: load-data
+        app.kubernetes.io/tier: job
+    spec:
+      restartPolicy: OnFailure
+      initContainers:
+        - name: wait-for-mariadb
+          image: kervion-backend
+          command:
+            - python
+            - -c
+            - |
+              import socket, time
+              deadline = time.monotonic() + 120
+              while time.monotonic() < deadline:
+                  try:
+                      socket.create_connection(("mariadb", 3306), timeout=2).close()
+                      break
+                  except OSError:
+                      time.sleep(2)
+              else:
+                  raise SystemExit("Timed out waiting for mariadb:3306")
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+      containers:
+        - name: load-data
+          image: kervion-backend
+          command: ["python", "database/loaders/load_mariadb.py", "--dataset", "game-data"]
+          envFrom:
+            - configMapRef:
+                name: kervion-config
+          env:
+            - name: MARIADB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: kervion-secrets
+                  key: MARIADB_USER
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: kervion-secrets
+                  key: MARIADB_PASSWORD
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi

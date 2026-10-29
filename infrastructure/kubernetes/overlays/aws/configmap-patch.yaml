@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kervion-config
+data:
+  KERVION_ALLOWED_ORIGINS: https://__DOMAIN__
+  KERVION_COOKIE_SECURE: "true"
+  KERVION_COOKIE_SAMESITE: lax

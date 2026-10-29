@@ -1,0 +1,40 @@
+# 단일 노드 시연용이며 고가용성 구성이 아니다.
+# EKS·ALB에 두 AZ가 필요하지만 EBS가 AZ에 묶이므로 노드는 2a에 고정한다.
+# 공용 서브넷의 공인 IP로 통신하고 NAT 고정 비용을 피한다.
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: kervion
+  region: ap-northeast-2
+  version: "1.36"
+availabilityZones: [ap-northeast-2a, ap-northeast-2c]
+vpc:
+  nat:
+    gateway: Disable
+addonsConfig:
+  autoApplyPodIdentityAssociations: true
+addons:
+  - name: vpc-cni
+  - name: coredns
+  - name: kube-proxy
+  - name: eks-pod-identity-agent
+  - name: aws-ebs-csi-driver
+    useDefaultPodIdentityAssociations: true
+iam:
+  podIdentityAssociations:
+    - namespace: kube-system
+      serviceAccountName: aws-load-balancer-controller
+      createServiceAccount: true
+      wellKnownPolicies:
+        awsLoadBalancerController: true
+managedNodeGroups:
+  - name: ng-demo
+    instanceType: t3.large
+    minSize: 1
+    desiredCapacity: 1
+    maxSize: 1
+    availabilityZones: [ap-northeast-2a]
+    privateNetworking: false
+    volumeSize: 20
+    volumeType: gp3
+    disableIMDSv1: true

@@ -1,0 +1,83 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: rag-index
+  namespace: kervion
+  labels:
+    app.kubernetes.io/part-of: kervion
+    app.kubernetes.io/name: rag-index
+    app.kubernetes.io/tier: job
+spec:
+  backoffLimit: 3
+  ttlSecondsAfterFinished: 3600
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/part-of: kervion
+        app.kubernetes.io/name: rag-index
+        app.kubernetes.io/tier: job
+    spec:
+      restartPolicy: OnFailure
+      initContainers:
+        - name: wait-for-dependencies
+          image: kervion-backend
+          command:
+            - python
+            - -c
+            - |
+              import socket, time
+              pending = [("mariadb", 3306), ("qdrant", 6333)]
+              deadline = time.monotonic() + 120
+              while pending and time.monotonic() < deadline:
+                  ready = []
+                  for host, port in pending:
+                      try:
+                          socket.create_connection((host, port), timeout=2).close()
+                          ready.append((host, port))
+                      except OSError:
+                          pass
+                  pending = [item for item in pending if item not in ready]
+                  if pending:
+                      time.sleep(2)
+              if pending:
+                  raise SystemExit("Timed out waiting for mariadb:3306 and qdrant:6333")
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+      containers:
+        - name: rag-index
+          image: kervion-backend
+          command: ["python", "-m", "backend.rag.index", "--dataset", "game-data"]
+          envFrom:
+            - configMapRef:
+                name: kervion-config
+          env:
+            - name: MARIADB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: kervion-secrets
+                  key: MARIADB_USER
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: kervion-secrets
+                  key: MARIADB_PASSWORD
+          volumeMounts:
+            - name: fastembed-cache
+              mountPath: /home/app/.cache/fastembed
+          resources:
+            # 색인 중 임베딩에 약 2GiB를 써서 2Gi 한도에서 OOMKilled가 났다(K04 실측).
+            requests:
+              cpu: "1"
+              memory: 2Gi
+            limits:
+              cpu: "4"
+              memory: 4Gi
+      volumes:
+        - name: fastembed-cache
+          persistentVolumeClaim:
+            claimName: fastembed-cache
