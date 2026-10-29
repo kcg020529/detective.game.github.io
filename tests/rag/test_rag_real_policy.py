@@ -35,6 +35,8 @@ class FakeEmbedder:
 
 @pytest.fixture(scope='module')
 def database_available():
+    if os.getenv('KERVION_OFFLINE_TESTS') == '1':
+        pytest.skip('Offline run: live MariaDB tests are disabled')
     try:
         connection = connect_db()
     except (OperationalError, InterfaceError) as exc:

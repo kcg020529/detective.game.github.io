@@ -10,6 +10,7 @@ from pymysql.err import IntegrityError
 from backend.api.current_user import current_user_id
 from backend.api.db import get_db
 from backend.api.errors import ApiError
+from backend.api.verdict import read_accusation
 
 router = APIRouter()
 
@@ -64,7 +65,7 @@ def _game_state(cursor, row: dict) -> dict:
         **_save(row),
         'current_day': int(row['day']),
         'memo': memo['memo'] if memo else '',
-        'accusation': None,
+        'accusation': read_accusation(cursor, row),
     }
 
 

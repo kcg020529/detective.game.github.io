@@ -697,7 +697,7 @@
   }
 
   function buildAccuse() {
-    return `<div class="c-accuse-body"><p>지금까지의 기록으로 악용자 한 명을 지목합니다. 지목은 한 번만 할 수 있습니다.</p><div class="c-accuse-grid" data-accuse-grid></div><div class="c-accuse-result" data-accuse-result></div><button type="button" class="c-submit" data-submit-accuse disabled>제출</button></div>`;
+    return `<div class="c-accuse-body"><p>지금까지의 기록으로 게임 결과를 조작한 AI 한 명을 지목합니다. 지목은 한 번만 할 수 있습니다.</p><div class="c-accuse-grid" data-accuse-grid></div><div class="c-accuse-result" data-accuse-result></div><button type="button" class="c-submit" data-submit-accuse disabled>제출</button></div>`;
   }
 
   function bindEvents(state) {
@@ -1158,7 +1158,7 @@
     if (state.suspect === null || state.save.accusation || state.accusationPending) return;
     const windowEl = state.windows.get('accuse');
     windowEl.querySelector('[data-submit-accuse]').hidden = true;
-    windowEl.querySelector('[data-accuse-result]').innerHTML = `<div class="c-accuse-confirm"><p><b>${data.ybs[state.suspect].id}</b>를 악용자로 지목합니다. 제출하면 바꿀 수 없습니다.</p><div><button type="button" data-accuse-cancel>취소</button><button type="button" class="c-submit" data-accuse-confirm>지목 확정</button></div></div>`;
+    windowEl.querySelector('[data-accuse-result]').innerHTML = `<div class="c-accuse-confirm"><p><b>${data.ybs[state.suspect].id}</b>를 결과 조작 AI로 지목합니다. 제출하면 바꿀 수 없습니다.</p><div><button type="button" data-accuse-cancel>취소</button><button type="button" class="c-submit" data-accuse-confirm>지목 확정</button></div></div>`;
     windowEl.querySelector('[data-accuse-confirm]').focus({ preventScroll: true });
   }
 
@@ -1223,9 +1223,9 @@
       <header><strong id="c-verdict-title">실험 판정서</strong><span>YB-LAB · Day ${currentDay(state)}</span></header>
       <div class="c-verdict-pick"><div data-verdict-pick></div><div><small>지목한 AI</small><b>${picked.id}</b><span>${escapeHtml(picked.trait)}</span></div></div>
       <div class="c-verdict-stamp ${hit ? 'is-hit' : 'is-miss'}" data-verdict-stamp>${hit ? '적중' : '불일치'}</div>
-      <section><h3>실제 악용자</h3><div class="c-verdict-culprit"><div data-verdict-culprit></div><div><b>${data.ybs[culprit].id}</b><p class="c-verdict-redact" data-verdict-truth>${escapeHtml(truth)}</p></div></div></section>
+      <section><h3>결과를 조작한 AI</h3><div class="c-verdict-culprit"><div data-verdict-culprit></div><div><b>${escapeHtml(data.ybs[culprit].id)}</b><p class="c-verdict-redact" data-verdict-truth>${escapeHtml(truth)}</p></div></div></section>
       <section><h3>결정적 단서</h3><ul class="c-verdict-list">${evidence.map((item) => {
-        const st = item.status;
+        const st = ['found', 'missed', 'restricted'].includes(item.status) ? item.status : 'missed';
         const style = st === 'restricted' ? 'locked' : st;
         return `<li class="is-${style}"><span>${labels[st]}</span>${escapeHtml(item.text)}</li>`;
       }).join('')}</ul></section>

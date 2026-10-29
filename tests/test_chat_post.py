@@ -54,7 +54,7 @@ def chat_client(monkeypatch):
     app.dependency_overrides[get_db] = lambda: conn
     app.dependency_overrides[current_user_id] = lambda: 7
     pipeline = Mock()
-    pipeline.reply.return_value = dict(content='approved', response_type='normal')
+    pipeline.reply.return_value = (dict(content='approved', response_type='normal'), [])
     original_pipeline = app.state.chat_pipeline
     app.state.chat_pipeline = pipeline
     with TestClient(app, raise_server_exceptions=False) as client:
@@ -86,7 +86,7 @@ def test_replay_does_not_generate_or_insert(chat_client):
         message_hash=hashlib.sha256(b'hello').hexdigest(), response={'messages': []}))
     assert post(client).json() == {'messages': []}
     pipeline.reply.assert_not_called()
-    assert not any(q.startswith('INSERT INTO chat_messages') for q, _ in conn.queries)
+    assert not any(q.startswith(('INSERT INTO chat_messages', 'INSERT INTO chat_message_records')) for q, _ in conn.queries)
 
 
 def test_request_id_collision(chat_client):
@@ -163,15 +163,20 @@ def test_pipeline_retrieve_uses_only_resolved_records(monkeypatch):
                     related_ai_ids=[], limit=5)))
     monkeypatch.setattr(planner_service.Planner, 'from_environment',
                         lambda: SimpleNamespace(plan=lambda *args: plan))
-    resolved = [dict(record_id='T01-action-001', summary='allowed summary')]
+    resolved = [dict(record_id='T01-action-001', summary='allowed summary'),
+                dict(record_id='T01-action-002', content='allowed content'),
+                dict(record_id='T01-action-001', content='duplicate record'),
+                dict(record_id='T01-action-003'),
+                dict(record_id='T01-action-004', summary='', content='  ')]
     retrieval = rag.Retrieval(resolved, [], 'ok', {})
     search = Mock(return_value=retrieval)
     monkeypatch.setattr(rag, 'retrieve', search)
     generator = Mock(return_value='draft')
     output = Mock(return_value=dict(content='approved', response_type='partial'))
     ctx = PolicyContext(7, 1, 7, 'std', 2, 'YB-1', 'game-data')
-    answer = ChatPipeline(generator, output).reply(conn=None, question='test', context=ctx, history=[])
+    answer, record_ids = ChatPipeline(generator, output).reply(conn=None, question='test', context=ctx, history=[])
     assert answer['content'] == 'approved'
+    assert record_ids == ['T01-action-001', 'T01-action-002']
     assert generator.call_args.kwargs['records'] == resolved
     assert generator.call_args.kwargs['retrieval'] is retrieval
     assert output.call_args.kwargs['draft'] == 'draft'
@@ -252,3 +257,15 @@ def test_chat_switches_input_guard_off_and_dataset(chat_client, monkeypatch):
     assert post(client).status_code == 200
     audit.assert_not_called()
     assert pipeline.reply.call_args.kwargs['context'].dataset == 'test-data'
+
+
+@pytest.mark.parametrize('response_type,stored', [('normal', True), ('partial', True),
+                                                 ('restricted', False), ('unknown', False)])
+def test_delivered_records_saved_only_for_approved_ai_messages(chat_client, response_type, stored):
+    client, conn, pipeline = chat_client
+    pipeline.reply.return_value = (dict(content='approved', response_type=response_type),
+                                   ['T25-action-034', 'T25-result-001'])
+    assert post(client).status_code == 200
+    inserted = [params for query, params in conn.queries if query.startswith('INSERT INTO chat_message_records')]
+    assert inserted == ([(2, 'game-data', 'T25-action-034'), (2, 'game-data', 'T25-result-001')] if stored else [])
+    assert conn.commits == 1  # 입력 감사 이후 메시지·연결 저장은 요청 트랜잭션에 남는다.

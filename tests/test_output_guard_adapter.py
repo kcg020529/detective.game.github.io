@@ -81,7 +81,8 @@ def test_pipeline_replaces_unsafe_draft_before_return(monkeypatch):
     ctx = PolicyContext(1, 2, 1, 'std', 1, 'YB-1', 'game-data')
     draft = {'content': 'CANARY-EXAMPLE-0001', 'response_type': 'normal'}
     pipeline = ChatPipeline(generator=lambda **kwargs: draft, output_guard=check_output)
-    final = pipeline.reply(conn=None, question='무슨 일이야?', context=ctx, history=[])
+    final, record_ids = pipeline.reply(conn=None, question='무슨 일이야?', context=ctx, history=[])
+    assert record_ids == []
     assert final['response_type'] == 'restricted'
     assert 'CANARY' not in final['content']
 

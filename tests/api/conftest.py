@@ -22,6 +22,8 @@ from backend.api.main import app
 
 @pytest.fixture(scope='session', autouse=True)
 def database_available():
+    if os.getenv('KERVION_OFFLINE_TESTS') == '1':
+        pytest.skip('Offline run: live MariaDB tests are disabled')
     try:
         conn = connect_db()
         conn.close()
