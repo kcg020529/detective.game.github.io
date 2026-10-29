@@ -12,6 +12,8 @@ from backend.api.main import app
 
 class AccountIntegrationTest(unittest.TestCase):
     def setUp(self):
+        if os.getenv('KERVION_OFFLINE_TESTS') == '1':
+            self.skipTest('Offline run: live MariaDB tests are disabled')
         database = os.getenv("MARIADB_DATABASE", "")
         if not database.endswith("_test"):
             self.skipTest("MARIADB_DATABASE must end in _test")

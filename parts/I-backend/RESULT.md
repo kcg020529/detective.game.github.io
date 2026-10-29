@@ -86,3 +86,17 @@
 2026-10-28 선영이 첫 실호출 범위를 현재 질문·역할·Day·캐릭터·F 허용 memory로 승인했다. Planner와 D의 외부 요청에서 이전 대화를 제거하고 기본 서버에 I05 생성기와 G-2를 함께 등록했다. 관련 테스트 46개 통과. 합성 질문 한 건으로 실제 DeepSeek Planner(`character` 경로)→D 답변 생성→G-2(`normal`)를 확인했다. 답변 원문·API 키는 출력하지 않았다. 이 시험은 검색 경로·실제 DB 채팅 저장·프론트 연결을 검증하지 않는다.
 
 2026-10-28 Output Guard 후처리를 연결했다. 개인정보 마스킹은 partial, 유출 계열 전체 차단은 안전 안내문 restricted로 저장한다. 깨진 답변·품질 계열 차단은 503을 유지한다. 임시 계정·Save의 실제 MariaDB에서 정상·대체·마스킹 세 요청이 각각 200, AI `response_type`은 normal·restricted·partial, 사용자/AI 채팅은 총 6줄, 출력 감사 이벤트는 2건임을 확인했다. 임시 데이터는 삭제했다. 기록 검색(Qdrant)·프론트 화면 검증은 별도다.
+
+# I06 - 최종 지목 서버 판정
+
+1. 기준: Y의 최종 시나리오(`docs/scenario/최종_시나리오.md`, 2026-10-29). 정답 YB-4(지금은 고정, 나중에 랜덤), 판정서 해설, 단서 S01~S04
+2. 구현
+   - `POST /api/v1/saves/{save_id}/accusations` (`backend/api/accusations.py`): Save 소유권 잠금 확인, Day 6에서만, Save당 한 번. 같은 요청 ID 재전송은 저장된 응답, 다른 본문은 409
+   - 정답·해설·단서 정의는 서버의 `data/game-data/verdict.json`에만 둔다. 프론트에는 없고, 제출 전 GET Save의 `accusation`은 `null`
+   - 단서 상태(`backend/api/verdict.py`): 이 Save의 채팅에서 근거 기록의 요약·본문이 전달됐으면 `found`, 역할이 모든 근거에 deny/metadata면 `restricted`, 나머지는 `missed`. 클라이언트의 획득 주장은 받지 않는다
+   - 채팅이 F가 허용한 기록 중 요약·본문이 있는 것을 전달하면(최종 응답 normal/partial일 때만) 메시지와 같은 트랜잭션에 기록 ID를 저장한다
+   - 새 테이블: `013_accusations.sql`, `014_chat_message_records.sql` (DB 담당 Y 검토 필요)
+3. 확인
+   - 테스트 280 passed, 1 skipped (로컬 DB 테스트 포함)
+   - 실제 서버(로컬 DB·Qdrant·DeepSeek, 엔딩 브랜치를 8002로 실행): Day 1 지목 409 → Day 6까지 진행 → YB-1에게 "25회차에 YB-4를 언제 잡았어?" 채팅 200 normal("90초") → YB-4 지목 200 적중, S01 `found`, 나머지 `missed` → 같은 ID 재전송 같은 응답 → 두 번째 지목 409 → GET Save에 판정 표시. 학부 연구생 Save에서 YB-2 지목은 불일치, 정답 YB-4 공개. 임시 계정·Save는 삭제
+4. 한계: 오답 엔딩·재도전 규칙은 미정이다. `found`는 "근거 기록이 캐릭터에게 전달됨" 기준이라 캐릭터가 답에 실제로 썼는지까지는 보지 않는다. S02~S04를 실제 질문으로 찾을 수 있는지는 확인하지 않았다

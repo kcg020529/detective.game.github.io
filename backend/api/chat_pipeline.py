@@ -13,6 +13,7 @@ class ChatPipeline:
         self.output_guard = output_guard
 
     def reply(self, *, conn, question, context, history):
+        """Return the validated final answer and F-approved delivered record IDs."""
         if self.generator is None or self.output_guard is None:
             raise ApiError(503, 'SERVICE_UNAVAILABLE', '캐릭터 응답·출력 검사 연결이 준비되지 않았습니다.')
         try:
@@ -42,7 +43,11 @@ class ChatPipeline:
                     or len(final['content']) > 2000
                     or final['response_type'] not in ('normal', 'partial', 'restricted', 'unknown')):
                 raise ApiError(503, 'SERVICE_UNAVAILABLE', '안전한 답변을 준비하지 못했습니다.')
-            return final
+            # 메타데이터만 전달된 기록은 단서 획득으로 세지 않는다.
+            record_ids = sorted({record['record_id'] for record in records
+                                 if (isinstance(record.get('summary'), str) and record['summary'].strip())
+                                 or (isinstance(record.get('content'), str) and record['content'].strip())})
+            return final, record_ids
         except OutputGuardRejected:
             # The audit INSERT uses this connection. Commit it before the API
             # returns 503 and its request transaction is rolled back.

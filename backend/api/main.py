@@ -13,6 +13,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from backend.api.character_adapter import make_generator
 from backend.api.chat_pipeline import ChatPipeline
 from backend.api.chats import router as chats_router
+from backend.api.accusations import router as accusations_router
 from backend.api.output_guard_adapter import check_output
 from backend.api.auth import router as auth_router
 from backend.api.errors import ApiError
@@ -104,4 +105,5 @@ async def handle_unexpected_error(request: Request, exc: Exception):
 
 app.include_router(saves_router, prefix='/api/v1')
 app.include_router(chats_router, prefix='/api/v1')
+app.include_router(accusations_router, prefix='/api/v1')
 app.include_router(auth_router, prefix='/api/v1')

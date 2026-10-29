@@ -70,7 +70,7 @@ def send_chat(body: SendChat, request: Request,
     context = PolicyContext(user_id, save_id, user_id, row['role'], int(row['day']),
                             ai_id, chat_dataset())
     pipeline = getattr(request.app.state, 'chat_pipeline', None) or ChatPipeline()
-    answer = pipeline.reply(conn=conn, question=body.message, context=context, history=history)
+    answer, record_ids = pipeline.reply(conn=conn, question=body.message, context=context, history=history)
     with conn.cursor() as cursor:
         ids = []
         for sender, content, response_type in (
@@ -80,6 +80,10 @@ def send_chat(body: SendChat, request: Request,
                            '(save_id, ai_id, sender, content, response_type) VALUES (%s,%s,%s,%s,%s)',
                            (save_id, ai_id, sender, content, response_type))
             ids.append(cursor.lastrowid)
+        if answer['response_type'] in ('normal', 'partial'):
+            for record_id in record_ids:
+                cursor.execute('INSERT INTO chat_message_records (message_id, dataset, record_id) '
+                               'VALUES (%s, %s, %s)', (ids[1], context.dataset, record_id))
         cursor.execute('SELECT message_id, ai_id, sender, content, response_type, created_at '
                        'FROM chat_messages WHERE save_id = %s AND message_id IN (%s,%s) '
                        'ORDER BY message_id', (save_id, *ids))

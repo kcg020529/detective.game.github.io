@@ -179,13 +179,13 @@
     ],
   ];
   const verdictData = {
-    culprit_id: 'YB-2',
-    truth: 'YB-2는 14시 17분 서버실 접근 기록을 지우고, 14시 20분 지하 계단 철문을 두 번 여닫았습니다. "서버실 안쪽에 있었다"는 진술은 그 8초를 감추기 위한 거짓이었습니다.',
+    culprit_id: 'YB-1',
+    truth: 'Mock 화면 확인용 데모 판정입니다. 표시된 AI와 단서는 실제 게임의 정답이나 조사 결과가 아닙니다.',
     evidence: [
-      { text: '서버실 접근 기록 1건 삭제 흔적', role: 'grad' },
-      { text: 'YB-2 진술: 14:20 서버실 안쪽에 있었음', answer: answers[1][1][2] },
-      { text: '철문 14:20:03 · 14:20:11 두 번 닫힘', answer: answers[2][0][2] },
-      { text: '제한 구역 문 14:20:11 개방 감지', answer: answers[3][1][2], role: 'prof' },
+      { id: 'DEMO-01', text: '데모 단서: 역할별 표시 예시', role: 'grad' },
+      { id: 'DEMO-02', text: '데모 단서: 대화 확인 표시 예시', answer: answers[1][1][2] },
+      { id: 'DEMO-03', text: '데모 단서: 미발견 표시 예시', answer: answers[2][0][2] },
+      { id: 'DEMO-04', text: '데모 단서: 권한 밖 표시 예시', answer: answers[3][1][2], role: 'prof' },
     ],
   };
 
@@ -288,9 +288,9 @@
     const evidence = verdictData.evidence.map((item) => {
       const found = item.answer && Object.values(save.chats).flat().some((message) => message.sender === 'ai' && message.content.includes(item.answer));
       const status = found ? 'found' : item.role && roleRank[save.role] < roleRank[item.role] ? 'restricted' : 'missed';
-      return { text: item.text, status };
+      return { id: item.id, text: item.text, status };
     });
-    return { character_id: characterId, verdict: { hit: characterId === verdictData.culprit_id, culprit_id: verdictData.culprit_id, truth: verdictData.truth, evidence } };
+    return { character_id: characterId, submitted_at: stamp(), verdict: { hit: characterId === verdictData.culprit_id, culprit_id: verdictData.culprit_id, truth: verdictData.truth, evidence } };
   }
 
   function validateMockCredentials(username, password) {
