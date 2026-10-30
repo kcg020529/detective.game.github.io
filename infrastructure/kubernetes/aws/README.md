@@ -1,6 +1,6 @@
 # AWS EKS 켜기·끄기 (K05)
 
-**아직 실제 AWS에 만들지 않았다.** 아래 파일과 스크립트는 오프라인 검증(렌더링·테스트)까지만 했다. 첫 실제 배포 전에 `eksctl`·`helm` 최신 버전으로 `cluster.yaml` 필드와 Load Balancer Controller 차트 버전(`scripts/aws-install-lbc.sh` 맨 위)을 다시 확인한다.
+**아직 실제 AWS에 만들지 않았다.** 파일과 스크립트는 오프라인 검증(렌더링·테스트)까지 했다. 2026-10-30 공식 문서로 확인: EKS 1.36 사용 가능(표준 지원 2027-08-02까지), `cluster.yaml`의 필드(`autoApplyPodIdentityAssociations`, `useDefaultPodIdentityAssociations`, `podIdentityAssociations[].createServiceAccount`·`wellKnownPolicies.awsLoadBalancerController`, `disableIMDSv1`, `nat.gateway: Disable`)가 eksctl 스키마에 있음, Load Balancer Controller 차트 최신이 고정값 3.6.2. 실제 만들 때는 `eksctl create cluster -f ... --dry-run`으로 한 번 더 본다.
 
 설계와 이유: 팀 worklog의 K05 설계안. 요약하면 서울 리전, EKS 1.36, t3.large 1대(2a 고정), 공용 서브넷 2개 AZ·NAT 없음, EBS gp3, ALB + HTTPS, ECR 이미지는 커밋 SHA 태그.
 
