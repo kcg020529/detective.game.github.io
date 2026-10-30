@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# 사용 전에 차트 버전과 설치할 eksctl의 정책 지원을 다시 확인한다.
+# 2026-10-30 eks-charts 최신(3.6.2)과 eksctl 스키마의 Pod Identity 필드를 확인했다. 올리기 직전 한 번 더 본다.
 LBC_CHART_VERSION='3.6.2'
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/render.sh"
