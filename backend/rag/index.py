@@ -99,14 +99,32 @@ def record_points(connection, dataset, embedder, text_mode='header'):
     return records, texts, payloads, record_counts
 
 
-def index_dataset(connection, qdrant, dataset, embedder, text_mode='header'):
+def index_dataset(connection, qdrant, dataset, embedder, text_mode='header', force=False):
     if text_mode not in ('plain', 'header'):
         raise ValueError('text_mode must be plain or header')
     collection = COLLECTIONS[dataset]
     manifest_id = str(uuid.uuid5(uuid.NAMESPACE_URL, f'kervion-rag-manifest:{dataset}'))
+    initial_checksums = table_checksums(connection)
+    parameters = {
+        'dataset': dataset, 'checksums': initial_checksums, 'model_name': MODEL_NAME,
+        'max_tokens': CHUNK_MAX_TOKENS, 'overlap_tokens': CHUNK_OVERLAP_TOKENS,
+        'text_mode': text_mode,
+    }
+    if not force and qdrant.collection_exists(MANIFEST) and qdrant.collection_exists(collection):
+        stored = qdrant.retrieve(collection_name=MANIFEST, ids=[manifest_id], with_payload=True)
+        manifest = (stored[0].payload or {}) if stored else {}
+        counts = manifest.get('point_counts', {})
+        if (all(manifest.get(key) == value for key, value in parameters.items())
+                and isinstance(counts, dict) and set(counts) == {'meta', 'summary', 'content'}
+                and all(type(count) is int and count >= 0 for count in counts.values())
+                and qdrant.count(collection_name=collection, exact=True).count == sum(counts.values())
+                and all(qdrant.count(collection_name=collection, exact=True, count_filter=models.Filter(must=[
+                    models.FieldCondition(key='kind', match=models.MatchValue(value=kind))
+                ])).count == count for kind, count in counts.items())):
+            print(f'dataset={dataset} unchanged; skipping index')
+            return
     if qdrant.collection_exists(MANIFEST):
         qdrant.delete(collection_name=MANIFEST, points_selector=models.PointIdsList(points=[manifest_id]), wait=True)
-    initial_checksums = table_checksums(connection)
     records, texts, payloads, record_counts = record_points(connection, dataset, embedder, text_mode)
     vectors = embedder.embed_documents(texts)
     if len(vectors) != len(payloads):
@@ -132,9 +150,7 @@ def index_dataset(connection, qdrant, dataset, embedder, text_mode='header'):
         qdrant.create_collection(collection_name=MANIFEST, vectors_config=models.VectorParams(
             size=1, distance=models.Distance.DOT))
     manifest = {
-        'dataset': dataset, 'checksums': initial_checksums, 'model_name': MODEL_NAME,
-        'max_tokens': CHUNK_MAX_TOKENS, 'overlap_tokens': CHUNK_OVERLAP_TOKENS,
-        'text_mode': text_mode,
+        **parameters,
         'record_count': len(records), 'record_counts': record_counts, 'point_counts': counts,
     }
     qdrant.upsert(collection_name=MANIFEST, points=[models.PointStruct(
@@ -152,12 +168,14 @@ def main(argv=None):
     parser.add_argument('--env-file')
     parser.add_argument('--qdrant-url')
     parser.add_argument('--text-mode', choices=('plain', 'header'), default='header')
+    parser.add_argument('--force', action='store_true')
     args = parser.parse_args(argv)
     load_env(args.env_file)
     connection = connect_db()
     qdrant = QdrantClient(url=args.qdrant_url or os.getenv('QDRANT_URL', 'http://127.0.0.1:6333'))
     try:
-        index_dataset(connection, qdrant, args.dataset, FastEmbedder(), args.text_mode)
+        index_dataset(connection, qdrant, args.dataset, FastEmbedder(), args.text_mode,
+                      force=args.force or os.getenv('KERVION_RAG_FORCE') == '1')
     finally:
         qdrant.close()
         connection.close()

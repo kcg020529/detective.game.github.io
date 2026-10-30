@@ -144,7 +144,7 @@ def advance_day(body: AdvanceDay, save_id: int = Path(gt=0), conn: Connection = 
     with conn.cursor() as cursor:
         row = _owned_save(cursor, user_id, save_id, lock=True)
         cursor.execute(
-            'SELECT endpoint, response_json FROM request_log WHERE save_id = %s AND client_request_id = %s',
+            'SELECT endpoint, response_json FROM request_log WHERE save_id = %s AND client_request_id = %s FOR UPDATE',
             (save_id, body.client_request_id),
         )
         logged = cursor.fetchone()

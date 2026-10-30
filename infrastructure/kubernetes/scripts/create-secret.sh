@@ -5,6 +5,13 @@ set -euo pipefail
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd -- "$SCRIPT_DIR/../../.." && pwd)"
 ENV_FILE="${1:-$ROOT/infrastructure/docker/.env}"
+OVERLAY="${2:-local}"
+if (( $# > 2 )); then
+  printf '%s\n' 'Usage: create-secret.sh [env-file] [local|aws]' >&2
+  exit 2
+fi
+source "$SCRIPT_DIR/render.sh"
+resolve_kube_context "$OVERLAY"
 if [[ ! -f "$ENV_FILE" ]]; then
   printf 'Environment file not found: %s\n' "$ENV_FILE" >&2
   exit 1
@@ -33,4 +40,5 @@ done
 for key in MARIADB_ROOT_PASSWORD MARIADB_USER MARIADB_PASSWORD DEEPSEEK_API_KEY DEEPSEEK_MODEL DEEPSEEK_PLANNER_API_KEY DEEPSEEK_PLANNER_MODEL; do
   if [[ -n "${values[$key]:-}" ]]; then printf '%s=%s\n' "$key" "${values[$key]}" >> "$tmp_file"; fi
 done
-kubectl create secret generic kervion-secrets --namespace kervion --from-env-file="$tmp_file" --dry-run=client -o yaml | kubectl apply -f -
+kc create namespace kervion --dry-run=client -o yaml | kc apply -f -
+kc create secret generic kervion-secrets --namespace kervion --from-env-file="$tmp_file" --dry-run=client -o yaml | kc apply -f -

@@ -10,24 +10,26 @@ if (( $# > 2 )); then
   exit 2
 fi
 source "$SCRIPT_DIR/render.sh"
+resolve_kube_context "$OVERLAY"
 MANIFESTS="$(render_overlay "$OVERLAY" "${2:-}")"
 
 restore_api() {
   local status=$?
   trap - EXIT
-  kubectl scale deployment/api --namespace kervion --replicas=1 || exit 1
-  kubectl rollout status deployment/api --namespace kervion --timeout=600s || exit 1
+  kc scale deployment/api --namespace kervion --replicas=1 || exit 1
+  kc rollout status deployment/api --namespace kervion --timeout=600s || exit 1
   exit "$status"
 }
 trap restore_api EXIT
 
-kubectl scale deployment/api --namespace kervion --replicas=0
-kubectl rollout status deployment/api --namespace kervion --timeout=300s
-kubectl wait --for=delete pod --namespace kervion --selector=app.kubernetes.io/name=api --timeout=300s
-kubectl delete job rag-index --namespace kervion --ignore-not-found=true --wait=true
-printf '%s\n' "$MANIFESTS" | kubectl apply -f - --selector=app.kubernetes.io/name=rag-index
-if ! kubectl wait --for=condition=complete job/rag-index --namespace kervion --timeout=1200s; then
-  kubectl logs job/rag-index --namespace kervion --all-containers=true --tail=50 || true
+kc scale deployment/api --namespace kervion --replicas=0
+kc rollout status deployment/api --namespace kervion --timeout=300s
+kc wait --for=delete pod --namespace kervion --selector=app.kubernetes.io/name=api --timeout=300s
+kc delete job rag-index --namespace kervion --ignore-not-found=true --wait=true
+# set env --local은 혼합 리소스의 selector를 적용하지 않아 Job 문서만 넘긴다.
+printf '%s\n' "$MANIFESTS" | awk 'BEGIN { RS = "\n---\n" } /\nkind: Job\n/ && /\n  name: rag-index\n/ { print }' | kc set env --local -f - --selector=app.kubernetes.io/name=rag-index --containers=rag-index KERVION_RAG_FORCE=1 -o yaml | kc apply -f - --selector=app.kubernetes.io/name=rag-index
+if ! kc wait --for=condition=complete job/rag-index --namespace kervion --timeout=1200s; then
+  kc logs job/rag-index --namespace kervion --all-containers=true --tail=50 || true
   printf '%s\n' 'Job rag-index failed; API will be restored.' >&2
   exit 1
 fi

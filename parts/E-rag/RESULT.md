@@ -22,6 +22,7 @@
    - I: 채팅 전송 API에서 인증·Save 확인 뒤 호출, `RagRequestError`·`RagUnavailable`을 API 오류 형식으로 바꿈
    - D: `resolve` 결과만 Context로 사용
    - test-data 색인은 아직 안 함. 검색 품질 평가는 E03
+6. R23: `backend/rag/index.py`는 데이터셋·체크섬·모델·청크 설정과 종류별/전체 점 개수가 같은 색인을 변경 없이 생략한다. `--force` 또는 `KERVION_RAG_FORCE=1`이면 재생성한다. `tests/rag/test_index_skip.py`에서 생략 시 쓰기·임베딩 없음, 설정/개수/컬렉션 변경 시 재생성, CLI·환경변수 강제를 가짜 연결·Qdrant로 확인했다.
 
 # E02 - 채팅 파이프라인 연동
 

@@ -105,7 +105,7 @@ def test_kubernetes_manifests():
         assert script.read_text(encoding='utf-8').splitlines()[:2] == ['#!/usr/bin/env bash', 'set -euo pipefail']
     reindex = (K8S / 'scripts/reindex.sh').read_text(encoding='utf-8')
     assert 'trap restore_api EXIT' in reindex
-    assert 'kubectl scale deployment/api --namespace kervion --replicas=1' in reindex
+    assert 'kc scale deployment/api --namespace kervion --replicas=1' in reindex
 
 
 def test_nginx_preserves_forwarded_protocol():
@@ -176,8 +176,15 @@ def _mock_script(bash, tmp_path, name, *, fail_at='', overlay=None):
     env = dict(os.environ, R20_LOG=log.as_posix(), FAIL_AT=fail_at)
     command = r'''
 kubectl() {
+  if [[ "$1" == --context ]]; then
+    [[ "$2" == docker-desktop ]] || return 1
+    shift 2
+  fi
+  [[ "$1" != config ]] || { printf 'docker-desktop\n'; return; }
   printf '%s\n' "$*" >> "$R20_LOG"
-  if [[ "$1" == kustomize ]]; then
+  if [[ "$1" == set && "$2" == env ]]; then
+    cat
+  elif [[ "$1" == kustomize ]]; then
     printf 'rendered-overlay\n'
   elif [[ "$1" == apply ]]; then
     cat >/dev/null
@@ -214,7 +221,7 @@ def test_reindex_restores_api_after_success_and_failure(bash, tmp_path, fail_at)
 def test_invalid_overlay_stops_before_kubectl(bash, tmp_path, name):
     result, calls = _mock_script(bash, tmp_path, name, overlay='missing-overlay')
     assert result.returncode == 2 and not calls
-    assert 'Overlay not found' in result.stderr
+    assert 'Unknown overlay' in result.stderr
 
 
 @pytest.mark.parametrize('fail_at', ['', 'wait'])
@@ -235,7 +242,7 @@ def test_deploy_orders_selected_jobs_and_aborts_before_app_on_failure(bash, tmp_
 
 
 def _aws_env(tmp_path, **updates):
-    values = dict(AWS_REGION='ap-northeast-2', CLUSTER_NAME='kervion',
+    values = dict(AWS_REGION='ap-northeast-2', CLUSTER_NAME='kervion', KUBE_CONTEXT='mock-eks-context',
                   ECR_REGISTRY='registry.example.invalid', DOMAIN='app.example.invalid',
                   CERT_ARN='arn:aws:acm:ap-northeast-2:000000000000:certificate/demo')
     values.update(updates)
@@ -385,7 +392,10 @@ aws() {
 }
 kubectl() {
   printf 'kubectl %s\n' "$*" >> "$R21_LOG"
-  if [[ "$1" == kustomize ]]; then
+  if [[ "$1" == --context ]]; then shift 2; fi
+  if [[ "$1" == config ]]; then
+    printf 'mock-eks-context\n'
+  elif [[ "$1" == kustomize ]]; then
     printf 'image: __ECR_REGISTRY__/kervion-backend:__IMAGE_TAG__\n'
   elif [[ "$1" == apply ]]; then
     cat >> "$R21_LOG.payload"
@@ -407,8 +417,8 @@ def test_aws_deploy_applies_edge_last_and_reuses_substituted_manifest(bash, tmp_
     result, calls = _mock_aws_script(bash, tmp_path, 'deploy.sh', ('aws', 'abcdef0'))
     assert result.returncode == 0, result.stderr
     assert sum(call.startswith('kubectl kustomize') for call in calls) == 1
-    assert calls[-1] == 'kubectl apply -f - --selector=app.kubernetes.io/tier=edge'
-    assert calls[-2] == 'kubectl rollout status deployment/web --namespace kervion --timeout=300s'
+    assert calls[-1] == 'kubectl --context mock-eks-context apply -f - --selector=app.kubernetes.io/tier=edge'
+    assert calls[-2] == 'kubectl --context mock-eks-context rollout status deployment/web --namespace kervion --timeout=300s'
     payload = (tmp_path / 'aws-commands.log.payload').read_text(encoding='utf-8')
     assert '__' not in payload and 'registry.example.invalid/kervion-backend:abcdef0' in payload
 
@@ -471,3 +481,124 @@ def test_teardown_deletes_every_statefulset_claim():
         claims |= {f"pvc/{t['metadata']['name']}-{name}-0" for t in sts['spec']['volumeClaimTemplates']}
     script = (K8S / 'scripts/teardown.sh').read_text(encoding='utf-8')
     assert claims <= set(re.findall(r'pvc/[\w-]+', script))
+
+
+def test_cache_mounts_have_writable_group():
+    mounts = 0
+    for _, obj in _documents():
+        pod = obj.get('spec', {}).get('template', {}).get('spec', {})
+        if any(v.get('persistentVolumeClaim', {}).get('claimName') == 'fastembed-cache'
+               for v in pod.get('volumes', [])):
+            mounts += 1
+            assert pod['securityContext']['fsGroup'] == 10001
+            assert pod['securityContext']['fsGroupChangePolicy'] == 'OnRootMismatch'
+    assert mounts == 2
+
+
+def test_mutating_scripts_use_context_wrapper():
+    for name in ('deploy.sh', 'reindex.sh', 'create-secret.sh', 'teardown.sh'):
+        text = (K8S / 'scripts' / name).read_text(encoding='utf-8')
+        assert 'kubectl ' not in text
+        assert 'resolve_kube_context ' in text
+    render = (K8S / 'scripts/render.sh').read_text(encoding='utf-8')
+    assert 'kc() { kubectl --context "$KUBE_CONTEXT" "$@"; }' in render
+    assert 'KERVION_RAG_FORCE=1' in (K8S / 'scripts/reindex.sh').read_text(encoding='utf-8')
+
+
+def _context_stub(bash, tmp_path, script, args, **env_updates):
+    binary = tmp_path / 'bin'
+    binary.mkdir(exist_ok=True)
+    log = tmp_path / 'calls.log'
+    stub = binary / 'kubectl'
+    stub.write_text("""#!/usr/bin/env bash
+printf '%s\\n' "$*" >> "$R23_LOG"
+[[ "$1" == --context ]] || exit 98
+shift 2
+case "$1" in
+  config) printf 'docker-desktop\\nmock-eks-context\\ncustom-local\\n' ;;
+  create) printf 'kind: Stub\\n' ;;
+  apply) cat >/dev/null ;;
+esac
+""", encoding='utf-8', newline='\n')
+    stub.chmod(0o755)
+    env = dict(os.environ, R23_BIN=binary.as_posix(), R23_LOG=log.as_posix(), KUBE_CONTEXT='', **env_updates)
+    result = subprocess.run([bash, '-c', 'export PATH="$(cd "$R23_BIN" && pwd):$PATH"; source "$1" "${@:2}"',
+                             'bash', script.as_posix(), *args], cwd=ROOT, env=env,
+                            text=True, encoding='utf-8', capture_output=True)
+    return result, log.read_text(encoding='utf-8').splitlines() if log.exists() else []
+
+
+@pytest.mark.parametrize('overlay,context,expected', [('aws', '', 2), ('aws', 'missing', 2),
+                                                     ('aws', 'mock-eks-context', 0),
+                                                     ('local', '', 0), ('local', 'custom-local', 0)])
+def test_context_resolver_checks_configured_context(bash, tmp_path, overlay, context, expected):
+    env_file = _aws_env(tmp_path, KUBE_CONTEXT=context)
+    driver = tmp_path / 'resolve.sh'
+    driver.write_text(f'source "{(K8S / "scripts/render.sh").as_posix()}"\nresolve_kube_context "$1"\n',
+                      encoding='utf-8', newline='\n')
+    options = {'KERVION_AWS_ENV_FILE': env_file.as_posix()}
+    if overlay == 'local':
+        # 환경변수 우선순위도 확인한다.
+        driver.write_text(f'KUBE_CONTEXT="{context}"\n' + driver.read_text(encoding='utf-8'), encoding='utf-8', newline='\n')
+    result, calls = _context_stub(bash, tmp_path, driver, [overlay], **options)
+    assert result.returncode == expected, result.stderr
+    if overlay == 'aws' and not context:
+        assert 'KUBE_CONTEXT' in result.stderr and not calls
+    if expected == 0:
+        assert result.stderr.count('Kube context:') == 1
+
+
+def test_secret_creates_namespace_before_secret(bash, tmp_path):
+    env_file = tmp_path / 'secret.env'
+    env_file.write_text('MARIADB_ROOT_PASSWORD=test\nMARIADB_USER=test\nMARIADB_PASSWORD=test\n', encoding='utf-8')
+    result, calls = _context_stub(bash, tmp_path, K8S / 'scripts/create-secret.sh', [env_file.as_posix(), 'local'])
+    assert result.returncode == 0, result.stderr
+    assert all(call.startswith('--context docker-desktop ') for call in calls)
+    create = [call for call in calls if ' create ' in call]
+    assert 'create namespace kervion' in create[0]
+    assert 'create secret generic kervion-secrets' in create[1]
+    assert 'MARIADB_PASSWORD' not in result.stdout
+
+
+def test_nginx_post_limits_and_json_429():
+    conf = (ROOT / 'infrastructure/docker/nginx.conf').read_text(encoding='utf-8')
+    assert 'default "";' in conf and 'POST $binary_remote_addr;' in conf
+    assert 'zone=kervion_auth:10m rate=10r/m;' in conf
+    assert 'zone=kervion_chat:10m rate=20r/m;' in conf
+    auth = conf.split('location ~ ^/api/v1/auth/(signup|login)$ {')[1].split('}')[0]
+    chat = conf.split('location ~ ^/api/v1/saves/[0-9]+/chats/[^/]+$ {')[1].split('}')[0]
+    assert 'limit_req zone=kervion_auth burst=5 nodelay;' in auth
+    assert 'limit_req zone=kervion_chat burst=10 nodelay;' in chat
+    assert 'limit_conn kervion_chat_connections 2;' in chat
+    assert 'limit_req_status 429;' in conf and 'limit_conn_status 429;' in conf
+    body = re.search(r"return 429 '(.+)';", conf).group(1)
+    assert json.loads(body)['error']['code'] == 'RATE_LIMITED'
+    assert 'real_ip_recursive on;' in conf and 'real_ip_header X-Forwarded-For;' in conf
+    for cidr in ('10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16'):
+        assert f'set_real_ip_from {cidr};' in conf
+    assert 'proxy_read_timeout 90s;' in conf
+
+
+def test_reindex_force_changes_only_rag_index_job(bash, tmp_path):
+    if not shutil.which('kubectl'):
+        pytest.skip('kubectl is not installed')
+    script = (K8S / 'scripts/reindex.sh').read_text(encoding='utf-8')
+    pipeline = next(line for line in script.splitlines() if 'KERVION_RAG_FORCE=1' in line)
+    pipeline = pipeline.split(' | kc apply', 1)[0]
+    config = tmp_path / 'kubeconfig'
+    config.write_text(yaml.safe_dump({'apiVersion': 'v1', 'kind': 'Config',
+        'clusters': [{'name': 'offline', 'cluster': {'server': 'https://127.0.0.1:1'}}],
+        'contexts': [{'name': 'unused-offline', 'context': {'cluster': 'offline', 'user': 'offline'}}],
+        'users': [{'name': 'offline', 'user': {'token': 'offline-test'}}]}), encoding='utf-8')
+    command = ('set -euo pipefail\nsource infrastructure/kubernetes/scripts/render.sh\n'
+               'KUBE_CONTEXT=unused-offline\nMANIFESTS="$(render_overlay local)"\n' + pipeline)
+    result = subprocess.run([bash, '-c', command], cwd=ROOT,
+                            env=dict(os.environ, KUBECONFIG=str(config)),
+                            text=True, encoding='utf-8', capture_output=True)
+    assert result.returncode == 0, result.stderr
+    jobs = list(yaml.safe_load_all(result.stdout))
+    assert len(jobs) == 1 and jobs[0]['kind'] == 'Job'
+    assert jobs[0]['metadata']['name'] == 'rag-index'
+    containers = _containers(jobs[0])
+    assert not any(c.get('env') for c in containers if c['name'] != 'rag-index')
+    assert {'name': 'KERVION_RAG_FORCE', 'value': '1'} in containers[-1]['env']

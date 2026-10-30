@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# env 파일은 실행하지 않고 허용된 다섯 설정만 읽는다.
+# env 파일은 실행하지 않고 허용된 설정만 읽는다.
 K8S_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 read_aws_env() {
   local file="${1:-${KERVION_AWS_ENV_FILE:-$K8S_DIR/aws/aws.env}}" line key value
-  AWS_REGION='' ECR_REGISTRY='' DOMAIN='' CERT_ARN='' CLUSTER_NAME=''
+  AWS_REGION='' ECR_REGISTRY='' DOMAIN='' CERT_ARN='' CLUSTER_NAME='' KUBE_CONTEXT=''
   if [[ ! -f "$file" ]]; then
     printf '%s\n' 'AWS settings file is missing; copy aws/aws.env.example to aws/aws.env.' >&2
     return 2
@@ -15,7 +15,7 @@ read_aws_env() {
     [[ "$line" =~ ^[[:space:]]*(#|$) || "$line" != *=* ]] && continue
     key="${line%%=*}" value="${line#*=}"
     case "$key" in
-      AWS_REGION|ECR_REGISTRY|DOMAIN|CERT_ARN|CLUSTER_NAME) printf -v "$key" '%s' "$value" ;;
+      AWS_REGION|ECR_REGISTRY|DOMAIN|CERT_ARN|CLUSTER_NAME|KUBE_CONTEXT) printf -v "$key" '%s' "$value" ;;
     esac
   done < "$file"
   require_aws_keys AWS_REGION CLUSTER_NAME || return
@@ -33,6 +33,27 @@ require_aws_keys() {
       return 2
     fi
   done
+}
+
+# 변경 명령은 확인한 컨텍스트만 사용한다.
+kc() { kubectl --context "$KUBE_CONTEXT" "$@"; }
+
+resolve_kube_context() {
+  local overlay="${1:-local}" contexts context found=false
+  case "$overlay" in
+    local) KUBE_CONTEXT="${KUBE_CONTEXT:-docker-desktop}" ;;
+    aws) read_aws_env || return; require_aws_keys KUBE_CONTEXT || return ;;
+    *) printf 'Unknown overlay: %s\n' "$overlay" >&2; return 2 ;;
+  esac
+  contexts="$(kc config get-contexts -o name)" || return
+  while IFS= read -r context; do
+    [[ "${context%$'\r'}" != "$KUBE_CONTEXT" ]] || found=true
+  done <<< "$contexts"
+  if ! "$found"; then
+    printf 'Kube context not found: %s\n' "$KUBE_CONTEXT" >&2
+    return 2
+  fi
+  printf 'Kube context: %s\n' "$KUBE_CONTEXT" >&2
 }
 
 render_overlay() {

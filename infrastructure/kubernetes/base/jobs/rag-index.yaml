@@ -17,6 +17,11 @@ spec:
         app.kubernetes.io/name: rag-index
         app.kubernetes.io/tier: job
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        fsGroup: 10001
+        fsGroupChangePolicy: OnRootMismatch
       restartPolicy: OnFailure
       initContainers:
         - name: wait-for-dependencies
