@@ -13,6 +13,7 @@
   }
 
   const messages = {
+    RATE_LIMITED: '요청이 너무 많습니다. 잠시 후 다시 시도하세요.',
     AUTH_REQUIRED: '로그인이 필요합니다.', ACCESS_DENIED: '현재 권한으로는 요청할 수 없습니다.',
     NOT_FOUND: '요청한 항목을 찾을 수 없습니다.', STATE_CONFLICT: '현재 상태에서는 요청을 처리할 수 없습니다.',
     INVALID_REQUEST: '요청 내용을 확인해 주세요.', VALIDATION_ERROR: '입력값을 확인해 주세요.',
@@ -30,18 +31,19 @@
     return value == null ? value : JSON.parse(JSON.stringify(value));
   }
 
-  async function request(method, path, body) {
+  async function request(method, path, body, options = {}) {
     const headers = {};
     if (body !== undefined) headers['Content-Type'] = 'application/json';
     let response;
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15000);
+    const timeout = setTimeout(() => controller.abort(), options.timeout || 15000);
     try {
       response = await fetch(`${API_BASE.replace(/\/$/, '')}${path}`, {
         method,
         credentials: 'include',
         headers,
         signal: controller.signal,
+        keepalive: Boolean(options.keepalive),
         ...(body === undefined ? {} : { body: JSON.stringify(body) }),
       });
     } catch (error) {
@@ -119,9 +121,9 @@
     createSave: (slotNo, role, overwrite) => request('POST', '/saves', { slot_no: slotNo, role, overwrite }),
     getSave: (saveId) => request('GET', `/saves/${encodeURIComponent(saveId)}`),
     listChats: (saveId, characterId, before = null) => request('GET', `/saves/${encodeURIComponent(saveId)}/chats/${encodeURIComponent(characterId)}?limit=20${before == null ? '' : `&before=${encodeURIComponent(before)}`}`),
-    sendChat: (saveId, characterId, message, clientRequestId) => request('POST', `/saves/${encodeURIComponent(saveId)}/chats/${encodeURIComponent(characterId)}`, { message, client_request_id: clientRequestId || requestId() }),
+    sendChat: (saveId, characterId, message, clientRequestId) => request('POST', `/saves/${encodeURIComponent(saveId)}/chats/${encodeURIComponent(characterId)}`, { message, client_request_id: clientRequestId || requestId() }, { timeout: 60000 }),
     advanceDay: (saveId, clientRequestId) => request('POST', `/saves/${encodeURIComponent(saveId)}/advance-day`, { client_request_id: clientRequestId || requestId() }),
-    saveMemo: (saveId, memo) => request('PUT', `/saves/${encodeURIComponent(saveId)}/memo`, { memo }),
+    saveMemo: (saveId, memo, options) => request('PUT', `/saves/${encodeURIComponent(saveId)}/memo`, { memo }, options),
     submitAccusation: (saveId, characterId, clientRequestId) => request('POST', `/saves/${encodeURIComponent(saveId)}/accusations`, { character_id: characterId, client_request_id: clientRequestId || requestId() }),
   };
 

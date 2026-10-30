@@ -81,3 +81,5 @@
 4. `scripts/aws-install-lbc.sh`, `scripts/teardown-aws.sh`(Ingress 먼저 삭제 → ALB 삭제 대기 → 클러스터 삭제 → 남은 자원 출력)
 5. `.github/workflows/ci.yml`: PR·main에서 오프라인 테스트, 이미지 2개 빌드(push 없음), 두 overlay 렌더링. 권한은 읽기 전용
 6. 하지 않은 것: **실제 AWS 생성·배포는 안 했다.** 로컬에 eksctl·helm이 없어 `cluster.yaml`과 차트 버전은 실제 도구로 검증하지 못했다. CI는 GitHub에서 아직 실행되지 않았다
+7. R23: 캐시를 마운트하는 API·rag-index에 fsGroup 10001/OnRootMismatch를 적용했다. 공통 `resolve_kube_context`/`kc`로 deploy·reindex·Secret·로컬 teardown의 대상을 고정하고, Secret은 namespace부터 만든다. AWS는 aws.env의 KUBE_CONTEXT가 필수다. reindex는 Job 문서만 골라 KERVION_RAG_FORCE=1을 넣는다. nginx는 POST 인증 10r/m·burst 5, 채팅 20r/m·burst 10·동시 2개, JSON 429, 사설 프록시 실제 IP와 읽기 제한 90초를 적용하고 기존 전달 헤더를 유지한다.
+   - 검증: `KERVION_OFFLINE_TESTS=1`, `PYTHONUTF8=1`, `.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider`: 371 통과, 21 건너뜀, 기존 Starlette 경고 1개. shell 9개 bash -n, 수정 JS node --check, overlay 2개 렌더링, nginx:1.27-alpine nginx -t 통과. `tests/infra/test_kubernetes_manifests.py`에서 컨텍스트/namespace/그룹/429와 실제 kubectl --local의 Job 단독 변경을 확인했다. 클러스터·AWS·DeepSeek는 호출하지 않았고 커밋하지 않았다.

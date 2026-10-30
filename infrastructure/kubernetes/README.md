@@ -16,7 +16,7 @@ Git Bash에서 저장소 루트 기준으로 실행한다.
 
 ```bash
 bash infrastructure/kubernetes/scripts/build-images.sh                 # kervion-backend:k8s, kervion-web:k8s
-bash infrastructure/kubernetes/scripts/create-secret.sh <env 파일>     # 기본 infrastructure/docker/.env, 값은 출력하지 않음
+bash infrastructure/kubernetes/scripts/create-secret.sh <env 파일> local # 기본 infrastructure/docker/.env, 값은 출력하지 않음
 bash infrastructure/kubernetes/scripts/deploy.sh local                 # 데이터 → Job 3개 → api/web 순서
 bash infrastructure/kubernetes/scripts/smoke.sh                        # http://localhost:30080
 ```
@@ -26,16 +26,18 @@ bash infrastructure/kubernetes/scripts/smoke.sh                        # http://
 - smoke는 시험 계정을 지우지 않는다. 확인 후 DB에서 `k8s_smoke_%` 사용자의 Save를 먼저, 사용자를 다음에 지운다(`saves`가 `users`를 RESTRICT로 참조).
 - 배포 스크립트를 실행하는 동안 같은 스크립트 파일을 고치지 않는다. bash는 실행 중에 파일을 이어서 읽는다.
 
+AWS Secret은 `bash infrastructure/kubernetes/scripts/create-secret.sh infrastructure/kubernetes/aws/.env.aws aws`로 만든다.
+
 ## 무엇이 바뀌면 무엇을 다시 실행하나
 
 | 바뀐 것 | 실행 |
 |---|---|
-| 코드만 | 이미지 다시 빌드 후 `deploy.sh` (Job은 다시 실행해도 안전) |
+| 코드만 | 이미지 다시 빌드 후 `deploy.sh` (변경 없는 색인은 생략) |
 | DB 구조 (`database/schemas/mariadb/*.sql`) | **먼저 DB 백업**, 그다음 `deploy.sh` (migrate가 새 파일만 적용) |
 | 시나리오 기록·권한 표 | `deploy.sh` (load-data와 rag-index 포함) |
 | 임베딩 설정 | `reindex.sh <overlay>` 후 api 재시작 |
 
-`reindex.sh`는 api를 0으로 줄이고 색인한 뒤 1로 되돌린다. 색인이 실패해도 api를 되돌린다.
+`reindex.sh`는 api를 0으로 줄이고 강제 색인한 뒤 1로 되돌린다. 직접 색인 명령도 `--force`로 생략 없이 다시 만들 수 있다. 색인이 실패해도 api를 되돌린다.
 
 ## 되돌리기와 복구
 
@@ -60,3 +62,5 @@ bash infrastructure/kubernetes/scripts/teardown.sh --delete-data   # PVC까지 �
 ## Windows Git Bash 주의
 
 `kubectl exec ... -- cat /sys/...`처럼 `/`로 시작하는 인자는 Git Bash가 Windows 경로로 바꾼다. 앞에 `MSYS_NO_PATHCONV=1`을 붙인다.
+
+컨텍스트: 로컬은 `docker-desktop`(환경변수 `KUBE_CONTEXT`로 변경), AWS는 `aws/aws.env`의 필수 `KUBE_CONTEXT`를 사용한다. `kubectl config get-contexts`에서 확인한 이름을 넣는다.

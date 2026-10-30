@@ -21,7 +21,7 @@
 eksctl create cluster -f infrastructure/kubernetes/aws/cluster.yaml     # VPC·노드·Pod Identity·EBS CSI
 bash infrastructure/kubernetes/scripts/aws-install-lbc.sh               # Load Balancer Controller (Helm)
 # 이미지: 커밋 SHA로 빌드·태그 → ECR push (latest 금지)
-bash infrastructure/kubernetes/scripts/create-secret.sh infrastructure/kubernetes/aws/.env.aws
+bash infrastructure/kubernetes/scripts/create-secret.sh infrastructure/kubernetes/aws/.env.aws aws
 bash infrastructure/kubernetes/scripts/deploy.sh aws <SHA>              # 데이터 → Job → api/web → Ingress
 ```
 
@@ -34,3 +34,5 @@ bash infrastructure/kubernetes/scripts/teardown-aws.sh
 ```
 
 순서: (선택) DB 덤프 → **Ingress 삭제 후 ALB가 사라질 때까지 대기** → namespace 삭제(EBS도 삭제) → Controller 제거 → `eksctl delete cluster` → 남은 EBS·로드밸런서·보안그룹·EIP·CloudFormation 스택 출력. 출력에 남은 자원이 있으면 콘솔에서 지운다. Ingress를 먼저 지우지 않으면 ALB가 남아 요금이 계속 나간다.
+
+컨텍스트: 로컬은 `docker-desktop`(환경변수 `KUBE_CONTEXT`로 변경), AWS는 `aws/aws.env`의 필수 `KUBE_CONTEXT`를 사용한다. `kubectl config get-contexts`에서 확인한 이름을 넣는다.

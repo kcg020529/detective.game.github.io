@@ -559,6 +559,8 @@
       if (banner) banner.hidden = event.detail.online;
     };
     window.addEventListener('api:connection', state.connection);
+    state.pagehide = () => flushMemo(state, true);
+    window.addEventListener('pagehide', state.pagehide);
     // 창 없이 아이콘만 있는 바탕화면에서 시작. 전환 연출이 끝난 뒤 할 일을 한 번 알림
     addTimer(state, () => showToast(state, 'YB들에게 물어보고 수첩 메모에 정리해 보세요.'), reduceMotion ? 300 : 1100);
     state.clockTimer = setInterval(() => {
@@ -646,7 +648,20 @@
     finally { clearTimeout(waitTimer); if (isLiveState(state) && button.isConnected) { button.disabled = false; button.removeAttribute('aria-busy'); button.textContent = label; } }
   }
 
+  function flushMemo(state, keepalive = false) {
+    if (!state.memoTimer) return;
+    clearTimeout(state.memoTimer);
+    state.memoTimer = null;
+    return window.Api.saveMemo(state.save.save_id, state.memoValue, { keepalive }).then((result) => {
+      state.save.memo = result.memo;
+    }).catch((error) => {
+      if (isLiveState(state)) handleError(state, error);
+    });
+  }
+
   function unmount(state) {
+    flushMemo(state);
+    window.removeEventListener('pagehide', state.pagehide);
     document.removeEventListener('keydown', state.keydown);
     window.removeEventListener('api:connection', state.connection);
     document.removeEventListener('pointermove', state.pointermove);
@@ -656,7 +671,6 @@
     state.sessionClick && state.root.removeEventListener('click', state.sessionClick);
     state.timers.forEach((timer) => clearTimeout(timer));
     state.timers.clear();
-    if (state.memoTimer) clearTimeout(state.memoTimer);
     if (state.clockTimer) clearInterval(state.clockTimer);
     state.root.replaceChildren();
     if (instance?.state === state) instance = null;
@@ -775,15 +789,8 @@
     memo.value = state.save.memo || '';
     memo.addEventListener('input', () => {
       clearTimeout(state.memoTimer);
-      const value = memo.value;
-      state.memoTimer = setTimeout(async () => {
-        try {
-          const result = await window.Api.saveMemo(state.save.save_id, value);
-          state.save.memo = result.memo;
-        } catch (error) {
-          if (isLiveState(state)) handleError(state, error);
-        }
-      }, 600);
+      state.memoValue = memo.value;
+      state.memoTimer = setTimeout(() => flushMemo(state), 600);
     });
     renderLaunchers(state);
     renderMessenger(state);
@@ -955,6 +962,16 @@
     return canvas;
   }
 
+  function updateChatControls(state) {
+    const messenger = state.windows.get('messenger');
+    if (!messenger) return;
+    messenger.querySelectorAll('[data-ask]').forEach((button) => { button.disabled = state.chatPending; });
+    const send = messenger.querySelector('[data-send]');
+    send.disabled = state.chatPending;
+    send.setAttribute('aria-busy', String(state.chatPending));
+    send.textContent = state.chatWaitVisible ? '보내는 중…' : '보내기';
+  }
+
   function selectYb(state, index) {
     state.activeYb = index;
     renderMessenger(state);
@@ -983,11 +1000,9 @@
     log.innerHTML = `${older}${history.length ? history.map((entry) => renderBubble(entry)).join('') : state.loadingInitial && state.loadingVisible ? '<div role="status">불러오는 중…</div>' : state.loadFailed ? '<div role="status">불러오지 못했습니다 · <button type="button" data-retry-load>다시 시도</button></div>' : `<div class="c-system-message">${yb.id} 채널이 열려 있습니다. 질문을 선택하세요.</div>`}`;
     const questions = windowEl.querySelector('[data-question-list]');
     questions.innerHTML = yb.questions.map((question, index) => `<button type="button" data-ask="${index}" ${state.chatPending ? 'disabled' : ''}>${escapeHtml(question)}</button>`).join('');
-    windowEl.querySelector('[data-send]').disabled = state.chatPending;
-    windowEl.querySelector('[data-send]').setAttribute('aria-busy', String(state.chatPending));
+    updateChatControls(state);
     const chatError = windowEl.querySelector('[data-chat-error]');
     if (chatError && !state.chatValidationError) chatError.textContent = '';
-    windowEl.querySelector('[data-send]').textContent = state.chatWaitVisible ? '보내는 중…' : '보내기';
     if (preserveScroll) log.scrollTop = preserveScroll.top + log.scrollHeight - preserveScroll.height;
     else log.scrollTop = log.scrollHeight;
   }
@@ -1053,9 +1068,10 @@
 
   async function sendQuestion(state, question, existing = null) {
     if (state.chatPending) return;
-    const yb = data.ybs[state.activeYb];
+    const ybIndex = state.activeYb;
+    const yb = data.ybs[ybIndex];
     const entry = existing || { question, answer: { text: '', type: 'unknown', from: yb.id }, typed: 0, typing: false, pending: true, pendingVisible: false, clientRequestId: requestId() };
-    if (!existing) state.histories[state.activeYb].push(entry);
+    if (!existing) state.histories[ybIndex].push(entry);
     entry.failed = false;
     entry.pending = true;
     entry.pendingVisible = false;
@@ -1063,8 +1079,8 @@
     state.chatPending = true;
     state.chatWaitVisible = false;
     state.chatValidationError = false;
-    const pendingTimer = setTimeout(() => { if (isLiveState(state) && state.chatPending) { entry.pendingVisible = true; state.chatWaitVisible = true; renderMessenger(state); } }, 300);
-    renderMessenger(state);
+    const pendingTimer = setTimeout(() => { if (isLiveState(state) && state.chatPending) { entry.pendingVisible = true; state.chatWaitVisible = true; if (state.activeYb === ybIndex) renderMessenger(state); } }, 300);
+    if (state.activeYb === ybIndex) renderMessenger(state);
     renderTaskbar(state);
     try {
       const result = await window.Api.sendChat(state.save.save_id, yb.id, question, entry.clientRequestId);
@@ -1073,17 +1089,18 @@
       entry.pendingVisible = false;
       entry.pending = false;
       state.chatWaitVisible = false;
-      state.chatRows[state.activeYb].push(...result.messages);
-      state.chatRows[state.activeYb].sort((a, b) => Number(a.message_id) - Number(b.message_id));
-      state.histories[state.activeYb] = rowsToEntries(state.chatRows[state.activeYb], yb.id);
+      state.chatRows[ybIndex].push(...result.messages);
+      state.chatRows[ybIndex].sort((a, b) => Number(a.message_id) - Number(b.message_id));
+      state.histories[ybIndex] = rowsToEntries(state.chatRows[ybIndex], yb.id);
       const userRow = result.messages.find((row) => row.sender === 'user');
-      const completed = state.histories[state.activeYb].find((item) => item.message_id === userRow?.message_id);
+      const completed = state.histories[ybIndex].find((item) => item.message_id === userRow?.message_id);
       if (completed) {
         completed.clientRequestId = entry.clientRequestId;
-        completed.typing = true;
+        completed.typing = state.activeYb === ybIndex;
         completed.typed = 0;
       }
-      if (completed) typeAnswer(state, completed);
+      if (completed && state.activeYb === ybIndex) typeAnswer(state, completed, ybIndex);
+      else { state.typing = null; state.chatPending = false; }
     } catch (error) {
       if (!isLiveState(state)) return;
       clearTimeout(pendingTimer);
@@ -1091,15 +1108,18 @@
       state.chatPending = false;
       state.chatWaitVisible = false;
       if (error.code === 'INVALID_REQUEST' || error.code === 'VALIDATION_ERROR') {
-        state.histories[state.activeYb] = state.histories[state.activeYb].filter((item) => item !== entry);
-        state.chatValidationError = true;
-        state.windows.get('messenger').querySelector('[data-compose]').value = question;
-        state.windows.get('messenger').querySelector('[data-chat-error]').textContent = error.message;
-      } else if (['SERVICE_UNAVAILABLE', 'NETWORK_ERROR', 'TIMEOUT'].includes(error.code)) entry.failed = true;
-      else state.histories[state.activeYb] = state.histories[state.activeYb].filter((item) => item !== entry);
-      renderMessenger(state);
-      if (!['INVALID_REQUEST', 'VALIDATION_ERROR', 'SERVICE_UNAVAILABLE', 'NETWORK_ERROR', 'TIMEOUT'].includes(error.code)) handleError(state, error);
+        state.histories[ybIndex] = state.histories[ybIndex].filter((item) => item !== entry);
+        if (state.activeYb === ybIndex) {
+          state.chatValidationError = true;
+          state.windows.get('messenger').querySelector('[data-compose]').value = question;
+          state.windows.get('messenger').querySelector('[data-chat-error]').textContent = error.message;
+        } else handleError(state, error);
+      } else if (['SERVICE_UNAVAILABLE', 'NETWORK_ERROR', 'TIMEOUT', 'RATE_LIMITED'].includes(error.code)) entry.failed = true;
+      else state.histories[ybIndex] = state.histories[ybIndex].filter((item) => item !== entry);
+      if (state.activeYb === ybIndex) renderMessenger(state);
+      if (!['INVALID_REQUEST', 'VALIDATION_ERROR', 'SERVICE_UNAVAILABLE', 'NETWORK_ERROR', 'TIMEOUT', 'RATE_LIMITED'].includes(error.code)) handleError(state, error);
     }
+    if (state.activeYb !== ybIndex) updateChatControls(state);
     renderTaskbar(state);
   }
 
@@ -1113,21 +1133,25 @@
     sendQuestion(state, entry.question, entry);
   }
 
-  function typeAnswer(state, entry) {
+  function typeAnswer(state, entry, ybIndex) {
+    if (!isLiveState(state)) return;
+    if (state.activeYb !== ybIndex) entry.typed = entry.answer.text.length;
     if (entry.typed >= entry.answer.text.length) {
       entry.typing = false;
       state.typing = null;
       state.chatPending = false;
-      renderMessenger(state);
+      if (state.activeYb === ybIndex) renderMessenger(state);
+      else updateChatControls(state);
+      renderTaskbar(state);
       return;
     }
     entry.typed += 1;
     const timer = setTimeout(() => {
       state.timers.delete(timer);
-      typeAnswer(state, entry);
+      typeAnswer(state, entry, ybIndex);
     }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 35);
     state.timers.add(timer);
-    renderMessenger(state);
+    if (state.activeYb === ybIndex) renderMessenger(state);
   }
 
   function renderAccuse(state) {

@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/render.sh"
+
 # PVC 삭제는 데이터를 지우므로 확인이 필요합니다.
 DELETE_DATA=false
 CONFIRMED=false
@@ -19,10 +22,11 @@ if "$DELETE_DATA"; then
     [[ "$answer" == yes ]] || { printf '%s\n' 'Cancelled.'; exit 1; }
   fi
 fi
-kubectl delete --namespace kervion --ignore-not-found=true --wait=true \
+resolve_kube_context local
+kc delete --namespace kervion --ignore-not-found=true --wait=true \
   deployment/api deployment/web statefulset/mariadb statefulset/qdrant \
   service/api service/web service/mariadb service/qdrant \
   job/migrate job/load-data job/rag-index configmap/kervion-config configmap/kervion-nginx
 if "$DELETE_DATA"; then
-  kubectl delete --namespace kervion --ignore-not-found=true pvc/data-mariadb-0 pvc/storage-qdrant-0 pvc/fastembed-cache
+  kc delete --namespace kervion --ignore-not-found=true pvc/data-mariadb-0 pvc/storage-qdrant-0 pvc/fastembed-cache
 fi
