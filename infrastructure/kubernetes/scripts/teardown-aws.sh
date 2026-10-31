@@ -24,9 +24,8 @@ if ! "$CONFIRMED"; then
   [[ "$answer" == "$CLUSTER_NAME" ]] || { printf '%s\n' 'Cancelled.'; exit 1; }
 fi
 
-# 기본 로컬 컨텍스트 대신 대상 EKS ARN만 사용한다.
-KUBE_CONTEXT="$(aws eks describe-cluster --name "$CLUSTER_NAME" --region "$AWS_REGION" --query cluster.arn --output text)"
-[[ -n "$KUBE_CONTEXT" && "$KUBE_CONTEXT" != None ]] || exit 1
+# eksctl이 만든 컨텍스트 이름은 ARN이 아니라서 aws.env의 KUBE_CONTEXT를 확인해 쓴다.
+resolve_kube_context aws
 if ! "$CONFIRMED"; then
   printf '%s' 'Create a MariaDB backup first? [y/N] ' >&2
   read -r backup

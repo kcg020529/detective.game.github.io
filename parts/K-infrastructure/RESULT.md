@@ -87,3 +87,19 @@
    - HTTP Ingress의 host/cert/redirect 설정을 없애고 관리형 prefix list로 제한했다. nginx는 CloudFront-Viewer-Address의 IPv4:port·[IPv6]:port(비괄호 IPv6 호환 포함)에서 포트를 제거해 IP별 제한·X-Real-IP에 쓰고, CloudFront-Forwarded-Proto → X-Forwarded-Proto → scheme 순으로 전달한다. GET 제한 제외와 기존 사설 프록시 설정은 유지한다.
    - AWS README·env 예시·CI 더미 설정을 바꿨다. CloudFront 기본 인증서와 안정된 DOMAIN을 사용하며 첫 생성 → 클러스터/앱 배포 → sync → smoke 순서다. 선택 삭제 CLI는 추가하지 않고 콘솔에서 비활성화 후 삭제하는 방법을 적었다. worklog 문서는 수정하지 않았다.
    - 확인: `KERVION_OFFLINE_TESTS=1 PYTHONUTF8=1 .venv/Scripts/python.exe -m pytest -q -p no:cacheprovider`: 392 통과, 21 건너뜀, 기존 Starlette 경고 1개. 인프라 시험 40개와 CloudFront 시험 18개가 통과했다. shell 10개 bash -n, overlay 2개 렌더링, nginx:1.27-alpine nginx -t, 격리 컨테이너의 IPv6 POST 키·IPv4 GET 제외·프로토콜 대체값 확인도 통과했다. UTF-8 LF·문자 깨짐 검색·git diff --check 통과. AWS·클러스터·eksctl·Helm 실호출은 하지 않았고 실제 CloudFront 수락/배포는 미검증이다. 커밋하지 않았다.
+
+# K05-3 - AWS 첫 배포 (2026-10-31)
+
+1. 구성: CloudFront `d1htkm42bhrp9q.cloudfront.net`(HTTPS) → ALB(HTTP 80, CloudFront prefix list `pl-22a6434b`만 허용) → EKS 1.36(서울, t3.large 1대) web/api/MariaDB/Qdrant, 이미지 ECR `36de29e`
+2. 걸린 시간: 클러스터 17분 → Load Balancer Controller 1분 → 배포 10분(Job 3개, 색인 1,445건) → CloudFront 연결 1분. ECR 생성부터 접속까지 약 32분
+3. 확인
+   - smoke: `/` 200, 가입 201, Save 201, 채팅 200
+   - 엔딩 흐름: Day 1 지목 409 → Day 6 YB-1 "90초" normal → YB-4 지목 적중(S01 found) → 같은 요청 재전송 같은 응답 → 두 번째 지목 409 → std Save 불일치. 로컬(K04-b)과 같음
+   - EBS에서 `fsGroup` 동작: 색인 Job이 새 EBS 볼륨에 모델을 받아 완료
+   - ALB 주소 직접 접속은 연결 안 됨(보안그룹), http는 https로 301
+   - 쿠키 `Secure; HttpOnly; SameSite=lax`, 다른 Origin은 403
+   - 요청 제한: 로그인 연속 시 429. 직접 보낸 `CloudFront-Viewer-Address`는 CloudFront가 덮어써 우회되지 않음
+   - 메모리: 노드 1.97GiB(27%), api 0.97GiB
+   - 시험 계정 삭제(사용자 0)
+4. 고친 것: `aws-install-lbc.sh`, `teardown-aws.sh`가 클러스터 ARN을 kube context로 썼는데 eksctl이 만든 이름(`<user>@kervion.<region>.eksctl.io`)과 달라 실패했다. aws.env의 `KUBE_CONTEXT`를 확인해 쓰도록 바꿈
+5. 참고: CloudFront 연결 직후 1분 정도 502가 났다가 정상

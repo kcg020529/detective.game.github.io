@@ -388,7 +388,7 @@ aws() {
   printf 'aws %s\n' "$*" >> "$R21_LOG"
   case "$1 $2" in
     'eks describe-cluster')
-      if [[ "$*" == *vpcId* ]]; then printf 'mock-eks-context\tvpc-demo\n'; else printf 'mock-eks-context\n'; fi ;;
+      if [[ "$*" == *vpcId* ]]; then printf 'vpc-demo\n'; else printf 'mock-eks-context\n'; fi ;;
     'elbv2 describe-load-balancers')
       if [[ ! -f "$R21_LOG.lb" ]]; then touch "$R21_LOG.lb"; printf 'mock-load-balancer\n'; fi ;;
     'elbv2 describe-tags') printf '1\n' ;;

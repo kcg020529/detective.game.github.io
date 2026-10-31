@@ -5,12 +5,12 @@ set -euo pipefail
 LBC_CHART_VERSION='3.6.2'
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/render.sh"
-read_aws_env
-cluster_info="$(aws eks describe-cluster --name "$CLUSTER_NAME" --region "$AWS_REGION" --query 'cluster.[arn,resourcesVpcConfig.vpcId]' --output text)"
-read -r KUBE_CONTEXT VPC_ID <<< "$cluster_info"
-[[ -n "$KUBE_CONTEXT" && "$KUBE_CONTEXT" != None && -n "$VPC_ID" && "$VPC_ID" != None ]] || exit 1
+# eksctl이 만든 컨텍스트 이름은 ARN이 아니라서 aws.env의 KUBE_CONTEXT를 확인해 쓴다.
+resolve_kube_context aws
+VPC_ID="$(aws eks describe-cluster --name "$CLUSTER_NAME" --region "$AWS_REGION" --query cluster.resourcesVpcConfig.vpcId --output text)"
+VPC_ID="${VPC_ID%$''}"
+[[ -n "$VPC_ID" && "$VPC_ID" != None ]] || exit 1
 
-# ARN 컨텍스트를 명시해 현재 로컬 컨텍스트에 설치하지 않는다.
 helm repo add eks https://aws.github.io/eks-charts --force-update
 helm upgrade --install aws-load-balancer-controller eks/aws-load-balancer-controller \
   --namespace kube-system --kube-context "$KUBE_CONTEXT" --version "$LBC_CHART_VERSION" \
