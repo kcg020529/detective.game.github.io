@@ -26,7 +26,8 @@ resolve_kube_context local
 kc delete --namespace kervion --ignore-not-found=true --wait=true \
   deployment/api deployment/web statefulset/mariadb statefulset/qdrant \
   service/api service/web service/mariadb service/qdrant \
-  job/migrate job/load-data job/rag-index configmap/kervion-config configmap/kervion-nginx
+  job/migrate job/load-data job/rag-index configmap/kervion-config
+kc delete --namespace kervion --ignore-not-found=true configmap --selector=app.kubernetes.io/name=nginx
 if "$DELETE_DATA"; then
   kc delete --namespace kervion --ignore-not-found=true pvc/data-mariadb-0 pvc/storage-qdrant-0 pvc/fastembed-cache
 fi

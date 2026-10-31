@@ -93,4 +93,5 @@ aws ec2 describe-addresses --region "$AWS_REGION" --query 'Addresses[].{Id:Alloc
 printf '%s\n' 'Remaining eksctl stacks:'
 aws cloudformation describe-stacks --region "$AWS_REGION" \
   --query "Stacks[?starts_with(StackName, 'eksctl-$CLUSTER_NAME-')].{Name:StackName,Status:StackStatus}" --output json || failed=1
+printf '%s\n' 'CloudFront remains for the next session. To delete it, disable the kervion distribution in the CloudFront console, wait for deployment, then delete it.'
 exit "$failed"

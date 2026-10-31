@@ -75,11 +75,15 @@
 
 # K05-1 - AWS 배포 준비 (오프라인, 2026-10-29)
 
-1. `overlays/aws/`: ECR 이미지 `:<커밋 SHA>`, gp3 StorageClass(암호화, WaitForFirstConsumer, Delete), ALB Ingress(HTTPS, 80→443, ACM 인증서), https 허용 Origin·Secure 쿠키
-2. `scripts/render.sh`: `aws/aws.env`에서 ECR 주소·도메인·인증서 ARN만 읽어 치환. SHA가 아닌 태그·`latest`·남은 자리표시자는 실패
+1. `overlays/aws/`: ECR 이미지 `:<커밋 SHA>`, gp3 StorageClass(암호화, WaitForFirstConsumer, Delete), ALB Ingress(HTTP:80, CloudFront prefix list만 허용) + CloudFront 기본 인증서(R24 전환), https 허용 Origin·Secure 쿠키
+2. `scripts/render.sh`: `aws/aws.env`에서 ECR 주소·cloudfront.net 도메인·CF_PREFIX_LIST를 읽어 치환(R24 전환). SHA가 아닌 태그·`latest`·남은 자리표시자는 실패
 3. `aws/cluster.yaml`(eksctl): 서울, 1.36, 공용 서브넷 2개 AZ, NAT 없음, 노드 t3.large 1대 2a 고정, Pod Identity·EBS CSI 애드온, Load Balancer Controller 권한, IMDSv1 끔
 4. `scripts/aws-install-lbc.sh`, `scripts/teardown-aws.sh`(Ingress 먼저 삭제 → ALB 삭제 대기 → 클러스터 삭제 → 남은 자원 출력)
 5. `.github/workflows/ci.yml`: PR·main에서 오프라인 테스트, 이미지 2개 빌드(push 없음), 두 overlay 렌더링. 권한은 읽기 전용
 6. 하지 않은 것: **실제 AWS 생성·배포는 안 했다.** 로컬에 eksctl·helm이 없어 `cluster.yaml`과 차트 버전은 실제 도구로 검증하지 못했다. CI는 GitHub에서 아직 실행되지 않았다
 7. R23: 캐시를 마운트하는 API·rag-index에 fsGroup 10001/OnRootMismatch를 적용했다. 공통 `resolve_kube_context`/`kc`로 deploy·reindex·Secret·로컬 teardown의 대상을 고정하고, Secret은 namespace부터 만든다. AWS는 aws.env의 KUBE_CONTEXT가 필수다. reindex는 Job 문서만 골라 KERVION_RAG_FORCE=1을 넣는다. nginx는 POST 인증 10r/m·burst 5, 채팅 20r/m·burst 10·동시 2개, JSON 429, 사설 프록시 실제 IP와 읽기 제한 90초를 적용하고 기존 전달 헤더를 유지한다.
    - 검증: `KERVION_OFFLINE_TESTS=1`, `PYTHONUTF8=1`, `.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider`: 371 통과, 21 건너뜀, 기존 Starlette 경고 1개. shell 9개 bash -n, 수정 JS node --check, overlay 2개 렌더링, nginx:1.27-alpine nginx -t 통과. `tests/infra/test_kubernetes_manifests.py`에서 컨텍스트/namespace/그룹/429와 실제 kubectl --local의 Job 단독 변경을 확인했다. 클러스터·AWS·DeepSeek는 호출하지 않았고 커밋하지 않았다.
+8. R24: `scripts/aws-cloudfront.sh`의 `distribution_config`는 AWS 없이 JSON을 출력한다. `create`는 Comment kervion 배포를 재사용하고, 없으면 example.com 자리표시자 origin으로 만든다. `sync`는 명시한 컨텍스트의 ALB 주소를 최대 600초 기다린 뒤 ETag를 사용해 기존 배포의 alb origin만 변경하고 배포 완료를 기다린다. 프로필은 AWS_PROFILE을 따른다. teardown은 CloudFront를 남긴다.
+   - HTTP Ingress의 host/cert/redirect 설정을 없애고 관리형 prefix list로 제한했다. nginx는 CloudFront-Viewer-Address의 IPv4:port·[IPv6]:port(비괄호 IPv6 호환 포함)에서 포트를 제거해 IP별 제한·X-Real-IP에 쓰고, CloudFront-Forwarded-Proto → X-Forwarded-Proto → scheme 순으로 전달한다. GET 제한 제외와 기존 사설 프록시 설정은 유지한다.
+   - AWS README·env 예시·CI 더미 설정을 바꿨다. CloudFront 기본 인증서와 안정된 DOMAIN을 사용하며 첫 생성 → 클러스터/앱 배포 → sync → smoke 순서다. 선택 삭제 CLI는 추가하지 않고 콘솔에서 비활성화 후 삭제하는 방법을 적었다. worklog 문서는 수정하지 않았다.
+   - 확인: `KERVION_OFFLINE_TESTS=1 PYTHONUTF8=1 .venv/Scripts/python.exe -m pytest -q -p no:cacheprovider`: 392 통과, 21 건너뜀, 기존 Starlette 경고 1개. 인프라 시험 40개와 CloudFront 시험 18개가 통과했다. shell 10개 bash -n, overlay 2개 렌더링, nginx:1.27-alpine nginx -t, 격리 컨테이너의 IPv6 POST 키·IPv4 GET 제외·프로토콜 대체값 확인도 통과했다. UTF-8 LF·문자 깨짐 검색·git diff --check 통과. AWS·클러스터·eksctl·Helm 실호출은 하지 않았고 실제 CloudFront 수락/배포는 미검증이다. 커밋하지 않았다.

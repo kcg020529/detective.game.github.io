@@ -5,7 +5,7 @@ Docker Compose와 같은 이미지 두 개(`kervion-backend`, `kervion-web`)를 
 ```
 base/              namespace, configmap, mariadb, qdrant, fastembed-cache PVC, api, web, jobs/
 overlays/local/    Docker Desktop: 이미지 :k8s, web NodePort 30080, http 쿠키
-overlays/aws/      EKS: ECR 이미지 :<커밋 SHA>, gp3 StorageClass, ALB Ingress, https 쿠키 (aws/README.md)
+overlays/aws/      EKS: ECR 이미지 :<커밋 SHA>, gp3 StorageClass, ALB Ingress + CloudFront, https 쿠키 (aws/README.md)
 scripts/           build-images, create-secret, deploy, reindex, smoke, teardown, render, aws-*
 aws/               eksctl cluster.yaml, aws.env.example
 ```
