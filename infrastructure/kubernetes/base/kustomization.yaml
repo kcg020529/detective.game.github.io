@@ -17,8 +17,8 @@ configMapGenerator:
   - name: kervion-nginx
     files:
       - nginx.conf=../../docker/nginx.conf
+    # 이름에 내용 해시를 붙여 nginx.conf가 바뀌면 web이 새로 뜬다(subPath 마운트는 자동 갱신되지 않음).
     options:
-      disableNameSuffixHash: true
       labels:
         app.kubernetes.io/part-of: kervion
         app.kubernetes.io/name: nginx

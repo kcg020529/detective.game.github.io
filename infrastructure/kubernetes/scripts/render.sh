@@ -5,7 +5,7 @@ set -euo pipefail
 K8S_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 read_aws_env() {
   local file="${1:-${KERVION_AWS_ENV_FILE:-$K8S_DIR/aws/aws.env}}" line key value
-  AWS_REGION='' ECR_REGISTRY='' DOMAIN='' CERT_ARN='' CLUSTER_NAME='' KUBE_CONTEXT=''
+  AWS_REGION='' ECR_REGISTRY='' DOMAIN='' CF_PREFIX_LIST='' CLUSTER_NAME='' KUBE_CONTEXT=''
   if [[ ! -f "$file" ]]; then
     printf '%s\n' 'AWS settings file is missing; copy aws/aws.env.example to aws/aws.env.' >&2
     return 2
@@ -15,7 +15,7 @@ read_aws_env() {
     [[ "$line" =~ ^[[:space:]]*(#|$) || "$line" != *=* ]] && continue
     key="${line%%=*}" value="${line#*=}"
     case "$key" in
-      AWS_REGION|ECR_REGISTRY|DOMAIN|CERT_ARN|CLUSTER_NAME|KUBE_CONTEXT) printf -v "$key" '%s' "$value" ;;
+      AWS_REGION|ECR_REGISTRY|DOMAIN|CF_PREFIX_LIST|CLUSTER_NAME|KUBE_CONTEXT) printf -v "$key" '%s' "$value" ;;
     esac
   done < "$file"
   require_aws_keys AWS_REGION CLUSTER_NAME || return
@@ -69,9 +69,9 @@ render_overlay() {
       return 2
     fi
     read_aws_env "${3:-${KERVION_AWS_ENV_FILE:-$K8S_DIR/aws/aws.env}}" || return
-    require_aws_keys ECR_REGISTRY DOMAIN CERT_ARN || return
-    if [[ ! "$ECR_REGISTRY" =~ ^[a-z0-9][a-z0-9.-]+(:[0-9]+)?$ || ! "$DOMAIN" =~ ^[a-z0-9][a-z0-9.-]*[a-z0-9]$ || ! "$CERT_ARN" =~ ^arn:[a-z-]+:acm:[a-z0-9-]+:[0-9]{12}:certificate/[a-zA-Z0-9-]+$ ]]; then
-      printf '%s\n' 'Invalid ECR_REGISTRY, DOMAIN or CERT_ARN format.' >&2
+    require_aws_keys ECR_REGISTRY DOMAIN CF_PREFIX_LIST || return
+    if [[ ! "$ECR_REGISTRY" =~ ^[a-z0-9][a-z0-9.-]+(:[0-9]+)?$ || ! "$DOMAIN" =~ ^[a-z0-9]+\.cloudfront\.net$ || ! "$CF_PREFIX_LIST" =~ ^pl-[0-9a-f]+$ ]]; then
+      printf '%s\n' 'Invalid ECR_REGISTRY, DOMAIN or CF_PREFIX_LIST format.' >&2
       return 2
     fi
   elif [[ -n "$tag" ]]; then
@@ -83,7 +83,7 @@ render_overlay() {
     rendered="${rendered//__ECR_REGISTRY__/$ECR_REGISTRY}"
     rendered="${rendered//__IMAGE_TAG__/$tag}"
     rendered="${rendered//__DOMAIN__/$DOMAIN}"
-    rendered="${rendered//__CERT_ARN__/$CERT_ARN}"
+    rendered="${rendered//__CF_PREFIX_LIST__/$CF_PREFIX_LIST}"
     printf 'AWS render: tag=%s domain=%s\n' "$tag" "$DOMAIN" >&2
   fi
   if [[ "$rendered" =~ __[A-Z_]+__ ]]; then

@@ -56,8 +56,8 @@ jobs:
           AWS_REGION=ap-northeast-2
           CLUSTER_NAME=kervion
           ECR_REGISTRY=registry.example.invalid
-          DOMAIN=ci.example.invalid
-          CERT_ARN=arn:aws:acm:ap-northeast-2:000000000000:certificate/demo
+          DOMAIN=d111111abcdef8.cloudfront.net
+          CF_PREFIX_LIST=pl-0123abcd
           EOF
           bash infrastructure/kubernetes/scripts/render.sh local > "$RUNNER_TEMP/local.yaml"
           bash infrastructure/kubernetes/scripts/render.sh aws "${GITHUB_SHA::7}" "$RUNNER_TEMP/aws.env" > "$RUNNER_TEMP/aws.yaml"

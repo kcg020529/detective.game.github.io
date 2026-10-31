@@ -14,7 +14,7 @@ BASE = K8S / 'base'
 LOCAL = K8S / 'overlays/local'
 AWS = K8S / 'overlays/aws'
 SCRIPTS = ('build-images.sh', 'create-secret.sh', 'deploy.sh', 'teardown.sh', 'smoke.sh', 'reindex.sh',
-           'render.sh', 'aws-install-lbc.sh', 'teardown-aws.sh')
+           'render.sh', 'aws-install-lbc.sh', 'teardown-aws.sh', 'aws-cloudfront.sh')
 
 
 def _load(path):
@@ -45,7 +45,8 @@ def test_kubernetes_manifests():
     }
     assert all('secret' not in item for item in base['resources'])
     assert base['configMapGenerator'][0]['files'] == ['nginx.conf=../../docker/nginx.conf']
-    assert base['configMapGenerator'][0]['options']['disableNameSuffixHash'] is True
+    # nginx.conf가 바뀌면 이름이 바뀌어 web이 다시 뜬다.
+    assert 'disableNameSuffixHash' not in base['configMapGenerator'][0].get('options', {})
     assert 'images' not in base
     assert local['resources'] == ['../../base']
     assert {item['name']: (item['newName'], item['newTag']) for item in local['images']} == {
@@ -110,7 +111,7 @@ def test_kubernetes_manifests():
 
 def test_nginx_preserves_forwarded_protocol():
     conf = (ROOT / 'infrastructure/docker/nginx.conf').read_text(encoding='utf-8')
-    assert re.search(r'map\s+\$http_x_forwarded_proto\s+\$kervion_forwarded_proto\s*\{\s*default\s+\$http_x_forwarded_proto;\s*""\s+\$scheme;\s*\}', conf)
+    assert re.search(r'map\s+\$http_x_forwarded_proto\s+\$kervion_origin_proto\s*\{\s*default\s+\$http_x_forwarded_proto;\s*""\s+\$scheme;\s*\}', conf)
     assert 'proxy_set_header X-Forwarded-Proto $kervion_forwarded_proto;' in conf
 
 
@@ -243,8 +244,8 @@ def test_deploy_orders_selected_jobs_and_aborts_before_app_on_failure(bash, tmp_
 
 def _aws_env(tmp_path, **updates):
     values = dict(AWS_REGION='ap-northeast-2', CLUSTER_NAME='kervion', KUBE_CONTEXT='mock-eks-context',
-                  ECR_REGISTRY='registry.example.invalid', DOMAIN='app.example.invalid',
-                  CERT_ARN='arn:aws:acm:ap-northeast-2:000000000000:certificate/demo')
+                  ECR_REGISTRY='registry.example.invalid', DOMAIN='d111111abcdef8.cloudfront.net',
+                  CF_PREFIX_LIST='pl-0123abcd')
     values.update(updates)
     path = tmp_path / 'aws.env'
     path.write_text(''.join(f'{key}={value}\n' for key, value in values.items()), encoding='utf-8')
@@ -277,12 +278,14 @@ def test_aws_overlay_and_shared_render(bash, tmp_path):
     ingress = next(obj for obj in objects if obj['kind'] == 'Ingress')
     assert ingress['metadata']['labels']['app.kubernetes.io/tier'] == 'edge'
     assert ingress['spec']['ingressClassName'] == 'alb'
-    assert ingress['spec']['rules'][0]['host'] == 'app.example.invalid'
+    assert 'host' not in ingress['spec']['rules'][0]
     assert ingress['spec']['rules'][0]['http']['paths'][0]['backend']['service'] == {'name': 'web', 'port': {'number': 80}}
     annotations = ingress['metadata']['annotations']
-    assert json.loads(annotations['alb.ingress.kubernetes.io/listen-ports']) == [{'HTTP': 80}, {'HTTPS': 443}]
-    assert annotations['alb.ingress.kubernetes.io/ssl-redirect'] == '443'
-    assert annotations['alb.ingress.kubernetes.io/certificate-arn'].endswith('/demo')
+    assert json.loads(annotations['alb.ingress.kubernetes.io/listen-ports']) == [{'HTTP': 80}]
+    assert 'alb.ingress.kubernetes.io/ssl-redirect' not in annotations
+    assert 'alb.ingress.kubernetes.io/certificate-arn' not in annotations
+    assert annotations['alb.ingress.kubernetes.io/security-group-prefix-lists'] == 'pl-0123abcd'
+    assert 'alb.ingress.kubernetes.io/inbound-cidrs' not in annotations
     assert annotations['alb.ingress.kubernetes.io/scheme'] == 'internet-facing'
     assert annotations['alb.ingress.kubernetes.io/target-type'] == 'ip'
     assert annotations['alb.ingress.kubernetes.io/healthcheck-path'] == '/'
@@ -295,7 +298,7 @@ def test_aws_overlay_and_shared_render(bash, tmp_path):
     config = next(obj for obj in objects if obj['kind'] == 'ConfigMap' and obj['metadata']['name'] == 'kervion-config')
     assert config['data']['KERVION_COOKIE_SECURE'] == 'true'
     assert config['data']['KERVION_COOKIE_SAMESITE'] == 'lax'
-    assert config['data']['KERVION_ALLOWED_ORIGINS'] == 'https://app.example.invalid'
+    assert config['data']['KERVION_ALLOWED_ORIGINS'] == 'https://d111111abcdef8.cloudfront.net'
     service = next(obj for obj in objects if obj['kind'] == 'Service' and obj['metadata']['name'] == 'web')
     assert service['spec']['type'] == 'ClusterIP'
     for obj in objects:
@@ -303,7 +306,9 @@ def test_aws_overlay_and_shared_render(bash, tmp_path):
         assert all('storageClassName' not in claim['spec'] for claim in claims)
 
 
-@pytest.mark.parametrize('tag,updates', [('', {}), ('latest', {}), ('bad-tag', {}), ('abcdef0', {'DOMAIN': ''})])
+@pytest.mark.parametrize('tag,updates', [('', {}), ('latest', {}), ('bad-tag', {}), ('abcdef0', {'DOMAIN': ''}),
+    ('abcdef0', {'DOMAIN': 'example.com'}), ('abcdef0', {'CF_PREFIX_LIST': ''}),
+    ('abcdef0', {'CF_PREFIX_LIST': 'pl-NOTHEX'})])
 def test_aws_render_rejects_invalid_settings(bash, tmp_path, tag, updates):
     result = subprocess.run([bash, (K8S / 'scripts/render.sh').as_posix(), 'aws', tag, _aws_env(tmp_path, **updates).as_posix()],
                             cwd=ROOT, text=True, encoding='utf-8', capture_output=True)
@@ -562,7 +567,7 @@ def test_secret_creates_namespace_before_secret(bash, tmp_path):
 
 def test_nginx_post_limits_and_json_429():
     conf = (ROOT / 'infrastructure/docker/nginx.conf').read_text(encoding='utf-8')
-    assert 'default "";' in conf and 'POST $binary_remote_addr;' in conf
+    assert 'default "";' in conf and 'POST $kervion_client_key;' in conf
     assert 'zone=kervion_auth:10m rate=10r/m;' in conf
     assert 'zone=kervion_chat:10m rate=20r/m;' in conf
     auth = conf.split('location ~ ^/api/v1/auth/(signup|login)$ {')[1].split('}')[0]
