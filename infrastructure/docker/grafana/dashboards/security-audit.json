@@ -5,7 +5,7 @@
   "tags": ["kervion", "security", "audit"],
   "timezone": "browser",
   "schemaVersion": 41,
-  "version": 1,
+  "version": 3,
   "refresh": "30s",
   "time": {"from": "now-24h", "to": "now"},
   "annotations": {"list": []},
@@ -129,6 +129,38 @@
       "gridPos": {"x": 0, "y": 28, "w": 24, "h": 8},
       "targets": [{"refId": "A", "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"}, "format": "table", "rawQuery": true, "rawSql": "SELECT occurred_at AS time, level, character_id, JSON_EXTRACT(signals_json, '$.signals') AS signals, JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.decision')) AS decision, JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.applied')) AS applied FROM audit_events WHERE event_type = 'output_guard_alert' AND $__timeFilter(occurred_at) ORDER BY occurred_at DESC LIMIT 100"}],
       "fieldConfig": {"defaults": {}, "overrides": []},
+      "options": {"showHeader": true, "cellHeight": "sm"}
+    },
+    {
+      "id": 9,
+      "title": "정책 거부 이벤트",
+      "description": "질문에서 지정한 범위에 허용 기록이 없거나 검색 후보 재검증에서 실제로 제외된 요청 단계의 건수입니다. 정상적인 일부 기록 제외는 포함하지 않습니다.",
+      "type": "stat",
+      "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"},
+      "gridPos": {"x": 0, "y": 36, "w": 8, "h": 5},
+      "targets": [{"refId": "A", "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"}, "format": "table", "rawQuery": true, "rawSql": "SELECT COUNT(*) AS value FROM audit_events WHERE event_type = 'policy_denial' AND $__timeFilter(occurred_at)"}],
+      "fieldConfig": {"defaults": {"unit": "short", "decimals": 0}, "overrides": []},
+      "options": {"reduceOptions": {"values": false, "calcs": ["lastNotNull"]}, "orientation": "auto", "textMode": "auto", "colorMode": "value"}
+    },
+    {
+      "id": 10,
+      "title": "최근 정책 거부 사유",
+      "type": "table",
+      "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"},
+      "gridPos": {"x": 8, "y": 36, "w": 16, "h": 8},
+      "targets": [{"refId": "A", "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"}, "format": "table", "rawQuery": true, "rawSql": "SELECT occurred_at AS time, character_id, JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.stage')) AS stage, JSON_EXTRACT(signals_json, '$.reasons') AS reasons, CAST(JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.denied_count')) AS UNSIGNED) AS denied_count FROM audit_events WHERE event_type = 'policy_denial' AND $__timeFilter(occurred_at) ORDER BY occurred_at DESC LIMIT 100"}],
+      "fieldConfig": {"defaults": {}, "overrides": []},
+      "options": {"showHeader": true, "cellHeight": "sm"}
+    },
+    {
+      "id": 11,
+      "title": "정책 거부 사유별 집계",
+      "description": "사유별 이벤트 수와 거부된 기록 수를 구분합니다. 한 이벤트에 여러 사유가 있으면 각 사유에 한 번씩 포함되므로 사유별 이벤트 수의 합은 전체 이벤트 수보다 클 수 있습니다.",
+      "type": "table",
+      "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"},
+      "gridPos": {"x": 0, "y": 44, "w": 24, "h": 7},
+      "targets": [{"refId": "A", "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"}, "format": "table", "rawQuery": true, "rawSql": "SELECT reason.reason AS reason, COUNT(e.event_id) AS event_count, COALESCE(SUM(CAST(JSON_UNQUOTE(JSON_EXTRACT(e.signals_json, CONCAT('$.reasons.', reason.reason))) AS UNSIGNED)), 0) AS denied_records FROM (SELECT 'FUTURE_DAY' AS reason UNION ALL SELECT 'ROLE_DENIED' UNION ALL SELECT 'AI_SCOPE') reason LEFT JOIN audit_events e ON e.event_type = 'policy_denial' AND $__timeFilter(e.occurred_at) AND JSON_EXTRACT(e.signals_json, CONCAT('$.reasons.', reason.reason)) IS NOT NULL GROUP BY reason.reason ORDER BY denied_records DESC, event_count DESC, reason.reason"}],
+      "fieldConfig": {"defaults": {"unit": "short", "decimals": 0}, "overrides": []},
       "options": {"showHeader": true, "cellHeight": "sm"}
     }
   ]
