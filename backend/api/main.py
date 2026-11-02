@@ -16,6 +16,7 @@ from backend.api.chats import router as chats_router
 from backend.api.accusations import router as accusations_router
 from backend.api.output_guard_adapter import check_output
 from backend.api.auth import router as auth_router
+from backend.api.admin import router as admin_router
 from backend.api.errors import ApiError
 from backend.api.saves import router as saves_router
 from backend.api.switches import current_switches
@@ -107,3 +108,4 @@ app.include_router(saves_router, prefix='/api/v1')
 app.include_router(chats_router, prefix='/api/v1')
 app.include_router(accusations_router, prefix='/api/v1')
 app.include_router(auth_router, prefix='/api/v1')
+app.include_router(admin_router, prefix='/api/v1')

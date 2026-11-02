@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b171b">
+  <title>보안 감사 대시보드 | KERVION</title>
+  <style>
+    :root { color-scheme: dark; --bg:#0b171b; --surface:#12232a; --line:#2c444a; --text:#eaf3ef; --muted:#a4b8b9; --mint:#91ddc0; --amber:#e9bc78; }
+    * { box-sizing: border-box; }
+    body { margin:0; min-width:320px; background:var(--bg); color:var(--text); font:15px/1.55 system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif; }
+    a { color:inherit; text-decoration:none; }
+    a:focus-visible { outline:2px solid var(--mint); outline-offset:4px; }
+    .layout { display:grid; grid-template-columns:225px minmax(0,1fr); min-height:100vh; }
+    .sidebar { display:flex; flex-direction:column; gap:38px; padding:30px 18px 24px; border-right:1px solid var(--line); background:#0e1d22; }
+    .brand { display:flex; gap:11px; align-items:center; padding:0 8px; }
+    .brand-mark { display:grid; place-items:center; width:35px; height:35px; border:1px solid #7bc8ad; border-radius:10px; background:linear-gradient(145deg,#274c45,#172c32); box-shadow:0 0 26px #66dcb230; color:#b9ffe2; font-size:17px; font-weight:800; }
+    .brand-name { font-size:17px; font-weight:800; letter-spacing:.12em; line-height:1.1; }
+    .brand small { display:block; margin-top:3px; color:var(--muted); font-size:10px; letter-spacing:.12em; }
+    .nav-caption { padding:0 11px; color:#7e9a9c; font-size:10px; font-weight:800; letter-spacing:.18em; }
+    .nav { display:grid; gap:6px; margin-top:10px; }
+    .nav a { display:flex; align-items:center; gap:12px; min-height:43px; padding:9px 12px; border:1px solid transparent; border-radius:9px; color:#afc1c1; font-size:13px; font-weight:650; }
+    .nav a:hover { background:#1b3339; color:var(--text); }
+    .nav a.active { border-color:#416c61; background:#1e3b38; color:#d6fff0; }
+    .nav .icon { width:17px; text-align:center; font-size:17px; line-height:1; }
+    .side-bottom { margin-top:auto; padding:18px 11px 0; border-top:1px solid var(--line); }
+    .side-bottom strong { display:block; font-size:12px; }
+    .side-bottom p { margin:5px 0 0; color:var(--muted); font-size:11px; }
+    .content { min-width:0; padding:29px clamp(18px,3vw,48px) 38px; }
+    .topbar { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    .breadcrumb { color:#91aaa9; font-size:11px; font-weight:700; letter-spacing:.14em; }
+    .status { display:inline-flex; align-items:center; gap:8px; padding:7px 11px; border:1px solid #466d60; border-radius:99px; background:#19352f; color:#a9ebcd; font-size:11px; font-weight:750; white-space:nowrap; }
+    .status::before { content:""; width:7px; height:7px; border-radius:50%; background:#91ddaa; box-shadow:0 0 10px #91ddaa; }
+    .hero { position:relative; overflow:hidden; margin-top:18px; padding:27px 30px; border:1px solid #3b5956; border-radius:16px; background:linear-gradient(110deg,#1b3435 0%,#172a31 54%,#1b3036 100%); }
+    .hero::after { content:""; position:absolute; top:-105px; right:-20px; width:330px; height:330px; border:1px solid #7fc9af35; border-radius:50%; box-shadow:0 0 0 43px #7fc9af0b,0 0 0 87px #7fc9af09; pointer-events:none; }
+    .hero-content { position:relative; z-index:1; }
+    .eyebrow { margin:0 0 7px; color:var(--mint); font-size:11px; font-weight:800; letter-spacing:.2em; }
+    h1 { margin:0; font-size:clamp(25px,2.4vw,35px); line-height:1.25; letter-spacing:-.045em; }
+    .hero p:last-child { max-width:680px; margin:10px 0 0; color:#bfd1cf; font-size:13px; }
+    .guide { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin:16px 0 22px; }
+    .guide-card { padding:14px 16px; border:1px solid var(--line); border-radius:10px; background:var(--surface); }
+    .guide-card .number { color:var(--amber); font:800 11px/1.1 ui-monospace,SFMono-Regular,monospace; }
+    .guide-card strong { display:block; margin:5px 0 3px; font-size:13px; }
+    .guide-card span:last-child { color:var(--muted); font-size:11px; }
+    .panel { overflow:hidden; border:1px solid #385158; border-radius:13px; background:var(--surface); box-shadow:0 15px 45px #0004; }
+    .panel-head { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; padding:15px 18px; border-bottom:1px solid var(--line); }
+    .panel-title { display:flex; align-items:center; gap:10px; }
+    .panel-title::before { content:""; width:4px; height:22px; border-radius:2px; background:var(--mint); }
+    h2 { margin:0; font-size:15px; letter-spacing:-.02em; }
+    .panel-actions { display:flex; align-items:center; gap:8px; }
+    .panel-actions a { padding:7px 11px; border:1px solid #49656a; border-radius:7px; color:#d8e7e2; font-size:11px; font-weight:700; }
+    .panel-actions a:hover { border-color:var(--mint); background:#244139; }
+    iframe { display:block; width:100%; height:min(1120px,calc(100vh - 105px)); min-height:680px; border:0; background:#181b1f; }
+    .footnote { margin:12px 1px 0; color:#91a9aa; font-size:11px; }
+    @media (max-width:900px) { .layout { grid-template-columns:1fr; } .sidebar { flex-direction:row; align-items:center; justify-content:space-between; gap:12px; padding:13px 18px; border-right:0; border-bottom:1px solid var(--line); } .side-bottom,.nav-caption { display:none; } .nav { display:flex; margin:0; } .guide { grid-template-columns:repeat(2,minmax(0,1fr)); } .content { padding-top:19px; } }
+    @media (max-width:620px) { .sidebar { align-items:flex-start; flex-direction:column; } .nav { width:100%; } .nav a { min-height:36px; padding:6px 9px; font-size:11px; } .hero { padding:22px 18px; } .hero::after { right:-190px; } .guide { grid-template-columns:1fr; gap:7px; } .guide-card { padding:10px 13px; } .guide-card strong { display:inline; margin-left:8px; } .guide-card span:last-child { display:block; margin-top:2px; } .panel-head { padding:13px; } iframe { min-height:620px; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">K</span><div><div class="brand-name">KERVION</div><small>SECURITY CONSOLE</small></div></div>
+      <div><div class="nav-caption">WORKSPACE</div><nav class="nav" aria-label="관리자 메뉴"><a class="active" href="/admin/audit" aria-current="page"><span class="icon" aria-hidden="true">▦</span>감사 대시보드</a><a href="/"><span class="icon" aria-hidden="true">↗</span>게임으로 돌아가기</a></nav></div>
+      <div class="side-bottom"><strong>관리자 전용 화면</strong><p>감사 데이터는 웹사이트 관리자 세션이 확인된 경우에만 표시됩니다.</p></div>
+    </aside>
+    <main class="content">
+      <div class="topbar"><span class="breadcrumb">ADMIN / SECURITY / AUDIT</span><span class="status">30초 자동 갱신</span></div>
+      <section class="hero" aria-labelledby="page-title"><div class="hero-content"><p class="eyebrow">SECURITY OVERVIEW</p><h1 id="page-title">보안 감사 대시보드</h1><p>플레이어 질문과 AI 답변에서 감지된 보안 이벤트를 확인하세요. 검사 결과만 집계하며 질문·답변 원문은 표시하지 않습니다.</p></div></section>
+      <div class="guide" aria-label="대시보드 안내"><div class="guide-card"><span class="number">01 / INPUT</span><strong>입력 탐지</strong><span>경고·고위험 질문의 발생 흐름</span></div><div class="guide-card"><span class="number">02 / OUTPUT</span><strong>출력 검사</strong><span>AI 답변의 검사 결과와 처리</span></div><div class="guide-card"><span class="number">03 / POLICY</span><strong>정책 거부</strong><span>허용 범위가 없는 검색·후보 거부</span></div><div class="guide-card"><span class="number">04 / HISTORY</span><strong>최근 이벤트</strong><span>시각·수준·탐지 신호를 확인</span></div></div>
+      <section class="panel" aria-labelledby="panel-heading"><div class="panel-head"><div class="panel-title"><h2 id="panel-heading">감사 이벤트 현황</h2></div><div class="panel-actions"><a href="/admin/audit">화면 새로고침</a><a href="/api/v1/admin/grafana/d/kervion-security-audit/kervion-security-audit?orgId=1&amp;refresh=30s" target="_blank" rel="noopener">대시보드 크게 보기 ↗</a></div></div><iframe title="Grafana 보안 감사 대시보드" loading="eager" src="/api/v1/admin/grafana/d/kervion-security-audit/kervion-security-audit?orgId=1&amp;kiosk=1&amp;refresh=30s"></iframe></section>
+      <p class="footnote">기간 선택과 상세 조회는 위 Grafana 화면에서 조절할 수 있습니다. 이벤트가 없다면 그래프와 표가 비어 보일 수 있습니다.</p>
+    </main>
+  </div>
+</body>
+</html>
