@@ -703,7 +703,7 @@
   }
 
   function buildMessenger() {
-    return `<div class="c-messenger"><aside class="c-yb-list" data-yb-list></aside><section class="c-chat-panel"><div class="c-chat-head" data-chat-head></div><div class="c-chat-log" data-chat-log aria-live="polite"></div><p data-chat-error role="status" aria-live="polite"></p><div class="c-compose"><textarea data-compose rows="1" placeholder="질문을 입력하세요" aria-describedby="c-compose-hint"></textarea><button type="button" data-send>보내기</button></div><small id="c-compose-hint" class="c-compose-hint">Tab: 추천 질문 넣기</small></section></div>`;
+    return `<div class="c-messenger"><aside class="c-yb-list" data-yb-list></aside><section class="c-chat-panel"><div class="c-chat-head" data-chat-head></div><div class="c-chat-log" data-chat-log aria-live="polite"></div><p data-chat-error role="status" aria-live="polite"></p><div class="c-compose"><textarea data-compose rows="1" maxlength="200" placeholder="질문을 입력하세요" aria-describedby="c-compose-hint"></textarea><button type="button" data-send>보내기</button></div><small id="c-compose-hint" class="c-compose-hint">Tab: 추천 질문 넣기</small></section></div>`;
   }
 
   function buildNotebook() {

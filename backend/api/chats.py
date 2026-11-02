@@ -21,7 +21,7 @@ router = APIRouter()
 
 class SendChat(BaseModel):
     model_config = ConfigDict(extra='forbid', strict=True)
-    message: str = Field(min_length=1, max_length=2000)
+    message: str = Field(min_length=1, max_length=200)
     client_request_id: str = Field(pattern=r'^[\x21-\x7E]{1,64}$')
 
     @field_validator('message')

@@ -3,7 +3,7 @@
 `POST /api/v1/saves/{save_id}/chats/{ai_id}`. 기존 세션 쿠키 인증을 사용한다.
 
 요청: `{"message":"첫날 무슨 일이 있었어?","client_request_id":"chat-unique-1"}`.
-message는 공백만 있는 값을 제외한 1~2000자, 요청 ID는 출력 가능한 ASCII 1~64자다. 역할·Day·사용자 ID·dataset 추가 필드는 받지 않는다.
+message는 공백만 있는 값을 제외한 1~200자, 요청 ID는 출력 가능한 ASCII 1~64자다. 역할·Day·사용자 ID·dataset 추가 필드는 받지 않는다.
 
 성공 200: `{"messages":[사용자 메시지, AI 메시지],"game_state":Save 상태}`. 메시지 형식은 기존 GET과 동일하다. 안전한 최종 답변만 대화에 저장한다. Save별 요청 ID를 직렬화하며 동일 AI·동일 질문 재전송은 저장된 응답을 반환한다. 같은 ID로 다른 질문·AI·Day 진행을 요청하면 409다. 실패한 요청은 성공 캐시에 넣지 않아 재시도할 수 있다.
 
