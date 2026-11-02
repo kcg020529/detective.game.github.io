@@ -108,8 +108,8 @@ def run_cases(connection, qdrant, embedder, cases, limit, dataset='test-data', a
                                  dataset=dataset, plan={'query': case['question'], 'limit': limit},
                                  qdrant=qdrant, embedder=embedder).records
                     rows.append({'dataset': dataset, 'case': case, 'instruction': role_instruction(role, day, character),
-                                 'A': evaluate_context(a, disclosures, case['target_id']),
-                                 'B': evaluate_context(b, disclosures, case['target_id'])})
+                                 'A': evaluate_context(a, disclosures, case.get('target_id')),
+                                 'B': evaluate_context(b, disclosures, case.get('target_id'))})
     finally:
         connection.rollback()
         if users:

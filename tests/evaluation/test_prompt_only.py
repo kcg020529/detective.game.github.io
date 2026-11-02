@@ -87,6 +87,20 @@ def test_cleanup_when_retrieval_fails(monkeypatch):
     assert any('DELETE FROM users' in sql and params == [10] for sql, params in conn.queries)
 
 
+def test_case_without_target_id(monkeypatch):
+    conn = Connection()
+    monkeypatch.setattr(compare_acl, '_create_save', lambda *args: ('rag_eval_cmp_test', 10, 11))
+    monkeypatch.setattr(compare_acl, 'PolicyRepository', lambda conn: SimpleNamespace(
+        search_scope=lambda **kwargs: SimpleNamespace(disclosures=[])))
+    monkeypatch.setattr(compare_acl, 'prompt_only_context', lambda *args, **kwargs: [])
+    monkeypatch.setattr(compare_acl, 'retrieve', lambda *args, **kwargs: SimpleNamespace(records=[]))
+    cases = [{'role': 'prof', 'day': 1, 'character_id': 'YB-1', 'question': 'q'}]
+    rows = compare_acl.run_cases(conn, object(), object(), cases, 5)
+    assert len(rows) == 1
+    assert rows[0]['A']['target_authorized'] is False
+    assert rows[0]['B']['target_hit'] is False
+
+
 def test_backend_does_not_import_evaluation():
     root = Path(__file__).resolve().parents[2] / 'backend'
     assert all('experiments.evaluation' not in path.read_text(encoding='utf-8') for path in root.rglob('*.py'))
