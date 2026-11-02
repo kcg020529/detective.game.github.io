@@ -1,7 +1,7 @@
 {
   "uid": "kervion-security-audit",
   "title": "Kervion 보안 감사",
-  "description": "Input·Output Guard 감사 메타데이터를 표시합니다. 질문 원문과 AI 답변은 표시하지 않습니다.",
+  "description": "Input·Output Guard와 정책 거부 감사 메타데이터를 표시합니다. 질문 원문과 AI 답변은 표시하지 않습니다.",
   "tags": ["kervion", "security", "audit"],
   "timezone": "browser",
   "schemaVersion": 41,
@@ -18,7 +18,7 @@
       "gridPos": {"x": 0, "y": 0, "w": 24, "h": 3},
       "options": {
         "mode": "markdown",
-        "content": "Input Guard의 warn·high_risk와 Output Guard의 log·alert만 집계합니다. 통과 후 기록할 신호가 없는 요청은 저장하지 않으므로 전체 요청 수나 차단율이 아닙니다. 질문·답변 원문은 저장하거나 표시하지 않습니다."
+        "content": "Input Guard의 warn·high_risk, Output Guard의 log·alert, 정책 거부 이벤트를 집계합니다. 통과 후 기록할 신호가 없는 요청은 저장하지 않으므로 전체 요청 수나 차단율이 아닙니다. 질문·답변 원문은 저장하거나 표시하지 않습니다."
       }
     },
     {
