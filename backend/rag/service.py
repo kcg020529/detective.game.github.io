@@ -100,7 +100,8 @@ def _metadata_line(record):
     return ', '.join(parts) + '.' if parts else ''
 
 
-def retrieve(conn, *, user_id, save_id, character_id, dataset, plan, qdrant=None, embedder=None):
+def retrieve(conn, *, user_id, save_id, character_id, dataset, plan, qdrant=None, embedder=None,
+             on_policy_denial=None):
     """채팅 한 번의 검색. qdrant·embedder를 주지 않으면 QDRANT_URL과 공유 모델을 쓴다."""
     own_client = qdrant is None
     if own_client:
@@ -116,7 +117,8 @@ def retrieve(conn, *, user_id, save_id, character_id, dataset, plan, qdrant=None
         else:
             records, signal = search_with_signal(
                 conn, user_id=user_id, save_id=save_id, character_id=character_id, dataset=dataset,
-                plan=plan, qdrant=qdrant, embedder=embedder or FastEmbedder())
+                plan=plan, qdrant=qdrant, embedder=embedder or FastEmbedder(),
+                on_policy_denial=on_policy_denial)
     finally:
         if own_client:
             qdrant.close()

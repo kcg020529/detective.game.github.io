@@ -11,6 +11,9 @@ TYPES = frozenset({'Setup', 'Action', 'Dialogue', 'Thought', 'Result', 'Incident
 LOCATIONS = frozenset({'중앙홀', '회의실', '기록실', '전력실', '통신실', '창고', '서버실'})
 METADATA = ('record_id', 'record_type', 'test_id', 'day', 'location_ids', 'involved_ai')
 EXTRA_FIELDS = {'metadata': (), 'summary': ('summary',), 'full': ('summary', 'content')}
+# Expected access boundaries. Invalid metadata and server state are data errors,
+# not player access denials, and must not inflate the policy-denial dashboard.
+ACCESS_DENIAL_REASONS = frozenset({'FUTURE_DAY', 'ROLE_DENIED', 'AI_SCOPE'})
 
 
 @dataclass(frozen=True)
