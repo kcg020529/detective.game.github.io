@@ -136,13 +136,11 @@ test('F/G/I: HTTP adapter handles rate limits, chat timeout, and memo keepalive'
 
 
 test('H: inactive response re-enables composer without replacing conversation DOM', () => {
-  const buttons = [{ disabled: true }, { disabled: true }];
   const send = { disabled: true, setAttribute(_name, value) { this.busy = value; } };
   const context = vm.createContext({});
   vm.runInContext(extract('updateChatControls', 'selectYb'), context);
   context.updateChatControls({ chatPending: false, chatWaitVisible: false,
-    windows: new Map([['messenger', { querySelectorAll: () => buttons, querySelector: () => send }]]) });
+    windows: new Map([['messenger', { querySelector: () => send }]]) });
   assert.equal(send.disabled, false);
   assert.equal(send.busy, 'false');
-  assert.ok(buttons.every(button => !button.disabled));
 });

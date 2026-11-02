@@ -991,7 +991,7 @@ async function startLoading() {
   showTitle();
   startScene();
   render();
-  loadTimer = setInterval(tick, 70);
+  loadTimer = setInterval(tick, 40); // 70ms에서 약 43% 단축
 
   // 개발용 지름길: 로딩을 바로 100으로
   if (fastLoad && !skipToPlay) {
@@ -1188,16 +1188,15 @@ loginView.addEventListener('submit', async (event) => {
 
 /* ---------- 역할 선택 (1안: 출입증 3장) ---------- */
 
-// 역할 = 난이도. sample: 계획서 예시 "제한 파일 접근" 사건이 역할별로 보이는 모습
+// 역할 = 난이도.
 // name: 계획서·백엔드에서 쓰는 이름, label: 화면에 보이는 이름
 const roles = {
-  prof: { name: 'Professor', label: '교수', sample: '난이도: 쉬움' },
-  grad: { name: 'Graduate Student', label: '대학원생', sample: '난이도: 보통' },
-  std: { name: 'Undergraduate Researcher', label: '학부 연구생', sample: '난이도: 어려움' },
+  prof: { name: 'Professor', label: '교수' },
+  grad: { name: 'Graduate Student', label: '대학원생' },
+  std: { name: 'Undergraduate Researcher', label: '학부 연구생' },
 };
 
 const roleView = document.querySelector('#role-view');
-const sampleResult = document.querySelector('#sample-result');
 const roleError = document.querySelector('#role-error');
 const readyTitle = document.querySelector('#ready-title');
 
@@ -1208,33 +1207,26 @@ function showRoleSelect(purpose = 'new') {
   roleView.hidden = false;
   loadingScreen.classList.add('is-login', 'is-role');
   document.querySelector('#role-back').textContent = purpose === 'signup' ? '계정 만들기로 돌아가기' : '정문으로 돌아가기';
-  const roleDescriptions = { prof: '쉬움', grad: '보통', std: '어려움' };
   for (const input of roleView.querySelectorAll('input[name="role"]')) {
     input.disabled = false;
     input.closest('.badge').classList.remove('is-disabled');
-    input.closest('.badge').querySelector('.badge-info').textContent = roleDescriptions[input.value];
   }
   if (purpose === 'new' && currentUserRoles[0]) roleView.querySelector(`input[name="role"][value="${currentUserRoles[0]}"]`).checked = true;
   const picked = roleView.querySelector('input[name="role"]:checked');
   if (picked) applyRole(picked.value);
 }
 
-// 고른 역할을 예시 상자와 오른쪽 연구소에 반영
+// 고른 역할을 오른쪽 연구소에 반영
 function applyRole(value) {
-  const role = roles[value];
-  if (!role) return;
+  if (!roles[value]) return;
   sceneRole = value;
-  sampleResult.textContent = role.sample;
-  sampleResult.classList.add('is-set');
   roleError.textContent = '';
 }
 
-// 역할 선택을 처음 상태로 (선택 해제, 예시 상자 비움, 연구소 원래대로)
+// 역할 선택을 처음 상태로 (선택 해제, 연구소 원래대로)
 function resetRole() {
   roleView.reset();
   sceneRole = null;
-  sampleResult.textContent = '역할을 고르면 여기에 나옵니다.';
-  sampleResult.classList.remove('is-set');
   roleError.textContent = '';
 }
 

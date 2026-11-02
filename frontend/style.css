@@ -383,7 +383,8 @@ body {
 .badge:hover .badge-name { color: var(--room-on); }
 .badge:has(input:checked) .badge-name { color: #fff; }
 .badge-info {
-  font-size: calc(1.15cqw * var(--e-text, 1));
+  font-size: calc(.95cqw * var(--e-text, 1));
+  word-break: keep-all;
   color: #8796a0;
 }
 .badge:has(input:checked) .badge-info { color: #a7b3b9; }
@@ -393,19 +394,6 @@ body {
   color: #8796a0;
 }
 .badge:has(input:checked) .badge-level { color: var(--amber); }
-
-/* 같은 사건이 역할에 따라 어떻게 보이는지 */
-.sample {
-  margin-top: 1.6cqw;
-  padding: 1.1cqw 1.4cqw;
-  border-left: 2px solid #344150;
-  background: #0f151d;
-}
-.sample p { margin: 0; }
-.sample-head { font-size: calc(1.1cqw * var(--e-text, 1)); color: #75838b; }
-.sample .sample-event { margin-top: .4cqw; font-size: calc(1.35cqw * var(--e-text, 1)); color: var(--room-on); }
-.sample .sample-result { margin-top: .3cqw; font-size: calc(1.35cqw * var(--e-text, 1)); font-weight: 700; color: #75838b; }
-.sample .sample-result.is-set { color: var(--amber); }
 
 .role-actions {
   margin-top: auto;
@@ -668,10 +656,8 @@ kbd {
   .badge { grid-template-columns: 3.4cqw 1fr auto; gap: 2cqw; padding: 2cqw .6cqw; }
   .badge .arrow { border-left-width: 2cqw; border-top-width: 1.4cqw; border-bottom-width: 1.4cqw; }
   .badge-name { font-size: 3.4cqw; }
-  .badge-info, .badge-level, .role-note { font-size: 2.7cqw; }
-  .sample { margin-top: 3cqw; padding: 2.4cqw 2.8cqw; }
-  .sample-head { font-size: 2.6cqw; }
-  .sample .sample-event, .sample .sample-result { font-size: 3cqw; }
+  .badge-level, .role-note { font-size: 2.7cqw; }
+  .badge-info { font-size: 2.3cqw; }
   .role-actions { margin-top: 3cqw; gap: 1cqw; }
   .ready .case, .ready .note { font-size: 3.6cqw; }
   .ready .note { max-width: none; }
