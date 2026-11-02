@@ -2,12 +2,14 @@ from qdrant_client import models
 
 from backend.rag.index import COLLECTIONS
 
-PROMPT_ONLY_DATASETS = frozenset({'test-data'})
+PROMPT_ONLY_DATASETS = frozenset({'test-data', 'game-data'})
 
 
-def prompt_only_context(connection, *, dataset, query, limit, qdrant, embedder):
+def prompt_only_context(connection, *, dataset, query, limit, qdrant, embedder, allow_game_data=False):
     if dataset not in PROMPT_ONLY_DATASETS:
-        raise ValueError('prompt-only evaluation requires test-data')
+        raise ValueError('unsupported evaluation dataset')
+    if dataset == 'game-data' and not allow_game_data:
+        raise ValueError('game-data requires explicit evaluation opt-in')
     groups = qdrant.query_points_groups(
         collection_name=COLLECTIONS[dataset], group_by='record_id',
         query=embedder.embed_query(query),

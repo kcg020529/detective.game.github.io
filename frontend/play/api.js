@@ -283,7 +283,7 @@
     const choices = answers[index];
     const matched = choices.find(([question]) => question === message)
       || choices.find(([question]) => message.includes(question.slice(0, 3)) || question.includes(message.slice(0, 3)));
-    return matched || ['', 'unknown', ''];
+    return matched || ['', 'unknown', 'Mock 모드라 준비된 데모 질문에만 답합니다. 실제 답변은 서버에 연결된 화면에서 확인하세요.'];
   }
 
   function makeAccusation(save, characterId) {

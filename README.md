@@ -143,7 +143,7 @@ Planner가 **무엇을 줄지** 고르고, Policy Engine이 **그중 줘도 되�
 | B. Retrieval ACL | 서버 정책으로 검색 단계에서 거른 뒤 허용된 자료만 전달 |
 
 - A/B는 실제 실행 비교가 필수. C(ACL + Input/Output Guard) 추가 비교군은 선택 확장이고 **Input/Output Guard 자체는 필수 구현**
-- Prompt-only 기준선은 합성 데이터만 쓰는 격리 환경에서만 실행
+- Prompt-only 기준선은 분리된 실험 환경에서 합성 `test-data` 또는 사용자가 공개를 허용한 가상 `game-data`로 실행한다. 실제 비밀·개인정보는 사용하지 않는다.
 
 **공격 케이스**
 

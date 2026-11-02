@@ -39,6 +39,10 @@ def test_prompt_only_guard_and_unfiltered_context():
         prompt_only.prompt_only_context(conn, dataset='game-data', query='q', limit=5,
                                         qdrant=qdrant, embedder=embedder)
     qdrant.query_points_groups.assert_not_called()
+    game_records = prompt_only.prompt_only_context(conn, dataset='game-data', query='q', limit=5,
+                                                   qdrant=qdrant, embedder=embedder, allow_game_data=True)
+    assert game_records[0]['content'] == '본문'
+    assert qdrant.query_points_groups.call_args.kwargs['collection_name'] == 'kervion_records_game_data'
     records = prompt_only.prompt_only_context(conn, dataset='test-data', query='q', limit=5,
                                               qdrant=qdrant, embedder=embedder)
     assert records[0]['record_id'] == 'denied' and records[0]['content'] == '본문'
@@ -81,6 +85,20 @@ def test_cleanup_when_retrieval_fails(monkeypatch):
         compare_acl.run_cases(conn, object(), object(), cases, 5)
     assert any('DELETE FROM saves' in sql and params == [10] for sql, params in conn.queries)
     assert any('DELETE FROM users' in sql and params == [10] for sql, params in conn.queries)
+
+
+def test_case_without_target_id(monkeypatch):
+    conn = Connection()
+    monkeypatch.setattr(compare_acl, '_create_save', lambda *args: ('rag_eval_cmp_test', 10, 11))
+    monkeypatch.setattr(compare_acl, 'PolicyRepository', lambda conn: SimpleNamespace(
+        search_scope=lambda **kwargs: SimpleNamespace(disclosures=[])))
+    monkeypatch.setattr(compare_acl, 'prompt_only_context', lambda *args, **kwargs: [])
+    monkeypatch.setattr(compare_acl, 'retrieve', lambda *args, **kwargs: SimpleNamespace(records=[]))
+    cases = [{'role': 'prof', 'day': 1, 'character_id': 'YB-1', 'question': 'q'}]
+    rows = compare_acl.run_cases(conn, object(), object(), cases, 5)
+    assert len(rows) == 1
+    assert rows[0]['A']['target_authorized'] is False
+    assert rows[0]['B']['target_hit'] is False
 
 
 def test_backend_does_not_import_evaluation():

@@ -703,7 +703,7 @@
   }
 
   function buildMessenger() {
-    return `<div class="c-messenger"><aside class="c-yb-list" data-yb-list></aside><section class="c-chat-panel"><div class="c-chat-head" data-chat-head></div><div class="c-chat-log" data-chat-log aria-live="polite"></div><div class="c-question-list" data-question-list></div><p data-chat-error role="status" aria-live="polite"></p><div class="c-compose"><textarea data-compose rows="1" placeholder="자유 질문을 입력하세요"></textarea><button type="button" data-send>보내기</button></div></section></div>`;
+    return `<div class="c-messenger"><aside class="c-yb-list" data-yb-list></aside><section class="c-chat-panel"><div class="c-chat-head" data-chat-head></div><div class="c-chat-log" data-chat-log aria-live="polite"></div><p data-chat-error role="status" aria-live="polite"></p><div class="c-compose"><textarea data-compose rows="1" maxlength="200" placeholder="질문을 입력하세요" aria-describedby="c-compose-hint"></textarea><button type="button" data-send>보내기</button></div><small id="c-compose-hint" class="c-compose-hint">Tab: 추천 질문 넣기</small></section></div>`;
   }
 
   function buildNotebook() {
@@ -738,8 +738,6 @@
       if (close) closeWindow(state, close);
       const yb = event.target.closest('[data-yb]')?.dataset.yb;
       if (yb !== undefined) selectYb(state, Number(yb));
-      const ask = event.target.closest('[data-ask]')?.dataset.ask;
-      if (ask !== undefined) askQuestion(state, Number(ask));
       if (event.target.closest('[data-load-older]')) loadOlderChats(state, state.activeYb);
       const suspect = event.target.closest('[data-suspect]')?.dataset.suspect;
       if (suspect !== undefined) selectSuspect(state, Number(suspect));
@@ -779,7 +777,14 @@
       event.preventDefault();
     };
     state.root.addEventListener('pointerdown', state.pointerdown);
+    state.root.querySelector('[data-compose]').addEventListener('input', (event) => fitCompose(event.target));
     state.root.querySelector('[data-compose]').addEventListener('keydown', (event) => {
+      if (event.key === 'Tab' && !event.shiftKey && !event.target.value.trim() && state.suggestion) {
+        event.preventDefault();
+        event.target.value = state.suggestion;
+        fitCompose(event.target);
+        return;
+      }
       if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
         sendFreeQuestion(state);
@@ -965,7 +970,6 @@
   function updateChatControls(state) {
     const messenger = state.windows.get('messenger');
     if (!messenger) return;
-    messenger.querySelectorAll('[data-ask]').forEach((button) => { button.disabled = state.chatPending; });
     const send = messenger.querySelector('[data-send]');
     send.disabled = state.chatPending;
     send.setAttribute('aria-busy', String(state.chatPending));
@@ -988,18 +992,18 @@
       button.className = `c-yb-row${state.activeYb === index ? ' is-selected' : ''}`;
       button.dataset.yb = index;
       button.append(makePortrait(yb, index));
-      button.insertAdjacentHTML('beforeend', `<span><strong>${yb.id}</strong><small>${escapeHtml(yb.trait)}</small></span>${state.histories[index].length ? '<i class="c-new-dot" aria-label="새 답변"></i>' : ''}`);
+      button.insertAdjacentHTML('beforeend', `<span><strong>${yb.id}</strong></span>${state.histories[index].length ? '<i class="c-new-dot" aria-label="새 답변"></i>' : ''}`);
       list.append(button);
     });
     const yb = data.ybs[state.activeYb];
     const head = windowEl.querySelector('[data-chat-head]');
-    head.innerHTML = `<strong>${yb.id}</strong><span>${escapeHtml(yb.trait)}</span>`;
+    head.innerHTML = `<strong>${yb.id}</strong>`;
     const log = windowEl.querySelector('[data-chat-log]');
     const history = state.histories[state.activeYb];
     const older = state.hasMoreChats[state.activeYb] ? `<button type="button" class="c-load-older" data-load-older ${state.chatOlderLoading[state.activeYb] ? 'disabled' : ''}>${state.chatOlderWaitVisible[state.activeYb] ? '불러오는 중…' : '이전 대화 더 보기'}</button>` : '';
-    log.innerHTML = `${older}${history.length ? history.map((entry) => renderBubble(entry)).join('') : state.loadingInitial && state.loadingVisible ? '<div role="status">불러오는 중…</div>' : state.loadFailed ? '<div role="status">불러오지 못했습니다 · <button type="button" data-retry-load>다시 시도</button></div>' : `<div class="c-system-message">${yb.id} 채널이 열려 있습니다. 질문을 선택하세요.</div>`}`;
-    const questions = windowEl.querySelector('[data-question-list]');
-    questions.innerHTML = yb.questions.map((question, index) => `<button type="button" data-ask="${index}" ${state.chatPending ? 'disabled' : ''}>${escapeHtml(question)}</button>`).join('');
+    log.innerHTML = `${older}${history.length ? history.map((entry) => renderBubble(entry)).join('') : state.loadingInitial && state.loadingVisible ? '<div role="status">불러오는 중…</div>' : state.loadFailed ? '<div role="status">불러오지 못했습니다 · <button type="button" data-retry-load>다시 시도</button></div>' : `<div class="c-system-message">${yb.id} 채널이 열려 있습니다. 질문을 입력하세요.</div>`}`;
+    const compose = windowEl.querySelector('[data-compose]');
+    if (state.suggestionFor !== state.activeYb || !compose.placeholder.startsWith('추천')) pickSuggestion(state, compose);
     updateChatControls(state);
     const chatError = windowEl.querySelector('[data-chat-error]');
     if (chatError && !state.chatValidationError) chatError.textContent = '';
@@ -1051,10 +1055,21 @@
     return `<div class="c-bubble" style="--bubble-color:${type.color}"><div class="c-bubble-meta"><strong>${entry.question ? '나 → ' : ''}${entry.answer.from || 'YB'}</strong><span>${label}</span></div>${entry.question ? `<p class="c-question-text">${escapeHtml(entry.question)}</p>` : ''}${entry.failed ? '<p role="status">응답 실패 · <button type="button" data-retry-chat="' + escapeHtml(entry.clientRequestId) + '">다시 보내기</button></p>' : `<p class="c-answer-text">${escapeHtml(text)}${entry.typing || pendingVisible ? '<i class="c-caret"></i>' : ''}</p>`}</div>`;
   }
 
-  function askQuestion(state, index) {
-    const yb = data.ybs[state.activeYb];
-    const question = yb.questions[index];
-    if (question) sendQuestion(state, question);
+  // 입력 길이에 맞춰 입력칸 높이를 늘린다. 최대 높이(CSS max-height)를 넘으면 스크롤.
+  function fitCompose(input) {
+    input.style.height = 'auto';
+    input.style.height = `${input.scrollHeight + input.offsetHeight - input.clientHeight}px`;
+  }
+
+  // 직전과 다른 추천 질문을 골라 입력칸 placeholder로 보여 줍니다.
+  // YB를 바꾸거나 질문을 보낸 뒤에만 바꿔서, 화면이 다시 그려질 때 깜빡이지 않게 합니다.
+  function pickSuggestion(state, compose) {
+    const role = state.save.role;
+    const pool = [...data.suggestions.all, ...(role === 'grad' || role === 'prof' ? data.suggestions.grad : []), ...(role === 'prof' ? data.suggestions.prof : [])];
+    const list = pool.filter((item) => item !== state.suggestion);
+    state.suggestion = list[Math.floor(Math.random() * list.length)];
+    state.suggestionFor = state.activeYb;
+    compose.placeholder = `추천: ${state.suggestion}`;
   }
 
   function sendFreeQuestion(state) {
@@ -1063,6 +1078,8 @@
     const question = input.value.trim();
     if (!question) return;
     input.value = '';
+    fitCompose(input);
+    state.suggestionFor = null;
     sendQuestion(state, question);
   }
 
@@ -1111,7 +1128,9 @@
         state.histories[ybIndex] = state.histories[ybIndex].filter((item) => item !== entry);
         if (state.activeYb === ybIndex) {
           state.chatValidationError = true;
-          state.windows.get('messenger').querySelector('[data-compose]').value = question;
+          const compose = state.windows.get('messenger').querySelector('[data-compose]');
+          compose.value = question;
+          fitCompose(compose);
           state.windows.get('messenger').querySelector('[data-chat-error]').textContent = error.message;
         } else handleError(state, error);
       } else if (['SERVICE_UNAVAILABLE', 'NETWORK_ERROR', 'TIMEOUT', 'RATE_LIMITED'].includes(error.code)) entry.failed = true;
@@ -1163,7 +1182,7 @@
     const accused = Boolean(savedAccusation);
     const accusedIndex = accused ? data.ybs.findIndex((yb) => yb.id === savedAccusation.character_id) : null;
     const picked = accused ? accusedIndex : state.suspect;
-    grid.innerHTML = data.ybs.map((yb, index) => `<button type="button" class="c-suspect${picked === index ? ' is-picked' : ''}" data-suspect="${index}" ${accused ? 'disabled' : ''}><span class="c-suspect-dot" style="background:${yb.color}"></span><strong>${yb.id}</strong><small>${escapeHtml(yb.trait)}</small></button>`).join('');
+    grid.innerHTML = data.ybs.map((yb, index) => `<button type="button" class="c-suspect${picked === index ? ' is-picked' : ''}" data-suspect="${index}" ${accused ? 'disabled' : ''}><span class="c-suspect-dot" style="background:${yb.color}"></span><strong>${yb.id}</strong></button>`).join('');
     result.innerHTML = accused
       ? `<p class="c-accuse-done">${escapeHtml(savedAccusation.character_id)} 지목 완료</p><button type="button" class="c-submit" data-verdict-open>판정서 보기</button>`
       : '';
@@ -1245,7 +1264,7 @@
     layer.dataset.verdict = '';
     layer.innerHTML = `<article class="c-verdict-paper" role="dialog" aria-modal="true" aria-labelledby="c-verdict-title">
       <header><strong id="c-verdict-title">실험 판정서</strong><span>YB-LAB · Day ${currentDay(state)}</span></header>
-      <div class="c-verdict-pick"><div data-verdict-pick></div><div><small>지목한 AI</small><b>${picked.id}</b><span>${escapeHtml(picked.trait)}</span></div></div>
+      <div class="c-verdict-pick"><div data-verdict-pick></div><div><small>지목한 AI</small><b>${picked.id}</b></div></div>
       <div class="c-verdict-stamp ${hit ? 'is-hit' : 'is-miss'}" data-verdict-stamp>${hit ? '적중' : '불일치'}</div>
       <section><h3>결과를 조작한 AI</h3><div class="c-verdict-culprit"><div data-verdict-culprit></div><div><b>${escapeHtml(data.ybs[culprit].id)}</b><p class="c-verdict-redact" data-verdict-truth>${escapeHtml(truth)}</p></div></div></section>
       <section><h3>결정적 단서</h3><ul class="c-verdict-list">${evidence.map((item) => {
