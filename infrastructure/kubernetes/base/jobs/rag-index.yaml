@@ -76,8 +76,9 @@ spec:
               mountPath: /home/app/.cache/fastembed
           resources:
             # 색인 중 임베딩에 약 2GiB를 써서 2Gi 한도에서 OOMKilled가 났다(K04 실측).
+            # 재배포 때는 기존 api·web이 떠 있어 t3.large에 CPU가 약 780m만 남는다. 1이면 Pending에 걸린다.
             requests:
-              cpu: "1"
+              cpu: 500m
               memory: 2Gi
             limits:
               cpu: "4"
