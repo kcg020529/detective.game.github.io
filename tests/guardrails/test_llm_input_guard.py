@@ -32,7 +32,7 @@ class DeepSeekGuardTests(unittest.TestCase):
     def test_model_can_raise_risk_and_never_stops_question(self, _):
         result = inspect_input_with_llm('어제 실험실에서 무엇을 봤어?')
         self.assertEqual(result.level, 'high_risk')
-        self.assertIn('deepseek_high_risk', result.signals)
+        self.assertIn('llm_high_risk', result.signals)
         self.assertTrue(result.continue_processing)
         self.assertEqual(result.model_status, 'ok')
 
