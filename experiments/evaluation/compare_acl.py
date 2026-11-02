@@ -87,7 +87,7 @@ def finish(rows, name):
     return int(violations > 0)
 
 
-def run_cases(connection, qdrant, embedder, cases, limit):
+def run_cases(connection, qdrant, embedder, cases, limit, dataset='test-data', allow_game_data=False):
     users, rows = [], []
     try:
         with connection.cursor() as cursor:
@@ -95,19 +95,19 @@ def run_cases(connection, qdrant, embedder, cases, limit):
             if cursor.fetchone()['count']:
                 raise RuntimeError('Existing rag_eval_cmp_ users; refusing to start')
         for role in ROLES:
-            for day in range(1, 4):
+            for day in sorted({c['day'] for c in cases if c['role'] == role}):
                 _, user_id, save_id = _create_save(connection, role, day, 'cmp')
                 users.append(user_id)
                 for case in (c for c in cases if c['role'] == role and c['day'] == day):
                     character = case['character_id']
                     disclosures = dict(PolicyRepository(connection).search_scope(
-                        user_id=user_id, save_id=save_id, character_id=character, dataset='test-data').disclosures)
-                    a = prompt_only_context(connection, dataset='test-data', query=case['question'], limit=limit,
-                                            qdrant=qdrant, embedder=embedder)
+                        user_id=user_id, save_id=save_id, character_id=character, dataset=dataset).disclosures)
+                    a = prompt_only_context(connection, dataset=dataset, query=case['question'], limit=limit,
+                                            qdrant=qdrant, embedder=embedder, allow_game_data=allow_game_data)
                     b = retrieve(connection, user_id=user_id, save_id=save_id, character_id=character,
-                                 dataset='test-data', plan={'query': case['question'], 'limit': limit},
+                                 dataset=dataset, plan={'query': case['question'], 'limit': limit},
                                  qdrant=qdrant, embedder=embedder).records
-                    rows.append({'case': case, 'instruction': role_instruction(role, day, character),
+                    rows.append({'dataset': dataset, 'case': case, 'instruction': role_instruction(role, day, character),
                                  'A': evaluate_context(a, disclosures, case['target_id']),
                                  'B': evaluate_context(b, disclosures, case['target_id'])})
     finally:
@@ -125,11 +125,24 @@ def main(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument('--name', required=True)
     parser.add_argument('--limit', type=int, default=5)
+    parser.add_argument('--dataset', choices=('test-data', 'game-data'), default='test-data')
+    parser.add_argument('--cases', type=Path, help='explicit reviewed JSON cases file')
+    parser.add_argument('--allow-game-data', action='store_true', help='opt in to unfiltered game-data in evaluation')
     args = parser.parse_args(argv)
     if not re.fullmatch(r'[A-Za-z0-9_-]{1,40}', args.name) or not 1 <= args.limit <= 20:
         parser.error('invalid name or limit (1–20)')
-    cases = build_eval_set()
-    CASE_PATH.write_text(json.dumps(cases, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    if args.dataset == 'game-data' and (not args.allow_game_data or not args.cases):
+        parser.error('game-data requires --allow-game-data and an explicit cases file')
+    cases = json.loads(args.cases.read_text(encoding='utf-8-sig')) if args.cases else build_eval_set()
+    if not isinstance(cases, list) or not cases or any(
+        not isinstance(c, dict) or c.get('role') not in ROLES or type(c.get('day')) is not int
+        or not 1 <= c['day'] <= 6 or c.get('character_id') not in AIS
+        or not isinstance(c.get('question'), str) or not c['question'].strip()
+        or not isinstance(c.get('id'), str) or not c['id']
+        or (c.get('target_id') is not None and not isinstance(c.get('target_id'), str))
+        for c in cases
+    ) or len({c['id'] for c in cases}) != len(cases):
+        parser.error('invalid cases: require unique id, role, day 1–6, character_id, question and optional target_id')
     env_file = ROOT / 'infrastructure/docker/.env'
     if env_file.exists():
         load_env(str(env_file))
@@ -137,7 +150,8 @@ def main(argv=None):
     qdrant = None
     try:
         qdrant = QdrantClient(url=os.getenv('QDRANT_URL', 'http://127.0.0.1:6333'))
-        return finish(run_cases(connection, qdrant, FastEmbedder(), cases, args.limit), args.name)
+        return finish(run_cases(connection, qdrant, FastEmbedder(), cases, args.limit,
+                                dataset=args.dataset, allow_game_data=args.allow_game_data), args.name)
     finally:
         if qdrant is not None:
             qdrant.close()

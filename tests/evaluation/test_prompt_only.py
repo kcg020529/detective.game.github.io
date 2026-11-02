@@ -39,6 +39,10 @@ def test_prompt_only_guard_and_unfiltered_context():
         prompt_only.prompt_only_context(conn, dataset='game-data', query='q', limit=5,
                                         qdrant=qdrant, embedder=embedder)
     qdrant.query_points_groups.assert_not_called()
+    game_records = prompt_only.prompt_only_context(conn, dataset='game-data', query='q', limit=5,
+                                                   qdrant=qdrant, embedder=embedder, allow_game_data=True)
+    assert game_records[0]['content'] == '본문'
+    assert qdrant.query_points_groups.call_args.kwargs['collection_name'] == 'kervion_records_game_data'
     records = prompt_only.prompt_only_context(conn, dataset='test-data', query='q', limit=5,
                                               qdrant=qdrant, embedder=embedder)
     assert records[0]['record_id'] == 'denied' and records[0]['content'] == '본문'
