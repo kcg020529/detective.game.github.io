@@ -64,7 +64,8 @@ def qdrant():
     client.upsert(collection_name=MANIFEST, points=[models.PointStruct(
         id=manifest_id, vector=[0.0], payload={'dataset': 'game-data', 'checksums': table_checksums(FakeConnection()),
                                               'model_name': MODEL_NAME, 'max_tokens': CHUNK_MAX_TOKENS,
-                                              'overlap_tokens': CHUNK_OVERLAP_TOKENS})])
+                                              'overlap_tokens': CHUNK_OVERLAP_TOKENS,
+                                              'point_counts': {'meta': 0, 'summary': 0, 'content': 0}})])
     yield client
     client.close()
 
@@ -78,6 +79,15 @@ def add_point(client, rid, kind, *, record_type='Action', day=1, test_id=1, loc=
                  'record_type': record_type, 'day': day, 'test_id': test_id,
                  'location_ids': [loc], 'related_ai_ids': [ai]},
     )])
+    # 검색 쪽 검사와 맞추려고 매니페스트의 point_counts를 실제 컬렉션으로 다시 센다.
+    manifest_id = str(uuid.uuid5(uuid.NAMESPACE_URL, 'kervion-rag-manifest:game-data'))
+    stored = client.retrieve(collection_name=MANIFEST, ids=[manifest_id], with_payload=True)
+    if stored:
+        counts = {k: client.count(COLLECTIONS['game-data'], exact=True, count_filter=models.Filter(must=[
+            models.FieldCondition(key='kind', match=models.MatchValue(value=k))])).count
+            for k in ('meta', 'summary', 'content')}
+        client.upsert(collection_name=MANIFEST, points=[models.PointStruct(
+            id=manifest_id, vector=[0.0], payload={**stored[0].payload, 'point_counts': counts})])
 
 
 def run_search(monkeypatch, client, disclosures, plan=None):
@@ -270,6 +280,50 @@ def test_manifest_chunk_setting_mismatch_fails_closed(qdrant, monkeypatch):
     assert exc.value.code == 'INDEX_STALE'
 
 
+def test_manifest_missing_records_collection_fails_closed(qdrant, monkeypatch):
+    qdrant.delete_collection(COLLECTIONS['game-data'])
+    monkeypatch.setattr(search, 'PolicyRepository', lambda _: type('R', (), {
+        'search_scope': lambda self, **_: Scope([('T01-action-001', 'metadata')])})())
+    with pytest.raises(RagUnavailable) as exc:
+        search.search_with_signal(FakeConnection(), user_id=1, save_id=1, character_id='YB-2',
+                                  dataset='game-data', plan={'query': 'q'}, qdrant=qdrant,
+                                  embedder=FakeEmbedder())
+    assert exc.value.code == 'INDEX_STALE'
+
+
+@pytest.mark.parametrize('actual', [0, 1])
+def test_manifest_point_count_mismatch_fails_closed(qdrant, monkeypatch, actual):
+    add_point(qdrant, 'T01-action-001', 'meta')
+    if actual == 0:
+        point_id = str(uuid.uuid5(uuid.NAMESPACE_URL, 'T01-action-001:meta'))
+        qdrant.delete(collection_name=COLLECTIONS['game-data'],
+                      points_selector=models.PointIdsList(points=[point_id]))
+    # 매니페스트가 센 수(2)와 실제 포인트 수(actual)가 어긋나면 오래된 인덱스다.
+    manifest_id = str(uuid.uuid5(uuid.NAMESPACE_URL, 'kervion-rag-manifest:game-data'))
+    stored = qdrant.retrieve(collection_name=MANIFEST, ids=[manifest_id], with_payload=True)
+    qdrant.upsert(collection_name=MANIFEST, points=[models.PointStruct(
+        id=manifest_id, vector=[0.0], payload={**stored[0].payload,
+                                              'point_counts': {'meta': 2, 'summary': 0, 'content': 0}})])
+    monkeypatch.setattr(search, 'PolicyRepository', lambda _: type('R', (), {
+        'search_scope': lambda self, **_: Scope([('T01-action-001', 'metadata')])})())
+    with pytest.raises(RagUnavailable) as exc:
+        search.search_with_signal(FakeConnection(), user_id=1, save_id=1, character_id='YB-2',
+                                  dataset='game-data', plan={'query': 'q'}, qdrant=qdrant,
+                                  embedder=FakeEmbedder())
+    assert exc.value.code == 'INDEX_STALE'
+
+
+def test_manifest_matching_point_count_proceeds(monkeypatch, qdrant):
+    add_point(qdrant, 'T01-action-001', 'meta')
+    monkeypatch.setattr(search, 'PolicyRepository', lambda _: type('R', (), {
+        'search_scope': lambda self, **_: Scope([('T01-action-001', 'metadata')]),
+        'resolve': lambda self, **_: [{'record_id': 'T01-action-001'}]})())
+    records, signal = search.search_with_signal(FakeConnection(), user_id=1, save_id=1,
+                                              character_id='YB-2', dataset='game-data',
+                                              plan={'query': 'q'}, qdrant=qdrant, embedder=FakeEmbedder())
+    assert signal == search.SIGNAL_OK and [row['record_id'] for row in records] == ['T01-action-001']
+
+
 def test_query_token_limit_fails_before_policy_and_qdrant(monkeypatch, qdrant):
     calls = {'scope': 0, 'qdrant': 0}
 
@@ -396,6 +450,7 @@ def test_header_manifest_text_mode_is_informational(qdrant, monkeypatch):
         id=point_id, vector=[0.0], payload={
             'dataset': 'game-data', 'checksums': table_checksums(FakeConnection()), 'model_name': MODEL_NAME,
             'max_tokens': CHUNK_MAX_TOKENS, 'overlap_tokens': CHUNK_OVERLAP_TOKENS, 'text_mode': 'header',
+            'point_counts': {'meta': 0, 'summary': 0, 'content': 0},
         })])
     assert rag_search._manifest_is_current(FakeConnection(), qdrant, 'game-data')
 

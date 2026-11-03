@@ -54,7 +54,10 @@ def _manifest_is_current(connection, qdrant, dataset):
         return (payload.get('checksums') == table_checksums(connection)
                 and payload.get('model_name') == MODEL_NAME
                 and payload.get('max_tokens') == CHUNK_MAX_TOKENS
-                and payload.get('overlap_tokens') == CHUNK_OVERLAP_TOKENS)
+                and payload.get('overlap_tokens') == CHUNK_OVERLAP_TOKENS
+                and qdrant.collection_exists(COLLECTIONS[dataset])
+                and qdrant.count(collection_name=COLLECTIONS[dataset], exact=True).count
+                    == sum(payload['point_counts'].values()))
     except (PolicyDenied, PolicyUnavailable):
         raise
     except Exception:
