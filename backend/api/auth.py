@@ -28,6 +28,8 @@ if COOKIE_SAMESITE not in {"lax", "strict", "none"}:
     raise ValueError("KERVION_COOKIE_SAMESITE must be lax, strict, or none")
 if COOKIE_SAMESITE == "none" and not COOKIE_SECURE:
     raise ValueError("SameSite=None requires KERVION_COOKIE_SECURE=true")
+# 없는 아이디의 로그인도 같은 해시 검증 시간을 보내게 하는 더미 해시.
+_DUMMY_HASH = hash_password("kervion-dummy-login")
 
 
 class Signup(BaseModel):
@@ -120,7 +122,8 @@ def login(payload: Login, conn: Connection = Depends(get_db, scope='function')):
             (username,),
         )
         user = cursor.fetchone()
-        if not user or not verify_password(payload.password, user["password_hash"]):
+        ok = verify_password(payload.password, user["password_hash"] if user else _DUMMY_HASH)
+        if not user or not ok:
             raise ApiError(401, "AUTH_REQUIRED", "아이디 또는 비밀번호가 맞지 않습니다.")
         token, token_hash, expires_at = new_session()
         cursor.execute(

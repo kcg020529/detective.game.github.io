@@ -92,8 +92,8 @@
         : method === 'POST' && route === '/saves' ? result.save_id != null && typeof result.role === 'string' && Number.isFinite(result.day)
           : method === 'POST' && chatRoute ? Array.isArray(result.messages) && result.messages.length === 2 && validChatRow(result.messages[0]) && result.messages[0].sender === 'user' && validChatRow(result.messages[1]) && result.messages[1].sender === 'ai' && Number.isFinite(result.game_state?.current_day)
             : method === 'POST' && route.endsWith('/advance-day') ? Number.isFinite(result.game_state?.current_day)
-              : method === 'GET' && savePath ? result.save_id != null && typeof result.role === 'string' && Number.isFinite(result.current_day ?? result.day)
-                : method === 'POST' && route.endsWith('/accusations') ? Array.isArray(result.accusation?.verdict?.evidence) && typeof result.accusation?.verdict?.hit === 'boolean'
+              : method === 'GET' && savePath ? result.save_id != null && typeof result.role === 'string' && Number.isFinite(result.current_day ?? result.day) && validAccusation(result.accusation)
+                : method === 'POST' && route.endsWith('/accusations') ? Array.isArray(result.accusation?.verdict?.evidence) && typeof result.accusation?.verdict?.hit === 'boolean' && validAccusation(result.accusation)
                     : true;
       if (!valid) throw new ApiError(response.status, 'INVALID_RESPONSE', messageFor('INVALID_RESPONSE'));
       if (chatRoute) result.messages = result.messages.map(normalizeChatRow);
@@ -139,6 +139,12 @@
   }
   function normalizeChatRow(row) {
     return { ...row, response_type: row.sender === 'user' ? null : answerTypes.has(row.response_type) ? row.response_type : 'unknown' };
+  }
+
+  const ybId = /^YB-[1-6]$/;
+  // 지목 결과가 있으면 두 YB id 형식을 검사해 판정서 렌더링의 findIndex를 지킨다.
+  function validAccusation(accusation) {
+    return !accusation || (ybId.test(accusation.character_id) && ybId.test(accusation.verdict?.culprit_id));
   }
 
   const roleRank = { std: 1, grad: 2, prof: 3 };

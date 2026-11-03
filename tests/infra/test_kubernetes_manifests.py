@@ -571,7 +571,7 @@ def test_nginx_post_limits_and_json_429():
     assert 'zone=kervion_auth:10m rate=10r/m;' in conf
     assert 'zone=kervion_chat:10m rate=20r/m;' in conf
     auth = conf.split('location ~ ^/api/v1/auth/(signup|login)$ {')[1].split('}')[0]
-    chat = conf.split('location ~ ^/api/v1/saves/[0-9]+/chats/[^/]+$ {')[1].split('}')[0]
+    chat = conf.split('location ~ ^/api/v1/saves/[^/]+/chats/[^/]+$ {')[1].split('}')[0]
     assert 'limit_req zone=kervion_auth burst=5 nodelay;' in auth
     assert 'limit_req zone=kervion_chat burst=10 nodelay;' in chat
     assert 'limit_conn kervion_chat_connections 2;' in chat

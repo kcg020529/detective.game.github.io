@@ -1254,8 +1254,10 @@
     const accusation = state.save.accusation;
     if (!accusation || state.root.querySelector('[data-verdict]')) return;
     const { verdict } = accusation;
-    const culprit = data.ybs.findIndex((yb) => yb.id === verdict.culprit_id);
+    const culprit = data.ybs.findIndex((yb) => yb.id === verdict?.culprit_id);
     const pickedIndex = data.ybs.findIndex((yb) => yb.id === accusation.character_id);
+    // 알 수 없는 YB id면 판정서 대신 오류 토스트를 띄운다.
+    if (culprit < 0 || pickedIndex < 0) return showToast(state, window.Api.messageFor('INVALID_RESPONSE'));
     const picked = data.ybs[pickedIndex];
     const { hit, truth, evidence } = verdict;
     const labels = { found: '찾음', missed: '놓침', restricted: '권한 밖' };
@@ -1298,21 +1300,54 @@
   }
 
   // Day 전환: 확인 창 → Day 제목 화면 → 바탕화면. 되돌릴 수 없어 한 번 묻는다.
-  function openDayDialog(state) {
-    if (state.dayChanging || currentDay(state) >= data.maxDay) return;
-    const day = currentDay(state);
-    const layer = state.root.querySelector('[data-day-dialog]');
-    state.advanceRequestId ||= requestId();
-    layer.querySelector('[data-day-dialog-text]').textContent = `Day ${day} 조사를 마치고 Day ${day + 1}로 넘어갑니다. 넘어간 뒤에는 Day ${day}로 돌아올 수 없습니다.`;
-    state.root.querySelector('[data-start-menu]').hidden = true;
-    layer.hidden = false;
-    layer.querySelector('[data-day-confirm]').focus({ preventScroll: true });
+  async function openDayDialog(state) {
+    if (state.dayChanging || state.dayDialogOpening || currentDay(state) >= data.maxDay) return;
+    state.dayDialogOpening = true;
+    try {
+      const day = currentDay(state);
+      const layer = state.root.querySelector('[data-day-dialog]');
+      if (state.advanceUnresolved) {
+        // 응답 못 받은 넘어가기 요청이 서버에 닿았을 수 있으니 다시 묻기 전에 Day를 맞춘다.
+        let save;
+        try { save = await window.Api.getSave(state.save.save_id); }
+        catch { /* 맞추기가 실패해도 같은 키로 다시 묻는다 */ }
+        if (!isLiveState(state) || state.dayChanging || currentDay(state) !== day) return;
+        if (save && currentDay({ save }) > day) {
+          state.advanceRequestId = null;
+          state.advanceUnresolved = false;
+          applyServerDay(state, save);
+          return;
+        }
+      }
+      state.advanceRequestId ||= requestId();
+      layer.querySelector('[data-day-dialog-text]').textContent = `Day ${day} 조사를 마치고 Day ${day + 1}로 넘어갑니다. 넘어간 뒤에는 Day ${day}로 돌아올 수 없습니다.`;
+      state.root.querySelector('[data-start-menu]').hidden = true;
+      layer.hidden = false;
+      layer.querySelector('[data-day-confirm]').focus({ preventScroll: true });
+    } catch { /* 닫힌 화면에서의 열기는 무시한다 */ } finally {
+      state.dayDialogOpening = false;
+    }
   }
 
   function closeDayDialog(state) {
     state.root.querySelector('[data-day-dialog]').hidden = true;
     state.root.querySelector('[data-day-next]')?.focus({ preventScroll: true });
-    state.advanceRequestId = null;
+    // 응답 못 받은 요청의 키는 재사용해야 하므로 취소해도 버리지 않는다.
+    if (!state.advanceUnresolved) state.advanceRequestId = null;
+  }
+
+  // 서버가 앞선 Day를 일반 전환과 같은 효과(시계·지목·아이콘)로 받아들인다.
+  function applyServerDay(state, save) {
+    const previousDay = currentDay(state);
+    state.save = { ...state.save, ...save };
+    // 시계 초기화·지목 알림은 Day가 실제로 늘었을 때만 준다.
+    if (currentDay(state) > previousDay) {
+      state.clockMinutes = DAY_START_MINUTES;
+      if (currentDay(state) >= data.maxDay) state.unread.add('accuse');
+    }
+    state.windows.get('notebook').querySelector('[data-memo]').value = state.save.memo || '';
+    renderLaunchers(state); renderAccuse(state); renderTaskbar(state);
+    showToast(state, '최신 상태로 맞췄습니다.');
   }
 
   async function advanceDay(state) {
@@ -1330,6 +1365,7 @@
       if (!isLiveState(state)) return;
       state.save = { ...state.save, ...result.game_state };
       state.advanceRequestId = null;
+      state.advanceUnresolved = false;
       const day = currentDay(state);
       state.clockMinutes = DAY_START_MINUTES;
       const curtain = state.root.querySelector('[data-day-curtain]');
@@ -1355,13 +1391,21 @@
       state.dayChanging = false;
       if (error.code === 'STATE_CONFLICT') {
         state.advanceRequestId = null;
-        try { state.save = { ...state.save, ...(await window.Api.getSave(state.save.save_id)) }; state.windows.get('notebook').querySelector('[data-memo]').value = state.save.memo || ''; renderAccuse(state); renderTaskbar(state); showToast(state, '최신 상태로 맞췄습니다.'); }
-        catch (syncError) { handleError(state, syncError); }
+        state.advanceUnresolved = false;
+        try {
+          const fresh = await window.Api.getSave(state.save.save_id);
+          if (!isLiveState(state)) return;
+          applyServerDay(state, fresh);
+        } catch (syncError) {
+          if (!isLiveState(state)) return;
+          handleError(state, syncError);
+        }
       } else {
-        if (!['SERVICE_UNAVAILABLE', 'NETWORK_ERROR', 'TIMEOUT'].includes(error.code)) state.advanceRequestId = null;
+        const retryable = ['SERVICE_UNAVAILABLE', 'NETWORK_ERROR', 'TIMEOUT'].includes(error.code);
+        // 끊긴 요청은 서버에 닿았을 수 있으니 같은 키를 유지해 재시도로 이어지게 한다.
+        if (retryable) { state.advanceUnresolved = true; showToast(state, error.message); }
+        else { state.advanceRequestId = null; state.advanceUnresolved = false; handleError(state, error); }
         openDayDialog(state);
-        if (!['SERVICE_UNAVAILABLE', 'NETWORK_ERROR', 'TIMEOUT'].includes(error.code)) handleError(state, error);
-        else showToast(state, error.message);
       }
       renderTaskbar(state);
     } finally {
