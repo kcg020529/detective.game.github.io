@@ -119,6 +119,7 @@ def test_high_risk_input_uses_fixed_reply_without_planner_or_llm(chat_client, mo
     assert response.status_code == 200
     pipeline.reply.assert_not_called()
     audit.assert_called_once()
+    assert audit.call_args.args[1]['continue_processing'] is False
     saved = [params for query, params in conn.queries
              if query.startswith('INSERT INTO chat_messages')]
     assert saved[1][3] == fixed_reply('YB-1', 'injection')['reply']

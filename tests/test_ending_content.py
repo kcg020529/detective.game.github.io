@@ -49,6 +49,8 @@ def test_new_schemas_are_discovered_in_order_without_database(monkeypatch):
     monkeypatch.setattr(migrate, 'apply_file', lambda conn, path, **kwargs: applied.append(path.name) or 'applied')
     migrate.migrate(MagicMock())
     assert applied.index('012_audit_events.sql') < applied.index('013_accusations.sql') < applied.index('014_chat_message_records.sql')
+    assert applied.index('012_audit_events.sql') < applied.index('002_input_guard_processing.sql')
+    assert len(migrate.split_sql((migrate.MIGRATION_DIR / '002_input_guard_processing.sql').read_text())) == 1
     for name in ('013_accusations.sql', '014_chat_message_records.sql'):
         sql = (migrate.SCHEMA_DIR / name).read_text(encoding='utf-8')
         assert len(migrate.split_sql(sql)) == 1

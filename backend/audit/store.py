@@ -33,7 +33,8 @@ def save_input_guard_alert(conn: Connection, event: dict) -> int:
     if (event['event_type'] != 'input_guard_alert'
             or level not in LEVEL_SCORES
             or event['score'] != LEVEL_SCORES[level]
-            or event['continue_processing'] is not True
+            or type(event['continue_processing']) is not bool
+            or event['continue_processing'] != (level == 'warn')
             or not isinstance(signals, list)
             or not signals
             or any(not isinstance(signal, str) or signal not in SIGNAL_LEVELS for signal in signals)
@@ -55,7 +56,7 @@ def save_input_guard_alert(conn: Connection, event: dict) -> int:
             'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
             (
                 event['request_id'], event['event_type'], level, event['score'],
-                json.dumps(signals, ensure_ascii=False), True,
+                json.dumps(signals, ensure_ascii=False), event['continue_processing'],
                 event['user_id'], event['save_id'], event['role'], event['character_id'],
             ),
         )

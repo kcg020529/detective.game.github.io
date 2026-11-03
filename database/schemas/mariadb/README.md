@@ -62,4 +62,9 @@ Docker의 첫 실행은 `.env`의 `MARIADB_DATABASE`에 이 SQL을 적용한다.
 원문 컬럼은 없다. Save 또는 계정이 삭제되면 해당 외래키는 `NULL`이 되고 사건
 메타데이터는 남는다. 보존 기간·조회 권한·다른 모듈의 이벤트 형식은 팀 계약 후
 확정한다. `backend.audit.store.save_input_guard_alert`의 호출자가 트랜잭션을
-커밋하거나 롤백한다. 현재 채팅 전송 API에서 자동 호출하지 않는다.
+커밋하거나 롤백한다. 채팅 전송 API는 인증·Save 확인 후 자동 호출한다.
+
+기존 DB에 Input Guard 차단 흐름을 적용할 때는
+`database/migrations/mariadb/002_input_guard_processing.sql`을 먼저 실행한다.
+이전 `high_risk` 감사 행의 `continue_processing=true`는 당시 탐지 전용 동작을
+뜻하므로 이관 과정에서 변경하지 않는다. 새 `high_risk` 행은 `false`로 저장한다.

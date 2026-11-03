@@ -71,7 +71,7 @@ def send_chat(body: SendChat, request: Request,
             history.pop(0)
     context = PolicyContext(user_id, save_id, user_id, row['role'], int(row['day']),
                             ai_id, chat_dataset())
-    if guard_result is not None and guard_result.level == 'high_risk':
+    if guard_result is not None and not guard_result.continue_processing:
         # Do not send a high-risk question to Planner, RAG, or the character LLM.
         answer = {'content': fixed_reply(ai_id, 'injection')['reply'],
                   'response_type': 'restricted'}

@@ -1,4 +1,14 @@
-# 기존 MariaDB 공개 수준 이관
+# 기존 MariaDB 이관
+
+## Input Guard 처리 상태 제약
+
+이미 초기화한 DB에는 `mariadb/002_input_guard_processing.sql`을 적용한다.
+기존 `high_risk` 감사 행은 당시의 탐지 전용 동작을 나타내므로 수정하지 않는다.
+이관 후 새 `high_risk` 행은 일반 답변 생성 중단을 뜻하는
+`continue_processing=false`로 저장된다. `warn`은 계속 `true`다.
+새 DB에는 갱신된 `database/schemas/mariadb/012_audit_events.sql`이 적용된다.
+
+## 공개 수준 이관
 
 새 DB는 `database/schemas/mariadb/006_document_permissions.sql`의 4단계 CHECK를 사용한다. 이미 초기화한 DB는 초기 SQL을 편집해도 변경되지 않으므로 다음 순서로 이관한다. 이 절차는 계정·Save·대화를 삭제하지 않는다.
 
@@ -12,4 +22,6 @@
 
 MariaDB의 [ALTER TABLE](https://mariadb.com/docs/server/reference/sql-statements/data-definition/alter/alter-table)은 [암묵적 COMMIT](https://mariadb.com/docs/server/reference/sql-statements/transactions/sql-statements-that-cause-an-implicit-commit)을 수행한다. 이관 SQL의 UPDATE 트랜잭션과 DDL 전체를 하나의 rollback 단위로 가정하지 않는다. 중간에 실패하면 서비스를 중단한 상태로 대상 제약·행 값을 확인하고 다시 실행한다. 같은 이름의 CHECK를 교체하므로 정상 완료 후에도 재실행할 수 있다.
 
-현재 세션에서는 Docker 엔진과 로컬 MariaDB에 연결할 수 없어 이관 SQL의 실제 실행은 미검증이다.
+공개 수준 이관 SQL의 실제 실행 상태는 이 문서의 절차만으로 확인할 수 없다.
+Input Guard 처리 상태 이관 SQL은 2026-11-03 로컬 MariaDB에서 적용하고
+새 `high_risk` 감사 행의 `continue_processing=false` 저장을 확인했다.

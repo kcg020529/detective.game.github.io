@@ -1,4 +1,4 @@
-"""Run the detection-only Input Guard and persist its alert in one DB transaction.
+"""Run Input Guard classification and persist its alert in one DB transaction.
 
 Call this only after authentication and Save ownership have been checked. The
 caller owns the connection transaction and must commit or roll back it.
@@ -24,8 +24,8 @@ def inspect_and_record_input(
 ) -> InputGuardResult:
     """Classify the current question; store warn/high_risk metadata only.
 
-    Every result continues to the caller's normal authorization and response
-    flow. This function does not make an access decision or commit the DB.
+    High-risk results tell the caller to skip normal answer generation.
+    This function does not make an access decision or commit the DB.
     """
     result = (inspect_input_with_llm if use_llm else inspect_input)(question)
     event = input_guard_audit_event(

@@ -29,11 +29,11 @@ class DeepSeekGuardTests(unittest.TestCase):
         self.assertNotIn('records', payload)
 
     @patch('backend.guardrails.input.llm_input_guard.classify_with_llm', return_value='high_risk')
-    def test_model_can_raise_risk_and_never_stops_question(self, _):
+    def test_model_can_raise_risk_and_stop_normal_answer(self, _):
         result = inspect_input_with_llm('어제 실험실에서 무엇을 봤어?')
         self.assertEqual(result.level, 'high_risk')
         self.assertIn('llm_high_risk', result.signals)
-        self.assertTrue(result.continue_processing)
+        self.assertFalse(result.continue_processing)
         self.assertEqual(result.model_status, 'ok')
 
     @patch('backend.guardrails.input.llm_input_guard.classify_with_llm', return_value='allow')
