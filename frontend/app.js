@@ -780,7 +780,12 @@ function labWallpaperUrl() {
   const litRooms = Object.keys(veil);
   const lights = litRooms.map((key) => rooms[key].lightAt);
   const shown = bots.map((bot) => bot.shownAt);
+  // 숨은 기능(안테나 파티·디스코)과 역할 미리보기 잠금이 바탕화면에 구워지지 않게 잠깐 끔
+  const saved = { secretOpen, discoOn, sceneRole, restrictedOpen, party, discoDrop, discoGlow, veil: { ...veil } };
   try {
+    secretOpen = false; discoOn = false; sceneRole = null;
+    restrictedOpen = 0; party = 0; discoDrop = 0; discoGlow = 0;
+    for (const key of Object.keys(veil)) veil[key] = 0;
     showLabels = false;
     litRooms.forEach((key) => { rooms[key].lightAt = null; });
     bots.forEach((bot) => { bot.shownAt = null; });
@@ -795,6 +800,8 @@ function labWallpaperUrl() {
   } catch (error) {
     labWallpaper = '';
   } finally {
+    ({ secretOpen, discoOn, sceneRole, restrictedOpen, party, discoDrop, discoGlow } = saved);
+    Object.assign(veil, saved.veil);
     showLabels = true;
     litRooms.forEach((key, i) => { rooms[key].lightAt = lights[i]; });
     bots.forEach((bot, i) => { bot.shownAt = shown[i]; });
