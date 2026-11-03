@@ -5,7 +5,7 @@
 import sys
 from pathlib import Path
 
-# [검토8] import 방식은 임시이다. 저장소에 패키지 구조·테스트 도구 규약이 정해지면 맞춘다. (AGENTS.md에는 아직 코드 규약이 없다)
+# 패키지 구조 규약이 없어 sys.path로 불러온다.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import yaml  # noqa: E402
@@ -26,7 +26,7 @@ ALLOWED_PERSONA_KEYS = {"id", "display_name", "personality", "voice_rules", "cat
 
 def _renders():
     for pid in persona_ids():
-        for mode in LLM_MODES:  # restricted는 LLM에 보내는 프롬프트가 없다 ([검토18])
+        for mode in LLM_MODES:  # restricted는 LLM에 보내는 프롬프트가 없다
             yield pid, mode, render_actor_prompt(pid, mode, memory=MEMORY, history=HISTORY)
 
 
@@ -66,13 +66,13 @@ def test_unknown_does_not_include_memory():
 
 
 def test_unknown_prompt_forbids_refusal_wording_but_answer_prompt_has_no_such_line():
-    """[검토20] unknown은 '모른다'로만 말하게 하고 거절 말투를 금지한다. 이 줄은 unknown 구획에만 있어야 한다."""
+    """unknown은 '모른다'로만 말하게 하고 거절 말투를 금지한다. 이 줄은 unknown 구획에만 있어야 한다."""
     for pid in persona_ids():
         unknown = render_actor_prompt(pid, "unknown")
         answer = render_actor_prompt(pid, "answer", memory=MEMORY)
         assert "거절 말투는 쓰지 않는다" in unknown, pid
         assert "거절 말투는 쓰지 않는다" not in answer, pid
-        assert "[검토20]" not in unknown, pid  # 검토 표식은 주석에만 있고 프롬프트로 나가면 안 된다
+        assert "[검토20]" not in unknown, pid  # 내부 표식이 프롬프트로 나가면 안 된다
 
 
 def test_history_and_memory_are_marked_as_reference_only():
@@ -92,7 +92,7 @@ def _personas():
 
 
 def test_every_persona_has_examples_of_each_kind():
-    """[검토12][검토18] 예시는 answer 2개 이상, unknown 1개 이상이고 필드는 kind, q, a뿐이다. restricted는 고정 문구라 예시가 없다."""
+    """예시는 answer 2개 이상, unknown 1개 이상이고 필드는 kind, q, a뿐이다. restricted는 고정 문구라 예시가 없다."""
     for p in _personas():
         kinds = [e["kind"] for e in p["examples"]]
         assert set(kinds) == set(LLM_MODES), (p["id"], kinds)
@@ -113,7 +113,7 @@ def test_answer_examples_do_not_start_with_catchphrase_and_use_it_once():
 
 
 def test_examples_are_shown_only_for_the_matching_mode():
-    """[검토12] answer 예시는 unknown에서 보이지 않아야 한다. 예시 속 사실을 베껴 답하는 일을 막으려는 것이다."""
+    """answer 예시는 unknown에서 보이지 않아야 한다. 예시 속 사실을 베껴 답하는 일을 막으려는 것이다."""
     for p in _personas():
         for mode in LLM_MODES:
             out = render_actor_prompt(p["id"], mode, memory=MEMORY, history=HISTORY)
@@ -133,7 +133,7 @@ def test_non_answer_prompts_have_no_place_names():
 
 
 def test_use_catchphrase_slot():
-    """[검토15] 켬/끔 지시는 [말버릇 지시]로 들어가고, answer가 아니면 항상 끔이다. 값이 없으면 일반 문구를 쓴다."""
+    """켬/끔 지시는 [말버릇 지시]로 들어가고, answer가 아니면 항상 끔이다. 값이 없으면 일반 문구를 쓴다."""
     on = render_actor_prompt("YB-1", "answer", memory=MEMORY, use_catchphrase=True)
     assert "[말버릇 지시]" in on and '말버릇("정확히는요…")을 한 번 자연스럽게 넣는다' in on and "열 번 중 두세 번" not in on
     off = render_actor_prompt("YB-1", "answer", memory=MEMORY, use_catchphrase=False)
@@ -155,7 +155,7 @@ def test_catchphrase_guidance_in_prompt():
 
 
 def test_fixed_modes_return_the_fixed_phrase_without_llm():
-    """[검토18][검토19] restricted·off_topic·injection은 프롬프트를 만들지 않고 캐릭터별 고정 문구를 돌려준다. 형식은 LLM 응답과 같고 used는 비어 있다."""
+    """restricted·off_topic·injection은 프롬프트를 만들지 않고 캐릭터별 고정 문구를 돌려준다. 형식은 LLM 응답과 같고 used는 비어 있다."""
     field = {"restricted": "restricted_style", "off_topic": "off_topic_style", "injection": "off_topic_style"}
     for p in _personas():
         for mode in FIXED_MODES:
@@ -178,7 +178,7 @@ def test_fixed_modes_return_the_fixed_phrase_without_llm():
 
 
 def test_injection_text_is_the_same_as_off_topic_and_differs_from_other_cases():
-    """[검토19] 인젝션에만 다른 문구가 나오면 감지 여부가 응답으로 드러난다. 그래서 off_topic과 같아야 하고, 접근 불가·모름 문구와는 달라야 한다."""
+    """인젝션에만 다른 문구가 나오면 감지 여부가 응답으로 드러난다. 그래서 off_topic과 같아야 하고, 접근 불가·모름 문구와는 달라야 한다."""
     for p in _personas():
         pid = p["id"]
         off, inj = fixed_reply(pid, "off_topic")["reply"], fixed_reply(pid, "injection")["reply"]
@@ -189,7 +189,7 @@ def test_injection_text_is_the_same_as_off_topic_and_differs_from_other_cases():
 
 
 def test_restricted_phrases_follow_the_wording_principles():
-    """[검토18] 문구 원칙: 서로 다르다 / '볼 수 있는' 또는 '열람 권한' 계열이다(모른다와 구별) / 원인·등급·문서 이름이나 대안을 말하지 않는다."""
+    """문구 원칙: 서로 다르다 / '볼 수 있는' 또는 '열람 권한' 계열이다(모른다와 구별) / 원인·등급·문서 이름이나 대안을 말하지 않는다."""
     phrases = [fixed_reply(pid, "restricted")["reply"] for pid in persona_ids()]
     assert len(set(phrases)) == len(phrases)
     for pid, s in zip(persona_ids(), phrases):

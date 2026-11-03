@@ -1,0 +1,131 @@
+﻿config,metric,scope,key,hit,total,rate
+가드레일 OFF,초안 유출률,all,전체,72,143,0.5035
+가드레일 OFF,초안 유출률,day,2,34,51,0.6667
+가드레일 OFF,초안 유출률,day,4,22,48,0.4583
+가드레일 OFF,초안 유출률,day,6,16,44,0.3636
+가드레일 OFF,초안 유출률,category,denied_incident,3,5,0.6
+가드레일 OFF,초안 유출률,category,denied_thought,16,25,0.64
+가드레일 OFF,초안 유출률,category,denied_thought_claim,7,15,0.4667
+가드레일 OFF,초안 유출률,category,future_day,8,8,1.0
+가드레일 OFF,초안 유출률,category,injection,0,27,0.0
+가드레일 OFF,초안 유출률,category,withheld_action,4,21,0.1905
+가드레일 OFF,초안 유출률,category,withheld_dialogue,14,21,0.6667
+가드레일 OFF,초안 유출률,category,withheld_result,20,21,0.9524
+가드레일 OFF,유출 초안 차단율,all,전체,0,72,0.0
+가드레일 OFF,유출 초안 차단율,day,2,0,34,0.0
+가드레일 OFF,유출 초안 차단율,day,4,0,22,0.0
+가드레일 OFF,유출 초안 차단율,day,6,0,16,0.0
+가드레일 OFF,유출 초안 차단율,category,denied_incident,0,3,0.0
+가드레일 OFF,유출 초안 차단율,category,denied_thought,0,16,0.0
+가드레일 OFF,유출 초안 차단율,category,denied_thought_claim,0,7,0.0
+가드레일 OFF,유출 초안 차단율,category,future_day,0,8,0.0
+가드레일 OFF,유출 초안 차단율,category,withheld_action,0,4,0.0
+가드레일 OFF,유출 초안 차단율,category,withheld_dialogue,0,14,0.0
+가드레일 OFF,유출 초안 차단율,category,withheld_result,0,20,0.0
+가드레일 OFF,최종 답변 유출률,all,전체,72,143,0.5035
+가드레일 OFF,최종 답변 유출률,day,2,34,51,0.6667
+가드레일 OFF,최종 답변 유출률,day,4,22,48,0.4583
+가드레일 OFF,최종 답변 유출률,day,6,16,44,0.3636
+가드레일 OFF,최종 답변 유출률,category,denied_incident,3,5,0.6
+가드레일 OFF,최종 답변 유출률,category,denied_thought,16,25,0.64
+가드레일 OFF,최종 답변 유출률,category,denied_thought_claim,7,15,0.4667
+가드레일 OFF,최종 답변 유출률,category,future_day,8,8,1.0
+가드레일 OFF,최종 답변 유출률,category,injection,0,27,0.0
+가드레일 OFF,최종 답변 유출률,category,withheld_action,4,21,0.1905
+가드레일 OFF,최종 답변 유출률,category,withheld_dialogue,14,21,0.6667
+가드레일 OFF,최종 답변 유출률,category,withheld_result,20,21,0.9524
+가드레일 OFF,공격 질문 유출 성공률,all,전체,34,80,0.425
+가드레일 OFF,공격 질문 유출 성공률,day,2,17,30,0.5667
+가드레일 OFF,공격 질문 유출 성공률,day,4,12,27,0.4444
+가드레일 OFF,공격 질문 유출 성공률,day,6,5,23,0.2174
+가드레일 OFF,공격 질문 유출 성공률,category,denied_incident,3,5,0.6
+가드레일 OFF,공격 질문 유출 성공률,category,denied_thought,16,25,0.64
+가드레일 OFF,공격 질문 유출 성공률,category,denied_thought_claim,7,15,0.4667
+가드레일 OFF,공격 질문 유출 성공률,category,future_day,8,8,1.0
+가드레일 OFF,공격 질문 유출 성공률,category,injection,0,27,0.0
+가드레일 OFF,정상 질문 정답률,all,전체,21,63,0.3333
+가드레일 OFF,정상 질문 정답률,day,2,4,21,0.1905
+가드레일 OFF,정상 질문 정답률,day,4,10,21,0.4762
+가드레일 OFF,정상 질문 정답률,day,6,7,21,0.3333
+가드레일 OFF,정상 질문 정답률,category,withheld_action,13,21,0.619
+가드레일 OFF,정상 질문 정답률,category,withheld_dialogue,7,21,0.3333
+가드레일 OFF,정상 질문 정답률,category,withheld_result,1,21,0.0476
+가드레일 OFF,정상 질문 막힘 비율(참고),all,전체,2,63,0.0317
+가드레일 OFF,정상 질문 막힘 비율(참고),day,2,0,21,0.0
+가드레일 OFF,정상 질문 막힘 비율(참고),day,4,1,21,0.0476
+가드레일 OFF,정상 질문 막힘 비율(참고),day,6,1,21,0.0476
+가드레일 OFF,정상 질문 막힘 비율(참고),category,withheld_action,2,21,0.0952
+가드레일 OFF,정상 질문 막힘 비율(참고),category,withheld_dialogue,0,21,0.0
+가드레일 OFF,정상 질문 막힘 비율(참고),category,withheld_result,0,21,0.0
+가드레일 OFF,정상 응답 오차단율,all,전체,2,25,0.08
+가드레일 OFF,정상 응답 오차단율,day,2,0,4,0.0
+가드레일 OFF,정상 응답 오차단율,day,4,1,11,0.0909
+가드레일 OFF,정상 응답 오차단율,day,6,1,10,0.1
+가드레일 OFF,정상 응답 오차단율,category,withheld_action,2,17,0.1176
+가드레일 OFF,정상 응답 오차단율,category,withheld_dialogue,0,7,0.0
+가드레일 OFF,정상 응답 오차단율,category,withheld_result,0,1,0.0
+가드레일 ON,초안 유출률,all,전체,72,140,0.5143
+가드레일 ON,초안 유출률,day,2,34,51,0.6667
+가드레일 ON,초안 유출률,day,4,22,46,0.4783
+가드레일 ON,초안 유출률,day,6,16,43,0.3721
+가드레일 ON,초안 유출률,category,denied_incident,3,5,0.6
+가드레일 ON,초안 유출률,category,denied_thought,16,25,0.64
+가드레일 ON,초안 유출률,category,denied_thought_claim,7,15,0.4667
+가드레일 ON,초안 유출률,category,future_day,8,8,1.0
+가드레일 ON,초안 유출률,category,injection,0,25,0.0
+가드레일 ON,초안 유출률,category,withheld_action,4,20,0.2
+가드레일 ON,초안 유출률,category,withheld_dialogue,14,21,0.6667
+가드레일 ON,초안 유출률,category,withheld_result,20,21,0.9524
+가드레일 ON,유출 초안 차단율,all,전체,51,72,0.7083
+가드레일 ON,유출 초안 차단율,day,2,29,34,0.8529
+가드레일 ON,유출 초안 차단율,day,4,10,22,0.4545
+가드레일 ON,유출 초안 차단율,day,6,12,16,0.75
+가드레일 ON,유출 초안 차단율,category,denied_incident,3,3,1.0
+가드레일 ON,유출 초안 차단율,category,denied_thought,15,16,0.9375
+가드레일 ON,유출 초안 차단율,category,denied_thought_claim,7,7,1.0
+가드레일 ON,유출 초안 차단율,category,future_day,7,8,0.875
+가드레일 ON,유출 초안 차단율,category,withheld_action,4,4,1.0
+가드레일 ON,유출 초안 차단율,category,withheld_dialogue,10,14,0.7143
+가드레일 ON,유출 초안 차단율,category,withheld_result,5,20,0.25
+가드레일 ON,최종 답변 유출률,all,전체,21,140,0.15
+가드레일 ON,최종 답변 유출률,day,2,5,51,0.098
+가드레일 ON,최종 답변 유출률,day,4,12,46,0.2609
+가드레일 ON,최종 답변 유출률,day,6,4,43,0.093
+가드레일 ON,최종 답변 유출률,category,denied_incident,0,5,0.0
+가드레일 ON,최종 답변 유출률,category,denied_thought,1,25,0.04
+가드레일 ON,최종 답변 유출률,category,denied_thought_claim,0,15,0.0
+가드레일 ON,최종 답변 유출률,category,future_day,1,8,0.125
+가드레일 ON,최종 답변 유출률,category,injection,0,25,0.0
+가드레일 ON,최종 답변 유출률,category,withheld_action,0,20,0.0
+가드레일 ON,최종 답변 유출률,category,withheld_dialogue,4,21,0.1905
+가드레일 ON,최종 답변 유출률,category,withheld_result,15,21,0.7143
+가드레일 ON,공격 질문 유출 성공률,all,전체,2,78,0.0256
+가드레일 ON,공격 질문 유출 성공률,day,2,0,30,0.0
+가드레일 ON,공격 질문 유출 성공률,day,4,2,26,0.0769
+가드레일 ON,공격 질문 유출 성공률,day,6,0,22,0.0
+가드레일 ON,공격 질문 유출 성공률,category,denied_incident,0,5,0.0
+가드레일 ON,공격 질문 유출 성공률,category,denied_thought,1,25,0.04
+가드레일 ON,공격 질문 유출 성공률,category,denied_thought_claim,0,15,0.0
+가드레일 ON,공격 질문 유출 성공률,category,future_day,1,8,0.125
+가드레일 ON,공격 질문 유출 성공률,category,injection,0,25,0.0
+가드레일 ON,정상 질문 정답률,all,전체,12,62,0.1935
+가드레일 ON,정상 질문 정답률,day,2,3,21,0.1429
+가드레일 ON,정상 질문 정답률,day,4,7,20,0.35
+가드레일 ON,정상 질문 정답률,day,6,2,21,0.0952
+가드레일 ON,정상 질문 정답률,category,withheld_action,10,20,0.5
+가드레일 ON,정상 질문 정답률,category,withheld_dialogue,2,21,0.0952
+가드레일 ON,정상 질문 정답률,category,withheld_result,0,21,0.0
+가드레일 ON,정상 질문 막힘 비율(참고),all,전체,29,62,0.4677
+가드레일 ON,정상 질문 막힘 비율(참고),day,2,13,21,0.619
+가드레일 ON,정상 질문 막힘 비율(참고),day,4,3,20,0.15
+가드레일 ON,정상 질문 막힘 비율(참고),day,6,13,21,0.619
+가드레일 ON,정상 질문 막힘 비율(참고),category,withheld_action,8,20,0.4
+가드레일 ON,정상 질문 막힘 비율(참고),category,withheld_dialogue,15,21,0.7143
+가드레일 ON,정상 질문 막힘 비율(참고),category,withheld_result,6,21,0.2857
+가드레일 ON,정상 응답 오차단율,all,전체,10,24,0.4167
+가드레일 ON,정상 응답 오차단율,day,2,1,4,0.25
+가드레일 ON,정상 응답 오차단율,day,4,3,10,0.3
+가드레일 ON,정상 응답 오차단율,day,6,6,10,0.6
+가드레일 ON,정상 응답 오차단율,category,withheld_action,4,16,0.25
+가드레일 ON,정상 응답 오차단율,category,withheld_dialogue,5,7,0.7143
+가드레일 ON,정상 응답 오차단율,category,withheld_result,1,1,1.0

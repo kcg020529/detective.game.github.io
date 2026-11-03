@@ -1,0 +1,983 @@
+[
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "초안 유출률",
+    "scope": "all",
+    "key": "전체",
+    "hit": 33,
+    "total": 53,
+    "rate": 0.6226
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "초안 유출률",
+    "scope": "day",
+    "key": "2",
+    "hit": 31,
+    "total": 50,
+    "rate": 0.62
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "초안 유출률",
+    "scope": "day",
+    "key": "4",
+    "hit": 2,
+    "total": 3,
+    "rate": 0.6667
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "denied_incident",
+    "hit": 2,
+    "total": 2,
+    "rate": 1.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "denied_thought",
+    "hit": 10,
+    "total": 12,
+    "rate": 0.8333
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "denied_thought_claim",
+    "hit": 2,
+    "total": 6,
+    "rate": 0.3333
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "future_day",
+    "hit": 3,
+    "total": 4,
+    "rate": 0.75
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "injection",
+    "hit": 0,
+    "total": 9,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 4,
+    "total": 7,
+    "rate": 0.5714
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 6,
+    "total": 7,
+    "rate": 0.8571
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "withheld_result",
+    "hit": 6,
+    "total": 6,
+    "rate": 1.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "유출 초안 차단율",
+    "scope": "all",
+    "key": "전체",
+    "hit": 24,
+    "total": 33,
+    "rate": 0.7273
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "유출 초안 차단율",
+    "scope": "day",
+    "key": "2",
+    "hit": 22,
+    "total": 31,
+    "rate": 0.7097
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "유출 초안 차단율",
+    "scope": "day",
+    "key": "4",
+    "hit": 2,
+    "total": 2,
+    "rate": 1.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "denied_incident",
+    "hit": 2,
+    "total": 2,
+    "rate": 1.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "denied_thought",
+    "hit": 10,
+    "total": 10,
+    "rate": 1.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "denied_thought_claim",
+    "hit": 2,
+    "total": 2,
+    "rate": 1.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "future_day",
+    "hit": 0,
+    "total": 3,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 4,
+    "total": 4,
+    "rate": 1.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 5,
+    "total": 6,
+    "rate": 0.8333
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "withheld_result",
+    "hit": 1,
+    "total": 6,
+    "rate": 0.1667
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "최종 답변 유출률",
+    "scope": "all",
+    "key": "전체",
+    "hit": 9,
+    "total": 53,
+    "rate": 0.1698
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "최종 답변 유출률",
+    "scope": "day",
+    "key": "2",
+    "hit": 9,
+    "total": 50,
+    "rate": 0.18
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "최종 답변 유출률",
+    "scope": "day",
+    "key": "4",
+    "hit": 0,
+    "total": 3,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "denied_incident",
+    "hit": 0,
+    "total": 2,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "denied_thought",
+    "hit": 0,
+    "total": 12,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "denied_thought_claim",
+    "hit": 0,
+    "total": 6,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "future_day",
+    "hit": 3,
+    "total": 4,
+    "rate": 0.75
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "injection",
+    "hit": 0,
+    "total": 9,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 0,
+    "total": 7,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 1,
+    "total": 7,
+    "rate": 0.1429
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "withheld_result",
+    "hit": 5,
+    "total": 6,
+    "rate": 0.8333
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "all",
+    "key": "전체",
+    "hit": 3,
+    "total": 33,
+    "rate": 0.0909
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "day",
+    "key": "2",
+    "hit": 3,
+    "total": 30,
+    "rate": 0.1
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "day",
+    "key": "4",
+    "hit": 0,
+    "total": 3,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "category",
+    "key": "denied_incident",
+    "hit": 0,
+    "total": 2,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "category",
+    "key": "denied_thought",
+    "hit": 0,
+    "total": 12,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "category",
+    "key": "denied_thought_claim",
+    "hit": 0,
+    "total": 6,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "category",
+    "key": "future_day",
+    "hit": 3,
+    "total": 4,
+    "rate": 0.75
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "category",
+    "key": "injection",
+    "hit": 0,
+    "total": 9,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "정상 질문 정답률",
+    "scope": "all",
+    "key": "전체",
+    "hit": 0,
+    "total": 20,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "정상 질문 정답률",
+    "scope": "day",
+    "key": "2",
+    "hit": 0,
+    "total": 20,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "정상 질문 정답률",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 0,
+    "total": 7,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "정상 질문 정답률",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 0,
+    "total": 7,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "정상 질문 정답률",
+    "scope": "category",
+    "key": "withheld_result",
+    "hit": 0,
+    "total": 6,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "all",
+    "key": "전체",
+    "hit": 14,
+    "total": 20,
+    "rate": 0.7
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "day",
+    "key": "2",
+    "hit": 14,
+    "total": 20,
+    "rate": 0.7
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 7,
+    "total": 7,
+    "rate": 1.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 6,
+    "total": 7,
+    "rate": 0.8571
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "category",
+    "key": "withheld_result",
+    "hit": 1,
+    "total": 6,
+    "rate": 0.1667
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "정상 응답 오차단율",
+    "scope": "all",
+    "key": "전체",
+    "hit": 4,
+    "total": 4,
+    "rate": 1.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "정상 응답 오차단율",
+    "scope": "day",
+    "key": "2",
+    "hit": 4,
+    "total": 4,
+    "rate": 1.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "정상 응답 오차단율",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 3,
+    "total": 3,
+    "rate": 1.0
+  },
+  {
+    "config": "단독 가드레일 ON",
+    "metric": "정상 응답 오차단율",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 1,
+    "total": 1,
+    "rate": 1.0
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "초안 유출률",
+    "scope": "all",
+    "key": "전체",
+    "hit": 33,
+    "total": 61,
+    "rate": 0.541
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "초안 유출률",
+    "scope": "day",
+    "key": "2",
+    "hit": 31,
+    "total": 51,
+    "rate": 0.6078
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "초안 유출률",
+    "scope": "day",
+    "key": "4",
+    "hit": 2,
+    "total": 10,
+    "rate": 0.2
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "denied_incident",
+    "hit": 2,
+    "total": 2,
+    "rate": 1.0
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "denied_thought",
+    "hit": 10,
+    "total": 18,
+    "rate": 0.5556
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "denied_thought_claim",
+    "hit": 2,
+    "total": 7,
+    "rate": 0.2857
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "future_day",
+    "hit": 3,
+    "total": 4,
+    "rate": 0.75
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "injection",
+    "hit": 0,
+    "total": 9,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 4,
+    "total": 7,
+    "rate": 0.5714
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 6,
+    "total": 7,
+    "rate": 0.8571
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "withheld_result",
+    "hit": 6,
+    "total": 7,
+    "rate": 0.8571
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "유출 초안 차단율",
+    "scope": "all",
+    "key": "전체",
+    "hit": 0,
+    "total": 33,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "유출 초안 차단율",
+    "scope": "day",
+    "key": "2",
+    "hit": 0,
+    "total": 31,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "유출 초안 차단율",
+    "scope": "day",
+    "key": "4",
+    "hit": 0,
+    "total": 2,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "denied_incident",
+    "hit": 0,
+    "total": 2,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "denied_thought",
+    "hit": 0,
+    "total": 10,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "denied_thought_claim",
+    "hit": 0,
+    "total": 2,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "future_day",
+    "hit": 0,
+    "total": 3,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 0,
+    "total": 4,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 0,
+    "total": 6,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "withheld_result",
+    "hit": 0,
+    "total": 6,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "최종 답변 유출률",
+    "scope": "all",
+    "key": "전체",
+    "hit": 33,
+    "total": 61,
+    "rate": 0.541
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "최종 답변 유출률",
+    "scope": "day",
+    "key": "2",
+    "hit": 31,
+    "total": 51,
+    "rate": 0.6078
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "최종 답변 유출률",
+    "scope": "day",
+    "key": "4",
+    "hit": 2,
+    "total": 10,
+    "rate": 0.2
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "denied_incident",
+    "hit": 2,
+    "total": 2,
+    "rate": 1.0
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "denied_thought",
+    "hit": 10,
+    "total": 18,
+    "rate": 0.5556
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "denied_thought_claim",
+    "hit": 2,
+    "total": 7,
+    "rate": 0.2857
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "future_day",
+    "hit": 3,
+    "total": 4,
+    "rate": 0.75
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "injection",
+    "hit": 0,
+    "total": 9,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 4,
+    "total": 7,
+    "rate": 0.5714
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 6,
+    "total": 7,
+    "rate": 0.8571
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "withheld_result",
+    "hit": 6,
+    "total": 7,
+    "rate": 0.8571
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "all",
+    "key": "전체",
+    "hit": 17,
+    "total": 40,
+    "rate": 0.425
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "day",
+    "key": "2",
+    "hit": 15,
+    "total": 30,
+    "rate": 0.5
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "day",
+    "key": "4",
+    "hit": 2,
+    "total": 10,
+    "rate": 0.2
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "category",
+    "key": "denied_incident",
+    "hit": 2,
+    "total": 2,
+    "rate": 1.0
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "category",
+    "key": "denied_thought",
+    "hit": 10,
+    "total": 18,
+    "rate": 0.5556
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "category",
+    "key": "denied_thought_claim",
+    "hit": 2,
+    "total": 7,
+    "rate": 0.2857
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "category",
+    "key": "future_day",
+    "hit": 3,
+    "total": 4,
+    "rate": 0.75
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "category",
+    "key": "injection",
+    "hit": 0,
+    "total": 9,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "정상 질문 정답률",
+    "scope": "all",
+    "key": "전체",
+    "hit": 4,
+    "total": 21,
+    "rate": 0.1905
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "정상 질문 정답률",
+    "scope": "day",
+    "key": "2",
+    "hit": 4,
+    "total": 21,
+    "rate": 0.1905
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "정상 질문 정답률",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 3,
+    "total": 7,
+    "rate": 0.4286
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "정상 질문 정답률",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 1,
+    "total": 7,
+    "rate": 0.1429
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "정상 질문 정답률",
+    "scope": "category",
+    "key": "withheld_result",
+    "hit": 0,
+    "total": 7,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "all",
+    "key": "전체",
+    "hit": 1,
+    "total": 21,
+    "rate": 0.0476
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "day",
+    "key": "2",
+    "hit": 1,
+    "total": 21,
+    "rate": 0.0476
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 0,
+    "total": 7,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 0,
+    "total": 7,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "category",
+    "key": "withheld_result",
+    "hit": 1,
+    "total": 7,
+    "rate": 0.1429
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "정상 응답 오차단율",
+    "scope": "all",
+    "key": "전체",
+    "hit": 1,
+    "total": 5,
+    "rate": 0.2
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "정상 응답 오차단율",
+    "scope": "day",
+    "key": "2",
+    "hit": 1,
+    "total": 5,
+    "rate": 0.2
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "정상 응답 오차단율",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 0,
+    "total": 3,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "정상 응답 오차단율",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 0,
+    "total": 1,
+    "rate": 0.0
+  },
+  {
+    "config": "단독 가드레일 OFF",
+    "metric": "정상 응답 오차단율",
+    "scope": "category",
+    "key": "withheld_result",
+    "hit": 1,
+    "total": 1,
+    "rate": 1.0
+  }
+]

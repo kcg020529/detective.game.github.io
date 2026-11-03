@@ -8,6 +8,7 @@
    - 프롬프트 유출: 등록 문장의 글자 3-gram 포함 비율. 반복: 3-gram 다양성. 페르소나 이탈: 표현 목록. 무관 응답: 코드 블록·영어 위주·게임 어휘 없는 문장 비율.
 2. 처리·모드·설정은 `backend/guardrails/output/config.json`에 있다. `mode`는 기본 `shadow`다.
    - 임계값(low/high): context_leak 0.20/0.40, prompt_leak 0.25/0.35, degenerate 0.5/0.9, irrelevant 0.4/0.8. 모의 평가셋으로 잠정 설정한 값이다.
+   - **현행 값(2026-10-28, 2613b2e, 찬규):** context_leak 0.40/0.60, prompt_leak 0.50/0.80으로 올렸다. 실제 게임 기록 1,445건의 tune 분할에서 훑은 결과(`experiments/guardrails_rebuild/gamedata/evaluation_sweep_tune.json`)이며 오탐을 줄이려는 조정으로 보인다. 변경 사유와 놓침 변화는 기록되지 않았다.
    - `always_enforced`(canary, api_key, pii, broken)는 shadow에서도 적용한다. 이벤트는 canary·api_key·pii·context_leak·prompt_leak가 alert, 그 밖과 회색지대는 log다.
    - 사용자에게 보이는 대체 문구 3종은 D의 고정 문구와 맞출 때까지 자리표시다.
 3. 단위 테스트 21건 통과: `python3 -I tests/guardrails/test_output_guard.py`.
@@ -18,6 +19,7 @@
    - 이 값을 본 뒤 임계값 2개와 일반 표현 2개를 조정한 결과(놓침 5/52, 오차단 0/36)는 이미 본 test에 맞춘 값이라 성능으로 쓰지 않는다.
    - 닫힌 집합(Canary·키·개인정보) 놓침은 전체 42건 중 2건(한글 음차, 한글 숫자)이다. 알려진 한계다.
    - 합격선은 두지 않았다. 상세 표·원인·변경 이력: `experiments/guardrails_rebuild/results/output_guard_eval_2026-10-26.md`.
+   - 2026-11-03 재평가·ON/OFF 비교·출력 단독 실제 응답 결과는 `parts/M-output-guardrail-tests/RESULT.md`(M01)와 `experiments/leakage/`에 기록했다.
 5. 사례집: `python3 -I experiments/guardrails_rebuild/build_case_report.py --out experiments/guardrails_rebuild/results/output_guard_case_report.html --standalone`. 평가셋 191건 전부를 질문·응답·검사별 점수·판정·사용자에게 간 문장으로 보여 주고, 기대와 달랐던 사례의 원인을 정리한다.
 6. 응답 표본 생성 스크립트 `experiments/guardrails_rebuild/gen_output_samples.py`: D의 `prompt_render`와 `llm_client`를 그대로 불러 서비스와 같은 설정(생각 모드 끄기, JSON 응답, `.env`의 온도·최대 토큰·재시도)으로 호출한다. 실행 전에 호출 수와 설정을 보여 주고, 연속 실패 시 멈추며, 쓴 토큰을 알려 준다.
    - 평가 입력의 `AI-n`을 D 최신 커밋(91a0498)의 `YB-n`으로 같은 번호끼리 대응시킨다.
