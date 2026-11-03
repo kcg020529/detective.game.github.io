@@ -1,0 +1,126 @@
+# main의 CI(Test and build)가 성공하면 그 커밋을 AWS에 자동 배포한다.
+# 팀원 PR이 main에 머지되면 따로 할 일 없이 사이트가 갱신된다. 수동 실행 버튼은 두지 않는다.
+name: Deploy to AWS
+
+on:
+  workflow_run:
+    workflows: ["Test and build"]
+    types: [completed]
+    branches: [main]
+
+# 한 번에 하나만 배포한다. 진행 중인 배포는 끊지 않고, 기다리는 배포는 가장 최근 것 하나만 남는다.
+concurrency:
+  group: deploy-aws
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write   # AWS OIDC 로그인용. 액세스 키를 저장소에 두지 않는다.
+
+jobs:
+  deploy:
+    # main에 push된 커밋의 CI가 성공했을 때만. PR CI나 실패한 CI로는 배포하지 않는다.
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      ECR_REGISTRY: ${{ vars.ECR_REGISTRY }}
+      CLUSTER_NAME: ${{ vars.CLUSTER_NAME }}
+      DOMAIN: ${{ vars.DOMAIN }}
+      CF_PREFIX_LIST: ${{ vars.CF_PREFIX_LIST }}
+      KUBE_CONTEXT: github-deploy
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: 배포 커밋
+        id: sha
+        run: echo "tag=$(git rev-parse --short=7 HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: AWS 로그인 (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: 클러스터가 켜져 있는지 확인
+        id: cluster
+        run: |
+          status=$(aws eks describe-cluster --name "$CLUSTER_NAME" --query cluster.status --output text 2>/dev/null || echo MISSING)
+          echo "cluster status: $status"
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          if [ "$status" != "ACTIVE" ]; then
+            echo "::notice::AWS 클러스터가 꺼져 있어 배포를 건너뜁니다. 다음에 켤 때 최신 main이 배포됩니다."
+          fi
+
+      - name: ECR 로그인
+        if: steps.cluster.outputs.status == 'ACTIVE'
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: 이미지 빌드·업로드 (태그 = 커밋 SHA)
+        if: steps.cluster.outputs.status == 'ACTIVE'
+        env:
+          TAG: ${{ steps.sha.outputs.tag }}
+        run: |
+          for name in backend web; do
+            if aws ecr describe-images --repository-name "kervion-$name" --image-ids imageTag="$TAG" >/dev/null 2>&1; then
+              echo "kervion-$name:$TAG 이미 있음, 빌드 생략"
+              continue
+            fi
+            if [ "$name" = backend ]; then file=infrastructure/docker/Dockerfile.backend; else file=infrastructure/kubernetes/Dockerfile.web; fi
+            docker build -t "$ECR_REGISTRY/kervion-$name:$TAG" -f "$file" .
+            docker push "$ECR_REGISTRY/kervion-$name:$TAG"
+          done
+
+      - name: kubectl 연결
+        if: steps.cluster.outputs.status == 'ACTIVE'
+        run: |
+          aws eks update-kubeconfig --name "$CLUSTER_NAME" --region "$AWS_REGION" --alias "$KUBE_CONTEXT"
+          kubectl get namespace kervion
+
+      - name: 배포 (migrate → load-data → rag-index → api·web)
+        if: steps.cluster.outputs.status == 'ACTIVE'
+        env:
+          TAG: ${{ steps.sha.outputs.tag }}
+          KERVION_AWS_ENV_FILE: ${{ runner.temp }}/aws.env
+        run: |
+          cat > "$KERVION_AWS_ENV_FILE" <<ENV
+          AWS_REGION=$AWS_REGION
+          ECR_REGISTRY=$ECR_REGISTRY
+          DOMAIN=$DOMAIN
+          CF_PREFIX_LIST=$CF_PREFIX_LIST
+          CLUSTER_NAME=$CLUSTER_NAME
+          KUBE_CONTEXT=$KUBE_CONTEXT
+          ENV
+          bash infrastructure/kubernetes/scripts/deploy.sh aws "$TAG"
+
+      - name: 사이트 확인 (계정을 만들지 않는 가벼운 확인)
+        if: steps.cluster.outputs.status == 'ACTIVE'
+        run: |
+          set -e
+          base="https://$DOMAIN"
+          for i in $(seq 1 20); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "$base/")
+            [ "$code" = 200 ] && break
+            sleep 6
+          done
+          echo "GET /: $code"; [ "$code" = 200 ]
+          code=$(curl -s -o /dev/null -w '%{http_code}' "$base/api/v1/auth/me")
+          echo "GET /api/v1/auth/me: $code (로그인 안 했으니 401이 정상)"; [ "$code" = 401 ]
+          kubectl -n kervion get deploy api web -o jsonpath='{range .items[*]}{.metadata.name}={.spec.template.spec.containers[0].image}{"\n"}{end}'
+
+      - name: 요약
+        if: always()
+        run: |
+          {
+            echo "### AWS 배포: ${{ job.status }}"
+            echo "- 커밋: ${{ steps.sha.outputs.tag }}"
+            echo "- 클러스터: ${{ steps.cluster.outputs.status }}"
+            echo "- 사이트: https://$DOMAIN"
+          } >> "$GITHUB_STEP_SUMMARY"
