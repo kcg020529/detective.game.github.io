@@ -1267,7 +1267,7 @@
     layer.innerHTML = `<article class="c-verdict-paper" role="dialog" aria-modal="true" aria-labelledby="c-verdict-title">
       <header><strong id="c-verdict-title">실험 판정서</strong><span>YB-LAB · Day ${currentDay(state)}</span></header>
       <div class="c-verdict-pick"><div data-verdict-pick></div><div><small>지목한 AI</small><b>${picked.id}</b></div></div>
-      <div class="c-verdict-stamp ${hit ? 'is-hit' : 'is-miss'}" data-verdict-stamp>${hit ? '적중' : '불일치'}</div>
+      <div class="c-verdict-stamp ${hit ? 'is-hit' : 'is-miss'}" data-verdict-stamp>${hit ? '일치' : '불일치'}</div>
       <section><h3>결과를 조작한 AI</h3><div class="c-verdict-culprit"><div data-verdict-culprit></div><div><b>${escapeHtml(data.ybs[culprit].id)}</b><p class="c-verdict-redact" data-verdict-truth>${escapeHtml(truth)}</p></div></div></section>
       <section><h3>결정적 단서</h3><ul class="c-verdict-list">${evidence.map((item) => {
         const st = ['found', 'missed', 'restricted'].includes(item.status) ? item.status : 'missed';
