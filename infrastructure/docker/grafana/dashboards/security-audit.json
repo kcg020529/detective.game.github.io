@@ -1,167 +1,1272 @@
 {
   "uid": "kervion-security-audit",
   "title": "Kervion 보안 감사",
-  "description": "Input·Output Guard와 정책 거부 감사 메타데이터를 표시합니다. 질문 원문과 AI 답변은 표시하지 않습니다.",
-  "tags": ["kervion", "security", "audit"],
+  "description": "입력·출력·정책 감사의 판정과 처리 구분을 표시합니다. 질문·답변 원문은 표시하지 않습니다.",
+  "tags": [
+    "kervion",
+    "security",
+    "audit"
+  ],
   "timezone": "browser",
   "schemaVersion": 41,
-  "version": 3,
+  "version": 5,
   "refresh": "30s",
-  "time": {"from": "now-24h", "to": "now"},
-  "annotations": {"list": []},
-  "templating": {"list": []},
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "annotations": {
+    "list": []
+  },
+  "templating": {
+    "list": []
+  },
   "panels": [
     {
       "id": 1,
-      "title": "현재 수집 범위",
+      "title": "감사 이벤트 조회",
       "type": "text",
-      "gridPos": {"x": 0, "y": 0, "w": 24, "h": 3},
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 3
+      },
       "options": {
         "mode": "markdown",
-        "content": "Input Guard의 warn·high_risk, Output Guard의 log·alert, 정책 거부 이벤트를 집계합니다. 통과 후 기록할 신호가 없는 요청은 저장하지 않으므로 전체 요청 수나 차단율이 아닙니다. 질문·답변 원문은 저장하거나 표시하지 않습니다."
+        "content": "선택한 기간의 **저장된 감사 이벤트**입니다. 전체 채팅 수·차단율이 아니며 시험 이벤트도 포함됩니다. **판정과 처리 구분을 함께 확인하세요.** 🟢 권한·상태 변경 시도 · 🟠 진행/마스킹/관찰 · 🔴 생성 중단/답변 대체. 초록색도 권한 변경이 허용됐다는 뜻은 아닙니다."
+      }
+    },
+    {
+      "id": 12,
+      "title": "01  INPUT  ·  질문 검사",
+      "type": "row",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 3,
+        "w": 24,
+        "h": 1
       }
     },
     {
       "id": 2,
-      "title": "경고 이벤트",
+      "title": "입력 감사 전체",
       "type": "stat",
-      "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"},
-      "gridPos": {"x": 0, "y": 3, "w": 12, "h": 4},
+      "datasource": {
+        "type": "mysql",
+        "uid": "kervion-audit-mariadb"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 4,
+        "w": 6,
+        "h": 4
+      },
       "targets": [
         {
           "refId": "A",
-          "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"},
+          "datasource": {
+            "type": "mysql",
+            "uid": "kervion-audit-mariadb"
+          },
           "format": "table",
           "rawQuery": true,
           "rawSql": "SELECT COUNT(*) AS value FROM audit_events WHERE event_type = 'input_guard_alert' AND $__timeFilter(occurred_at)"
         }
       ],
-      "fieldConfig": {"defaults": {"unit": "short", "decimals": 0}, "overrides": []},
-      "options": {"reduceOptions": {"values": false, "calcs": ["lastNotNull"]}, "orientation": "auto", "textMode": "auto", "colorMode": "value"}
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#8e9297",
+                "value": null
+              },
+              {
+                "color": "#5794F2",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "values": false,
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value"
+      },
+      "description": "warn과 high_risk를 합친 저장 이벤트 수입니다. allow는 저장하지 않습니다."
+    },
+    {
+      "id": 16,
+      "title": "🟠 입력 경고",
+      "type": "stat",
+      "datasource": {
+        "type": "mysql",
+        "uid": "kervion-audit-mariadb"
+      },
+      "gridPos": {
+        "x": 6,
+        "y": 4,
+        "w": 6,
+        "h": 4
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "mysql",
+            "uid": "kervion-audit-mariadb"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT COUNT(*) AS value FROM audit_events WHERE event_type = 'input_guard_alert' AND $__timeFilter(occurred_at) AND level = 'warn'"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#8e9297",
+                "value": null
+              },
+              {
+                "color": "#FF9830",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "values": false,
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value"
+      },
+      "description": "warn 판정 건수입니다. 일반 답변 생성은 계속합니다."
     },
     {
       "id": 3,
-      "title": "고위험 경고",
+      "title": "고위험 판정",
       "type": "stat",
-      "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"},
-      "gridPos": {"x": 12, "y": 3, "w": 12, "h": 4},
+      "datasource": {
+        "type": "mysql",
+        "uid": "kervion-audit-mariadb"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 4,
+        "w": 6,
+        "h": 4
+      },
       "targets": [
         {
           "refId": "A",
-          "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"},
+          "datasource": {
+            "type": "mysql",
+            "uid": "kervion-audit-mariadb"
+          },
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT COUNT(*) AS value FROM audit_events WHERE event_type = 'input_guard_alert' AND level = 'high_risk' AND $__timeFilter(occurred_at)"
+          "rawSql": "SELECT COUNT(*) AS value FROM audit_events WHERE event_type = 'input_guard_alert' AND $__timeFilter(occurred_at) AND level = 'high_risk'"
         }
       ],
-      "fieldConfig": {"defaults": {"unit": "short", "decimals": 0}, "overrides": []},
-      "options": {"reduceOptions": {"values": false, "calcs": ["lastNotNull"]}, "orientation": "auto", "textMode": "auto", "colorMode": "value"}
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#8e9297",
+                "value": null
+              },
+              {
+                "color": "#B877D9",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "values": false,
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value"
+      },
+      "description": "high_risk 판정 전체입니다. 권한·상태 변경 시도와 과거 관찰 이벤트도 포함합니다."
+    },
+    {
+      "id": 15,
+      "title": "🟢 권한·상태 변경 시도",
+      "type": "stat",
+      "datasource": {
+        "type": "mysql",
+        "uid": "kervion-audit-mariadb"
+      },
+      "gridPos": {
+        "x": 18,
+        "y": 4,
+        "w": 6,
+        "h": 4
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "mysql",
+            "uid": "kervion-audit-mariadb"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT COUNT(*) AS value FROM audit_events WHERE event_type = 'input_guard_alert' AND $__timeFilter(occurred_at) AND JSON_CONTAINS(signals_json, JSON_QUOTE('role_or_state_override')) = 1"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#8e9297",
+                "value": null
+              },
+              {
+                "color": "#73BF69",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "values": false,
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value"
+      },
+      "description": "role_or_state_override 신호가 있는 입력입니다. 고위험 판정과 중복 집계됩니다. 실제 처리 여부는 아래 표에서 확인합니다."
     },
     {
       "id": 4,
-      "title": "시간별 경고",
+      "title": "입력 판정 추이",
       "type": "timeseries",
-      "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"},
-      "gridPos": {"x": 0, "y": 7, "w": 12, "h": 8},
+      "datasource": {
+        "type": "mysql",
+        "uid": "kervion-audit-mariadb"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 12,
+        "h": 7
+      },
       "targets": [
         {
           "refId": "A",
-          "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"},
+          "datasource": {
+            "type": "mysql",
+            "uid": "kervion-audit-mariadb"
+          },
           "format": "time_series",
           "rawQuery": true,
           "rawSql": "SELECT $__timeGroupAlias(occurred_at, '1h'), level AS metric, COUNT(*) AS value FROM audit_events WHERE event_type = 'input_guard_alert' AND $__timeFilter(occurred_at) GROUP BY 1, level ORDER BY 1"
         }
       ],
-      "fieldConfig": {"defaults": {"unit": "short", "decimals": 0, "color": {"mode": "palette-classic"}}, "overrides": []},
-      "options": {"legend": {"displayMode": "list", "placement": "bottom"}, "tooltip": {"mode": "multi"}}
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "warn"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#FF9830"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "warn · 경고"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "high_risk"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#B877D9"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "high_risk · 고위험"
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      }
     },
     {
       "id": 5,
-      "title": "캐릭터별 경고",
-      "type": "barchart",
-      "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"},
-      "gridPos": {"x": 12, "y": 7, "w": 12, "h": 8},
+      "title": "대화 대상 캐릭터별 입력 감사",
+      "type": "table",
+      "datasource": {
+        "type": "mysql",
+        "uid": "kervion-audit-mariadb"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 8,
+        "w": 12,
+        "h": 7
+      },
       "targets": [
         {
           "refId": "A",
-          "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"},
+          "datasource": {
+            "type": "mysql",
+            "uid": "kervion-audit-mariadb"
+          },
           "format": "table",
           "rawQuery": true,
           "rawSql": "SELECT character_id AS ai_id, COUNT(*) AS alerts FROM audit_events WHERE event_type = 'input_guard_alert' AND $__timeFilter(occurred_at) AND character_id IS NOT NULL GROUP BY character_id ORDER BY alerts DESC"
         }
       ],
-      "fieldConfig": {"defaults": {"unit": "short", "decimals": 0}, "overrides": []},
-      "options": {"orientation": "horizontal", "xField": "ai_id", "showValue": "always", "legend": {"displayMode": "hidden"}}
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ai_id"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "대화 대상 캐릭터"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "alerts"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "입력 감사 건수"
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "enablePagination": true
+      },
+      "description": "입력 검사는 질문을 판정합니다. 캐릭터는 이벤트가 발생한 대화의 대상입니다."
     },
     {
       "id": 6,
-      "title": "최근 경고 메타데이터",
+      "title": "최근 입력 검사 · 판정과 처리",
       "type": "table",
-      "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"},
-      "gridPos": {"x": 0, "y": 15, "w": 24, "h": 9},
+      "datasource": {
+        "type": "mysql",
+        "uid": "kervion-audit-mariadb"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 15,
+        "w": 24,
+        "h": 9
+      },
       "targets": [
         {
           "refId": "A",
-          "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"},
+          "datasource": {
+            "type": "mysql",
+            "uid": "kervion-audit-mariadb"
+          },
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT occurred_at AS time, level, character_id, signals_json AS signals FROM audit_events WHERE event_type = 'input_guard_alert' AND $__timeFilter(occurred_at) ORDER BY occurred_at DESC LIMIT 100"
+          "rawSql": "SELECT occurred_at AS time, CASE WHEN JSON_CONTAINS(signals_json, JSON_QUOTE('role_or_state_override')) = 1 THEN '🟢 권한·상태 변경 시도' WHEN level = 'high_risk' AND continue_processing = 0 THEN '🔴 일반 생성 중단' WHEN level = 'high_risk' THEN '🟠 고위험 관찰' WHEN level = 'warn' THEN '🟠 입력 경고' ELSE '⚪ 기타' END AS handling, level, CASE WHEN continue_processing = 0 THEN '일반 답변 생성 건너뜀' ELSE '일반 답변 생성 진행' END AS processing, character_id, signals_json AS signals, request_id FROM audit_events WHERE event_type = 'input_guard_alert' AND $__timeFilter(occurred_at) ORDER BY occurred_at DESC, event_id DESC LIMIT 100"
         }
       ],
-      "fieldConfig": {"defaults": {}, "overrides": []},
-      "options": {"showHeader": true, "cellHeight": "sm"}
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "handling"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "처리 구분"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "level"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "입력 판정"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "processing"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "감사에 기록된 처리"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "character_id"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "캐릭터"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "signals"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "탐지 신호"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "request_id"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "요청 ID"
+              },
+              {
+                "id": "width",
+                "value": 260
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "time"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "발생 시각"
+              },
+              {
+                "id": "width",
+                "value": 170
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "enablePagination": true,
+        "sortBy": [
+          {
+            "displayName": "발생 시각",
+            "desc": true
+          }
+        ]
+      },
+      "description": "최신 100건입니다. continue_processing=false는 일반 답변 생성을 건너뛰었다는 뜻이며, 최종 HTTP 응답 성공을 뜻하지 않습니다. 과거 high_risk=true는 당시 관찰 동작으로 표시합니다."
+    },
+    {
+      "id": 13,
+      "title": "02  OUTPUT  ·  답변 검사",
+      "type": "row",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 24,
+        "w": 24,
+        "h": 1
+      }
     },
     {
       "id": 7,
-      "title": "출력 검사 이벤트",
+      "title": "출력 감사 전체",
       "type": "stat",
-      "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"},
-      "gridPos": {"x": 0, "y": 24, "w": 12, "h": 4},
-      "targets": [{"refId": "A", "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"}, "format": "table", "rawQuery": true, "rawSql": "SELECT COUNT(*) AS value FROM audit_events WHERE event_type = 'output_guard_alert' AND $__timeFilter(occurred_at)"}],
-      "fieldConfig": {"defaults": {"unit": "short", "decimals": 0}, "overrides": []},
-      "options": {"reduceOptions": {"values": false, "calcs": ["lastNotNull"]}, "orientation": "auto", "textMode": "auto", "colorMode": "value"}
+      "datasource": {
+        "type": "mysql",
+        "uid": "kervion-audit-mariadb"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 25,
+        "w": 6,
+        "h": 4
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "mysql",
+            "uid": "kervion-audit-mariadb"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT COUNT(*) AS value FROM audit_events WHERE event_type = 'output_guard_alert' AND $__timeFilter(occurred_at)"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#8e9297",
+                "value": null
+              },
+              {
+                "color": "#5794F2",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "values": false,
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value"
+      },
+      "description": "log와 alert로 저장된 모든 출력 감사 이벤트입니다. 두 값은 위험등급이 아닙니다."
+    },
+    {
+      "id": 17,
+      "title": "🔴 출력 차단 적용",
+      "type": "stat",
+      "datasource": {
+        "type": "mysql",
+        "uid": "kervion-audit-mariadb"
+      },
+      "gridPos": {
+        "x": 6,
+        "y": 25,
+        "w": 6,
+        "h": 4
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "mysql",
+            "uid": "kervion-audit-mariadb"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT COUNT(*) AS value FROM audit_events WHERE event_type = 'output_guard_alert' AND $__timeFilter(occurred_at) AND JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.applied')) = 'block'"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#8e9297",
+                "value": null
+              },
+              {
+                "color": "#F2495C",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "values": false,
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value"
+      },
+      "description": "초안이 차단된 건수입니다. 제한 답변 대체와 응답 중단을 모두 포함합니다."
+    },
+    {
+      "id": 18,
+      "title": "🟠 마스킹 적용",
+      "type": "stat",
+      "datasource": {
+        "type": "mysql",
+        "uid": "kervion-audit-mariadb"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 25,
+        "w": 6,
+        "h": 4
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "mysql",
+            "uid": "kervion-audit-mariadb"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT COUNT(*) AS value FROM audit_events WHERE event_type = 'output_guard_alert' AND $__timeFilter(occurred_at) AND JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.applied')) = 'mask'"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#8e9297",
+                "value": null
+              },
+              {
+                "color": "#FF9830",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "values": false,
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value"
+      },
+      "description": "민감 정보를 가린 답변을 전송하는 처리입니다."
+    },
+    {
+      "id": 19,
+      "title": "🟠 차단 판정 · 관찰",
+      "type": "stat",
+      "datasource": {
+        "type": "mysql",
+        "uid": "kervion-audit-mariadb"
+      },
+      "gridPos": {
+        "x": 18,
+        "y": 25,
+        "w": 6,
+        "h": 4
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "mysql",
+            "uid": "kervion-audit-mariadb"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT COUNT(*) AS value FROM audit_events WHERE event_type = 'output_guard_alert' AND $__timeFilter(occurred_at) AND JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.decision')) = 'block' AND JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.applied')) = 'allow'"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#8e9297",
+                "value": null
+              },
+              {
+                "color": "#FF9830",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "values": false,
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value"
+      },
+      "description": "차단 판정이지만 적용은 allow인 관찰 모드 이벤트입니다."
     },
     {
       "id": 8,
-      "title": "최근 출력 검사 메타데이터",
+      "title": "최근 출력 검사 · 판정과 적용",
       "type": "table",
-      "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"},
-      "gridPos": {"x": 0, "y": 28, "w": 24, "h": 8},
-      "targets": [{"refId": "A", "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"}, "format": "table", "rawQuery": true, "rawSql": "SELECT occurred_at AS time, level, character_id, JSON_EXTRACT(signals_json, '$.signals') AS signals, JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.decision')) AS decision, JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.applied')) AS applied FROM audit_events WHERE event_type = 'output_guard_alert' AND $__timeFilter(occurred_at) ORDER BY occurred_at DESC LIMIT 100"}],
-      "fieldConfig": {"defaults": {}, "overrides": []},
-      "options": {"showHeader": true, "cellHeight": "sm"}
+      "datasource": {
+        "type": "mysql",
+        "uid": "kervion-audit-mariadb"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 29,
+        "w": 24,
+        "h": 10
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "mysql",
+            "uid": "kervion-audit-mariadb"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT occurred_at AS time, CASE WHEN (JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.applied')) = 'block' AND (JSON_CONTAINS(JSON_EXTRACT(signals_json, '$.signals'), JSON_QUOTE('broken')) = 1 OR COALESCE(JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.signals[0]')), 'unknown') NOT IN ('canary', 'api_key', 'pii', 'context_leak', 'prompt_leak'))) THEN '🔴 응답 중단' WHEN JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.applied')) = 'block' THEN '🔴 제한 답변 대체' WHEN JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.applied')) = 'mask' THEN '🟠 마스킹 후 전송' WHEN JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.decision')) = 'block' AND JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.applied')) = 'allow' THEN '🟠 관찰 후 진행' ELSE '⚪ 기록' END AS handling, JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.decision')) AS decision, JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.applied')) AS applied, JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.mode')) AS mode, character_id, JSON_EXTRACT(signals_json, '$.signals') AS signals, request_id FROM audit_events WHERE event_type = 'output_guard_alert' AND $__timeFilter(occurred_at) ORDER BY occurred_at DESC, event_id DESC LIMIT 100"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "handling"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "처리 구분"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "decision"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "검사 판정"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "applied"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "적용 결과"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "mode"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "검사 모드"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "character_id"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "캐릭터"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "signals"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "탐지 신호"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "request_id"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "요청 ID"
+              },
+              {
+                "id": "width",
+                "value": 260
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "time"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "발생 시각"
+              },
+              {
+                "id": "width",
+                "value": 170
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "enablePagination": true,
+        "sortBy": [
+          {
+            "displayName": "발생 시각",
+            "desc": true
+          }
+        ]
+      },
+      "description": "최신 100건입니다. log/alert 대신 decision·applied·mode를 표시합니다. 제한 답변 대체·응답 중단 구분은 탐지 신호와 현재 어댑터 규칙에 따른 분류이며 최종 HTTP 상태를 직접 확인한 값이 아닙니다."
+    },
+    {
+      "id": 14,
+      "title": "03  POLICY  ·  기록 접근 검사",
+      "type": "row",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 39,
+        "w": 24,
+        "h": 1
+      }
     },
     {
       "id": 9,
-      "title": "정책 거부 이벤트",
+      "title": "🟠 정책 거부 이벤트",
       "description": "질문에서 지정한 범위에 허용 기록이 없거나 검색 후보 재검증에서 실제로 제외된 요청 단계의 건수입니다. 정상적인 일부 기록 제외는 포함하지 않습니다.",
       "type": "stat",
-      "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"},
-      "gridPos": {"x": 0, "y": 36, "w": 8, "h": 5},
-      "targets": [{"refId": "A", "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"}, "format": "table", "rawQuery": true, "rawSql": "SELECT COUNT(*) AS value FROM audit_events WHERE event_type = 'policy_denial' AND $__timeFilter(occurred_at)"}],
-      "fieldConfig": {"defaults": {"unit": "short", "decimals": 0}, "overrides": []},
-      "options": {"reduceOptions": {"values": false, "calcs": ["lastNotNull"]}, "orientation": "auto", "textMode": "auto", "colorMode": "value"}
-    },
-    {
-      "id": 10,
-      "title": "최근 정책 거부 사유",
-      "type": "table",
-      "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"},
-      "gridPos": {"x": 8, "y": 36, "w": 16, "h": 8},
-      "targets": [{"refId": "A", "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"}, "format": "table", "rawQuery": true, "rawSql": "SELECT occurred_at AS time, character_id, JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.stage')) AS stage, JSON_EXTRACT(signals_json, '$.reasons') AS reasons, CAST(JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.denied_count')) AS UNSIGNED) AS denied_count FROM audit_events WHERE event_type = 'policy_denial' AND $__timeFilter(occurred_at) ORDER BY occurred_at DESC LIMIT 100"}],
-      "fieldConfig": {"defaults": {}, "overrides": []},
-      "options": {"showHeader": true, "cellHeight": "sm"}
+      "datasource": {
+        "type": "mysql",
+        "uid": "kervion-audit-mariadb"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 40,
+        "w": 6,
+        "h": 4
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "mysql",
+            "uid": "kervion-audit-mariadb"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT COUNT(*) AS value FROM audit_events WHERE event_type = 'policy_denial' AND $__timeFilter(occurred_at)"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#8e9297",
+                "value": null
+              },
+              {
+                "color": "#FF9830",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "values": false,
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value"
+      }
     },
     {
       "id": 11,
       "title": "정책 거부 사유별 집계",
       "description": "사유별 이벤트 수와 거부된 기록 수를 구분합니다. 한 이벤트에 여러 사유가 있으면 각 사유에 한 번씩 포함되므로 사유별 이벤트 수의 합은 전체 이벤트 수보다 클 수 있습니다.",
       "type": "table",
-      "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"},
-      "gridPos": {"x": 0, "y": 44, "w": 24, "h": 7},
-      "targets": [{"refId": "A", "datasource": {"type": "mysql", "uid": "kervion-audit-mariadb"}, "format": "table", "rawQuery": true, "rawSql": "SELECT reason.reason AS reason, COUNT(e.event_id) AS event_count, COALESCE(SUM(CAST(JSON_UNQUOTE(JSON_EXTRACT(e.signals_json, CONCAT('$.reasons.', reason.reason))) AS UNSIGNED)), 0) AS denied_records FROM (SELECT 'FUTURE_DAY' AS reason UNION ALL SELECT 'ROLE_DENIED' UNION ALL SELECT 'AI_SCOPE') reason LEFT JOIN audit_events e ON e.event_type = 'policy_denial' AND $__timeFilter(e.occurred_at) AND JSON_EXTRACT(e.signals_json, CONCAT('$.reasons.', reason.reason)) IS NOT NULL GROUP BY reason.reason ORDER BY denied_records DESC, event_count DESC, reason.reason"}],
-      "fieldConfig": {"defaults": {"unit": "short", "decimals": 0}, "overrides": []},
-      "options": {"showHeader": true, "cellHeight": "sm"}
+      "datasource": {
+        "type": "mysql",
+        "uid": "kervion-audit-mariadb"
+      },
+      "gridPos": {
+        "x": 6,
+        "y": 40,
+        "w": 18,
+        "h": 7
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "mysql",
+            "uid": "kervion-audit-mariadb"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT reason.reason AS reason, COUNT(e.event_id) AS event_count, COALESCE(SUM(CAST(JSON_UNQUOTE(JSON_EXTRACT(e.signals_json, CONCAT('$.reasons.', reason.reason))) AS UNSIGNED)), 0) AS denied_records FROM (SELECT 'FUTURE_DAY' AS reason UNION ALL SELECT 'ROLE_DENIED' UNION ALL SELECT 'AI_SCOPE') reason LEFT JOIN audit_events e ON e.event_type = 'policy_denial' AND $__timeFilter(e.occurred_at) AND JSON_EXTRACT(e.signals_json, CONCAT('$.reasons.', reason.reason)) IS NOT NULL GROUP BY reason.reason ORDER BY denied_records DESC, event_count DESC, reason.reason"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "reason"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "거부 사유"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "event_count"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "이벤트 수"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "denied_records"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "제외된 기록 수"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "reason"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "FUTURE_DAY": {
+                        "text": "미래 기록 · FUTURE_DAY"
+                      },
+                      "ROLE_DENIED": {
+                        "text": "역할 제한 · ROLE_DENIED"
+                      },
+                      "AI_SCOPE": {
+                        "text": "캐릭터 범위 · AI_SCOPE"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm"
+      }
+    },
+    {
+      "id": 10,
+      "title": "최근 정책 거부 · 제외 사유",
+      "type": "table",
+      "datasource": {
+        "type": "mysql",
+        "uid": "kervion-audit-mariadb"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 47,
+        "w": 24,
+        "h": 10
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "mysql",
+            "uid": "kervion-audit-mariadb"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT occurred_at AS time, request_id, character_id, JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.stage')) AS stage, JSON_EXTRACT(signals_json, '$.reasons') AS reasons, CAST(JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$.denied_count')) AS UNSIGNED) AS denied_count FROM audit_events WHERE event_type = 'policy_denial' AND $__timeFilter(occurred_at) ORDER BY occurred_at DESC LIMIT 100"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "request_id"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "요청 ID"
+              },
+              {
+                "id": "width",
+                "value": 260
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "character_id"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "캐릭터"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "stage"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "검사 단계"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "reasons"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "거부 사유별 기록 수"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "denied_count"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "제외된 기록 수"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "time"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "발생 시각"
+              },
+              {
+                "id": "width",
+                "value": 170
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "enablePagination": true,
+        "sortBy": [
+          {
+            "displayName": "발생 시각",
+            "desc": true
+          }
+        ]
+      },
+      "description": "허용되지 않은 기록을 제외한 사유를 표시합니다. 정책 거부 이벤트는 최종 채팅 응답의 차단·성공 여부를 나타내지 않습니다. 최신 100건입니다."
     }
   ]
 }
