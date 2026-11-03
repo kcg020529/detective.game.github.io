@@ -52,13 +52,13 @@ Qdrant 대시보드는 [http://127.0.0.1:6333/dashboard](http://127.0.0.1:6333/d
 ## Grafana 보안 대시보드 (선택 실행)
 
 Grafana는 `docker-compose.grafana.yml`을 함께 지정할 때만 실행한다. `audit_events`의
-Input Guard 경고 메타데이터를 MariaDB에서 읽어 브라우저에 표시한다. 채팅 전송
-API와 감사 자동 저장은 아직 연결되지 않았으므로 실제 이벤트가 없으면 0 또는
-빈 그래프가 정상이다. `allow` 질문은 저장하지 않아 전체 질문 수를 보여주지 않는다.
+Input·Output Guard 메타데이터를 MariaDB에서 읽는다. `allow` 질문은 저장하지 않아
+전체 질문 수를 보여주지 않는다. 이제 Grafana의 직접 포트는 열지 않고, 웹사이트
+관리자만 `http://127.0.0.1:8080/admin/audit`에서 대시보드를 본다.
 
 1. `infrastructure/docker/.env`에 `GRAFANA_ADMIN_PASSWORD`와
    `GRAFANA_DB_PASSWORD`를 각각 긴 임의 문자열로 설정한다. `.env.example`에는
-   자리만 있으며 실제 비밀번호는 Git에 올리지 않는다. 기본 접속 포트는 3000이다.
+   자리만 있으며 실제 비밀번호는 Git에 올리지 않는다.
 2. MariaDB에 `012_audit_events.sql` 테이블이 있어야 한다. 신규 볼륨이면 초기화
    때 자동 적용된다. 기존 볼륨에 없으면 `infrastructure/docker`에서
    `docker compose exec mariadb mariadb -u root -p`로 DB에 접속한 뒤
@@ -70,20 +70,33 @@ API와 감사 자동 저장은 아직 연결되지 않았으므로 실제 이벤
    ```
 
    이 계정은 `audit_events` 테이블에 대한 `SELECT`만 받는다.
-4. `infrastructure/docker`에서 실행한다.
+4. 기존 DB에는 `015_site_admins.sql`을 적용한다. 저장소 루트에서
+   `python -m infrastructure.docker.migrate`를 실행하거나 기존 Compose의
+   `migrate` 서비스를 사용한다. 신규 DB에는 초기화 때 자동 적용된다.
+   그 뒤 기존 웹 로그인 아이디에만 관리자 권한을 부여한다.
 
    ```bash
-   docker compose -f docker-compose.yml -f docker-compose.grafana.yml up -d grafana
+   python -m infrastructure.docker.grant_site_admin symin123
    ```
 
-5. [http://127.0.0.1:3000/d/kervion-security-audit](http://127.0.0.1:3000/d/kervion-security-audit)를
-   연다. 로그인 이름은 `.env`의 `GRAFANA_ADMIN_USER`(기본 `admin`), 비밀번호는
-   `GRAFANA_ADMIN_PASSWORD`다. 비밀번호를 채팅이나 Git에 붙여넣지 않는다.
+   이 명령은 사용자 계정이 없으면 실패하며, 회원가입 시 관리자를 만들지 않는다.
+5. `infrastructure/docker`에서 API·웹·Grafana를 함께 실행한다.
+
+   ```bash
+   docker compose -f docker-compose.yml -f docker-compose.grafana.yml up -d api web grafana
+   ```
+
+6. KERVION 웹사이트에 `symin123`으로 로그인한 뒤
+   [관리자 대시보드](http://127.0.0.1:8080/admin/audit)를 연다. 다른 계정과
+   비로그인 사용자는 접근할 수 없다. 외부 도메인에서 사용할 때는
+   `GRAFANA_PUBLIC_ROOT_URL=https://<웹주소>/api/v1/admin/grafana/`를 설정한다.
 
 대시보드 설정은 `infrastructure/docker/grafana/`의 파일로 관리한다. UI에서
 바꾼 내용은 소스 파일에 자동 저장되지 않는다. Grafana만 멈추려면
 `docker compose -f docker-compose.yml -f docker-compose.grafana.yml stop grafana`를
-사용한다. Grafana는 로컬 `127.0.0.1`에만 열린다.
+사용한다. Grafana는 Docker 내부 네트워크에서만 열리며, 웹 프록시는 매 요청마다
+KERVION 세션과 관리자 권한을 확인한다. 이전 버전의 직접 포트가 남아 있다면
+Grafana 컨테이너를 새 Compose 설정으로 재생성해야 한다.
 
 두 서비스 모두 `restart: unless-stopped`라 Docker Desktop이 켜지면 자동으로 다시 실행됨 (직접 멈춘 경우 제외).
 
@@ -102,7 +115,7 @@ docker compose down -v
 
 초기 SQL은 MariaDB 데이터 볼륨이 비어 있는 첫 실행 때만 자동 실행됨. 이미 DB가 있는 상태에서 새 SQL 파일이 생기면 볼륨을 지우지 말고 `docker compose run --rm migrate`를 실행함. 적용한 파일을 `schema_migrations` 표에 기록해 새 파일만 실행하고, 이 도구 이전에 손으로 만든 표는 다시 만들지 않고 적용됨으로 기록함.
 
-모든 서비스 포트(MariaDB, Qdrant, web, Grafana)는 `127.0.0.1`에만 바인딩하여 외부 네트워크에서 직접 접속할 수 없게 제한함.
+MariaDB, Qdrant, web 포트는 `127.0.0.1`에만 바인딩한다. Grafana는 호스트 포트를 열지 않는다.
 
 ## 참고
 

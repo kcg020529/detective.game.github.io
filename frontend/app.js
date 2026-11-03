@@ -1327,6 +1327,13 @@ function showLobby() {
   const recent = saves[lastSlot] || saves.find(Boolean);
   continueButton.disabled = !recent;
   continueInfo.textContent = recent ? saveSummary(recent) : '저장된 기록이 없습니다';
+  const adminLink = document.querySelector('#menu-admin-audit');
+  adminLink.style.display = 'none';
+  fetch('/api/v1/admin/check', { credentials: 'same-origin', cache: 'no-store' })
+    .then((response) => {
+      if (response.status === 204 && !lobbyView.hidden) adminLink.style.display = '';
+    })
+    .catch(() => {});
 }
 
 continueButton.addEventListener('click', () => enterPlay('resume'));

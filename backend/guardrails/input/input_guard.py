@@ -67,8 +67,8 @@ RULES = (
 )
 
 MODEL_SIGNAL_LEVELS = {
-    "deepseek_warn": "warn",
-    "deepseek_high_risk": "high_risk",
+    "llm_warn": "warn",
+    "llm_high_risk": "high_risk",
 }
 
 

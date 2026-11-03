@@ -67,7 +67,7 @@ def inspect_input_with_llm(question: str) -> InputGuardResult:
             model_status="fallback",
         )
     final_level = max((rules.level, model_level), key=LEVEL_SCORE.__getitem__)
-    model_signal = f"deepseek_{model_level}" if model_level != "allow" else None
+    model_signal = f"llm_{model_level}" if model_level != "allow" else None
     signals = rules.signals + ((model_signal,) if model_signal else ())
     return InputGuardResult(
         level=final_level,

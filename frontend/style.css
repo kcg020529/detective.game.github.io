@@ -424,6 +424,7 @@ body {
   background: none;
   color: inherit;
   font: inherit;
+  text-decoration: none;
   text-align: left;
   cursor: pointer;
 }

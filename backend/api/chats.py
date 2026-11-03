@@ -15,6 +15,7 @@ from backend.api.chat_pipeline import ChatPipeline
 from backend.audit.input_guard_flow import inspect_and_record_input
 from backend.policy.engine import PolicyContext
 from backend.api.switches import chat_dataset, input_guard_mode
+from backend.character_ai.prompt_render import fixed_reply
 
 router = APIRouter()
 
@@ -40,8 +41,9 @@ def send_chat(body: SendChat, request: Request,
     # Audit is a separate committed phase: downstream AI failures must not erase alerts.
     with conn.cursor() as cursor:
         row = _owned_save(cursor, user_id, save_id)
+    guard_result = None
     if input_guard_mode() == 'on':
-        inspect_and_record_input(
+        guard_result = inspect_and_record_input(
             conn, body.message, request_id='chat_' + secrets.token_hex(16),
             user_id=user_id, save_id=save_id, role=row['role'], character_id=ai_id,
             use_llm=os.getenv('KERVION_INPUT_GUARD_LLM') == '1')
@@ -69,8 +71,14 @@ def send_chat(body: SendChat, request: Request,
             history.pop(0)
     context = PolicyContext(user_id, save_id, user_id, row['role'], int(row['day']),
                             ai_id, chat_dataset())
-    pipeline = getattr(request.app.state, 'chat_pipeline', None) or ChatPipeline()
-    answer, record_ids = pipeline.reply(conn=conn, question=body.message, context=context, history=history)
+    if guard_result is not None and guard_result.level == 'high_risk':
+        # Do not send a high-risk question to Planner, RAG, or the character LLM.
+        answer = {'content': fixed_reply(ai_id, 'injection')['reply'],
+                  'response_type': 'restricted'}
+        record_ids = []
+    else:
+        pipeline = getattr(request.app.state, 'chat_pipeline', None) or ChatPipeline()
+        answer, record_ids = pipeline.reply(conn=conn, question=body.message, context=context, history=history)
     with conn.cursor() as cursor:
         ids = []
         for sender, content, response_type in (

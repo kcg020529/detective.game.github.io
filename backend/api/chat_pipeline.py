@@ -1,10 +1,12 @@
 """Chat orchestration. D and G-2 adapters must be explicitly installed by the app."""
 import os
+import secrets
 
 from backend.api.errors import ApiError
 from backend.api.output_guard_adapter import OutputGuardRejected
 from backend.planner.service import Planner, PlannerInputError, PlannerUnavailable
 from backend.policy.repository import PolicyDenied, PolicyUnavailable
+from backend.audit.policy_flow import record_policy_denial
 
 
 class ChatPipeline:
@@ -16,6 +18,19 @@ class ChatPipeline:
         """Return the validated final answer and F-approved delivered record IDs."""
         if self.generator is None or self.output_guard is None:
             raise ApiError(503, 'SERVICE_UNAVAILABLE', '캐릭터 응답·출력 검사 연결이 준비되지 않았습니다.')
+        policy_audit_written = False
+        policy_request_id = 'policy_' + secrets.token_hex(16)
+
+        def on_policy_denial(policy_context, stage, reason_counts):
+            nonlocal policy_audit_written
+            record_policy_denial(conn, policy_context, stage, reason_counts,
+                                 request_id=policy_request_id)
+            policy_audit_written = True
+
+        def commit_denial_on_failure():
+            if policy_audit_written and conn is not None:
+                conn.commit()
+
         try:
             plan = Planner.from_environment().plan(question, context, history)
             records = []
@@ -29,7 +44,8 @@ class ChatPipeline:
                     retrieval = retrieve(
                         conn, user_id=context.user_id, save_id=context.save_id,
                         character_id=context.character_id, dataset=context.dataset,
-                        plan=plan.search.to_rag_request(), qdrant=qdrant, embedder=FastEmbedder())
+                        plan=plan.search.to_rag_request(), qdrant=qdrant, embedder=FastEmbedder(),
+                        on_policy_denial=on_policy_denial if conn is not None else None)
                 finally:
                     qdrant.close()
                 records = retrieval.records
@@ -55,9 +71,12 @@ class ChatPipeline:
                 conn.commit()
             raise ApiError(503, 'SERVICE_UNAVAILABLE', '안전한 답변을 준비하지 못했습니다.') from None
         except ApiError:
+            commit_denial_on_failure()
             raise
         except (PlannerInputError, PlannerUnavailable, PolicyDenied, PolicyUnavailable):
+            commit_denial_on_failure()
             raise ApiError(503, 'SERVICE_UNAVAILABLE', '답변 서비스를 사용할 수 없습니다.') from None
         except Exception:
             # Includes optional RAG dependency/transport and D/G-2 failures.
+            commit_denial_on_failure()
             raise ApiError(503, 'SERVICE_UNAVAILABLE', '답변 서비스를 사용할 수 없습니다.') from None

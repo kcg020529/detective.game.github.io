@@ -85,8 +85,10 @@ class AuditStoreTests(unittest.TestCase):
         )
         conn = RecordingConnection()
         self.assertEqual(save_input_guard_alert(conn, event), 42)
-        self.assertIn('deepseek_high_risk', repr(conn.last_cursor.params))
+        self.assertIn('llm_high_risk', repr(conn.last_cursor.params))
         self.assertNotIn(question, repr(conn.last_cursor.params))
+        with self.assertRaises(ValueError):
+            save_input_guard_alert(conn, {**event, 'signals': ['deepseek_high_risk']})
 
 
 if __name__ == '__main__':

@@ -75,7 +75,8 @@ def search_records(conn, **kwargs):
     return search_with_signal(conn, **kwargs)[0]
 
 
-def search_with_signal(conn, *, user_id, save_id, character_id, dataset, plan, qdrant, embedder):
+def search_with_signal(conn, *, user_id, save_id, character_id, dataset, plan, qdrant, embedder,
+                       on_policy_denial=None):
     """(기록 목록, 신호). 신호는 SIGNAL_* 중 하나."""
     parsed = validate_plan(plan)
     try:
@@ -87,10 +88,14 @@ def search_with_signal(conn, *, user_id, save_id, character_id, dataset, plan, q
         raise RagUnavailable() from None
     if dataset not in DATASETS:
         raise RagRequestError()
-    repository = PolicyRepository(conn)
+    repository = (PolicyRepository(conn) if on_policy_denial is None
+                  else PolicyRepository(conn, on_denial=on_policy_denial))
     try:
-        scope = repository.search_scope(user_id=user_id, save_id=save_id,
-                                        character_id=character_id, dataset=dataset)
+        scope_args = dict(user_id=user_id, save_id=save_id,
+                          character_id=character_id, dataset=dataset)
+        if on_policy_denial is not None:
+            scope_args['requested_filters'] = parsed
+        scope = repository.search_scope(**scope_args)
     except (PolicyDenied, PolicyUnavailable):
         raise
     if not scope.disclosures:

@@ -5,9 +5,10 @@ their request transaction. No HTTP route or authentication replacement is added.
 """
 
 from dataclasses import dataclass
+from collections import Counter
 
 from backend.policy.engine import (
-    DATASETS, PolicyContext, decide, project, valid_context,
+    ACCESS_DENIAL_REASONS, DATASETS, PolicyContext, decide, project, valid_context,
 )
 
 
@@ -30,8 +31,9 @@ class SearchScope:
 
 
 class PolicyRepository:
-    def __init__(self, connection):
+    def __init__(self, connection, on_denial=None):
         self.connection = connection
+        self.on_denial = on_denial
 
     def _context(self, cursor, user_id, save_id, character_id, dataset):
         if (type(user_id) is not int or user_id <= 0
@@ -102,17 +104,48 @@ class PolicyRepository:
             records[row['record_id']]['location_ids'].append(row['location_id'])
         return records, permissions
 
-    def search_scope(self, *, user_id, save_id, character_id, dataset='game-data'):
+    @staticmethod
+    def _matches_requested_filters(record, filters):
+        """Only choose audit candidates; never widen the returned search scope."""
+        if not filters:
+            return True
+        for key, field in (('record_types', 'record_type'), ('test_ids', 'test_id')):
+            if filters.get(key) and record[field] not in filters[key]:
+                return False
+        if filters.get('location_ids') and not set(record['location_ids']).intersection(filters['location_ids']):
+            return False
+        related = set(record['involved_ai']) | set(record.get('witness_ai', ())) | set(record.get('overheard_ai', ()))
+        if filters.get('related_ai_ids') and not related.intersection(filters['related_ai_ids']):
+            return False
+        return True
+
+    def search_scope(self, *, user_id, save_id, character_id, dataset='game-data',
+                     requested_filters=None):
         """Return allowed keys/levels only; no summaries or bodies are queried."""
         try:
             with self.connection.cursor() as cursor:
                 context = self._context(cursor, user_id, save_id, character_id, dataset)
                 records, permissions = self._metadata(cursor, context)
                 allowed = []
+                denied = Counter()
+                requested_count = 0
+                requested_allowed = 0
                 for record_id, record in sorted(records.items()):
                     decision = decide(context, record, permissions[record_id])
                     if decision.allowed:
                         allowed.append((record_id, decision.level))
+                    if self._matches_requested_filters(record, requested_filters):
+                        requested_count += 1
+                        if decision.allowed:
+                            requested_allowed += 1
+                        elif decision.reason in ACCESS_DENIAL_REASONS:
+                            denied[decision.reason] += 1
+                # Ordinary filtering is expected. Record only when the entire
+                # requested metadata scope has no accessible records.
+                if (requested_count and not requested_allowed
+                        and sum(denied.values()) == requested_count
+                        and self.on_denial is not None):
+                    self.on_denial(context, 'pre_search', dict(denied))
                 return SearchScope(context.dataset, tuple(allowed))
         except (PolicyDenied, PolicyUnavailable):
             raise
@@ -137,12 +170,15 @@ class PolicyRepository:
                     return []
                 records, permissions = self._metadata(cursor, context, ids)
                 result = []
+                denied = Counter()
                 for record_id in ids:
                     if record_id not in records:
                         continue
                     record, permission = records[record_id], permissions[record_id]
                     decision = decide(context, record, permission)
                     if not decision.allowed:
+                        if decision.reason in ACCESS_DENIAL_REASONS:
+                            denied[decision.reason] += 1
                         continue
                     columns = tuple(field for field in ('summary', 'content')
                                     if field in decision.fields)
@@ -158,6 +194,8 @@ class PolicyRepository:
                     if safe is None:
                         raise PolicyUnavailable('INVALID_DISCLOSED_FIELDS')
                     result.append(safe)
+                if denied and self.on_denial is not None:
+                    self.on_denial(context, 'post_search', dict(denied))
                 return result
         except (PolicyDenied, PolicyUnavailable):
             raise

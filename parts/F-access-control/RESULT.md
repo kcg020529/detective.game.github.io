@@ -16,3 +16,8 @@
 5. `python -m unittest discover -s tests -p test_policy_engine.py -v` 19개 통과함. 확정 18개 역할 조합, 목격·엿듣기·타 AI Thought·Incident 관계, 미래 Day·타인 Save·다른 역할/기록/데이터셋 권한 행, 누락·오류·필드 누출 및 DB 어댑터의 조회 컬럼·권한 변경 후 재검증을 확인함.
    - game-data 302건 × 세 역할 × 여섯 AI의 5,436개 조합에서 공개 여부와 요약/본문 필드 경계를 확인함. 이는 로더가 생성한 권한으로 수행한 순수 함수 테스트이며 실제 DB·LLM 응답 검증은 아님.
    - B 로더 회귀 테스트 `python -m unittest discover -s tests -p test_mariadb_loader.py -q` 20개 통과함. DB 어댑터 테스트는 fake connection이며 실제 MariaDB SQL·Qdrant 사전 필터·채팅 E2E·감사 이벤트 연동은 미검증이다.
+
+## F03 - 정책 거부 감사 연결 (2026-11-02, 선영 작업 브랜치)
+
+- 접근 거부 코드 `FUTURE_DAY`·`ROLE_DENIED`·`AI_SCOPE`를 데이터 오류 코드와 구분했다. `search_scope()`에서 Planner가 지정한 회차·유형·장소·관련 AI 범위의 기록이 전부 이 사유들로 거부될 때만 `pre_search` 집계를 전달하고, `resolve()`는 실제 후보가 거부될 때만 `post_search` 집계를 전달한다. 구조화 필터가 없으면 전체 기록을 대상으로 한다. 일부 기록의 정상 필터링은 감사 이벤트로 만들지 않는다.
+- 감사 콜백은 선택 사항이라 기존 정책·검색 호출의 반환값과 기본 동작은 유지한다. 채팅 RAG 경로에서만 콜백을 전달한다. [계약](../../docs/interfaces/정책_거부_감사_기준.md)은 현재 구현안이며 팀 검토 전 최종 운영 기준으로 간주하지 않는다.

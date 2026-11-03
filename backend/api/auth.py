@@ -65,11 +65,12 @@ def _account(cursor, user_id: int, username: str) -> dict:
 
 
 def _set_cookie(response: Response, token: str) -> None:
+    response.delete_cookie(key=COOKIE_NAME, path="/api/v1")
     response.set_cookie(
         key=COOKIE_NAME,
         value=token,
         max_age=int(SESSION_TTL.total_seconds()),
-        path="/api/v1",
+        path="/",
         httponly=True,
         secure=COOKIE_SECURE,
         samesite=COOKIE_SAMESITE,
@@ -158,9 +159,11 @@ def logout(request: Request, conn: Connection = Depends(get_db, scope='function'
     response = Response(status_code=204)
     response.delete_cookie(
         key=COOKIE_NAME,
-        path="/api/v1",
+        path="/",
         secure=COOKIE_SECURE,
         httponly=True,
         samesite=COOKIE_SAMESITE,
     )
+    # Remove cookies issued by earlier builds with the narrower Path as well.
+    response.delete_cookie(key=COOKIE_NAME, path="/api/v1")
     return response
