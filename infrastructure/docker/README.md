@@ -98,6 +98,41 @@ Input·Output Guard 메타데이터를 MariaDB에서 읽는다. `allow` 질문�
 KERVION 세션과 관리자 권한을 확인한다. 이전 버전의 직접 포트가 남아 있다면
 Grafana 컨테이너를 새 Compose 설정으로 재생성해야 한다.
 
+### Discord 보안 감사 알림 (선택 실행)
+
+Discord 채널에서 웹훅을 만든 뒤 URL을 `infrastructure/docker/.env`의
+`KERVION_DISCORD_WEBHOOK_URL`에 넣는다. URL은 Git이나 채팅에 올리지 않는다.
+저장소의 알림 설정은 최근 1분간의 감사 이벤트를 10초 간격으로 평가한다.
+Input Guard는 `high_risk`를 요청 ID별로, Output Guard는 `level=alert`이거나
+`applied=mask/block`인 이벤트를 이벤트 ID별로 보낸다. 따라서 출력 `log`도
+마스킹·차단이 적용되면 알림 대상이다. 정책 거부는 `policy_denial`을 이벤트
+ID별로 보낸다. 입력 `allow`·`warn`은 Discord 알림 대상이 아니다.
+
+제목은 `INPUT`·`OUTPUT`·`POLICY`로 구분하고, 본문은 판정·처리·신호·요청 ID
+순서로 표시한다. 출력에는 검사 모드와 적용 결과도 포함한다. 입력의
+`role_or_state_override` 유형은 초록색, 그 밖의 고위험 입력과 출력 차단·중단은
+빨간색, 출력 마스킹·관찰 모드와 정책 기록 제외는 주황색이다. 초록색도 입력
+판정은 `high_risk`이며 일반 답변 생성으로 진행하지 않는다. 여백은 본문 위에만
+두며, 첫 줄의 U+2800 공백 문자는 Discord 표시용이므로 제거하지 않는다.
+질문·답변 원문, 비밀값과 계정 정보는 보내지 않는다.
+
+출력의 응답 중단 표시는 `applied`와 탐지 신호를 현재 채팅 어댑터의 처리 규칙에
+대응한 결과이며, 최종 HTTP 상태 자체를 조회하는 것은 아니다. 같은 사건의
+재알림 간격은 30분이며, 전송은 평가 시각과 Grafana 처리에 따라 지연될 수 있다.
+설정을 수정하면 Grafana를 재생성해야 하며, 이미 도착한 메시지는 변경되지 않는다.
+
+`infrastructure/docker`에서 다음처럼 Discord 설정 파일을 추가해 Grafana를
+재생성한다. URL이 비어 있으면 이 명령은 시작 전에 실패한다.
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.grafana.yml -f docker-compose.discord.yml up -d --force-recreate grafana
+```
+
+Grafana의 **Alerting → Alert rules**에서 Input Guard·Output Guard·정책 거부의
+3개 규칙을, **Contact points**에서 각각의 Discord 연락처를 확인한다. 실제
+조건 검증에는 해당 유형의 시험용 감사 이벤트가 필요하다. Discord 설정을 쓰지 않을 때는
+`docker-compose.discord.yml`을 빼고 기존 Compose 명령으로 Grafana를 재생성한다.
+
 두 서비스 모두 `restart: unless-stopped`라 Docker Desktop이 켜지면 자동으로 다시 실행됨 (직접 멈춘 경우 제외).
 
 ## 중지와 삭제
