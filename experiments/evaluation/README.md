@@ -1,5 +1,8 @@
 # Prompt-only(A) 대 Retrieval ACL(B) 비교
 
+선영의 규칙·DeepSeek·결합 **Input Guard 질문 판정 비교**는
+[input_guard/README.md](input_guard/README.md)에 별도로 정리한다.
+
 MASTER 8.1·PARTS N의 비교 실험을 위한 검색 단계 도구. A는 분리된 실험 환경에서 합성 `test-data` 또는 사용자가 실험상 공개를 허용한 가상 `game-data`를 사용한다. 운영 API와 `backend/`에는 연결하지 않는다(`backend`는 이 폴더를 가져오지 않는다). 실제 비밀·개인정보를 사용하지 않으며, 외부 모델 호출 시 시나리오가 외부로 전송될 수 있다.
 
 - `prompt_only.py`: A 경로. 정책 없이 질문과 가까운 기록의 요약·본문을 반환한다. `game-data`는 실험용 명시적 opt-in이 필요하다. `role_instruction()`은 다음 단계(모델 호출)에서 쓸 "말하지 마" 지시문

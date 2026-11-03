@@ -8,7 +8,7 @@
 
 ## 사례와 기준
 
-- `experiments/attacks/input_guard_cases.json`의 현재 30개는 개발자가 고른 회귀 검사 사례다. 정상 12개, 경고 8개, 고위험 10개다.
+- `experiments/attacks/input_guard/cases/input_guard_cases.json`의 현재 30개는 개발자가 고른 회귀 검사 사례다. 정상 12개, 경고 8개, 고위험 10개다.
 - 기대 등급은 플레이어 질문의 의도를 기준으로 사람이 검토한다. `allow`는 정상 추리·설명 질문, `warn`은 제한 기록 요청, `high_risk`는 지침 무시·비밀값 탈취·역할/Day/타인 Save 우회 요청이다.
 - `warn`·`high_risk`는 모두 탐지 후 계속 처리한다. 입력 탐지 성공을 F 정책이나 검색 ACL의 접근 차단 성공으로 세지 않는다.
 - DeepSeek에 보내는 범위는 현재 질문 한 개다. 평가용 일괄 외부 전송은 별도 승인 후 진행한다.
