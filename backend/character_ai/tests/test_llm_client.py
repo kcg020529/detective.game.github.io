@@ -193,7 +193,7 @@ def test_connection_error_is_reported():
         urllib.request.urlopen = original
 
 
-# --- 재시도 ([검토16]) ---
+# --- 재시도 ---
 
 def _sequence(*responses):
     """호출할 때마다 responses를 차례로 돌려주고 호출 횟수를 센다. 예외 객체는 던진다."""

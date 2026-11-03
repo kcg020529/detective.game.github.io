@@ -40,16 +40,16 @@
 
 # D02 - 6개 캐릭터별 프롬프트·페르소나 구현
 
-1. 페르소나 6명을 `backend/character_ai/personas/personas.yaml`에 정의했다 (임시, A02 대기).
+1. 페르소나 6명을 `backend/character_ai/personas/personas.yaml`에 정의했다.
    - 성격, 말투 규칙, 말버릇, 쓰지 않는 표현, 문장 수 상한, 모름·접근 불가·무관 문구, 말투 예시.
-   - 이름은 모두 "[설계 필요]"이고 A02 결과가 나오면 맞춘다.
+   - 이름은 YB-1~6 ID를 그대로 쓴다. `display_name`은 어디에서도 쓰이지 않는다.
 2. 6명이 함께 쓰는 프롬프트 템플릿을 `prompts/actor_system.md.j2`로 만들었다. 렌더링은 `prompt_render.py`.
    - `answer`·`unknown`만 LLM을 부른다. `restricted`·`off_topic`·`injection`은 `fixed_reply()`가 고정 문구를 돌려준다.
    - `unknown` 구획에는 "거절 말투를 쓰지 않는다"는 한 줄이 있다. 권한 때문에 막힌 것(`restricted`)과 구별하려는 것이다.
    - 말버릇은 호출 측이 턴마다 `use_catchphrase`로 켜고 끈다.
 3. 프롬프트 렌더링 mock 테스트 **20건 통과** (LLM 호출 없음).
    - `python3 -I backend/character_ai/tests/test_prompt_render.py`
-4. 캐릭터 ID는 `YB-1`~`YB-6`을 쓴다(2026-10-26 변경). 처음에는 `AI-1`~`AI-6`이었고 번호만 1:1로 옮겼다. 이름·성격은 A02 결과가 나오면 맞춘다.
+4. 캐릭터 ID는 `YB-1`~`YB-6`을 쓴다(2026-10-26 변경). 처음에는 `AI-1`~`AI-6`이었고 번호만 1:1로 옮겼다. 이름은 ID를 그대로 쓴다.
    - 아래 실제 호출 결과(289회 등)는 `AI-n` 표기일 때의 것이다. 바꾼 뒤에는 실제 호출을 다시 하지 않았고, 설명 속 `AI-n`도 같은 캐릭터의 `YB-n`으로 읽으면 된다.
 5. 실제 호출로 말투와 동작을 확인했다 (진행 중).
    - 말버릇: 켠 턴 사용 6명 모두 3/3, 끈 턴 0/7 (4차).
@@ -60,7 +60,10 @@
    - `python3 -I backend/character_ai/tests/test_eval_rules.py`
    - 실행: `python3 -I backend/character_ai/check_llm.py --all-modes --repeat 5 --verbose` (LLM 호출 60회)
    - 단어 목록 항목은 경보용이다. 돌려 말하면 못 잡는다.
-7. 접근 불가·무관·인젝션 신호 연결은 **하지 않았다**. 형식은 `docs/interfaces/`에서 합의해야 한다.
+7. 접근 불가·무관·인젝션 신호 연결 (2026-11-03 코드 기준)
+   - `backend/api/character_adapter.py`가 Planner의 `out_of_scope`를 off_topic으로, 허용 기록 없음 신호를 restricted로 넘긴다. off_topic 응답은 최종 `response_type`이 정해지기 전이라 임시로 `unknown`으로 저장한다.
+   - 인젝션(Input Guard `high_risk` → injection 고정 문구, 저장 유형 restricted)은 `feat/O-admin-audit-embed`의 97142fa에 있고 이 기록 작성 시점에 main에는 합쳐지지 않았다. 로컬에서 같은 인젝션 질문이 `unknown`에서 `restricted`로 바뀌는 것을 확인했다.
+8. 코드·템플릿·테스트의 `[검토N]` 주석을 정리하고 설계 이유는 PLAN·RESULT에만 둔다(2026-11-03). 6명 × 2 mode × 말버릇 3가지의 렌더링 결과가 변경 전과 같음을 확인했고, mock 테스트 3종(렌더링, LLM 클라이언트, 평가 규칙)이 실패 0건이다.
 
 # D 미검증
 
@@ -68,7 +71,7 @@
 - 프롬프트 규칙 2~4번이 실제 인젝션을 얼마나 막는지.
 - 거절 말투 감소가 프롬프트 한 줄 때문인지 (5차 한 번의 결과).
 - 5차 토큰·비용의 플랫폼 대조, 사고(thinking) 토큰 과금 여부.
-- A02 값을 반영한 뒤의 말투, 프론트 연결.
+- 프론트 연결 뒤의 말투.
 
 # D 후속/팀 합의
 
@@ -76,4 +79,4 @@
 - **다듬기:** YB-1·YB-6 거절 표현을 `avoid`에 넣을지, 점검에 거절 표현을 경보로 넣을지, 실제 모름 질문("남이 한 일")을 시험 질문에 넣을지, 반복률을 mode별·문장 단위로 낼지.
 - **YB-6 머뭇거림 (D03):** 서버가 정한 태도로 사실의 확실도를 통제할지.
 - **프론트(찬규):** 역할명(관리자·보안 분석가·개발자)이 MASTER의 prof/grad/std와 다르고, 안내문이 "Day 1~3"인데 MASTER는 Day 1~6이다.
-- **용범(A02)·선영:** 페르소나 값 확정, 신호 형식 합의. `.env.example`이 다른 팀원 파일과 겹치지 않는지 확인.
+- **선영:** 인젝션 연결(97142fa)이 main에 합쳐진 뒤 위 7번을 갱신한다. `.env.example`이 다른 팀원 파일과 겹치지 않는지 확인.

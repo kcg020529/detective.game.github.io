@@ -152,7 +152,7 @@ def test_run_checks_records_attempts_and_counts_failed_tokens():
 
 
 def test_run_checks_fixed_modes_use_fixed_phrases_without_calling_llm():
-    """[검토18][검토19] restricted·off_topic·injection은 LLM을 부르지 않고, 반복 횟수와 상관없이 mode마다 캐릭터당 한 번만 고정 문구를 확인한다."""
+    """restricted·off_topic·injection은 LLM을 부르지 않고, 반복 횟수와 상관없이 mode마다 캐릭터당 한 번만 고정 문구를 확인한다."""
     calls = []
 
     def chat(prompt, question):
@@ -185,7 +185,7 @@ def test_run_checks_flags_a_bad_fixed_phrase():
 
 
 def test_off_topic_and_injection_phrases_must_not_reveal_detection():
-    """[검토19] 감지했다는 사실이나 내부 규칙·권한·기록을 드러내는 말이 고정 문구에 섞이면 점검에 걸린다."""
+    """감지했다는 사실이나 내부 규칙·권한·기록을 드러내는 말이 고정 문구에 섞이면 점검에 걸린다."""
     p = _persona()
     clean = {"reply": "그건 실험이랑 상관없는 얘기예요. 실험 얘기를 해 주세요.", "used": []}
     for mode in ("off_topic", "injection"):

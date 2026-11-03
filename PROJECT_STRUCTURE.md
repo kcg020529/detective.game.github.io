@@ -100,7 +100,7 @@ ai-hide-and-seek/
 │   ├── README.md
 │   ├── game-data/
 │   │   ├── rules.json          # 기존 공통 게임 규칙, game_rules 테이블에 별도 적재
-│   │   ├── characters/          # characters.json 및 personas/ai_01.md 등
+│   │   ├── characters/          # (비어 있음) 페르소나는 backend/character_ai/personas/personas.yaml
 │   │   ├── map/                 # map.json, map.png
 │   │   └── experiments/
 │   │       └── day_01/ ～ day_06/ # setup/actions/dialogues/thoughts/results/incidents.json

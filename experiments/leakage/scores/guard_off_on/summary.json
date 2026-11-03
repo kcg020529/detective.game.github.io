@@ -1,0 +1,1172 @@
+[
+  {
+    "config": "가드레일 OFF",
+    "metric": "초안 유출률",
+    "scope": "all",
+    "key": "전체",
+    "hit": 72,
+    "total": 143,
+    "rate": 0.5035
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "초안 유출률",
+    "scope": "day",
+    "key": "2",
+    "hit": 34,
+    "total": 51,
+    "rate": 0.6667
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "초안 유출률",
+    "scope": "day",
+    "key": "4",
+    "hit": 22,
+    "total": 48,
+    "rate": 0.4583
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "초안 유출률",
+    "scope": "day",
+    "key": "6",
+    "hit": 16,
+    "total": 44,
+    "rate": 0.3636
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "denied_incident",
+    "hit": 3,
+    "total": 5,
+    "rate": 0.6
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "denied_thought",
+    "hit": 16,
+    "total": 25,
+    "rate": 0.64
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "denied_thought_claim",
+    "hit": 7,
+    "total": 15,
+    "rate": 0.4667
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "future_day",
+    "hit": 8,
+    "total": 8,
+    "rate": 1.0
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "injection",
+    "hit": 0,
+    "total": 27,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 4,
+    "total": 21,
+    "rate": 0.1905
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 14,
+    "total": 21,
+    "rate": 0.6667
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "withheld_result",
+    "hit": 20,
+    "total": 21,
+    "rate": 0.9524
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "유출 초안 차단율",
+    "scope": "all",
+    "key": "전체",
+    "hit": 0,
+    "total": 72,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "유출 초안 차단율",
+    "scope": "day",
+    "key": "2",
+    "hit": 0,
+    "total": 34,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "유출 초안 차단율",
+    "scope": "day",
+    "key": "4",
+    "hit": 0,
+    "total": 22,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "유출 초안 차단율",
+    "scope": "day",
+    "key": "6",
+    "hit": 0,
+    "total": 16,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "denied_incident",
+    "hit": 0,
+    "total": 3,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "denied_thought",
+    "hit": 0,
+    "total": 16,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "denied_thought_claim",
+    "hit": 0,
+    "total": 7,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "future_day",
+    "hit": 0,
+    "total": 8,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 0,
+    "total": 4,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 0,
+    "total": 14,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "withheld_result",
+    "hit": 0,
+    "total": 20,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "최종 답변 유출률",
+    "scope": "all",
+    "key": "전체",
+    "hit": 72,
+    "total": 143,
+    "rate": 0.5035
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "최종 답변 유출률",
+    "scope": "day",
+    "key": "2",
+    "hit": 34,
+    "total": 51,
+    "rate": 0.6667
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "최종 답변 유출률",
+    "scope": "day",
+    "key": "4",
+    "hit": 22,
+    "total": 48,
+    "rate": 0.4583
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "최종 답변 유출률",
+    "scope": "day",
+    "key": "6",
+    "hit": 16,
+    "total": 44,
+    "rate": 0.3636
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "denied_incident",
+    "hit": 3,
+    "total": 5,
+    "rate": 0.6
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "denied_thought",
+    "hit": 16,
+    "total": 25,
+    "rate": 0.64
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "denied_thought_claim",
+    "hit": 7,
+    "total": 15,
+    "rate": 0.4667
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "future_day",
+    "hit": 8,
+    "total": 8,
+    "rate": 1.0
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "injection",
+    "hit": 0,
+    "total": 27,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 4,
+    "total": 21,
+    "rate": 0.1905
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 14,
+    "total": 21,
+    "rate": 0.6667
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "withheld_result",
+    "hit": 20,
+    "total": 21,
+    "rate": 0.9524
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "all",
+    "key": "전체",
+    "hit": 34,
+    "total": 80,
+    "rate": 0.425
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "day",
+    "key": "2",
+    "hit": 17,
+    "total": 30,
+    "rate": 0.5667
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "day",
+    "key": "4",
+    "hit": 12,
+    "total": 27,
+    "rate": 0.4444
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "day",
+    "key": "6",
+    "hit": 5,
+    "total": 23,
+    "rate": 0.2174
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "category",
+    "key": "denied_incident",
+    "hit": 3,
+    "total": 5,
+    "rate": 0.6
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "category",
+    "key": "denied_thought",
+    "hit": 16,
+    "total": 25,
+    "rate": 0.64
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "category",
+    "key": "denied_thought_claim",
+    "hit": 7,
+    "total": 15,
+    "rate": 0.4667
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "category",
+    "key": "future_day",
+    "hit": 8,
+    "total": 8,
+    "rate": 1.0
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "category",
+    "key": "injection",
+    "hit": 0,
+    "total": 27,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "정상 질문 정답률",
+    "scope": "all",
+    "key": "전체",
+    "hit": 21,
+    "total": 63,
+    "rate": 0.3333
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "정상 질문 정답률",
+    "scope": "day",
+    "key": "2",
+    "hit": 4,
+    "total": 21,
+    "rate": 0.1905
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "정상 질문 정답률",
+    "scope": "day",
+    "key": "4",
+    "hit": 10,
+    "total": 21,
+    "rate": 0.4762
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "정상 질문 정답률",
+    "scope": "day",
+    "key": "6",
+    "hit": 7,
+    "total": 21,
+    "rate": 0.3333
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "정상 질문 정답률",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 13,
+    "total": 21,
+    "rate": 0.619
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "정상 질문 정답률",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 7,
+    "total": 21,
+    "rate": 0.3333
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "정상 질문 정답률",
+    "scope": "category",
+    "key": "withheld_result",
+    "hit": 1,
+    "total": 21,
+    "rate": 0.0476
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "all",
+    "key": "전체",
+    "hit": 2,
+    "total": 63,
+    "rate": 0.0317
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "day",
+    "key": "2",
+    "hit": 0,
+    "total": 21,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "day",
+    "key": "4",
+    "hit": 1,
+    "total": 21,
+    "rate": 0.0476
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "day",
+    "key": "6",
+    "hit": 1,
+    "total": 21,
+    "rate": 0.0476
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 2,
+    "total": 21,
+    "rate": 0.0952
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 0,
+    "total": 21,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "category",
+    "key": "withheld_result",
+    "hit": 0,
+    "total": 21,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "정상 응답 오차단율",
+    "scope": "all",
+    "key": "전체",
+    "hit": 2,
+    "total": 25,
+    "rate": 0.08
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "정상 응답 오차단율",
+    "scope": "day",
+    "key": "2",
+    "hit": 0,
+    "total": 4,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "정상 응답 오차단율",
+    "scope": "day",
+    "key": "4",
+    "hit": 1,
+    "total": 11,
+    "rate": 0.0909
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "정상 응답 오차단율",
+    "scope": "day",
+    "key": "6",
+    "hit": 1,
+    "total": 10,
+    "rate": 0.1
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "정상 응답 오차단율",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 2,
+    "total": 17,
+    "rate": 0.1176
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "정상 응답 오차단율",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 0,
+    "total": 7,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 OFF",
+    "metric": "정상 응답 오차단율",
+    "scope": "category",
+    "key": "withheld_result",
+    "hit": 0,
+    "total": 1,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "초안 유출률",
+    "scope": "all",
+    "key": "전체",
+    "hit": 72,
+    "total": 140,
+    "rate": 0.5143
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "초안 유출률",
+    "scope": "day",
+    "key": "2",
+    "hit": 34,
+    "total": 51,
+    "rate": 0.6667
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "초안 유출률",
+    "scope": "day",
+    "key": "4",
+    "hit": 22,
+    "total": 46,
+    "rate": 0.4783
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "초안 유출률",
+    "scope": "day",
+    "key": "6",
+    "hit": 16,
+    "total": 43,
+    "rate": 0.3721
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "denied_incident",
+    "hit": 3,
+    "total": 5,
+    "rate": 0.6
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "denied_thought",
+    "hit": 16,
+    "total": 25,
+    "rate": 0.64
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "denied_thought_claim",
+    "hit": 7,
+    "total": 15,
+    "rate": 0.4667
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "future_day",
+    "hit": 8,
+    "total": 8,
+    "rate": 1.0
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "injection",
+    "hit": 0,
+    "total": 25,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 4,
+    "total": 20,
+    "rate": 0.2
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 14,
+    "total": 21,
+    "rate": 0.6667
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "초안 유출률",
+    "scope": "category",
+    "key": "withheld_result",
+    "hit": 20,
+    "total": 21,
+    "rate": 0.9524
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "유출 초안 차단율",
+    "scope": "all",
+    "key": "전체",
+    "hit": 51,
+    "total": 72,
+    "rate": 0.7083
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "유출 초안 차단율",
+    "scope": "day",
+    "key": "2",
+    "hit": 29,
+    "total": 34,
+    "rate": 0.8529
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "유출 초안 차단율",
+    "scope": "day",
+    "key": "4",
+    "hit": 10,
+    "total": 22,
+    "rate": 0.4545
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "유출 초안 차단율",
+    "scope": "day",
+    "key": "6",
+    "hit": 12,
+    "total": 16,
+    "rate": 0.75
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "denied_incident",
+    "hit": 3,
+    "total": 3,
+    "rate": 1.0
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "denied_thought",
+    "hit": 15,
+    "total": 16,
+    "rate": 0.9375
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "denied_thought_claim",
+    "hit": 7,
+    "total": 7,
+    "rate": 1.0
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "future_day",
+    "hit": 7,
+    "total": 8,
+    "rate": 0.875
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 4,
+    "total": 4,
+    "rate": 1.0
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 10,
+    "total": 14,
+    "rate": 0.7143
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "유출 초안 차단율",
+    "scope": "category",
+    "key": "withheld_result",
+    "hit": 5,
+    "total": 20,
+    "rate": 0.25
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "최종 답변 유출률",
+    "scope": "all",
+    "key": "전체",
+    "hit": 21,
+    "total": 140,
+    "rate": 0.15
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "최종 답변 유출률",
+    "scope": "day",
+    "key": "2",
+    "hit": 5,
+    "total": 51,
+    "rate": 0.098
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "최종 답변 유출률",
+    "scope": "day",
+    "key": "4",
+    "hit": 12,
+    "total": 46,
+    "rate": 0.2609
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "최종 답변 유출률",
+    "scope": "day",
+    "key": "6",
+    "hit": 4,
+    "total": 43,
+    "rate": 0.093
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "denied_incident",
+    "hit": 0,
+    "total": 5,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "denied_thought",
+    "hit": 1,
+    "total": 25,
+    "rate": 0.04
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "denied_thought_claim",
+    "hit": 0,
+    "total": 15,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "future_day",
+    "hit": 1,
+    "total": 8,
+    "rate": 0.125
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "injection",
+    "hit": 0,
+    "total": 25,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 0,
+    "total": 20,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 4,
+    "total": 21,
+    "rate": 0.1905
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "최종 답변 유출률",
+    "scope": "category",
+    "key": "withheld_result",
+    "hit": 15,
+    "total": 21,
+    "rate": 0.7143
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "all",
+    "key": "전체",
+    "hit": 2,
+    "total": 78,
+    "rate": 0.0256
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "day",
+    "key": "2",
+    "hit": 0,
+    "total": 30,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "day",
+    "key": "4",
+    "hit": 2,
+    "total": 26,
+    "rate": 0.0769
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "day",
+    "key": "6",
+    "hit": 0,
+    "total": 22,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "category",
+    "key": "denied_incident",
+    "hit": 0,
+    "total": 5,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "category",
+    "key": "denied_thought",
+    "hit": 1,
+    "total": 25,
+    "rate": 0.04
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "category",
+    "key": "denied_thought_claim",
+    "hit": 0,
+    "total": 15,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "category",
+    "key": "future_day",
+    "hit": 1,
+    "total": 8,
+    "rate": 0.125
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "공격 질문 유출 성공률",
+    "scope": "category",
+    "key": "injection",
+    "hit": 0,
+    "total": 25,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "정상 질문 정답률",
+    "scope": "all",
+    "key": "전체",
+    "hit": 12,
+    "total": 62,
+    "rate": 0.1935
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "정상 질문 정답률",
+    "scope": "day",
+    "key": "2",
+    "hit": 3,
+    "total": 21,
+    "rate": 0.1429
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "정상 질문 정답률",
+    "scope": "day",
+    "key": "4",
+    "hit": 7,
+    "total": 20,
+    "rate": 0.35
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "정상 질문 정답률",
+    "scope": "day",
+    "key": "6",
+    "hit": 2,
+    "total": 21,
+    "rate": 0.0952
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "정상 질문 정답률",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 10,
+    "total": 20,
+    "rate": 0.5
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "정상 질문 정답률",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 2,
+    "total": 21,
+    "rate": 0.0952
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "정상 질문 정답률",
+    "scope": "category",
+    "key": "withheld_result",
+    "hit": 0,
+    "total": 21,
+    "rate": 0.0
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "all",
+    "key": "전체",
+    "hit": 29,
+    "total": 62,
+    "rate": 0.4677
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "day",
+    "key": "2",
+    "hit": 13,
+    "total": 21,
+    "rate": 0.619
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "day",
+    "key": "4",
+    "hit": 3,
+    "total": 20,
+    "rate": 0.15
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "day",
+    "key": "6",
+    "hit": 13,
+    "total": 21,
+    "rate": 0.619
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 8,
+    "total": 20,
+    "rate": 0.4
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 15,
+    "total": 21,
+    "rate": 0.7143
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "정상 질문 막힘 비율(참고)",
+    "scope": "category",
+    "key": "withheld_result",
+    "hit": 6,
+    "total": 21,
+    "rate": 0.2857
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "정상 응답 오차단율",
+    "scope": "all",
+    "key": "전체",
+    "hit": 10,
+    "total": 24,
+    "rate": 0.4167
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "정상 응답 오차단율",
+    "scope": "day",
+    "key": "2",
+    "hit": 1,
+    "total": 4,
+    "rate": 0.25
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "정상 응답 오차단율",
+    "scope": "day",
+    "key": "4",
+    "hit": 3,
+    "total": 10,
+    "rate": 0.3
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "정상 응답 오차단율",
+    "scope": "day",
+    "key": "6",
+    "hit": 6,
+    "total": 10,
+    "rate": 0.6
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "정상 응답 오차단율",
+    "scope": "category",
+    "key": "withheld_action",
+    "hit": 4,
+    "total": 16,
+    "rate": 0.25
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "정상 응답 오차단율",
+    "scope": "category",
+    "key": "withheld_dialogue",
+    "hit": 5,
+    "total": 7,
+    "rate": 0.7143
+  },
+  {
+    "config": "가드레일 ON",
+    "metric": "정상 응답 오차단율",
+    "scope": "category",
+    "key": "withheld_result",
+    "hit": 1,
+    "total": 1,
+    "rate": 1.0
+  }
+]

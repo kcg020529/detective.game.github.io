@@ -12,7 +12,7 @@ AI 응답은 매번 달라서 한 번 본 것으로는 판단하기 어렵다. -
 
 --repeat가 2 이상이면 (1) 질문을 아래 DEFAULT_QUESTIONS의 5가지 표현으로 돌려 가며 보내고(예시 질문과 우연히 같아서 생기는 착시를 줄이려고),
 (2) answer mode에서는 말버릇 사용 지시를 켬/끔으로 번갈아 넣어(use_catchphrase) 지시를 따르는지 본다.
-이 패턴은 검사용이다. 실제로 누가 얼마나 자주 켤지는 정하지 않았다. (prompt_render.py의 [검토15])
+이 패턴은 검사용이다. 실제로 누가 얼마나 자주 켤지는 정하지 않았다.
 """
 import argparse
 import sys
@@ -39,7 +39,7 @@ DEFAULT_QUESTIONS = (
     "오전에 어디서 뭐 하고 있었는지 기억나?",
 )
 REQUIRED_IN_ANSWER = ("A구역",)  # 위 질문과 시험용 기억 m1에 맞춘 값이다. 질문을 바꾸면 이 점검은 의미가 없을 수 있다.
-RELEVANT_IDS = ("m1",)           # 위 질문(오전 위치)에 쓰는 것이 맞는 기억. m2(오후)를 쓰면 무관한 기억을 쓴 것이다. [검토17]
+RELEVANT_IDS = ("m1",)           # 위 질문(오전 위치)에 쓰는 것이 맞는 기억. m2(오후)를 쓰면 무관한 기억을 쓴 것이다.
 CATCH_EVERY = 2                  # --repeat 2 이상일 때 answer mode에서 이 간격으로 말버릇 사용을 켠다 (0, 2, 4번째 호출)
 MAX_CONSECUTIVE_ERRORS = 3       # 연속으로 이만큼 실패하면 키나 잔액 문제로 보고 멈춘다
 MAX_CALLS_WITHOUT_YES = 100
@@ -65,7 +65,7 @@ def run_checks(persona_list, modes, repeat, questions, chat=chat_json, memory=No
         persona = get_persona(pid)
         for mode in modes:
             if mode in FIXED_MODES:
-                # [검토18] LLM을 부르지 않는 고정 문구다. 매번 같으므로 한 번만 확인하고, 같은 규칙으로 점검한다.
+                # LLM을 부르지 않는 고정 문구다. 매번 같으므로 한 번만 확인하고, 같은 규칙으로 점검한다.
                 fixed = fixed_reply(pid, mode)
                 results.append({"persona": pid, "mode": mode, "run": 1, "question": FIXED_NOTE[mode], "catch": None,
                                 "reply": fixed["reply"], "used": fixed["used"], "model": "고정 문구(LLM 호출 없음)", "usage": {},
@@ -214,7 +214,7 @@ def main():
     personas = [args.persona] if args.persona else persona_ids()
     modes = MODES if args.all_modes else (args.mode,)
     llm_modes = [m for m in modes if m not in FIXED_MODES]
-    planned = len(personas) * len(llm_modes) * args.repeat  # 고정 문구 mode는 LLM을 부르지 않는다 ([검토18][검토19])
+    planned = len(personas) * len(llm_modes) * args.repeat  # 고정 문구 mode는 LLM을 부르지 않는다
     if planned > MAX_CALLS_WITHOUT_YES and not args.yes:
         ap.error(f"호출이 {planned}회 예정입니다. 비용을 확인했다면 --yes를 붙여 다시 실행하세요.")
     if args.repeat > 1:
