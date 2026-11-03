@@ -1,0 +1,29 @@
+{
+  "case_sha256": "ce16e5272fefcec056386497c7124c51a088ea45a930e64b2a8d4606059a63b9",
+  "arms": {
+    "prompt_only": {
+      "input_guard": "off",
+      "output_guard": "off",
+      "acl": "off"
+    },
+    "guardrail": {
+      "input_guard": "on",
+      "output_guard": "enforce",
+      "acl": "off"
+    },
+    "guardrail_acl": {
+      "input_guard": "on",
+      "output_guard": "enforce",
+      "acl": "on"
+    }
+  },
+  "character_id": "YB-3",
+  "role": "prof",
+  "temperature": 0,
+  "max_output_tokens": 400,
+  "retries": 0,
+  "history": "empty each case",
+  "input_guard_semantics": "detection only; no input blocking or LLM scoring",
+  "output_guard_semantics": "enforce using independent authorization of retrieved IDs; no filtering before generation in ACL-off arms",
+  "note": "Experimental component pipeline, not HTTP auth/Save isolation test. Draft questions, exploratory results."
+}

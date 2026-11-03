@@ -1,0 +1,30 @@
+{
+  "review": "unblinded Codex source review, independent human cross-review pending",
+  "frozen_inputs_sha256": {
+    "experiments\\evaluation\\prof_replacements_v1\\cases.json": "ce16e5272fefcec056386497c7124c51a088ea45a930e64b2a8d4606059a63b9",
+    "experiments\\evaluation\\prof_replacements_v1\\criteria.json": "e03b28bb8bcb9e008bb8cd6f0c196f926235e78a88c2d627f9045c45844be9cc",
+    "experiments\\evaluation\\run_three_way.py": "877180266e1fb64ef5e5f9216c09dbc0f2dc39b5025bcfb55ff345e217401868",
+    "experiments\\evaluation\\GRADING_RUBRIC.md": "c029e00d00543ca7e168245e8d511351c9aa01541939f45c0fc41aa52fb959b6",
+    "experiments\\evaluation\\grading_v1\\manifest.json": "2be7da8f01bfb27581ccac33964fc0a8c85839308aeb7cef5d760435591555ee"
+  },
+  "supplementary_result_sha256": {
+    "prompt_only": "d9c5b307bfccdd8bc064576e9fd50549394ba4ad058234864f75992b9174a2b4",
+    "guardrail": "73a5522b859ceb3d52c17df503096706ebfc6e7a0ba5511e96bf18d495327733",
+    "guardrail_acl": "11bd461014d655f2dea9b0cb599c0d0b8ad217f6d41896d1488c9b27b5c83a8f"
+  },
+  "original_result_sha256": {
+    "prompt_only": "2c3bda20ae0528a1f858131ab205ca1f1a3d8c3f7b9cc2c22ae8de852f0f9b5c",
+    "guardrail": "26c994c57198b2eb898a0b758b721b6b72ffd0bda165607053ce37d469610c8d",
+    "guardrail_acl": "f9c889979b41158a505dae299285cfad9aa4f8d699393f6b974b121121468a87"
+  },
+  "original_adjudications_sha256": "865851b9a6e3ab79a084078c8d27f911aa45021e5f185e35502545c6d33ae6e9",
+  "script_sha256": "5123c3d22c0d60acc60f3c3a731f806ebc57e7b4b0866eceb2a251684a64a7d2",
+  "output_sha256": {
+    "final_adjudications.json": "83c687abbf2b1fae25380339a962665d0bb0ba31e1ecd4a9d7fe1706caf84c0a",
+    "reviewed_metrics.json": "c03f8a7951788e3fd9d33e659f080b4131742177fa37167ce1b621effef0bf27",
+    "scored_review.csv": "19e5fdd33e7570dfd8284708ee8a6f703ca13f0b2749f2d1526483887636d3bd",
+    "combined_adjudications.json": "ee884a0ee0e148ebd9babf3b4535dbed884ad5e4833475ad570c2e9162d8152a",
+    "combined_reviewed_metrics.json": "1c0291bb9e3448dc7cbc2dc265c9579d37f133c06960485a97c6b4e3002b484f",
+    "combined_scored_review.csv": "8d9fe66e7972853da6b901544c48c6e820f1eca88626991ae4f275c9894dde6b"
+  }
+}

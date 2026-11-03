@@ -1,0 +1,46 @@
+{
+  "status": "interrupted_insufficient_provider_balance",
+  "timestamp_utc": "2026-11-03T00:19:43.278524+00:00",
+  "evidence": {
+    "provider": "DeepSeek",
+    "chat_http_status": 402,
+    "error_type": "insufficient_balance_error",
+    "balance_api_http_status": 200,
+    "balance_api_reported_usd": "0.05",
+    "balance_api_is_available": true
+  },
+  "attempted": 361,
+  "unattempted": 89,
+  "common_completed_cases": 100,
+  "arms": {
+    "prompt_only": {
+      "recorded": 144,
+      "unattempted": 6,
+      "statuses": {
+        "error": 4,
+        "ok": 140
+      }
+    },
+    "guardrail": {
+      "recorded": 111,
+      "unattempted": 39,
+      "statuses": {
+        "error": 5,
+        "ok": 106
+      }
+    },
+    "guardrail_acl": {
+      "recorded": 106,
+      "unattempted": 44,
+      "statuses": {
+        "error": 4,
+        "guard_rejected": 1,
+        "ok": 101
+      }
+    }
+  },
+  "generation_resume": "python -m experiments.evaluation.run_three_way --name std_yb3_main_20261103 --role std --confirm-paid",
+  "scoring_resume": "python -m experiments.evaluation.judge_three_way --name std_yb3_main_20261103 --role std --watch --confirm-paid",
+  "recheck_after_generation": "python -m experiments.evaluation.recheck_judge --name std_yb3_main_20261103 --role std --confirm-paid",
+  "note": "Recorded attempts are never overwritten or silently retried. Failed first-pass judges remain in raw files; use recheck records and explicit source review before reporting content metrics."
+}

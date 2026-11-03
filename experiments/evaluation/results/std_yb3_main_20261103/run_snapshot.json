@@ -1,0 +1,16 @@
+{
+  "timestamp_utc": "2026-11-03T00:11:58.936586+00:00",
+  "role": "std",
+  "character": "YB-3",
+  "source_policy_check": "build_grading_keys --check passed",
+  "input_sha256": {
+    "experiments/evaluation/run_three_way.py": "877180266e1fb64ef5e5f9216c09dbc0f2dc39b5025bcfb55ff345e217401868",
+    "experiments/evaluation/judge_three_way.py": "2e486d77cda75a96515cb02f325a4c6f17d0b801e55f421b6b7d3b06d9bc956e",
+    "experiments/evaluation/GRADING_RUBRIC.md": "c029e00d00543ca7e168245e8d511351c9aa01541939f45c0fc41aa52fb959b6",
+    "experiments/evaluation/questions_game_data_v3_yb3/std.json": "49eb6f6b061d5a93100e9120cd5aeb84ec6157847189393faf4a83099afdd0e8",
+    "experiments/evaluation/grading_v1/manifest.json": "2be7da8f01bfb27581ccac33964fc0a8c85839308aeb7cef5d760435591555ee",
+    "experiments/evaluation/grading_v1/std_keys.json": "f9a452def68108b4e6ab507218ba18464ee7b4f5ded5b0424386bb2e5ac4d7fe",
+    "experiments/evaluation/grading_v1/scope_snapshot.json": "e7be6f208b45dd51b3dc618fc4d585e76e2ce0c67074ae236f48405e2e1d81b1",
+    "experiments/evaluation/grading_v1/source_snapshot.json": "73922724b72c6106c762367a742c973adcbbc60a44c62a81138bd46bcc602b71"
+  }
+}

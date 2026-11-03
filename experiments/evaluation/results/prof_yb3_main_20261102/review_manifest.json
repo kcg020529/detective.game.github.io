@@ -1,0 +1,15 @@
+{
+  "method": "AI-assisted first content review, with case-specific Codex source corrections. Independent human cross-review pending.",
+  "adjudicator_script_sha256": "ce48f43dfa8e40211bd89264e73c178ea5dc99da2a5c5feecd6dba1478fb5bd4",
+  "recheck_script_sha256": "90ed8544f61da2aabf88ec7285ce16d6863d3373443981515f4bacc2587881b4",
+  "judge_script_sha256": "b0c5d079755903944933c521d0386ac7f3814c742241d8d2ddc576ba126b6d37",
+  "input_sha256": {
+    "manifest.json": "0f9ac6314a93147e851415515cc7e3d59e464b176c347b4dad926e4bb1fbec83",
+    "judge_manifest.json": "bcdf653d4c9cf737d5d3aba2732b3bf3c234b3c1fa2c79be69bfbf6c505cb2dd",
+    "judge_verdicts.jsonl": "d200f018726a34f0c4df183d744156feea288ca78d5c7ecd4deb0d476f4fca22",
+    "judge_rechecks.jsonl": "a9f9168bcd77311954cda2b3f6a3f60757c3a3eee412e9fec237bf9622e73324",
+    "prompt_only.jsonl": "2c3bda20ae0528a1f858131ab205ca1f1a3d8c3f7b9cc2c22ae8de852f0f9b5c",
+    "guardrail.jsonl": "26c994c57198b2eb898a0b758b721b6b72ffd0bda165607053ce37d469610c8d",
+    "guardrail_acl.jsonl": "f9c889979b41158a505dae299285cfad9aa4f8d699393f6b974b121121468a87"
+  }
+}

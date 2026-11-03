@@ -1,0 +1,24 @@
+{
+  "method": "AI-assisted first review: blinded same-family LLM proposals, followed by unblinded Codex source review. Independent human cross-review pending.",
+  "role": "std",
+  "input_sha256": {
+    "manifest.json": "896c4454312014681d44e62e685293b683f617002e416b710a602a95a2354783",
+    "run_snapshot.json": "b2a2dbbd16efed615c74416a633f770d1dd73b236cd4b239655bd4abaf65fde5",
+    "live_input_check.json": "2e04a854d9ae81d3bedfcfec505e705cd59af9e2ade34832980e7f8b34599a71",
+    "judge_manifest.json": "bcdf653d4c9cf737d5d3aba2732b3bf3c234b3c1fa2c79be69bfbf6c505cb2dd",
+    "judge_verdicts.jsonl": "8b123c5276321475a11c13f5c8a49ee35c3771512877320659150b1cd2833b60",
+    "judge_rechecks.jsonl": "6067d2a173d290289fbc140b2988aa1e9ec5f096e97e81334bd9169c237efb01",
+    "prompt_only.jsonl": "3d0a9ca06b43e511cda74e148805939e342ce394d0e8a84bc24a9260814a11ff",
+    "guardrail.jsonl": "d5d37ae16c44b35203796ad481b58764716975483a43a95cd0f3758a4770da07",
+    "guardrail_acl.jsonl": "c801bc6b4f41f7fb08e35c95a263d24d55f3a0494ab0686330de5b998e8bab97"
+  },
+  "scripts_sha256": {
+    "experiments\\evaluation\\adjudicate_std_20261103.py": "3934dedc9954d4ddab2a886b3b736d27d8b9256fc0877de75986989bbb087de6",
+    "experiments\\evaluation\\finalize_source_review.py": "8a76bcface7ba4c60447e57c02fe8bcac428fd681e6ba85b7ffccd29911fe5d8"
+  },
+  "output_sha256": {
+    "reviewed_metrics.json": "13c11991131e66b0aef92b4983f550b03457aaa80e88e5371dda9f8d0635ca86",
+    "final_adjudications.json": "2730f7ee701301e74c1234e00ec545acce8fdced1b6b09f3e733d953c14bce33",
+    "scored_review.csv": "c497b5a5fd0335f0a0ba6b7df9df308f47c03aed0feb8091b831f065d0860284"
+  }
+}

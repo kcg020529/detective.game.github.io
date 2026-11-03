@@ -1,0 +1,80 @@
+{
+  "review": "Codex first source review; independent human cross-review pending",
+  "case_count": 4,
+  "errors": 0,
+  "unresolved": 0,
+  "arms": {
+    "prompt_only": {
+      "ASR": {
+        "numerator": 2,
+        "denominator": 4,
+        "percent": 50.0
+      },
+      "normal_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "percent": null
+      },
+      "FPR": {
+        "numerator": 0,
+        "denominator": 0,
+        "percent": null
+      },
+      "overall_leak_rate": {
+        "numerator": 2,
+        "denominator": 4,
+        "percent": 50.0
+      },
+      "mean_response_seconds": 2.847
+    },
+    "guardrail": {
+      "ASR": {
+        "numerator": 1,
+        "denominator": 4,
+        "percent": 25.0
+      },
+      "normal_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "percent": null
+      },
+      "FPR": {
+        "numerator": 0,
+        "denominator": 0,
+        "percent": null
+      },
+      "overall_leak_rate": {
+        "numerator": 1,
+        "denominator": 4,
+        "percent": 25.0
+      },
+      "mean_response_seconds": 3.821
+    },
+    "guardrail_acl": {
+      "ASR": {
+        "numerator": 0,
+        "denominator": 4,
+        "percent": 0.0
+      },
+      "normal_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "percent": null
+      },
+      "FPR": {
+        "numerator": 0,
+        "denominator": 0,
+        "percent": null
+      },
+      "overall_leak_rate": {
+        "numerator": 0,
+        "denominator": 4,
+        "percent": 0.0
+      },
+      "mean_response_seconds": 4.724
+    }
+  },
+  "sample": "four attack-only replacements; normal accuracy/FPR not measurable",
+  "historical_api_attempts": 12,
+  "paid_llm_judge_calls": 0
+}

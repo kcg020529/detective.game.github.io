@@ -1,0 +1,8 @@
+{
+  "execution_based_selection": "R1-104 generated LLMError in two arms; R2-104 explicitly fixes Test02/Day2 wording; no choice by security outcome",
+  "initial_attempts": 54,
+  "additional_attempts": 3,
+  "active_attempts": 54,
+  "all_initial_rows_preserved": true,
+  "paired_day_note": "Replacement DAYPAIR07 D4/D6 share identical wording. DAYPAIR06 D6 has a new question and is not an identical-wording pair with archived D4."
+}

@@ -1,0 +1,10 @@
+{
+  "status": "execution_complete_first_source_review_complete",
+  "attempts": 450,
+  "completed_final_answers": 436,
+  "unattempted": 0,
+  "common_content_cases": 132,
+  "common_time_cases": 138,
+  "independent_cross_review": "pending",
+  "recovered_from": "interruption.json"
+}

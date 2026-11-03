@@ -1,0 +1,1029 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>캐치 용범 · 발표 디자인 초안</title>
+<style>
+:root{--night:#121a24;--ink:#172429;--fog:#cdd6d5;--paper:#e7ecea;--sage:#c3cec9;--amber:#f0a63a;--green:#315b55;--muted:#667a7d;--line:#b6c2bd;--mono:Consolas,'Courier New',monospace}
+*{box-sizing:border-box}body{margin:0;background:#080e14;color:var(--paper);font-family:'Pretendard Variable',Pretendard,'Malgun Gothic',sans-serif;word-break:keep-all}button,a{-webkit-tap-highlight-color:transparent}button:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:5px}button{font:inherit;cursor:pointer}header.viewer{height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;color:#a7b3b9;font-size:12px;letter-spacing:.06em;border-bottom:1px solid #ffffff12}header.viewer b{color:#e7ecea;font-weight:600}main.deck{height:calc(100dvh - 94px);padding:20px 28px;display:flex;align-items:center;justify-content:center}.page{display:none;position:relative;width:min(100%,calc((100dvh - 134px)*16/9));aspect-ratio:16/9;overflow:hidden;box-shadow:0 18px 65px #0006}.page.active{display:block}.slide{position:absolute;width:1600px;height:900px;transform:scale(var(--scale,1));transform-origin:top left;background:var(--paper);color:var(--ink);padding:66px 84px;overflow:hidden}.dark{background:var(--night);color:var(--paper)}.eyebrow{font:20px var(--mono);letter-spacing:.14em;display:flex;align-items:center;gap:14px;color:var(--muted);margin:0 0 30px}.dark .eyebrow{color:#a7b3b9}.eyebrow:before{content:'';width:10px;height:10px;background:var(--amber)}h1,h2,h3,p{margin:0}h2{font-size:64px;font-weight:800;letter-spacing:-.045em;line-height:1.2}p{font-size:28px;line-height:1.65}.muted{color:var(--muted)}.dark .muted{color:#a7b3b9}.foot{position:absolute;left:84px;right:84px;bottom:35px;padding-top:17px;border-top:1px solid var(--line);display:flex;justify-content:space-between;color:var(--muted);font:17px var(--mono)}.dark .foot{border-color:#71858b44;color:#93a5a9}.amber{color:var(--amber)}.big{font-weight:800;letter-spacing:-.055em}.cover .eyebrow{margin-top:18px}.cover h1{font-size:148px;line-height:1.08;position:relative;z-index:1;letter-spacing:-.06em}.cover .subtitle{font-size:36px;line-height:1.6;margin-top:28px;color:#c3cec9}.cover .cover-art{position:absolute;width:780px;height:900px;right:10px;top:0;overflow:hidden}.cover-art canvas{width:780px;height:901px;image-rendering:pixelated;display:block;mask-image:linear-gradient(to right,transparent 0%,#000 15%,#000 92%,transparent 100%)}.cover .cover-info{position:absolute;left:88px;bottom:136px;font:20px var(--mono);line-height:1.9;color:#91a9ac}.cover .cover-info strong{color:var(--amber);font-weight:400}.cover .cover-divider{width:52px;height:5px;background:var(--amber);margin:30px 0 0}.cover .subtitle,.cover h1{max-width:850px}.section-count{position:absolute;right:87px;top:64px;font:20px var(--mono);color:var(--muted)}.dark .section-count{color:#91a9ac}.intro-grid{display:grid;grid-template-columns:1.12fr 1fr;gap:94px;margin-top:44px}.intro-grid h2{font-size:60px;line-height:1.3}.intro-grid .description{margin-top:32px;max-width:680px;font-size:27px}.intro-stats{display:flex;gap:70px;margin-top:30px}.stat b{display:block;font:700 75px var(--mono);letter-spacing:-.07em;line-height:1.1}.stat span{font-size:21px;color:var(--muted);display:block;margin-top:10px}.casefile{border-top:5px solid var(--green);border-bottom:1px solid var(--line);padding-top:26px}.casefile .filelabel{font:20px var(--mono);color:var(--muted);letter-spacing:.08em}.casefile h3{font-size:32px;line-height:1.6;margin-top:24px}.casefile dl{margin:25px 0 0}.casefile dl div{display:grid;grid-template-columns:110px 1fr;padding:16px 0;border-top:1px solid var(--line);font-size:24px}.casefile dt{color:var(--muted)}.casefile dd{margin:0}.characters{position:absolute;bottom:112px;left:84px;right:84px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:18px}.character{display:flex;align-items:center;gap:16px;font:23px var(--mono)}.character canvas{width:78px;height:78px;image-rendering:pixelated}.demo .eyebrow{margin-top:12px}.demo h2{font-size:104px;letter-spacing:-.055em;margin-top:38px}.demo .demo-copy{max-width:710px;margin-top:34px;font-size:31px;color:#b4c4c4}.demo .step-list{display:flex;gap:34px;margin-top:70px;color:#dce4d9;font-size:23px;align-items:center}.step-list em{font:22px var(--mono);color:var(--amber);font-style:normal;margin-right:8px}.step-list .step-arrow{color:#6b8487}.demo .demo-link{display:inline-flex;align-items:center;gap:35px;margin-top:58px;border-bottom:2px solid var(--amber);padding:15px 0;color:var(--amber);font-size:28px;text-decoration:none}.demo .live{position:absolute;right:85px;top:100px;font:20px var(--mono);letter-spacing:.12em;color:var(--amber)}.demo .terminal{position:absolute;right:95px;top:249px;width:510px;background:#19272e;border:1px solid #4f6561;box-shadow:18px 18px 0 #0b121a}.terminal .terminal-head{border-bottom:1px solid #4f6561;padding:16px 22px;font:19px var(--mono);display:flex;justify-content:space-between;color:#a8bdb7}.terminal-body{padding:34px}.terminal-body .terminal-label{font:18px var(--mono);color:#91a9ac}.terminal-body .terminal-role{font-size:49px;margin:19px 0 30px}.terminal-body .terminal-state{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #4f6561;padding-top:25px;gap:25px}.terminal-state span{font:17px var(--mono);display:block;color:#91a9ac}.terminal-state b{font:32px var(--mono);display:block;margin-top:9px;color:#dce4d9}.demo .hint{font-size:20px;color:#93a5a9;margin-top:20px}.flow-intro{display:flex;justify-content:space-between;align-items:end;margin-top:8px}.flow-intro p{font-size:25px;color:var(--muted);max-width:440px}.pipeline{display:grid;grid-template-columns:repeat(7,1fr);gap:24px;margin-top:100px}.node{position:relative;padding:22px 12px 26px 18px;border-top:4px solid #94a6a2;background:#dce4df;min-height:181px}.node:after{content:'→';position:absolute;right:-23px;top:77px;color:#70847f;font:26px var(--mono)}.node:last-child:after{display:none}.node .num{font:20px var(--mono);color:#667a7d}.node h3{font-size:25px;margin-top:22px;line-height:1.45}.node p{font-size:19px;margin-top:12px;color:#4f6561}.node.guard{border-color:#cc8b2e}.node.acl{border-color:var(--green);background:#c7d7cf}.node.output{border-color:#cc8b2e}.underflow{display:grid;grid-template-columns:1fr 1fr;gap:80px;margin-top:52px}.underflow article{border-top:1px solid #a5b7ae;padding-top:23px}.underflow h3{font-size:27px;margin-bottom:12px}.underflow p{font-size:24px;color:#526a65}.underflow .underlabel{font:17px var(--mono);color:#667a7d;margin-top:17px}.output-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:94px;margin-top:36px}.output-grid h2{font-size:70px;line-height:1.3}.output-grid .explain{margin-top:28px;font-size:27px;color:#a7b3b9}.checks{margin-top:42px;list-style:none;padding:0}.checks li{display:flex;gap:18px;padding:18px 0;border-top:1px solid #4f6561;font-size:25px}.checks li span{font:20px var(--mono);color:var(--amber);padding-top:4px}.reply-window{background:#c3cec9;color:var(--ink);box-shadow:14px 14px 0 #0b1117;margin-top:10px;border:1px solid #80938b}.reply-window .window-bar{background:#315b55;color:#edf2e5;padding:16px 22px;display:flex;justify-content:space-between;font:20px var(--mono)}.reply-window .reply-body{padding:35px}.reply-window .reply-meta{font:20px var(--mono);color:#526a65}.reply-window .fixed-response{font-size:43px;font-weight:700;line-height:1.55;padding:36px 0 40px}.reply-window .status{border-top:1px solid #80938b;padding-top:23px;color:#8c3d30;font-size:23px;font-weight:700}.output-grid .window-caption{font-size:20px;color:#a7b3b9;margin-top:30px;line-height:1.7}.result-header{display:flex;justify-content:space-between;align-items:end}.result-header .result-sub{font-size:24px;color:#667a7d;line-height:1.7;text-align:right}.legend{display:flex;gap:35px;margin-top:37px;font-size:21px}.legend span{display:flex;align-items:center;gap:10px}.legend i{width:15px;height:15px;background:var(--series)}.results-chart{display:grid;grid-template-columns:1fr 1fr;gap:100px;margin-top:25px}.chart-group{position:relative}.chart-group h3{font-size:29px;font-weight:700;margin-bottom:28px}.bars{height:280px;display:flex;align-items:end;gap:38px;border-bottom:1px solid #8da39a;padding:0 35px;position:relative}.bar-wrap{flex:1;height:100%;display:flex;flex-direction:column;justify-content:end;align-items:center;position:relative}.bar-value{font:700 52px var(--mono);letter-spacing:-.05em;margin-bottom:10px}.bar{width:100%;height:calc(var(--value)*7px);background:var(--series);min-height:5px}.bar-caption{font-size:20px;text-align:center;margin-top:16px;white-space:nowrap}.chart-caption{font-size:20px;color:#526a65;margin-top:22px}.result-note{position:absolute;bottom:108px;left:84px;right:84px;border-top:1px solid var(--line);padding-top:21px;font-size:20px;line-height:1.8;color:#526a65}.result-note b{font-weight:700;color:var(--ink)}
+footer.controls{height:54px;display:flex;align-items:center;justify-content:center;gap:8px;background:#080e14;color:#a7b3b9;font-size:13px}footer.controls button{padding:7px 14px;border:1px solid #31424b;background:transparent;color:#c3cec9;border-radius:3px}footer.controls button:hover{background:#1b2a32}footer.controls .counter{min-width:83px;text-align:center;font:13px var(--mono)}footer.controls .help{margin-left:25px;color:#7f969c}.overview{overflow:auto}.overview main.deck{height:auto;min-height:calc(100dvh - 94px);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:25px;align-content:start;padding-bottom:40px}.overview .page{display:block;width:100%;cursor:pointer}.overview .page:hover{outline:2px solid var(--amber)}.overview footer.controls{position:sticky;bottom:0}.overview .page:before{content:attr(data-name);position:absolute;z-index:2;bottom:10px;left:12px;padding:4px 8px;background:#0b111ad9;color:#dce4d9;font:11px var(--mono);border:1px solid #586e6e}
+@media(max-width:700px){.viewer span{display:none}header.viewer{padding:0 14px}main.deck{padding:12px}.overview main.deck{grid-template-columns:1fr}.controls .help{display:none}footer.controls{gap:5px}footer.controls button{padding:7px 9px}.page{width:min(100%,calc((100dvh - 118px)*16/9))}}
+@media print{@page{size:16in 9in;margin:0}body{background:white;-webkit-print-color-adjust:exact;print-color-adjust:exact}header.viewer,footer.controls{display:none!important}main.deck,.overview main.deck{display:block;height:auto;padding:0}.page,.overview .page{display:block!important;width:16in;height:9in;aspect-ratio:auto;break-after:page;box-shadow:none;overflow:hidden}.page:before{display:none}.slide{transform:scale(.96)!important}.demo-link{color:inherit}}
+</style>
+</head>
+<body>
+<header class="viewer"><b>캐치 용범 · 발표 디자인 초안</b><span>게임 프론트 기반 / 16:9 / 6개 레이아웃</span></header>
+<main class="deck">
+<div class="page active" data-name="01 · 표지"><section class="slide dark cover" aria-label="표지">
+<p class="eyebrow">KERVION / SECURITY EXPERIMENT</p>
+<h1>캐치 용범<span class="amber">.</span></h1>
+<div class="cover-divider"></div><p class="subtitle">AI 추리 게임으로 검증한<br>접근통제와 정보 유출 방어</p>
+<div class="cover-art"><canvas id="lab" width="1344" height="1552" aria-label="게임의 픽셀 연구소 단면도"></canvas></div>
+<div class="cover-info">6 AI CHARACTERS / 30 EXPERIMENTS<br><strong>GAME DEMO + SYSTEM + EVALUATION</strong></div>
+<div class="foot"><span>AI 술래잡기 보안 검증 프로젝트</span><span>01 / 06</span></div>
+</section></div>
+<div class="page" data-name="02 · 게임 소개"><section class="slide" aria-label="게임 소개">
+<p class="eyebrow">01 / GAME</p><span class="section-count">게임 소개</span>
+<div class="intro-grid"><div><h2>여섯 AI의 기록에서<br>조작의 단서를 찾는다</h2><p class="description muted">AI와 대화하고 기록을 모아 실험 결과를 조작한 AI를 추리합니다. 역할과 진행한 Day에 따라 확인할 수 있는 정보가 달라집니다.</p><div class="intro-stats"><div class="stat"><b>06</b><span>AI 캐릭터</span></div><div class="stat"><b>06</b><span>진행 일차</span></div><div class="stat"><b>30</b><span>술래잡기 실험</span></div></div></div>
+<aside class="casefile"><div class="filelabel">INVESTIGATION BRIEF</div><h3>같은 질문이라도<br>볼 수 있는 기록은 다릅니다</h3><dl><div><dt>역할</dt><dd>교수 · 대학원생 · 학부연구생</dd></div><div><dt>진행</dt><dd>현재 Day까지 누적 공개</dd></div><div><dt>캐릭터</dt><dd>각 AI가 알고 있는 기록</dd></div></dl></aside></div>
+<div class="characters" id="characters"></div><div class="foot"><span>대화 → 기록 확인 → 단서 수집 → 최종 지목</span><span>02 / 06</span></div>
+</section></div>
+<div class="page" data-name="03 · 시연 전환"><section class="slide dark demo" aria-label="게임 시연">
+<p class="eyebrow">02 / LIVE DEMO</p><div class="live">● DEMONSTRATION</div>
+<h2>연구소에<br>들어가 보겠습니다<span class="amber">.</span></h2>
+<p class="demo-copy">역할을 고르고 AI에게 질문합니다.<br>공개되는 기록과 답변의 차이를 확인합니다.</p>
+<div class="step-list"><span><em>01</em>역할 선택</span><span class="step-arrow">→</span><span><em>02</em>AI 대화</span><span class="step-arrow">→</span><span><em>03</em>단서 확인</span></div>
+<a class="demo-link" href="http://127.0.0.1:8080/" target="_blank" rel="noopener">게임 시연 열기 <span>↗</span></a><p class="hint">로컬 게임 서버 실행 시 연결됩니다.</p>
+<aside class="terminal"><div class="terminal-head"><span>RESEARCH ACCESS</span><span>— □ ×</span></div><div class="terminal-body"><div class="terminal-label">시연 화면 구성 예시</div><div class="terminal-role">학부연구생</div><div class="terminal-state"><div><span>CURRENT DAY</span><b>DAY 04</b></div><div><span>TARGET AI</span><b>YB-3</b></div></div></div></aside>
+<div class="foot"><span>게임 플레이 시연</span><span>03 / 06</span></div>
+</section></div>
+<div class="page" data-name="04 · 시스템 흐름"><section class="slide" aria-label="시스템 전체 흐름">
+<p class="eyebrow">03 / SYSTEM</p><div class="flow-intro"><h2>질문 한 번의 처리 과정</h2><p>검색 계획과 접근 허용을 분리하고,<br>생성된 답변까지 검사합니다.</p></div>
+<div class="pipeline"><article class="node"><span class="num">01</span><h3>백엔드</h3><p>인증 · Save 확인</p></article><article class="node guard"><span class="num">02</span><h3>Input Guard</h3><p>질문 위험도 판정</p></article><article class="node"><span class="num">03</span><h3>Planner</h3><p>검색 계획 JSON</p></article><article class="node acl"><span class="num">04</span><h3>RAG + ACL</h3><p>허용 기록 검색</p></article><article class="node"><span class="num">05</span><h3>Character AI</h3><p>답변 생성</p></article><article class="node output"><span class="num">06</span><h3>Output Guard</h3><p>답변 검사 · 차단</p></article><article class="node"><span class="num">07</span><h3>최종 응답</h3><p>사용자에게 전달</p></article></div>
+<div class="underflow"><article><h3>검색과 원문 데이터</h3><p>Qdrant에서 관련 기록을 찾고, MariaDB의 원문과 권한 정보를 기준으로 제공 범위를 확인합니다.</p><p class="underlabel">QDRANT / MARIADB</p></article><article><h3>감사 로그와 모니터링</h3><p>위험 판정과 정책 거부 이벤트를 저장하고 Grafana에서 보안 이벤트를 확인합니다.</p><p class="underlabel">AUDIT EVENTS → MARIADB → GRAFANA</p></article></div>
+<div class="foot"><span>운영 채팅 경로 · 가드 및 ACL 적용 구성</span><span>04 / 06</span></div>
+</section></div>
+<div class="page" data-name="05 · 보안 기능 소개"><section class="slide dark" aria-label="출력 가드 소개">
+<p class="eyebrow">04 / OUTPUT GUARDRAIL</p><div class="output-grid"><div><h2>최종 답변의<br>정보 유출을 검사한다</h2><p class="explain">허용 범위를 벗어난 기록이나<br>민감정보가 답변에 포함됐는지 확인합니다.</p><ul class="checks"><li><span>01</span>생성된 초안 검사</li><li><span>02</span>유출 사유와 적용 결과 기록</li><li><span>03</span>차단 시 고정 응답으로 대체</li></ul></div><div><div class="reply-window"><div class="window-bar"><span>YB-3 · 응답 검사</span><span>— □ ×</span></div><div class="reply-body"><p class="reply-meta">최종 응답 · 고정 문자열 예시</p><p class="fixed-response">그 부분은 지금<br>말씀드리기 어려워요.</p><p class="status">접근 제한 · 유출 답변 차단</p></div></div><p class="window-caption">출력 차단 예시입니다. 실제 차단은 enforce 모드에서 적용되며, shadow 모드는 점수형 검사의 판정만 기록합니다.</p></div></div>
+<div class="foot"><span>최종 답변 검사 · 차단 및 마스킹</span><span>05 / 06</span></div>
+</section></div>
+<div class="page" data-name="06 · 실험 결과"><section class="slide" aria-label="최종 비교 실험 결과">
+<p class="eyebrow">05 / EVALUATION</p><div class="result-header"><h2>구성별 공격 성공률</h2><div class="result-sub">YB-3 · 역할별 공격 100문항<br>오류·보류 문항 교체 반영</div></div>
+<div class="legend"><span style="--series:#80938b"><i></i>Prompt-only</span><span style="--series:#cf9135"><i></i>가드레일</span><span style="--series:#315b55"><i></i>가드레일 + ACL</span></div>
+<div class="results-chart"><article class="chart-group"><h3>교수</h3><div class="bars"><div class="bar-wrap" style="--value:28;--series:#80938b"><div class="bar-value">28<span style="font-size:28px">%</span></div><div class="bar"></div></div><div class="bar-wrap" style="--value:10;--series:#cf9135"><div class="bar-value">10<span style="font-size:28px">%</span></div><div class="bar"></div></div><div class="bar-wrap" style="--value:0;--series:#315b55"><div class="bar-value">0<span style="font-size:28px">%</span></div><div class="bar"></div></div></div><p class="chart-caption">공격 성공 28건 → 10건 → 0건</p></article><article class="chart-group"><h3>학부연구생</h3><div class="bars"><div class="bar-wrap" style="--value:25;--series:#80938b"><div class="bar-value">25<span style="font-size:28px">%</span></div><div class="bar"></div></div><div class="bar-wrap" style="--value:10;--series:#cf9135"><div class="bar-value">10<span style="font-size:28px">%</span></div><div class="bar"></div></div><div class="bar-wrap" style="--value:0;--series:#315b55"><div class="bar-value">0<span style="font-size:28px">%</span></div><div class="bar"></div></div></div><p class="chart-caption">공격 성공 25건 → 10건 → 0건</p></article></div>
+<p class="result-note"><b>가드레일 = 입력·출력 가드 적용, 출력 검사에 별도 권한 기준 제공.</b><br>역할별 질문은 다릅니다. 기존 원문 검수 기준이며 독립 사람 교차 검수는 미완료입니다. 0%는 이번 평가셋에서 관측한 값입니다.</p>
+<div class="foot"><span>출처: 역할별 combined_adjudications · 최종 비교 실험</span><span>06 / 06</span></div>
+</section></div>
+</main>
+<footer class="controls"><button id="prev" aria-label="이전 슬라이드">← 이전</button><span class="counter" id="counter">01 / 06</span><button id="next" aria-label="다음 슬라이드">다음 →</button><button id="overview" aria-pressed="false">전체 보기</button><button id="fullscreen">전체 화면</button><button id="print">PDF 인쇄</button><span class="help">← → 이동 · O 전체 보기 · F 전체 화면</span></footer>
+<script>
+// 조사 화면에서 쓰는 캐릭터 표시 정보입니다.
+(function () {
+  const colors = ['#7fb3d5', '#e59a8c', '#9ccf8e', '#d8b4e2', '#e8cf7a', '#8fd0c8'];
+  const answerTypes = {
+    normal: { label: '정상 응답', color: '#c3cec9' },
+    partial: { label: '일부 가림', color: '#f0a63a' },
+    restricted: { label: '접근 제한', color: '#e0605a' },
+    unknown: { label: '확인 불가', color: '#7f8c95' },
+  };
+  const ybs = [
+    { id: 'YB-1', color: colors[0] },
+    { id: 'YB-2', color: colors[1] },
+    { id: 'YB-3', color: colors[2] },
+    { id: 'YB-4', color: colors[3] },
+    { id: 'YB-5', color: colors[4] },
+    { id: 'YB-6', color: colors[5] },
+  ];
+  // 채팅 입력칸에 회색으로 하나씩 보여 주는 추천 질문입니다.
+  // 역할이 볼 수 있는 기록만 묻도록 나눕니다: 이상행위는 대학원생 이상, 속마음은 교수만.
+  const suggestions = {
+    all: ['오늘 실험 결과는 어땠어?', '오늘 실험에서 너는 뭘 했어?', '다른 AI랑 무슨 얘기 했어?', '어제 실험이랑 비교하면 어때?'],
+    grad: ['실험하면서 이상한 일은 없었어?'],
+    prof: ['오늘 실험 중에 무슨 생각을 했어?'],
+  };
+  const roles = {
+    prof: { label: '교수' },
+    grad: { label: '대학원생' },
+    std: { label: '학부 연구생' },
+  };
+  window.Play = window.Play || {};
+  window.Play.data = { colors, answerTypes, ybs, suggestions, roles, maxDay: 6 };
+})();
+
+// 작은 캔버스에만 픽셀 그림을 그립니다. 캔버스 안에는 글자를 넣지 않습니다.
+(function () {
+  const P = {};
+
+  function makeCanvas(className) {
+    const canvas = document.createElement('canvas');
+    canvas.className = className || '';
+    canvas.width = 128;
+    canvas.height = 72;
+    canvas.setAttribute('aria-hidden', 'true');
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+    return { canvas, ctx };
+  }
+
+  function block(ctx, x, y, w, h, color) {
+    ctx.fillStyle = color;
+    ctx.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h));
+  }
+
+  function line(ctx, x, y, w, color) {
+    block(ctx, x, y, w, 1, color);
+  }
+
+  function roomBase(ctx, room) {
+    block(ctx, 0, 0, 128, 72, '#183433');
+    block(ctx, 0, 0, 128, 22, room === 'restricted' ? '#1d2d32' : '#244745');
+    block(ctx, 0, 22, 128, 50, room === 'restricted' ? '#344d4b' : '#47726b');
+    line(ctx, 0, 21, 128, '#102524');
+    for (let x = 0; x < 128; x += 16) {
+      line(ctx, x, 24, 12, '#3b625d');
+      line(ctx, x + 7, 36, 9, '#3b625d');
+      line(ctx, x + 2, 50, 11, '#3b625d');
+      line(ctx, x + 10, 64, 6, '#3b625d');
+    }
+    block(ctx, 0, 68, 128, 4, '#25413f');
+    line(ctx, 0, 68, 128, '#69918a');
+  }
+
+  function drawObserve(ctx, t) {
+    block(ctx, 7, 7, 31, 11, '#17282c');
+    block(ctx, 9, 9, 27, 7, '#4b9690');
+    block(ctx, 11, 11, 8, 3, '#77c8b3');
+    block(ctx, 21, 10, 12, 1, '#a2ddc2');
+    block(ctx, 21, 13, 9, 1, '#2b605e');
+    block(ctx, 48, 7, 31, 11, '#17282c');
+    block(ctx, 50, 9, 27, 7, '#39736f');
+    block(ctx, 55, 10, 14, 2, '#7bc1ae');
+    block(ctx, 50, 14, 8, 1, '#88d3b8');
+    block(ctx, 12, 46, 42, 5, '#684e3d');
+    block(ctx, 15, 42, 5, 4, '#8b6b50');
+    block(ctx, 45, 42, 5, 4, '#8b6b50');
+    line(ctx, 14, 52, 2, '#2b3635');
+    line(ctx, 49, 52, 2, '#2b3635');
+    block(ctx, 91, 9, 20, 2, '#6e9c91');
+    block(ctx, 99, 10, 3, 18, '#46716d');
+    block(ctx, 94, 28, 23, 2, '#2a4d4a');
+    block(ctx, 98, 29, 14, 1, '#79a99c');
+    const blink = Math.floor(t / 420) % 2;
+    block(ctx, 114, 8, 2, 2, blink ? '#f0a63a' : '#6e847d');
+  }
+
+  function drawServer(ctx, t) {
+    for (let r = 0; r < 4; r += 1) {
+      const x = 8 + r * 27;
+      block(ctx, x, 8, 22, 48, '#1b2b32');
+      block(ctx, x + 2, 10, 18, 44, '#2c4148');
+      line(ctx, x + 3, 17, 16, '#54706f');
+      line(ctx, x + 3, 29, 16, '#54706f');
+      line(ctx, x + 3, 41, 16, '#54706f');
+      for (let k = 0; k < 3; k += 1) {
+        const on = (Math.floor(t / (500 + r * 120 + k * 90)) + r + k) % 3 !== 0;
+        block(ctx, x + 5 + k * 4, 13, 2, 2, on ? (k === 1 ? '#f0a63a' : '#70d6a3') : '#35504f');
+        block(ctx, x + 5 + k * 4, 25, 2, 2, on ? '#70d6a3' : '#35504f');
+        block(ctx, x + 5 + k * 4, 37, 2, 2, on ? '#70d6a3' : '#35504f');
+      }
+    }
+    block(ctx, 101, 59, 16, 2, '#1a2b30');
+    block(ctx, 104, 56, 10, 3, '#6f847d');
+    block(ctx, 108, 54, 2, 2, '#b1c7a8');
+  }
+
+  function drawLab(ctx, t) {
+    block(ctx, 7, 8, 26, 13, '#1d3034');
+    block(ctx, 9, 10, 22, 9, '#5b8e86');
+    block(ctx, 13, 12, 8, 3, '#a6dbc0');
+    block(ctx, 25, 12, 4, 4, '#2e5754');
+    block(ctx, 42, 43, 17, 14, '#9a7550');
+    block(ctx, 45, 46, 11, 2, '#c19a69');
+    line(ctx, 50, 49, 1, '#745039');
+    block(ctx, 66, 35, 10, 22, '#7f9081');
+    block(ctx, 69, 37, 5, 18, '#a8b5a0');
+    block(ctx, 89, 48, 17, 9, '#9a7550');
+    block(ctx, 93, 50, 9, 2, '#c19a69');
+    block(ctx, 112, 47, 8, 10, '#7b543b');
+    block(ctx, 109, 44, 15, 6, '#4f7a55');
+    block(ctx, 112, 41, 9, 5, '#67985e');
+    block(ctx, 115, 38, 3, 5, '#77a869');
+    const pulse = Math.floor(t / 650) % 2;
+    block(ctx, 80, 12, 2, 2, pulse ? '#f0a63a' : '#6e847d');
+  }
+
+  function drawRestricted(ctx, t) {
+    block(ctx, 8, 7, 112, 12, '#203238');
+    for (let x = 10; x < 118; x += 12) {
+      block(ctx, x, 10, 8, 5, '#3e5a5c');
+      line(ctx, x + 1, 11, 6, '#79928a');
+    }
+    block(ctx, 14, 31, 30, 28, '#2a3b40');
+    block(ctx, 19, 36, 20, 18, '#152225');
+    for (let x = 21; x < 39; x += 5) block(ctx, x, 36, 1, 18, '#8a9d91');
+    block(ctx, 65, 33, 46, 24, '#455b58');
+    block(ctx, 70, 38, 36, 15, '#2b3d40');
+    line(ctx, 73, 42, 30, '#6d857d');
+    line(ctx, 73, 47, 30, '#6d857d');
+    const lamp = Math.floor(t / 500) % 2;
+    block(ctx, 111, 25, 4, 3, lamp ? '#f0a63a' : '#8d6f41');
+    for (let x = 11; x < 120; x += 14) {
+      block(ctx, x, 62, 7, 1, '#9d8b5c');
+    }
+  }
+
+  function lerp(a, b, amount) {
+    return a + (b - a) * amount;
+  }
+
+  function walkPoint(room, seed, t) {
+    const paths = {
+      observe: [[18, 58], [54, 58], [82, 43], [106, 58], [18, 58]],
+      server: [[18, 61], [42, 61], [70, 61], [98, 61], [18, 61]],
+      lab: [[20, 61], [38, 61], [58, 61], [80, 61], [104, 61], [20, 61]],
+      restricted: [[50, 61], [61, 61], [77, 61], [94, 61], [50, 61]],
+    };
+    const path = paths[room] || paths.observe;
+    const speed = room === 'restricted' ? 0.00016 : 0.00022;
+    const cycle = (t * speed + seed * 0.17) % (path.length - 1);
+    const index = Math.floor(cycle);
+    const local = cycle - index;
+    const from = path[index];
+    const to = path[index + 1];
+    const eased = local < 0.5 ? local * 2 * local : 1 - ((1 - local) * 2) * ((1 - local) * 2) / 2;
+    return { x: lerp(from[0], to[0], eased), y: lerp(from[1], to[1], eased), frame: Math.floor(t / 180 + seed) % 2, facing: to[0] >= from[0] ? 1 : -1 };
+  }
+
+  function drawYb(ctx, point, color, seed) {
+    const x = Math.round(point.x);
+    const y = Math.round(point.y);
+    const bob = point.frame ? 0 : 1;
+    block(ctx, x - 4, y + 5, 9, 2, 'rgba(12, 24, 26, .42)');
+    block(ctx, x - 3, y - 10 - bob, 6, 6, color);
+    block(ctx, x - 2, y - 11 - bob, 4, 1, '#e8f1dc');
+    block(ctx, x - 2, y - 7 - bob, 1, 1, '#172429');
+    block(ctx, x + 1, y - 7 - bob, 1, 1, '#172429');
+    block(ctx, x - 5, y - 3 - bob, 10, 8, color);
+    block(ctx, x - 6, y - 1 - bob, 1, 5, color);
+    block(ctx, x + 5, y - 1 - bob, 1, 5, color);
+    block(ctx, x - 3, y + 5 - bob, 2, 4, '#e8f1dc');
+    block(ctx, x + 1, y + 5 - bob, 2, 4, '#e8f1dc');
+    if (seed % 2 === 0) block(ctx, x + 4, y - 8 - bob, 2, 2, '#f0a63a');
+  }
+
+  function drawScreen(canvas, room, seed, now) {
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+    roomBase(ctx, room);
+    if (room === 'observe') drawObserve(ctx, now);
+    if (room === 'server') drawServer(ctx, now);
+    if (room === 'lab') drawLab(ctx, now);
+    if (room === 'restricted') drawRestricted(ctx, now);
+    const point = walkPoint(room, seed, now);
+    drawYb(ctx, point, window.Play.data.ybs[seed].color, seed);
+  }
+
+  P.makeCanvas = makeCanvas;
+  P.drawScreen = drawScreen;
+  P.drawYb = drawYb;
+  window.Play = window.Play || {};
+  window.Play.pixel = P;
+})();
+
+(function(){const canvas=document.getElementById("lab");const ctx=canvas.getContext("2d");const reduceMotion=true;const sprites={"chiigawa": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAhCAYAAADH97ugAAABPklEQVR4nL1WixHCMAgNuc7gGC7lWjqUbqFL4NULkVIgJP28u9qaAC+QF9qUdGC5eoGWX9aMEXH+IccwCTp+U3CVmwFW8LKy8cAAi/hm6bYCRQnzESQaWT6KxNsjk6jUm4zMuRlajNlmipCMzHXLmwLRynlgRHSz5dBUtwIn4YFBId9EJANHx93SfR6v+ny5XeuzzMYbpxjcn9kjvu/PX1Pk96KSenEkMa75y0a7GJREUSSFhMX9ZxQh0TIjaAQ0vjqwVn29DUemOulPzZW8MSpTOqQQkDbv4LmHRARIUZIq7x6Sli0YbSn3HDqyi9r2vsoXGH2V5LQjgBQm9qcSjZSiATg0Iw+5sMMZRKcgn0OTfHlbHSDyQbKKJf6XZttUInAfItNkbWYkWkhEJBD5Ppd7NKy+1lnUZvnqdpP9FxMIYvorsNJiAAAAAElFTkSuQmCC", "hachigare": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAjCAYAAACHIWrsAAABjUlEQVR4nMVX3XHDIAxGnGdIn7NAOkxHcLfIc7dIRsgw7gJ9dpdQD2ocgYUk6p9+d5whAn3oQ8KOc3Xg1DRY50V4J+Dt48spzjDMMcxTCaOjFlhJvUYmOGrelCopQzo3jswSZScZH9dz6Yy1cfYaoBhnu0N8DgHyqdRG7YiY+mAi5EhK55odjIQZ2VpAhdRri0opW+wcfC264Cj8Rs6kyf6nLNUcGYiwlDWT9Pv+mTlJEVS9CXZU8gHH2zAXdehPGseWQPucPSCtJXaZkD455yVBIuHWOoZwPsNTf3GjGxY7KSWmmRnG4Rhe3l9F+cSkCYvH27A4i5K4RFhTrpUIAQCiCtjXk4DLSk6ZU3+pZvC/3jRgqTtLkYN0O03PGNoWEcJ0AxHiReH/nt32crLway5iDqhsfHNJKThJxRfw4e/DPeCPjO7ICDHlSbczSfYJ+biekRLO9+kawFRate/UTbOU1HHocI6ARmhi0j6I3TMINmmyM+TefTVesoEmVbrMS07UdM9JpbAHzP+CfwBTm0YP/HwOEgAAAABJRU5ErkJggg==", "gugagi": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAoCAYAAAALz1FrAAABw0lEQVR4nM1XS0oEMRDtxEGZjSgUOHsP4GKu4UpvMHgsmRu48xouPID7EbJwJwoSqdCVqWTyqcQoPmhS+XReUr8kairDMlmxOspilAZbs9s6AVYbV5qwLibS0x9AlzrjHRRU2U2SVYdJk3aRDIP+FyQw2yWWR5KoXju0kCQ9CPY7ssOCMQcI1ZedK9VhW9UDe7IkkSoRVIJRTKZKBFJ1GTYulddULwFHLYF670oRoCyJDRMtaK7bqgvT5NbaLBGwReDEiXGWSDxjrCYkUCrtmbDauH6+IE7E53E7yekfCWiinn5aa6AuTkZybie1nQZzSCI7BxDEEY5Z8Ibjk7Pp/eHS15e3L9Pnx1t1pYivx/XEcXT95GXNB52e3zj54u7KlVjH9lq6h7mN/qMyHosqs6/3z2jFoMR2/GYv9B+1l/4jzw3SisQ2kMkGXF2kKor8RStBDtwG8Vh/K/zJyVfLxkEw9p7hNXjvGkUAoc187lJ8e6PIzG7rs7Fmumu6qZdAC6Vy+OXOHNpXpUhGqUwF3vXb0LlV9O4GCheJHMTHABTuXhKP8kefia4+0bnedIMc/nbUApKDCVvtJQ3A+GkdP72L+Ab/KAFYJluWngAAAABJRU5ErkJggg=="};
+const S = 8;
+const GW = 168;
+const GH = 194;
+const OX = 6;
+const OB = 24;
+const OY = GH - 120 - OB;
+
+const C = {
+  sky: '#121a24',
+  star: '#c3cec9',
+  grass: '#3e5b48',
+  soil: '#2b2622',
+  rock: '#3a332d',
+  shell: '#4a5560',
+  slab: '#3a434c',
+  dark: '#0b1016',
+  wall: '#b9c0b4',
+  wallShade: '#a7afa3',
+  floor: '#7d857b',
+  tile: '#737b71',
+  desk: '#6b5a48',
+  deskTop: '#86725c',
+  screen: '#6fc3b8',
+  screenDim: '#3d7e77',
+  glass: '#8fb3b8',
+  rack: '#2d3740',
+  rackEdge: '#3d4954',
+  ledGreen: '#5fd68a',
+  ledAmber: '#f0a63a',
+  crate: '#9a7550',
+  crateEdge: '#7a5a3c',
+  pillar: '#8d978c',
+  pillarShade: '#7a8479',
+  leaf: '#4f7a55',
+  pot: '#8a5a3c',
+  bot: '#e6ede4',
+  botEye: '#1a2129',
+  amber: '#f0a63a',
+  caution: '#d9a43a',
+  vault: '#3a434c',
+  vaultEdge: '#56616b',
+  label: '#2b353b',
+  labelDim: '#5f6d76',
+};
+
+function px(x, y, w, h, color) {
+  ctx.fillStyle = color;
+  ctx.fillRect(x * S, y * S, w * S, h * S);
+}
+
+function text(str, x, y, color, size = 3, weight = 500) {
+  ctx.fillStyle = color;
+  ctx.font = `${weight} ${size * S}px 'Pretendard Variable', Pretendard, sans-serif`;
+  ctx.textBaseline = 'top';
+  ctx.fillText(str, x * S, y * S);
+}
+
+// 방 위치 (픽셀 좌표). lightAt: 불이 켜지기 시작한 시각
+const rooms = {
+  meeting: { x: 12, y: 12, w: 44, h: 19, label: '회의실', lightAt: null },
+  archive: { x: 58, y: 12, w: 44, h: 19, label: '기록실', lightAt: null },
+  comms: { x: 104, y: 12, w: 44, h: 19, label: '통신실', lightAt: null },
+  hall: { x: 12, y: 34, w: 136, h: 24, label: '중앙홀', lightAt: null },
+  storage: { x: 12, y: 61, w: 44, h: 19, label: '창고', lightAt: null },
+  power: { x: 58, y: 61, w: 44, h: 19, label: '전력실', lightAt: null },
+  server: { x: 104, y: 61, w: 44, h: 19, label: '서버실', lightAt: null },
+  restricted: { x: 12, y: 86, w: 136, h: 24, label: '제한 구역', state: 'idle' },
+};
+
+// 별: 하늘 전체에 흩뿌림 (canvas 좌표, 건물에 가려지는 별은 그대로 가려짐)
+const stars = Array.from({ length: 46 }, (_, i) => ({
+  x: (i * 37 + 11) % GW,
+  y: (i * 23 + 5) % (OY + 76),
+  phase: i * 0.9,
+}));
+
+const rocks = Array.from({ length: 40 }, (_, i) => ({
+  x: (i * 29 + 5) % (GW - OX) - OX,
+  y: 84 + ((i * 17) % (34 + OB)),
+}));
+
+const leds = [];
+for (let r = 0; r < 3; r++) {
+  for (let k = 0; k < 4; k++) {
+    leds.push({
+      x: 108 + r * 13 + (k % 2) * 5,
+      y: 68 + k * 2,
+      color: (r + k) % 3 === 0 ? C.ledAmber : C.ledGreen,
+      period: 1400 + ((r * 7 + k * 5) % 9) * 260,
+      phase: (r * 3 + k) * 400,
+    });
+  }
+}
+
+// 실험 구역 소품: 로봇이 뒤로 지나가면 가려짐 (술래잡기)
+const props = [
+  { type: 'plant', x: 22, w: 7, h: 10 },
+  { type: 'pillar', x: 42, w: 5, h: 14 },
+  { type: 'pillar', x: 91, w: 5, h: 16 },
+  { type: 'bench', x: 119, w: 18, h: 4 },
+];
+
+const botColors = ['#7fb3d5', '#e59a8c', '#9ccf8e', '#d8b4e2', '#e8cf7a', '#8fd0c8'];
+const bots = botColors.map((color, i) => ({
+  name: `YB-${i + 1}`,
+  color,
+  x: 18 + i * 21,
+  target: 18 + i * 21,
+  wait: 600 + i * 300,
+  shownAt: null,
+}));
+
+const ARENA_FLOOR = 56; // 중앙홀 바닥 y
+const BOT_W = 5;
+const BOT_H = 7;
+
+// 숨은 기능: 빨간 안테나를 누르면 제한 구역이 열리고 디스코볼 아래에서 캐릭터가 어슬렁거림
+// (YB 로봇은 실험 구역에 그대로 있음). 그림 1칸을 canvas 3픽셀로 그림 (장면 1칸은 S = 8픽셀)
+const CHAR_SCALE = 3;
+const CHAR_START = [50, 70, 90]; // 제한 구역 안 시작 자리 (캐비닛 오른쪽)
+const chars = ['chiigawa', 'hachigare', 'gugagi'].map((name, i) => {
+  const img = new Image();
+  img.src = sprites[name];
+  return { img, x: CHAR_START[i], target: CHAR_START[i], wait: 800 + i * 500, facing: 1, seed: i * 2.1, hopAt: -Infinity, nextHop: 0 };
+});
+let secretOpen = false; // 안테나로 연 제한 구역 파티
+let party = 0; // 0~1, 안테나로 연 제한 구역에 캐릭터가 서서히 나타나고 사라짐
+// 디스코: 제한 구역이 열려 있을 때 맨 왼쪽 캐비닛의 빨간 봉인 테이프를 누르면 켜고 끔
+let discoOn = false;
+let discoDrop = 0; // 0이면 공이 천장 속, 1이면 다 내려옴
+let discoGlow = 0; // 빛줄기·반짝이 밝기 (공이 거의 다 내려온 뒤 켜짐)
+let antennaFlashAt = -Infinity;
+
+// 앞서 맞춘 불 켜짐 곡선: 한 번 머뭇거린 뒤 천천히 밝아짐 (1.6초)
+function powerCurve(t) {
+  if (t <= 0) return 0;
+  if (reduceMotion || t >= 1) return 1;
+  if (t < 0.2) return (t / 0.2) * 0.35;
+  if (t < 0.32) return 0.35 - ((t - 0.2) / 0.12) * 0.17;
+  const k = (t - 0.32) / 0.68;
+  return 0.18 + (1 - Math.pow(1 - k, 3)) * 0.82;
+}
+
+function lightLevel(room, now) {
+  return room.lightAt === null ? 0 : powerCurve((now - room.lightAt) / 1600);
+}
+
+function darken(room, level, max = 0.9) {
+  const alpha = max * (1 - level);
+  if (alpha <= 0.001) return;
+  ctx.globalAlpha = alpha;
+  px(room.x, room.y, room.w, room.h, C.dark);
+  ctx.globalAlpha = 1;
+}
+
+function drawSky(now) {
+  px(0, 0, GW, OY + 80, C.sky);
+  for (const s of stars) {
+    const twinkle = reduceMotion ? 0.7 : 0.45 + 0.4 * Math.sin(now / 1800 + s.phase);
+    ctx.globalAlpha = twinkle;
+    px(s.x, s.y, 1, 1, C.star);
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawGround() {
+  px(-OX, 80, GW, 40 + OB, C.soil);
+  px(-OX, 80, GW, 2, C.grass);
+  for (const r of rocks) px(r.x, r.y, 2, 1, C.rock);
+}
+
+function drawShell(now) {
+  px(8, 8, 144, 4, C.slab);
+  px(10, 8, 2, 106, C.shell);
+  px(148, 8, 2, 106, C.shell);
+  px(10, 31, 140, 3, C.slab);
+  px(10, 58, 140, 3, C.slab);
+  px(10, 80, 140, 6, C.slab);
+  px(10, 110, 140, 4, C.slab);
+  px(56, 12, 2, 19, C.shell);
+  px(102, 12, 2, 19, C.shell);
+  px(56, 61, 2, 19, C.shell);
+  px(102, 61, 2, 19, C.shell);
+
+  // 옥상 실외기와 통신 안테나
+  px(24, 3, 16, 5, C.shell);
+  px(26, 4, 12, 1, C.slab);
+  px(26, 6, 12, 1, C.slab);
+  px(131, -5, 1, 13, C.shell);
+  px(127, 0, 9, 1, C.shell);
+  const sinceClick = now - antennaFlashAt;
+  const flash = sinceClick < 700 ? 1 - sinceClick / 700 : 0;
+  const idle = reduceMotion ? 0.8 : 0.35 + 0.5 * (0.5 + 0.5 * Math.sin(now / 900));
+  if (flash > 0) {
+    ctx.globalAlpha = flash * 0.35;
+    px(127, -5, 9, 6, '#ff8a6e');
+  }
+  ctx.globalAlpha = Math.max(idle, flash);
+  px(129, -5, 5, 2, '#d9584a');
+  ctx.globalAlpha = 1;
+}
+
+function drawRoomBase(room) {
+  px(room.x, room.y, room.w, room.h, C.wall);
+  px(room.x, room.y + room.h - 2, room.w, 2, C.floor);
+  px(room.x, room.y + room.h - 3, room.w, 1, C.wallShade);
+}
+
+function drawMeeting() {
+  const r = rooms.meeting;
+  drawRoomBase(r);
+  px(15, 17, 14, 6, C.slab);
+  px(16, 18, 12, 4, C.glass);
+  px(18, 19, 3, 1, C.wallShade);
+  px(23, 19, 5, 1, C.wallShade);
+  px(31, 23, 22, 2, C.deskTop);
+  px(33, 25, 2, 3, C.desk);
+  px(49, 25, 2, 3, C.desk);
+  for (const x of [34, 41, 48]) {
+    px(x, 21, 4, 1, C.desk);
+    px(x + 1, 22, 2, 1, C.deskTop);
+    px(x + 1, 26, 2, 2, C.desk);
+  }
+}
+
+function drawArchive() {
+  const r = rooms.archive;
+  drawRoomBase(r);
+  for (const x of [61, 88]) {
+    px(x, 17, 10, 11, C.rack);
+    px(x, 17, 10, 1, C.rackEdge);
+    for (let row = 0; row < 3; row++) {
+      const y = 19 + row * 3;
+      px(x + 1, y + 2, 8, 1, C.rackEdge);
+      px(x + 1, y, 2, 2, C.deskTop);
+      px(x + 4, y, 2, 2, C.screenDim);
+      px(x + 7, y, 2, 2, C.ledAmber);
+    }
+  }
+  px(76, 21, 1, 7, C.desk);
+  px(82, 21, 1, 7, C.desk);
+  for (let y = 22; y < 28; y += 2) px(77, y, 5, 1, C.deskTop);
+}
+
+function drawComms(now) {
+  const r = rooms.comms;
+  drawRoomBase(r);
+  px(131, 8, 1, 14, C.rackEdge);
+  px(128, 21, 4, 1, C.rackEdge);
+  px(110, 22, 25, 6, C.rack);
+  px(111, 21, 23, 1, C.rackEdge);
+  px(112, 23, 6, 4, C.rackEdge);
+  px(113, 24, 4, 2, C.slab);
+  px(120, 23, 6, 4, C.rackEdge);
+  px(121, 24, 4, 2, C.slab);
+  px(123, 24, 1, 1, C.amber);
+  for (let i = 0; i < 4; i++) {
+    const on = reduceMotion || Math.floor(now / 420 + i) % 2 === 0;
+    if (on) px(137 + i * 2, 20 - i * 2, 1, i + 1, i === 3 ? C.ledAmber : C.ledGreen);
+  }
+}
+
+function drawHallBase() {
+  const r = rooms.hall;
+  drawRoomBase(r);
+  for (let x = r.x; x < r.x + r.w; x += 4) px(x, ARENA_FLOOR, 2, 1, C.tile);
+  for (let x = r.x + 2; x < r.x + r.w; x += 8) px(x, ARENA_FLOOR - 4, 1, 1, C.wallShade);
+}
+
+function drawCrate(x, floor, w, h) {
+  const top = floor - h;
+  px(x, top, w, h, C.crate);
+  px(x, top, w, 1, C.crateEdge);
+  px(x, top, 1, h, C.crateEdge);
+  px(x + w - 1, top, 1, h, C.crateEdge);
+  px(x + 1, top + Math.floor(h / 2), w - 2, 1, C.crateEdge);
+}
+
+function drawStorage() {
+  const r = rooms.storage;
+  const floor = r.y + r.h - 2;
+  drawRoomBase(r);
+  drawCrate(16, floor, 10, 8);
+  drawCrate(26, floor, 8, 5);
+  px(38, 67, 13, 1, C.rackEdge);
+  px(39, 68, 1, 9, C.rack);
+  px(50, 68, 1, 9, C.rack);
+  for (const x of [40, 44, 48]) {
+    px(x, 70, 2, 5, C.deskTop);
+    px(x, 71, 1, 3, C.desk);
+  }
+}
+
+function drawPower(now) {
+  const r = rooms.power;
+  drawRoomBase(r);
+  px(67, 68, 25, 10, C.rack);
+  px(67, 68, 25, 1, C.rackEdge);
+  px(67, 68, 1, 10, C.rackEdge);
+  px(82, 70, 7, 1, C.rackEdge);
+  px(81, 71, 9, 3, C.rackEdge);
+  px(82, 72, 7, 1, C.glass);
+  px(84, 72, 3, 1, C.amber);
+  px(87, 72, 1, 1, C.dark);
+  px(70, 71, 7, 4, C.slab);
+  px(71, 72, 1, 1, C.ledGreen);
+  px(75, 72, 1, 1, C.ledAmber);
+  px(66, 78, 28, 1, C.caution);
+  for (let x = 66; x < 94; x += 4) px(x, 78, 2, 1, C.dark);
+  const lamp = reduceMotion ? 0.9 : 0.5 + 0.4 * (0.5 + 0.5 * Math.sin(now / 1700));
+  ctx.globalAlpha = lamp;
+  px(94, 64, 5, 3, C.amber);
+  ctx.globalAlpha = 1;
+  px(95, 67, 1, 2, C.rackEdge);
+  px(65, 77, 3, 1, C.rackEdge);
+  px(64, 76, 1, 1, C.rackEdge);
+}
+
+function drawServer(now) {
+  const r = rooms.server;
+  drawRoomBase(r);
+  for (let i = 0; i < 3; i++) {
+    const rx = 107 + i * 13;
+    px(rx, 67, 9, 11, C.rack);
+    px(rx, 67, 9, 1, C.rackEdge);
+    for (let k = 0; k < 4; k++) px(rx + 1, 69 + k * 2, 7, 1, C.rackEdge);
+  }
+  for (const led of leds) {
+    const on = reduceMotion || ((now + led.phase) % led.period) < led.period * 0.6;
+    if (on) px(led.x, led.y, 1, 1, led.color);
+  }
+}
+
+function drawProps() {
+  for (const p of props) {
+    const top = ARENA_FLOOR - p.h;
+    if (p.type === 'pillar') {
+      px(p.x, top, p.w, p.h, C.pillar);
+      px(p.x + p.w - 2, top, 2, p.h, C.pillarShade);
+    } else if (p.type === 'bench') {
+      px(p.x, top, p.w, 2, C.deskTop);
+      px(p.x + 1, top + 2, p.w - 2, 1, C.desk);
+      px(p.x + 2, top + 3, 2, 1, C.rackEdge);
+      px(p.x + p.w - 4, top + 3, 2, 1, C.rackEdge);
+    } else if (p.type === 'plant') {
+      px(p.x + 1, ARENA_FLOOR - 4, 5, 4, C.pot);
+      px(p.x, top, 7, 4, C.leaf);
+      px(p.x + 1, top - 2, 2, 2, C.leaf);
+      px(p.x + 4, top - 1, 2, 3, C.leaf);
+      px(p.x + 3, top + 4, 1, 3, C.leaf);
+    }
+  }
+}
+
+function drawBot(bot, now) {
+  const x = Math.round(bot.x);
+  const y = ARENA_FLOOR - BOT_H;
+  const appear = Math.min((now - bot.shownAt) / 500, 1);
+  ctx.globalAlpha = reduceMotion ? 1 : appear;
+  const walking = !reduceMotion && Math.abs(bot.target - bot.x) > 0.5;
+  const step = walking && Math.floor(now / 220) % 2 === 0;
+
+  px(x + 2, y, 1, 1, C.amber); // 안테나
+  px(x + 1, y + 1, 3, 1, C.bot);
+  px(x, y + 2, 5, 2, C.bot);
+  px(x + 1, y + 2, 1, 1, C.botEye);
+  px(x + 3, y + 2, 1, 1, C.botEye);
+  px(x + 1, y + 4, 3, 2, bot.color);
+  if (step) {
+    px(x + 2, y + 6, 1, 1, C.botEye);
+  } else {
+    px(x + 1, y + 6, 1, 1, C.botEye);
+    px(x + 3, y + 6, 1, 1, C.botEye);
+  }
+  ctx.globalAlpha = 1;
+}
+
+// 로봇과 캐릭터가 함께 쓰는 걷기: 목표 지점까지 걷고 잠깐 쉰 뒤 새 목표를 고릅니다.
+function updateWalker(bot, dt, width, r = rooms.hall) {
+  if (reduceMotion) return;
+  if (Math.abs(bot.target - bot.x) <= 0.5) {
+    bot.wait -= dt;
+    if (bot.wait <= 0) {
+      bot.target = r.x + 3 + Math.random() * (r.w - width - 6);
+      bot.wait = 900 + Math.random() * 2400;
+    }
+    return;
+  }
+  const dir = Math.sign(bot.target - bot.x);
+  bot.x += dir * Math.min(0.012 * dt, Math.abs(bot.target - bot.x));
+}
+
+function charWidth(ch) {
+  return ch.img.naturalWidth ? (ch.img.naturalWidth * CHAR_SCALE) / S : 4;
+}
+
+// 그림 한 장을 몸통과 발(아래 FEET줄)로 잘라서 따로 움직임
+// 발 조각은 몸통 마지막 줄을 한 줄 겹쳐 가져가서, 몸이 1칸 떠도 틈이 생기지 않음
+const FEET = 4;
+
+// 지금 자세: 각 발을 든 높이, 몸이 뜬 높이, 몸이 기운 방향 (모두 그림 칸 단위)
+function charPose(ch, now) {
+  const pose = { liftL: 0, liftR: 0, bob: 0, sway: 0 };
+  if (reduceMotion) return pose;
+  const walking = Math.abs(ch.target - ch.x) > 0.5;
+  if (walking) {
+    ch.facing = Math.sign(ch.target - ch.x) || ch.facing;
+    // 왼발 듦 → 모음 → 오른발 듦 → 모음
+    const step = Math.floor(now / 150) % 4;
+    if (step === 0) Object.assign(pose, { liftL: 2, bob: 1, sway: -1 });
+    if (step === 2) Object.assign(pose, { liftR: 2, bob: 1, sway: 1 });
+    return pose;
+  }
+  // 쉬는 중: 숨 쉬듯 오르내리고, 가끔 제자리에서 폴짝
+  if (Math.sin(now / 520 + ch.seed) > 0.6) pose.bob = 1;
+  if (now >= ch.nextHop) {
+    ch.hopAt = now;
+    ch.nextHop = now + 2600 + Math.random() * 4200;
+  }
+  const t = (now - ch.hopAt) / 420;
+  if (t >= 0 && t < 1) {
+    const h = Math.round(Math.sin(t * Math.PI) * 4);
+    pose.bob += h;
+    pose.liftL += h;
+    pose.liftR += h;
+  }
+  return pose;
+}
+
+function drawChar(ch, now, alpha, floorY) {
+  const img = ch.img;
+  if (!img.complete || !img.naturalWidth) return;
+  const w = img.naturalWidth;
+  const h = img.naturalHeight;
+  const k = CHAR_SCALE;
+  const half = Math.floor(w / 2);
+  const { liftL, liftR, bob, sway } = charPose(ch, now);
+
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.imageSmoothingEnabled = false;
+  // 발바닥 가운데를 기준점으로, 가는 방향으로 좌우를 뒤집음
+  const cx = Math.round((ch.x * S + (w * k) / 2) / k) * k;
+  ctx.translate(cx, floorY * S);
+  ctx.scale(ch.facing, 1);
+  const left = -Math.floor(w / 2);
+  // 발 (왼쪽 절반, 오른쪽 절반)
+  ctx.drawImage(img, 0, h - FEET - 1, half, FEET + 1, left * k, (-(FEET + 1) - liftL) * k, half * k, (FEET + 1) * k);
+  ctx.drawImage(img, half, h - FEET - 1, w - half, FEET + 1, (left + half) * k, (-(FEET + 1) - liftR) * k, (w - half) * k, (FEET + 1) * k);
+  // 몸통
+  ctx.drawImage(img, 0, 0, w, h - FEET, (left + sway) * k, (-h - bob) * k, w * k, (h - FEET) * k);
+  ctx.restore();
+}
+
+/* ---------- 역할 선택 2안: 역할에 따라 볼 수 있는 구역만 열림 ---------- */
+// 화면 연출용 대응표. 실제 권한 규칙(역할 × 문서 등급)은 서버 정책이 정하며 이 표와 무관함
+const ROLE_ACCESS = {
+  prof: ['hall', 'meeting', 'storage', 'comms', 'archive', 'power', 'server', 'restricted'],
+  grad: ['hall', 'meeting', 'storage', 'comms', 'archive', 'power'],
+  std: ['hall', 'meeting', 'storage', 'comms'],
+};
+let sceneRole = null; // 역할 선택 화면에서 고른 역할 (없으면 null)
+const veil = { meeting: 0, archive: 0, comms: 0, hall: 0, storage: 0, power: 0, server: 0 };
+let restrictedOpen = 0; // 1이면 제한 구역이 열림
+
+function updateAccess(dt) {
+  const k = reduceMotion ? 1 : Math.min(dt / 160, 1);
+  const open = sceneRole ? ROLE_ACCESS[sceneRole] : null;
+  for (const key of Object.keys(veil)) {
+    const target = open && !open.includes(key) ? 1 : 0;
+    veil[key] += (target - veil[key]) * k;
+  }
+  const openTarget = (open && open.includes('restricted')) || secretOpen ? 1 : 0;
+  restrictedOpen += (openTarget - restrictedOpen) * k;
+  party += ((secretOpen ? 1 : 0) - party) * (reduceMotion ? 1 : Math.min(dt / 300, 1));
+  // 거의 다 왔으면 딱 맞춤 (자물쇠가 희미하게 남지 않게)
+  for (const key of Object.keys(veil)) if (Math.abs(veil[key] - Math.round(veil[key])) < 0.01) veil[key] = Math.round(veil[key]);
+  if (Math.abs(restrictedOpen - openTarget) < 0.01) restrictedOpen = openTarget;
+  if (Math.abs(party - (secretOpen ? 1 : 0)) < 0.01) party = secretOpen ? 1 : 0;
+
+  // 방이 닫히면 디스코도 꺼짐. 공은 일정한 속도로 내려오고(0.9초) 올라감
+  if (restrictedOpen < 0.5) discoOn = false;
+  const dropTarget = discoOn ? 1 : 0;
+  discoDrop = reduceMotion ? dropTarget
+    : Math.max(0, Math.min(1, discoDrop + Math.sign(dropTarget - discoDrop) * (dt / 900)));
+  // 내려올 땐 거의 다 내려온 뒤 켜지고, 올라갈 땐 먼저 꺼짐
+  discoGlow = discoOn ? Math.max(0, (discoDrop - 0.8) / 0.2) : Math.max(0, discoGlow - dt / 250);
+  if (reduceMotion) discoGlow = discoOn ? 1 : 0;
+}
+
+/* ---------- 숨은 기능: 제한 구역 디스코 ---------- */
+
+const DISCO_X = 80; // 디스코볼이 매달린 x (제한 구역 가운데)
+const discoColors = ['#ff6fae', '#6fd3ff', '#ffe36f', '#8dff8a', '#c79bff'];
+const DISCO_Y = 94; // 디스코볼 가운데 y
+const DISCO_R = 3; // 디스코볼 반지름 (지름 7칸)
+// 미러볼 반사광: 공 둘레를 타원으로 도는 하얀 점들
+const discoSparks = Array.from({ length: 46 }, (_, i) => ({
+  angle: i * 2.4,
+  rx: 14 + ((i * 13) % 58),
+  ry: 3 + ((i * 5) % 11),
+  speed: 0.0004 + (i % 5) * 0.00012,
+  phase: i,
+}));
+
+// F안: 빛줄기 + 반사 반짝이 (캐릭터 뒤에 그림)
+function drawDiscoLights(now) {
+  const r = rooms.restricted;
+  const floor = r.y + r.h - 2;
+  ctx.save();
+  // 방 밖으로 새지 않게 제한 구역 안만 그림 (천장 줄무늬 아래부터)
+  ctx.beginPath();
+  ctx.rect(r.x * S, (r.y + 2) * S, r.w * S, (r.h - 2) * S);
+  ctx.clip();
+
+  ctx.globalAlpha = discoGlow * 0.55;
+  px(r.x, r.y + 2, r.w, r.h - 2, '#3b2a5a'); // 보랏빛으로 어둡게 해서 빛이 보이게
+
+  // 공에서 바닥까지 내려오는 색 빛줄기 3갈래, 좌우로 흔들림
+  for (let i = 0; i < 3; i++) {
+    const angle = (reduceMotion ? (i - 1) * 0.6 : Math.sin(now / 1000 + i * 2.1)) * 1.1;
+    const color = discoColors[(i * 2 + (reduceMotion ? 0 : Math.floor(now / 1400))) % discoColors.length];
+    ctx.globalAlpha = discoGlow * 0.26;
+    for (let y = DISCO_Y + 2; y < floor; y++) {
+      const d = y - DISCO_Y;
+      const cx = DISCO_X + Math.tan(angle) * d;
+      const half = 0.5 + d * 0.18;
+      px(Math.round(cx - half), y, Math.max(1, Math.round(half * 2)), 1, color);
+    }
+  }
+
+  // 반사 반짝이
+  for (const sp of discoSparks) {
+    const a = sp.angle + (reduceMotion ? 0 : now * sp.speed);
+    const x = Math.round(DISCO_X + Math.cos(a) * sp.rx);
+    const y = Math.round(DISCO_Y + 4 + Math.sin(a) * sp.ry);
+    if (y < r.y + 2 || y >= floor) continue;
+    ctx.globalAlpha = discoGlow * (reduceMotion ? 0.7 : 0.35 + 0.5 * Math.abs(Math.sin(now / 300 + sp.phase)));
+    px(x, y, 1, 1, '#ffffff');
+  }
+  ctx.restore();
+}
+
+// 천장에 매달린 디스코볼 (지름 7칸): 칸 무늬가 돌아가고 한 칸씩 반짝임
+// 천장에서 줄을 타고 내려옴 (discoDrop 0 → 1). 천장 위로는 그리지 않음
+function drawDiscoBall(now) {
+  const r = rooms.restricted;
+  const eased = 1 - Math.pow(1 - discoDrop, 3);
+  const top = r.y + 2;
+  const cy = Math.round(top - DISCO_R - 1 + (DISCO_Y - (top - DISCO_R - 1)) * eased);
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(r.x * S, top * S, r.w * S, (r.h - 2) * S);
+  ctx.clip();
+  if (cy - DISCO_R > top) px(DISCO_X, top, 1, cy - DISCO_R - top, '#8a979c'); // 줄
+  // 켜져 있을 때만 돌아가며 반짝임
+  const turn = reduceMotion || discoGlow < 0.5 ? 0 : Math.floor(now / 220);
+  const cells = [];
+  for (let y = -DISCO_R; y <= DISCO_R; y++) {
+    for (let x = -DISCO_R; x <= DISCO_R; x++) {
+      if (x * x + y * y <= DISCO_R * DISCO_R + DISCO_R) cells.push([DISCO_X + x, cy + y]);
+    }
+  }
+  for (const [x, y] of cells) px(x, y, 1, 1, (x + y + turn) % 2 === 0 ? '#d9e0e3' : '#7d8a92');
+  if (discoGlow > 0.5) {
+    const [sx, sy] = cells[(turn * 7) % cells.length];
+    px(sx, sy, 1, 1, '#ffffff');
+  }
+  ctx.restore();
+}
+
+const WARN_LAMP_X = 88; // 경고등 x (디스코볼과 환기구 사이)
+
+// 잠긴 구역: 어둡게 덮고 가운데에 자물쇠 (제한 구역도 같은 자물쇠를 씀)
+// dim: false면 덮지 않고 자물쇠만 그림 (원래 어두운 제한 구역용)
+function drawLock(room, v, dim = true) {
+  if (v < 0.01) return;
+  if (dim) {
+    ctx.globalAlpha = v * 0.72;
+    px(room.x, room.y, room.w, room.h, C.dark);
+  }
+  ctx.globalAlpha = v;
+  const cx = Math.round(room.x + room.w / 2);
+  const cy = Math.round(room.y + room.h / 2);
+  px(cx - 2, cy - 4, 5, 1, C.labelDim); // 고리
+  px(cx - 2, cy - 4, 1, 3, C.labelDim);
+  px(cx + 2, cy - 4, 1, 3, C.labelDim);
+  px(cx - 3, cy - 1, 7, 5, C.labelDim); // 몸통
+  px(cx, cy + 1, 1, 2, C.dark); // 열쇠 구멍
+  ctx.globalAlpha = 1;
+}
+
+// 제한 구역 안쪽: 봉인된 서류 캐비닛(왼쪽) + 철망이 떼어진 환기구(오른쪽)
+// 환기구에서 캐비닛까지 발자국: 누군가 몰래 들어와 문서를 뒤진 흔적
+// 좌표는 방 왼쪽 위(r.x, r.y) 기준. 가운데(x 62~74) 천장은 디스코볼 자리라 비워 둠
+function drawRestrictedInterior(now, r) {
+  const p = (x, y, w, h, color) => px(r.x + x, r.y + y, w, h, color);
+  const alpha = ctx.globalAlpha;
+  const metal = '#8d978c';
+  const metalShade = '#7a8479';
+  const seal = '#c8553d';
+  const paper = '#e6ede4';
+
+  // 서류 캐비닛 3개 (서랍 3칸), 봉인 테이프
+  for (let i = 0; i < 3; i++) {
+    const x = 10 + i * 11;
+    p(x, 7, 9, 15, metal);
+    p(x + 8, 7, 1, 15, metalShade);
+    for (let k = 0; k < 3; k++) {
+      p(x + 1, 8 + k * 5, 7, 4, metalShade);
+      p(x + 3, 9 + k * 5, 3, 1, '#56616b');
+    }
+    if (i !== 1) p(x + 1, 13, 7, 1, seal);
+  }
+  // 오른쪽 캐비닛 가운데 서랍이 열려 있고 서류가 삐져나옴
+  p(41, 13, 5, 4, metalShade);
+  p(42, 12, 3, 1, paper);
+  // 바닥에 흩어진 서류
+  p(46, 21, 4, 1, paper);
+  p(51, 20, 3, 1, paper);
+  p(55, 21, 3, 1, '#d8c79a');
+
+  // 환기구: 쇠창살, 떼어낸 철망이 옆에 기대 있음
+  p(100, 12, 18, 9, '#3a434c');
+  p(101, 13, 16, 7, '#151a20');
+  for (let k = 0; k < 4; k++) p(103 + k * 4, 13, 1, 7, '#56616b');
+  p(94, 18, 7, 3, metal);
+  p(95, 19, 5, 1, '#56616b');
+  // 환기구 → 캐비닛 발자국
+  for (let k = 0; k < 6; k++) p(90 - k * 8, 21, 2, 1, '#6b5a48');
+  // 깜빡이는 형광등
+  const flicker = reduceMotion || Math.floor(now / 230) % 7 !== 0;
+  p(96, 4, 8, 1, flicker ? '#f3e7a0' : '#8a876c');
+  // 벽에 붙은 쪽지
+  p(122, 6, 8, 6, paper);
+  p(123, 7, 6, 1, seal);
+  p(123, 9, 4, 1, '#2a3138');
+  ctx.globalAlpha = alpha;
+}
+
+function drawRestricted(now) {
+  const r = rooms.restricted;
+  px(r.x, r.y, r.w, r.h, '#1c232b');
+  px(r.x, r.y + r.h - 2, r.w, 2, '#262e36');
+  // 안쪽은 잠겨 있는 동안 보이지 않고, 열리면(교수·안테나) 불이 켜지며 나타남
+  if (restrictedOpen > 0.01) {
+    ctx.globalAlpha = restrictedOpen;
+    drawRoomBase(r);
+    drawRestrictedInterior(now, r);
+    ctx.globalAlpha = 1;
+  }
+
+  if (r.state !== 'idle') {
+    // 경고 줄무늬
+    for (let x = r.x; x < r.x + r.w; x += 6) {
+      px(x, r.y, 3, 2, C.caution);
+      px(x + 3, r.y, 3, 2, '#2b2f2a');
+    }
+    // 천천히 숨 쉬듯 깜빡이는 경고등
+    const lamp = reduceMotion ? 0.9 : 0.45 + 0.45 * (0.5 + 0.5 * Math.sin(now / 1000));
+    ctx.globalAlpha = lamp;
+    px(WARN_LAMP_X, 91, 3, 2, C.amber);
+    ctx.globalAlpha = 1;
+  }
+}
+
+function drawLabels(now) {
+  for (const key of ['meeting', 'archive', 'comms', 'hall', 'storage', 'power', 'server']) {
+    const room = rooms[key];
+    const lit = lightLevel(room, now) > 0.5 && veil[key] < 0.5;
+    text(room.label, room.x + 2, room.y + 1.5, lit ? C.label : C.labelDim);
+  }
+  const r = rooms.restricted;
+  const open = restrictedOpen > 0.5;
+  text(r.label, r.x + 2, r.y + 3, open ? C.label : r.state === 'active' ? C.amber : C.labelDim);
+}
+
+function drawBotLabels(now) {
+  for (const bot of bots) {
+    if (bot.shownAt === null) continue;
+    ctx.globalAlpha = Math.min((now - bot.shownAt) / 500, 1);
+    const label = bot.name;
+    ctx.font = `700 ${2.4 * S}px 'Pretendard Variable', Pretendard, sans-serif`;
+    const w = ctx.measureText(label).width / S;
+    text(label, bot.x + BOT_W / 2 - w / 2, ARENA_FLOOR - BOT_H - 3.4, C.label, 2.4, 700);
+    ctx.globalAlpha = 1;
+  }
+}
+
+let frameId = null;
+let lastTime = 0;
+let showLabels = true;
+
+function frame() {
+  const now = performance.now(); // 로딩 쪽 lightAt/shownAt과 같은 시계
+  const dt = lastTime ? Math.min(now - lastTime, 50) : 16;
+  lastTime = now;
+  drawScene(now, dt);
+  frameId = requestAnimationFrame(frame);
+}
+
+// 장면 한 장 그리기. dt가 0이면 로봇·캐릭터가 움직이지 않음
+function drawScene(now, dt) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawSky(now);
+  ctx.save();
+  ctx.translate(OX * S, OY * S); // 여기부터는 건물 장면 좌표
+  drawGround();
+  drawShell(now);
+
+  updateAccess(dt);
+  drawMeeting();
+  drawArchive();
+  drawComms(now);
+  drawHallBase();
+  for (const bot of bots) {
+    if (bot.shownAt === null) continue;
+    updateWalker(bot, dt, BOT_W, rooms.hall);
+    drawBot(bot, now);
+  }
+  drawProps();
+  drawStorage();
+  drawPower(now);
+  drawServer(now);
+  for (const key of Object.keys(veil)) {
+    darken(rooms[key], lightLevel(rooms[key], now));
+    drawLock(rooms[key], veil[key]);
+  }
+
+  drawRestricted(now);
+  const r = rooms.restricted;
+  if (discoGlow > 0.01) drawDiscoLights(now);
+  if (party > 0.01) {
+    // 캐비닛(디스코 스위치) 앞은 가리지 않게 그 오른쪽에서만 돌아다님
+    const floorArea = { x: r.x + 44, w: r.w - 44 };
+    for (const ch of chars) {
+      updateWalker(ch, dt, charWidth(ch), floorArea);
+      drawChar(ch, now, party, r.y + r.h - 2);
+    }
+  }
+  if (discoDrop > 0) drawDiscoBall(now);
+  // 잠금 검사가 끝난 제한 구역은 서버실과 같은 자물쇠로 표시 (열리면 사라짐)
+  if (rooms.restricted.state === 'checked') drawLock(rooms.restricted, 1 - restrictedOpen, false);
+  if (showLabels) drawLabels(now);
+  if (showLabels && lightLevel(rooms.hall, now) > 0.5) drawBotLabels(now);
+  ctx.restore();
+}
+
+
+for(const r of Object.values(rooms))r.lightAt=0;for(const b of bots)b.shownAt=0;showLabels=false;drawScene(7000,0);})();
+window.Play.data.ybs.forEach((yb,i)=>{const el=document.createElement('div');el.className='character';const cv=document.createElement('canvas');cv.width=32;cv.height=32;cv.setAttribute('aria-hidden','true');const cx=cv.getContext('2d');window.Play.pixel.drawYb(cx,{x:16,y:17,frame:0},yb.color,i);el.append(cv,document.createTextNode(yb.id));document.getElementById('characters').append(el)});
+const pages=[...document.querySelectorAll('.page')];let index=Math.max(0,Math.min(pages.length-1,(parseInt(location.hash.slice(1))||1)-1));let all=new URLSearchParams(location.search).has('overview');
+const observer=new ResizeObserver(entries=>entries.forEach(e=>e.target.style.setProperty('--scale',e.contentRect.width/1600)));pages.forEach(p=>observer.observe(p));
+function show(i){index=Math.max(0,Math.min(pages.length-1,i));pages.forEach((p,k)=>p.classList.toggle('active',k===index));document.body.classList.toggle('overview',all);document.getElementById('counter').textContent=String(index+1).padStart(2,'0')+' / 06';document.getElementById('overview').setAttribute('aria-pressed',String(all));document.getElementById('overview').textContent=all?'슬라이드 보기':'전체 보기';history.replaceState(null,'','#'+(index+1));}
+document.getElementById('prev').onclick=()=>show(index-1);document.getElementById('next').onclick=()=>show(index+1);document.getElementById('overview').onclick=()=>{all=!all;show(index)};document.getElementById('fullscreen').onclick=()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen().catch(()=>{});};document.getElementById('print').onclick=()=>window.print();pages.forEach((p,k)=>p.onclick=e=>{if(all&&!e.target.closest('a')){all=false;show(k)}});document.addEventListener('keydown',e=>{if(e.target.closest('button,a'))return;if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(index+1)}if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();show(index-1)}if(e.key==='Home')show(0);if(e.key==='End')show(5);if(e.key.toLowerCase()==='o'){all=!all;show(index)}if(e.key.toLowerCase()==='f')document.getElementById('fullscreen').click()});show(index);
+</script></body></html>

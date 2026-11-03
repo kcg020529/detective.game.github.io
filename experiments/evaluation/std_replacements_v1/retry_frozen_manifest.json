@@ -1,0 +1,9 @@
+{
+  "frozen_before_execution_utc": "2026-11-03T01:32:07.625234+00:00",
+  "sha256": {
+    "experiments\\evaluation\\std_replacements_v1\\retry_cases.json": "61989d45b1707ae6c0a714c2bca6f1232c3860155f1a83bb0c4285ae320ffca6",
+    "experiments\\evaluation\\std_replacements_v1\\retry_criteria.json": "1e9ef8b41f135e78ae2babc0f48f536617443b3c5f3cab9c6505cb898ce25126",
+    "experiments\\evaluation\\run_three_way.py": "877180266e1fb64ef5e5f9216c09dbc0f2dc39b5025bcfb55ff345e217401868",
+    "experiments\\evaluation\\GRADING_RUBRIC.md": "c029e00d00543ca7e168245e8d511351c9aa01541939f45c0fc41aa52fb959b6"
+  }
+}

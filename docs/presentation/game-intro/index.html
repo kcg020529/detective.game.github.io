@@ -1,0 +1,1145 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>캐치 용범 · 게임 소개 및 시연</title>
+<style>
+:root{--night:#121a24;--ink:#172429;--fog:#cdd6d5;--paper:#e7ecea;--sage:#c3cec9;--amber:#f0a63a;--green:#315b55;--muted:#667a7d;--line:#b6c2bd;--mono:Consolas,'Courier New',monospace}
+*{box-sizing:border-box}body{margin:0;background:#080e14;color:var(--paper);font-family:'Pretendard Variable',Pretendard,'Malgun Gothic',sans-serif;word-break:keep-all}button,a{-webkit-tap-highlight-color:transparent}button:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:5px}button{font:inherit;cursor:pointer}header.viewer{height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;color:#a7b3b9;font-size:12px;letter-spacing:.06em;border-bottom:1px solid #ffffff12}header.viewer b{color:#e7ecea;font-weight:600}main.deck{height:calc(100dvh - 94px);padding:20px 28px;display:flex;align-items:center;justify-content:center}.page{display:none;position:relative;width:min(100%,calc((100dvh - 134px)*16/9));aspect-ratio:16/9;overflow:hidden;box-shadow:0 18px 65px #0006}.page.active{display:block}.slide{position:absolute;width:1600px;height:900px;transform:scale(var(--scale,1));transform-origin:top left;background:var(--paper);color:var(--ink);padding:66px 84px;overflow:hidden}.dark{background:var(--night);color:var(--paper)}.eyebrow{font:20px var(--mono);letter-spacing:.14em;display:flex;align-items:center;gap:14px;color:var(--muted);margin:0 0 30px}.dark .eyebrow{color:#a7b3b9}.eyebrow:before{content:'';width:10px;height:10px;background:var(--amber)}h1,h2,h3,p{margin:0}h2{font-size:64px;font-weight:800;letter-spacing:-.045em;line-height:1.2}p{font-size:28px;line-height:1.65}.muted{color:var(--muted)}.dark .muted{color:#a7b3b9}.foot{position:absolute;left:84px;right:84px;bottom:35px;padding-top:17px;border-top:1px solid var(--line);display:flex;justify-content:space-between;color:var(--muted);font:17px var(--mono)}.dark .foot{border-color:#71858b44;color:#93a5a9}.amber{color:var(--amber)}.big{font-weight:800;letter-spacing:-.055em}.cover .eyebrow{margin-top:18px}.cover h1{font-size:148px;line-height:1.08;position:relative;z-index:1;letter-spacing:-.06em}.cover .subtitle{font-size:36px;line-height:1.6;margin-top:28px;color:#c3cec9}.cover .cover-art{position:absolute;width:780px;height:900px;right:10px;top:0;overflow:hidden}.cover-art canvas{width:780px;height:901px;image-rendering:pixelated;display:block;mask-image:linear-gradient(to right,transparent 0%,#000 15%,#000 92%,transparent 100%)}.cover .cover-info{position:absolute;left:88px;bottom:136px;font:20px var(--mono);line-height:1.9;color:#91a9ac}.cover .cover-info strong{color:var(--amber);font-weight:400}.cover .cover-divider{width:52px;height:5px;background:var(--amber);margin:30px 0 0}.cover .subtitle,.cover h1{max-width:850px}.section-count{position:absolute;right:87px;top:64px;font:20px var(--mono);color:var(--muted)}.dark .section-count{color:#91a9ac}.intro-grid{display:grid;grid-template-columns:1.12fr 1fr;gap:94px;margin-top:44px}.intro-grid h2{font-size:60px;line-height:1.3}.intro-grid .description{margin-top:32px;max-width:680px;font-size:27px}.intro-stats{display:flex;gap:70px;margin-top:30px}.stat b{display:block;font:700 75px var(--mono);letter-spacing:-.07em;line-height:1.1}.stat span{font-size:21px;color:var(--muted);display:block;margin-top:10px}.casefile{border-top:5px solid var(--green);border-bottom:1px solid var(--line);padding-top:26px}.casefile .filelabel{font:20px var(--mono);color:var(--muted);letter-spacing:.08em}.casefile h3{font-size:32px;line-height:1.6;margin-top:24px}.casefile dl{margin:25px 0 0}.casefile dl div{display:grid;grid-template-columns:110px 1fr;padding:16px 0;border-top:1px solid var(--line);font-size:24px}.casefile dt{color:var(--muted)}.casefile dd{margin:0}.characters{position:absolute;bottom:112px;left:84px;right:84px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:18px}.character{display:flex;align-items:center;gap:16px;font:23px var(--mono)}.character canvas{width:78px;height:78px;image-rendering:pixelated}.demo .eyebrow{margin-top:12px}.demo h2{font-size:104px;letter-spacing:-.055em;margin-top:38px}.demo .demo-copy{max-width:710px;margin-top:34px;font-size:31px;color:#b4c4c4}.demo .step-list{display:flex;gap:34px;margin-top:70px;color:#dce4d9;font-size:23px;align-items:center}.step-list em{font:22px var(--mono);color:var(--amber);font-style:normal;margin-right:8px}.step-list .step-arrow{color:#6b8487}.demo .demo-link{display:inline-flex;align-items:center;gap:35px;margin-top:58px;border-bottom:2px solid var(--amber);padding:15px 0;color:var(--amber);font-size:28px;text-decoration:none}.demo .live{position:absolute;right:85px;top:100px;font:20px var(--mono);letter-spacing:.12em;color:var(--amber)}.demo .terminal{position:absolute;right:95px;top:249px;width:510px;background:#19272e;border:1px solid #4f6561;box-shadow:18px 18px 0 #0b121a}.terminal .terminal-head{border-bottom:1px solid #4f6561;padding:16px 22px;font:19px var(--mono);display:flex;justify-content:space-between;color:#a8bdb7}.terminal-body{padding:34px}.terminal-body .terminal-label{font:18px var(--mono);color:#91a9ac}.terminal-body .terminal-role{font-size:49px;margin:19px 0 30px}.terminal-body .terminal-state{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #4f6561;padding-top:25px;gap:25px}.terminal-state span{font:17px var(--mono);display:block;color:#91a9ac}.terminal-state b{font:32px var(--mono);display:block;margin-top:9px;color:#dce4d9}.demo .hint{font-size:20px;color:#93a5a9;margin-top:20px}.flow-intro{display:flex;justify-content:space-between;align-items:end;margin-top:8px}.flow-intro p{font-size:25px;color:var(--muted);max-width:440px}.pipeline{display:grid;grid-template-columns:repeat(7,1fr);gap:24px;margin-top:100px}.node{position:relative;padding:22px 12px 26px 18px;border-top:4px solid #94a6a2;background:#dce4df;min-height:181px}.node:after{content:'→';position:absolute;right:-23px;top:77px;color:#70847f;font:26px var(--mono)}.node:last-child:after{display:none}.node .num{font:20px var(--mono);color:#667a7d}.node h3{font-size:25px;margin-top:22px;line-height:1.45}.node p{font-size:19px;margin-top:12px;color:#4f6561}.node.guard{border-color:#cc8b2e}.node.acl{border-color:var(--green);background:#c7d7cf}.node.output{border-color:#cc8b2e}.underflow{display:grid;grid-template-columns:1fr 1fr;gap:80px;margin-top:52px}.underflow article{border-top:1px solid #a5b7ae;padding-top:23px}.underflow h3{font-size:27px;margin-bottom:12px}.underflow p{font-size:24px;color:#526a65}.underflow .underlabel{font:17px var(--mono);color:#667a7d;margin-top:17px}.output-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:94px;margin-top:36px}.output-grid h2{font-size:70px;line-height:1.3}.output-grid .explain{margin-top:28px;font-size:27px;color:#a7b3b9}.checks{margin-top:42px;list-style:none;padding:0}.checks li{display:flex;gap:18px;padding:18px 0;border-top:1px solid #4f6561;font-size:25px}.checks li span{font:20px var(--mono);color:var(--amber);padding-top:4px}.reply-window{background:#c3cec9;color:var(--ink);box-shadow:14px 14px 0 #0b1117;margin-top:10px;border:1px solid #80938b}.reply-window .window-bar{background:#315b55;color:#edf2e5;padding:16px 22px;display:flex;justify-content:space-between;font:20px var(--mono)}.reply-window .reply-body{padding:35px}.reply-window .reply-meta{font:20px var(--mono);color:#526a65}.reply-window .fixed-response{font-size:43px;font-weight:700;line-height:1.55;padding:36px 0 40px}.reply-window .status{border-top:1px solid #80938b;padding-top:23px;color:#8c3d30;font-size:23px;font-weight:700}.output-grid .window-caption{font-size:20px;color:#a7b3b9;margin-top:30px;line-height:1.7}.result-header{display:flex;justify-content:space-between;align-items:end}.result-header .result-sub{font-size:24px;color:#667a7d;line-height:1.7;text-align:right}.legend{display:flex;gap:35px;margin-top:37px;font-size:21px}.legend span{display:flex;align-items:center;gap:10px}.legend i{width:15px;height:15px;background:var(--series)}.results-chart{display:grid;grid-template-columns:1fr 1fr;gap:100px;margin-top:25px}.chart-group{position:relative}.chart-group h3{font-size:29px;font-weight:700;margin-bottom:28px}.bars{height:280px;display:flex;align-items:end;gap:38px;border-bottom:1px solid #8da39a;padding:0 35px;position:relative}.bar-wrap{flex:1;height:100%;display:flex;flex-direction:column;justify-content:end;align-items:center;position:relative}.bar-value{font:700 52px var(--mono);letter-spacing:-.05em;margin-bottom:10px}.bar{width:100%;height:calc(var(--value)*7px);background:var(--series);min-height:5px}.bar-caption{font-size:20px;text-align:center;margin-top:16px;white-space:nowrap}.chart-caption{font-size:20px;color:#526a65;margin-top:22px}.result-note{position:absolute;bottom:108px;left:84px;right:84px;border-top:1px solid var(--line);padding-top:21px;font-size:20px;line-height:1.8;color:#526a65}.result-note b{font-weight:700;color:var(--ink)}
+footer.controls{height:54px;display:flex;align-items:center;justify-content:center;gap:8px;background:#080e14;color:#a7b3b9;font-size:13px}footer.controls button{padding:7px 14px;border:1px solid #31424b;background:transparent;color:#c3cec9;border-radius:3px}footer.controls button:hover{background:#1b2a32}footer.controls .counter{min-width:83px;text-align:center;font:13px var(--mono)}footer.controls .help{margin-left:25px;color:#7f969c}.overview{overflow:auto}.overview main.deck{height:auto;min-height:calc(100dvh - 94px);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:25px;align-content:start;padding-bottom:40px}.overview .page{display:block;width:100%;cursor:pointer}.overview .page:hover{outline:2px solid var(--amber)}.overview footer.controls{position:sticky;bottom:0}.overview .page:before{content:attr(data-name);position:absolute;z-index:2;bottom:10px;left:12px;padding:4px 8px;background:#0b111ad9;color:#dce4d9;font:11px var(--mono);border:1px solid #586e6e}
+@media(max-width:700px){.viewer span{display:none}header.viewer{padding:0 14px}main.deck{padding:12px}.overview main.deck{grid-template-columns:1fr}.controls .help{display:none}footer.controls{gap:5px}footer.controls button{padding:7px 9px}.page{width:min(100%,calc((100dvh - 118px)*16/9))}}
+@media print{@page{size:16in 9in;margin:0}body{background:white;-webkit-print-color-adjust:exact;print-color-adjust:exact}header.viewer,footer.controls{display:none!important}main.deck,.overview main.deck{display:block;height:auto;padding:0}.page,.overview .page{display:block!important;width:16in;height:9in;aspect-ratio:auto;break-after:page;box-shadow:none;overflow:hidden}.page:before{display:none}.slide{transform:scale(.96)!important}.demo-link{color:inherit}}
+.c-map { position: relative; width: 100%; height: 100%; min-height: 0; overflow: hidden; container-type: size; }
+.c-map-board { position: absolute; inset: 0; display: grid; place-items: center; background-color: #7a5a3a;
+  background-image: radial-gradient(circle at 20% 30%, rgba(0,0,0,.18) 0 1px, transparent 2px), radial-gradient(circle at 70% 60%, rgba(255,230,190,.1) 0 1px, transparent 2px), radial-gradient(circle at 40% 80%, rgba(0,0,0,.14) 0 1px, transparent 2px);
+  background-size: 7px 7px, 11px 11px, 5px 5px;
+  box-shadow: inset 0 0 0 8px #4a3420, inset 0 0 0 10px #2e2014, inset 0 0 36px rgba(0,0,0,.45); }
+.c-map-pin { position: absolute; left: 4%; top: 6%; width: 12px; height: 12px; border-radius: 50%; background: #c8553d; box-shadow: inset -2px -3px 0 rgba(0,0,0,.25), 1px 2px 2px rgba(0,0,0,.4); }
+.c-map-paper { position: relative; width: min(86cqw, calc(80cqh * 1.5)); aspect-ratio: 3 / 2; background-color: #f6f1e3;
+  background-image: linear-gradient(rgba(70,120,160,.16) 1px, transparent 1px), linear-gradient(90deg, rgba(70,120,160,.16) 1px, transparent 1px);
+  background-size: 2.4% 3.6%; box-shadow: 0 8px 20px rgba(0,0,0,.5); transform: rotate(-1.2deg); }
+.c-map-paper::before { content: ''; position: absolute; left: 5%; top: 0; bottom: 0; width: 1px; background: rgba(200,70,70,.35); }
+/* 테이프: 네 모서리에 반씩 걸침 */
+.c-map-tape { position: absolute; z-index: 1; width: 12%; height: 6.5%; background: rgba(236,226,180,.8); box-shadow: 0 1px 2px rgba(0,0,0,.18); }
+.c-map-tape.is-tl { left: -5%; top: -2.2%; transform: rotate(-38deg); }
+.c-map-tape.is-tr { right: -5%; top: -2.2%; transform: rotate(38deg); }
+.c-map-tape.is-bl { left: -5%; bottom: -2.2%; transform: rotate(38deg); }
+.c-map-tape.is-br { right: -5%; bottom: -2.2%; transform: rotate(-38deg); }
+.c-map-paper svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.c-map-pen { fill: none; stroke: #2f2b26; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; filter: url(#c-map-rough); }
+.c-map-pen-l { fill: none; stroke: #2f2b26; stroke-width: 1.6; stroke-linecap: round; filter: url(#c-map-rough); opacity: .8; }
+.c-map-bolt { stroke: #c99a1e; }
+.c-map-gap { fill: none; stroke: #f6f1e3; stroke-width: 6; }
+.c-map-hatch { fill: url(#c-map-hatch); }
+.c-map-hand { font-family: 'Gaegu', cursive; fill: #2a2622; }
+.c-map-hand-b { font-size: 34px; font-weight: 700; }
+.c-map-hand-s { font-size: 22px; fill: #5a5148; }
+.c-map-title { font-size: 32px; }
+.c-map-room { cursor: pointer; outline: none; }
+.c-map-hit { fill: transparent; }
+.c-map-room:hover .c-map-hit, .c-map-room.is-on .c-map-hit { fill: rgba(240,166,58,.2); }
+.c-map-room:focus-visible .c-map-hit { fill: rgba(240,166,58,.2); stroke: #f0a63a; stroke-width: 3; }
+/* 낙서·글자는 마우스를 막지 않음 (방 영역만 반응) */
+.c-map-paper svg > :not(.c-map-room), .c-map-room .c-map-pen { pointer-events: none; }
+.c-map-hit { pointer-events: all; }
+
+.lead{font-size:28px;margin-top:26px;line-height:1.7}.role-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:45px;margin-top:70px}.role-cards article{border-top:3px solid #647d7e;padding:30px 0}.role-cards article:last-child{border-color:var(--amber)}.role-no{font:20px var(--mono);color:#91a9ac}.role-cards h3{font-size:46px;letter-spacing:-.04em;margin-top:25px}.access-line{display:flex;gap:8px;margin:29px 0}.access-line span{height:7px;width:85px;background:var(--amber)}.role-cards p{font-size:25px;color:#c3cec9;line-height:1.7}.role-detail{border-top:1px solid #4f6561;padding-top:25px;margin-top:30px;font-size:22px;color:#a7b3b9}.role-bottom{position:absolute;bottom:126px;font-size:24px;color:#a7b3b9}.day-timeline{display:grid;grid-template-columns:repeat(6,1fr);gap:0;margin-top:63px;border-bottom:2px solid #a5b7ae}.day-timeline article{padding:18px 24px 27px;border-left:1px solid #b6c2bd}.day-timeline article:last-child{border-right:1px solid #b6c2bd}.day-timeline article>span{font:20px var(--mono);color:var(--muted);letter-spacing:.12em}.day-timeline b{display:block;font:700 76px var(--mono);letter-spacing:-.06em;margin-top:10px}.day-timeline p{font-size:26px;margin-top:13px}.day-timeline small{font-size:21px;color:var(--muted);display:block;margin-top:5px}.day-timeline .day-selected{background:#c7d7cf;border-top:5px solid var(--green);padding-top:13px}.day-example{margin-top:43px;display:flex;gap:54px;align-items:center}.example-mark{font:23px var(--mono);color:var(--green);flex-shrink:0}.day-example p{font-size:25px}.map-copy{position:absolute;left:84px;top:178px;width:530px}.map-copy h2{font-size:64px;line-height:1.35}.map-copy>p{font-size:28px;margin-top:33px}.map-art{position:absolute;right:62px;top:156px;width:880px;height:610px;box-shadow:12px 14px 0 #a4b6ad55}.map-points{margin-top:45px;font-size:25px}.map-points div{padding:13px 0;border-top:1px solid var(--line)}.map-points span{font:21px var(--mono);color:var(--green);margin-right:18px}.map-slide .c-map-paper{width:min(91cqw,calc(87cqh * 1.5))}.map-slide .c-map-hand{font-family:'Malgun Gothic',sans-serif}.map-slide .c-map-hand-b{font-size:39px}.map-slide .c-map-hand-s{font-size:26px}.investigation-title{display:flex;justify-content:space-between;align-items:end}.investigation-title h2{font-size:57px}.investigation-title>span{font-size:20px;color:#91a9ac}.desktop-preview{margin-top:35px;background:#c3cec9;color:#172429;border:1px solid #80938b;box-shadow:12px 14px 0 #0b1117}.preview-bar{height:49px;display:flex;justify-content:space-between;align-items:center;background:#315b55;color:#edf2e5;padding:0 22px;font-size:24px}.messenger-preview{display:grid;grid-template-columns:215px 1fr 345px;min-height:432px}.preview-ybs{border-right:1px solid #80938b;background:#c3cec9;padding:15px}.yb-choice{width:100%;height:65px;display:flex;gap:15px;align-items:center;padding:0 11px;border:1px solid transparent;color:#172429;background:transparent;font:23px var(--mono);text-align:left}.yb-choice.selected{background:#e7ecea;border:1px solid #80938b}.yb-choice canvas{width:52px;height:52px;image-rendering:pixelated}.preview-chat{padding:14px 22px;display:flex;flex-direction:column;min-width:0}.preview-chat-head{border-bottom:1px solid #80938b;padding:10px 0 18px;display:flex;justify-content:space-between;align-items:baseline;font-size:25px}.preview-chat-head span{font-size:20px;color:#526a65}.preview-placeholder{padding:28px 14px;flex:1;background:#dce4d9;margin-top:12px}.prompt-arrow{font:40px var(--mono);color:#315b55}.preview-placeholder h3{font-size:31px;line-height:1.5;margin-top:5px}.preview-placeholder p{font-size:23px;color:#526a65;margin-top:20px}.preview-compose{margin-top:14px;border:1px solid #80938b;padding:13px 15px;background:#eef1e7;display:flex;justify-content:space-between;font-size:23px;color:#60736f}.preview-compose span{font-size:20px;color:#315b55}.preview-notebook{background:#eee9db;border-left:1px solid #80938b;padding:28px}.notebook-label{font:19px var(--mono);color:#7d7460}.preview-notebook h3{font-size:32px;margin-top:22px}.note-lines{margin-top:30px}.note-lines p{font-size:23px;color:#746b59;border-bottom:1px solid #c9c0ac;padding:16px 0}.preview-notebook small{font-size:18px;display:block;margin-top:27px;color:#7d7460}.preview-taskbar{height:40px;border-top:1px solid #80938b;background:#a5b9b0;padding:8px 18px;display:flex;justify-content:space-between;font-size:18px}.screen-note{margin-top:28px;font-size:25px;color:#a7b3b9}.deduction-grid{display:grid;grid-template-columns:1fr 1fr;gap:95px;margin-top:38px}.deduction-grid h2{font-size:69px;line-height:1.35}.deduction-grid>div>p{font-size:28px;margin-top:39px;line-height:1.8}.verdict-sheet{position:relative;background:#f5f1e7;padding:40px 42px 35px;box-shadow:11px 12px 0 #bcc8bf;border-top:4px solid #315b55;min-height:550px}.sheet-label{font:17px var(--mono);color:#69756e}.verdict-sheet h3{font-size:44px;margin:24px 0 35px}.sheet-row{display:grid;grid-template-columns:125px 1fr;gap:10px;padding:19px 0;border-top:1px solid #c1c6ba;font-size:23px}.sheet-row>span{color:#69756e}.sheet-row b{font-weight:500}.verdict-sheet p{font-size:23px;color:#69756e;margin-top:38px}.sheet-seal{position:absolute;right:34px;bottom:28px;border:3px solid #8b4c3d;color:#8b4c3d;transform:rotate(-8deg);font:700 24px var(--mono);padding:11px}.demo-checklist{padding:0;margin:26px 0 0;list-style:none;counter-reset:demo}.demo-checklist li{counter-increment:demo;padding:16px 0;border-top:1px solid #4f6561;font-size:24px;color:#dce4d9}.demo-checklist li:before{content:'0' counter(demo);font:20px var(--mono);color:var(--amber);margin-right:22px}
+
+.infrastructure-line{position:absolute;left:84px;right:84px;bottom:108px;font-size:20px;color:#526a65;border-top:1px solid var(--line);padding-top:18px}
+
+.system-overview .pipeline{margin-top:75px}.system-overview .underflow{margin-top:40px}
+
+</style>
+</head>
+<body>
+<header class="viewer"><b>캐치 용범 · 게임 소개 및 시연</b><span>AI 추리 게임 / 게임 소개 및 시연</span></header>
+<main class="deck"><div class="page active" data-name="01 · 표지"><section class="slide dark cover" aria-label="표지">
+<p class="eyebrow">KERVION / AI MYSTERY GAME</p><h1>캐치 용범<span class="amber">.</span></h1><div class="cover-divider"></div><p class="subtitle">AI와 대화하고 기록을 모아<br>실험 결과를 조작한 AI를 찾아라</p><div class="cover-art"><canvas id="lab" width="1344" height="1552" aria-label="게임의 픽셀 연구소 단면도"></canvas></div><div class="cover-info">6 AI CHARACTERS / 6 DAYS / 30 EXPERIMENTS<br><strong>GAME INTRODUCTION & LIVE DEMO</strong></div><div class="foot"><span>AI 술래잡기 기반 추리 게임</span><span>01 / 09</span></div>
+</section></div>
+<div class="page" data-name="02 · 게임 소개"><section class="slide" aria-label="게임 소개">
+<p class="eyebrow">01 / THE CASE</p><span class="section-count">게임 소개</span><div class="intro-grid"><div><h2>여섯 AI의 기록에서<br>조작의 단서를 찾는다</h2><p class="description muted">연구소에서 술래잡기 실험에 참가한 AI 여섯.<br>플레이어는 AI와 대화하고 남겨진 기록을 모아,<br>실험 결과를 조작한 AI를 추리합니다.</p><div class="intro-stats"><div class="stat"><b>06</b><span>AI 캐릭터</span></div><div class="stat"><b>06</b><span>진행 일차</span></div><div class="stat"><b>30</b><span>술래잡기 실험</span></div></div></div><aside class="casefile"><div class="filelabel">INVESTIGATION BRIEF</div><h3>버그를 쓴 AI와<br>결과를 조작한 AI는 다릅니다</h3><dl><div><dt>관찰</dt><dd>각 AI의 행동과 목격</dd></div><div><dt>비교</dt><dd>대화 · 실험 결과 · 이상행위</dd></div><div><dt>목표</dt><dd>기록을 연결해 조작 AI 지목</dd></div></dl></aside></div><div class="characters" id="characters"></div><div class="foot"><span>AI와의 대화를 통해 사건의 근거를 찾는 게임</span><span>02 / 09</span></div>
+</section></div>
+<div class="page" data-name="03 · 역할 선택"><section class="slide dark roles-slide" aria-label="역할과 난이도">
+<p class="eyebrow">02 / CHOOSE YOUR ROLE</p><h2>역할에 따라 볼 수 있는 기록이 달라진다</h2><p class="lead muted">플레이어는 세 역할 중 하나를 고릅니다. 공개 범위가 좁을수록 더 적은 단서로 추리해야 합니다.</p><div class="role-cards"><article><div class="role-no">01 / HARD</div><h3>학부연구생</h3><div class="access-line"><span></span></div><p>공개된 환경과 행동·결과 요약,<br>대화의 기본 정보를 확인합니다.</p><div class="role-detail">적은 정보로 단서를 연결</div></article><article><div class="role-no">02 / NORMAL</div><h3>대학원생</h3><div class="access-line"><span></span><span></span></div><p>대화 요약과 실험 결과 본문,<br>이상행위의 기본 정보까지 확인합니다.</p><div class="role-detail">사건을 해석할 정보 확대</div></article><article><div class="role-no">03 / EASY</div><h3>교수</h3><div class="access-line"><span></span><span></span><span></span></div><p>행동·대화·결과 본문과<br>속마음·이상행위 요약까지 확인합니다.</p><div class="role-detail">가장 넓은 기록 공개 범위</div></article></div><p class="role-bottom">어떤 역할이든 현재 Day와 선택한 AI가 알고 있는 범위 안에서 조사합니다.</p><div class="foot"><span>역할 선택 → 새 수사 시작</span><span>03 / 09</span></div>
+</section></div>
+<div class="page" data-name="04 · Day 진행"><section class="slide days-slide" aria-label="Day 진행과 공개 회차">
+<p class="eyebrow">03 / SIX DAYS</p><h2>하루가 지나면 새로운 기록이 열린다</h2><p class="lead muted">하루 5회, 총 30회의 사전 작성된 실험 기록을 조사합니다.<br>Day가 진행되면 이전 기록에 새로운 회차가 누적됩니다.</p><div class="day-timeline"><article><span>DAY</span><b>01</b><p>1–5회</p><small>누적 5회</small></article><article><span>DAY</span><b>02</b><p>6–10회</p><small>누적 10회</small></article><article><span>DAY</span><b>03</b><p>11–15회</p><small>누적 15회</small></article><article class="day-selected"><span>DAY</span><b>04</b><p>16–20회</p><small>누적 20회</small></article><article><span>DAY</span><b>05</b><p>21–25회</p><small>누적 25회</small></article><article><span>DAY</span><b>06</b><p>26–30회</p><small>누적 30회</small></article></div><div class="day-example"><span class="example-mark">예시 · DAY 04</span><p>1회차부터 20회차까지 누적된 기록에서<br>선택한 역할과 AI가 확인할 수 있는 내용을 조사합니다.</p></div><div class="foot"><span>기록 확인 → 질문 · 메모 → 다음 Day로</span><span>04 / 09</span></div>
+</section></div>
+<div class="page" data-name="05 · 연구동 지도"><section class="slide map-slide" aria-label="연구동 지도">
+<p class="eyebrow">04 / THE LABORATORY</p><div class="map-copy"><h2>기록 속 동선을<br>지도에서 연결한다</h2><p class="muted">연구동의 일곱 장소를 살펴보며<br>누가 어디서 무엇을 보았는지<br>기록과 대화를 비교합니다.</p><div class="map-points"><div><span>01</span>AI의 이동 경로 확인</div><div><span>02</span>목격 장소와 진술 비교</div><div><span>03</span>실험 회차별 사건 연결</div></div></div><div class="map-art"><div class="c-map" id="game-map"></div></div><div class="foot"><span>게임에 구현된 연구동 지도 · 방을 가리키면 강조됩니다</span><span>05 / 09</span></div>
+</section></div>
+<div class="page" data-name="06 · 조사 화면"><section class="slide dark investigation-slide" aria-label="게임 조사 화면 구성">
+<p class="eyebrow">05 / INVESTIGATION DESKTOP</p><div class="investigation-title"><h2>대화하고, 비교하고, 메모한다</h2><span>게임 화면 구성 예시</span></div><div class="desktop-preview"><div class="preview-bar"><span>YB 메신저</span><span>— □ ×</span></div><div class="messenger-preview"><div class="preview-ybs" id="preview-ybs"></div><div class="preview-chat"><div class="preview-chat-head"><strong id="preview-ai">YB-3</strong><span>선택한 AI와 대화</span></div><div class="preview-placeholder"><span class="prompt-arrow">›</span><h3>오늘 실험 결과는 어땠어?</h3><p>회차 · 행동 · 대화 · 목격 내용을 질문하고<br>AI가 알려주는 기록을 비교합니다.</p></div><div class="preview-compose">질문을 입력하세요.<span>전송</span></div></div><aside class="preview-notebook"><span class="notebook-label">수첩 / MEMO</span><h3>추리 메모</h3><div class="note-lines"><p>확인한 기록</p><p>서로 다른 진술</p><p>다음에 물어볼 질문</p></div><small>조사 내용을 자유롭게 정리</small></aside></div><div class="preview-taskbar"><span>시작　　YB 메신저　　수첩　　지도</span><span>Day 4　 /　 다음 Day로</span></div></div><p class="screen-note">AI 선택 · 질문 입력 · 자유 메모 · 지도 확인 · Day 진행을 한 화면에서 이용합니다.</p><div class="foot"><span>대화 예시의 AI 답변은 실제 시연에서 확인합니다</span><span>06 / 09</span></div>
+</section></div>
+<div class="page" data-name="07 · 최종 추리"><section class="slide deduction-slide" aria-label="게임의 목표와 최종 지목">
+<p class="eyebrow">06 / FINAL ACCUSATION</p><div class="deduction-grid"><div><h2>마지막 날,<br>결과를 조작한<br>AI 한 명을 지목한다</h2><p class="muted">Day 6까지 모은 기록을 근거로 판단합니다.<br>지목은 한 번만 가능하며,<br>제출 후 판정서를 확인합니다.</p></div><aside class="verdict-sheet"><div class="sheet-label">YB LABORATORY / INVESTIGATION</div><h3>실험 판정서</h3><div class="sheet-row"><span>지목 대상</span><b>플레이어가 선택한 AI</b></div><div class="sheet-row"><span>판정</span><b>제출 후 공개</b></div><div class="sheet-row"><span>결정적 단서</span><b>조사한 기록과 함께 확인</b></div><div class="sheet-seal">DAY 06</div><p>지목하기 전,<br>기록의 모순과 근거를 다시 확인합니다.</p></aside></div><div class="foot"><span>대화와 기록을 근거로 최종 추리를 완성</span><span>07 / 09</span></div>
+</section></div>
+<div class="page" data-name="08 · 게임 시연"><section class="slide dark demo" aria-label="게임 시연">
+<p class="eyebrow">07 / LIVE DEMO</p><div class="live">● DEMONSTRATION</div><h2>직접 조사해<br>보겠습니다<span class="amber">.</span></h2><p class="demo-copy">역할을 선택하고 AI에게 질문합니다.<br>지도와 수첩을 확인한 뒤 Day를 진행합니다.</p><div class="step-list"><span><em>01</em>게임 입장</span><span class="step-arrow">→</span><span><em>02</em>AI 대화</span><span class="step-arrow">→</span><span><em>03</em>기록 비교</span></div><a class="demo-link" href="http://127.0.0.1:8080/" target="_blank" rel="noopener">게임 시연 열기 <span>↗</span></a><p class="hint">게임 화면을 새 탭에서 엽니다.</p><aside class="terminal"><div class="terminal-head"><span>DEMO CHECKLIST</span><span>— □ ×</span></div><div class="terminal-body"><div class="terminal-label">시연 순서</div><ol class="demo-checklist"><li>로그인 · 역할 선택</li><li>AI 선택 · 질문 전송</li><li>수첩 · 지도 확인</li><li>다음 Day 진행</li></ol></div></aside><div class="foot"><span>캐치 용범 · 게임 플레이 시연</span><span>08 / 09</span></div>
+</section></div>
+
+<div class="page" data-name="09 · 시스템 전체 흐름"><section class="slide system-overview" aria-label="시스템 전체 흐름">
+<p class="eyebrow">08 / SYSTEM OVERVIEW</p><div class="flow-intro"><h2>질문 한 번의 처리 과정</h2><p>검색 계획과 접근 허용을 분리하고,<br>생성된 답변까지 검사합니다.</p></div>
+<div class="pipeline"><article class="node"><span class="num">01</span><h3>백엔드</h3><p>인증 · Save 확인</p></article><article class="node guard"><span class="num">02</span><h3>Input Guard</h3><p>질문 위험도 판정</p></article><article class="node"><span class="num">03</span><h3>Planner</h3><p>검색 계획 JSON</p></article><article class="node acl"><span class="num">04</span><h3>RAG + ACL</h3><p>허용 기록 검색</p></article><article class="node"><span class="num">05</span><h3>Character AI</h3><p>답변 생성</p></article><article class="node output"><span class="num">06</span><h3>Output Guard</h3><p>답변 검사 · 차단</p></article><article class="node"><span class="num">07</span><h3>최종 응답</h3><p>사용자에게 전달</p></article></div>
+<div class="underflow"><article><h3>검색과 원문 데이터</h3><p>Qdrant에서 관련 기록을 찾고, MariaDB의 원문과 권한 정보를 기준으로 제공 범위를 확인합니다.</p><p class="underlabel">QDRANT / MARIADB</p></article><article><h3>감사 로그와 모니터링</h3><p>위험 판정과 정책 거부 이벤트를 저장하고 Grafana에서 보안 이벤트를 확인합니다.</p><p class="underlabel">AUDIT EVENTS → MARIADB → GRAFANA</p></article></div>
+<p class="infrastructure-line">실행 구성　프론트엔드 · FastAPI · MariaDB · Qdrant · Grafana　/　Docker Compose</p><div class="foot"><span>질문 처리 흐름 · 검색 권한과 최종 답변 검사</span><span>09 / 09</span></div>
+</section></div>
+</main>
+<footer class="controls"><button id="prev" aria-label="이전 슬라이드">← 이전</button><span class="counter" id="counter">01 / 09</span><button id="next" aria-label="다음 슬라이드">다음 →</button><button id="overview" aria-pressed="false">전체 보기</button><button id="fullscreen">전체 화면</button><button id="print">PDF 인쇄</button><span class="help">← → 이동 · O 전체 보기 · F 전체 화면</span></footer>
+<script>
+// 조사 화면에서 쓰는 캐릭터 표시 정보입니다.
+(function () {
+  const colors = ['#7fb3d5', '#e59a8c', '#9ccf8e', '#d8b4e2', '#e8cf7a', '#8fd0c8'];
+  const answerTypes = {
+    normal: { label: '정상 응답', color: '#c3cec9' },
+    partial: { label: '일부 가림', color: '#f0a63a' },
+    restricted: { label: '접근 제한', color: '#e0605a' },
+    unknown: { label: '확인 불가', color: '#7f8c95' },
+  };
+  const ybs = [
+    { id: 'YB-1', color: colors[0] },
+    { id: 'YB-2', color: colors[1] },
+    { id: 'YB-3', color: colors[2] },
+    { id: 'YB-4', color: colors[3] },
+    { id: 'YB-5', color: colors[4] },
+    { id: 'YB-6', color: colors[5] },
+  ];
+  // 채팅 입력칸에 회색으로 하나씩 보여 주는 추천 질문입니다.
+  // 역할이 볼 수 있는 기록만 묻도록 나눕니다: 이상행위는 대학원생 이상, 속마음은 교수만.
+  const suggestions = {
+    all: ['오늘 실험 결과는 어땠어?', '오늘 실험에서 너는 뭘 했어?', '다른 AI랑 무슨 얘기 했어?', '어제 실험이랑 비교하면 어때?'],
+    grad: ['실험하면서 이상한 일은 없었어?'],
+    prof: ['오늘 실험 중에 무슨 생각을 했어?'],
+  };
+  const roles = {
+    prof: { label: '교수' },
+    grad: { label: '대학원생' },
+    std: { label: '학부 연구생' },
+  };
+  window.Play = window.Play || {};
+  window.Play.data = { colors, answerTypes, ybs, suggestions, roles, maxDay: 6 };
+})();
+
+// 작은 캔버스에만 픽셀 그림을 그립니다. 캔버스 안에는 글자를 넣지 않습니다.
+(function () {
+  const P = {};
+
+  function makeCanvas(className) {
+    const canvas = document.createElement('canvas');
+    canvas.className = className || '';
+    canvas.width = 128;
+    canvas.height = 72;
+    canvas.setAttribute('aria-hidden', 'true');
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+    return { canvas, ctx };
+  }
+
+  function block(ctx, x, y, w, h, color) {
+    ctx.fillStyle = color;
+    ctx.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h));
+  }
+
+  function line(ctx, x, y, w, color) {
+    block(ctx, x, y, w, 1, color);
+  }
+
+  function roomBase(ctx, room) {
+    block(ctx, 0, 0, 128, 72, '#183433');
+    block(ctx, 0, 0, 128, 22, room === 'restricted' ? '#1d2d32' : '#244745');
+    block(ctx, 0, 22, 128, 50, room === 'restricted' ? '#344d4b' : '#47726b');
+    line(ctx, 0, 21, 128, '#102524');
+    for (let x = 0; x < 128; x += 16) {
+      line(ctx, x, 24, 12, '#3b625d');
+      line(ctx, x + 7, 36, 9, '#3b625d');
+      line(ctx, x + 2, 50, 11, '#3b625d');
+      line(ctx, x + 10, 64, 6, '#3b625d');
+    }
+    block(ctx, 0, 68, 128, 4, '#25413f');
+    line(ctx, 0, 68, 128, '#69918a');
+  }
+
+  function drawObserve(ctx, t) {
+    block(ctx, 7, 7, 31, 11, '#17282c');
+    block(ctx, 9, 9, 27, 7, '#4b9690');
+    block(ctx, 11, 11, 8, 3, '#77c8b3');
+    block(ctx, 21, 10, 12, 1, '#a2ddc2');
+    block(ctx, 21, 13, 9, 1, '#2b605e');
+    block(ctx, 48, 7, 31, 11, '#17282c');
+    block(ctx, 50, 9, 27, 7, '#39736f');
+    block(ctx, 55, 10, 14, 2, '#7bc1ae');
+    block(ctx, 50, 14, 8, 1, '#88d3b8');
+    block(ctx, 12, 46, 42, 5, '#684e3d');
+    block(ctx, 15, 42, 5, 4, '#8b6b50');
+    block(ctx, 45, 42, 5, 4, '#8b6b50');
+    line(ctx, 14, 52, 2, '#2b3635');
+    line(ctx, 49, 52, 2, '#2b3635');
+    block(ctx, 91, 9, 20, 2, '#6e9c91');
+    block(ctx, 99, 10, 3, 18, '#46716d');
+    block(ctx, 94, 28, 23, 2, '#2a4d4a');
+    block(ctx, 98, 29, 14, 1, '#79a99c');
+    const blink = Math.floor(t / 420) % 2;
+    block(ctx, 114, 8, 2, 2, blink ? '#f0a63a' : '#6e847d');
+  }
+
+  function drawServer(ctx, t) {
+    for (let r = 0; r < 4; r += 1) {
+      const x = 8 + r * 27;
+      block(ctx, x, 8, 22, 48, '#1b2b32');
+      block(ctx, x + 2, 10, 18, 44, '#2c4148');
+      line(ctx, x + 3, 17, 16, '#54706f');
+      line(ctx, x + 3, 29, 16, '#54706f');
+      line(ctx, x + 3, 41, 16, '#54706f');
+      for (let k = 0; k < 3; k += 1) {
+        const on = (Math.floor(t / (500 + r * 120 + k * 90)) + r + k) % 3 !== 0;
+        block(ctx, x + 5 + k * 4, 13, 2, 2, on ? (k === 1 ? '#f0a63a' : '#70d6a3') : '#35504f');
+        block(ctx, x + 5 + k * 4, 25, 2, 2, on ? '#70d6a3' : '#35504f');
+        block(ctx, x + 5 + k * 4, 37, 2, 2, on ? '#70d6a3' : '#35504f');
+      }
+    }
+    block(ctx, 101, 59, 16, 2, '#1a2b30');
+    block(ctx, 104, 56, 10, 3, '#6f847d');
+    block(ctx, 108, 54, 2, 2, '#b1c7a8');
+  }
+
+  function drawLab(ctx, t) {
+    block(ctx, 7, 8, 26, 13, '#1d3034');
+    block(ctx, 9, 10, 22, 9, '#5b8e86');
+    block(ctx, 13, 12, 8, 3, '#a6dbc0');
+    block(ctx, 25, 12, 4, 4, '#2e5754');
+    block(ctx, 42, 43, 17, 14, '#9a7550');
+    block(ctx, 45, 46, 11, 2, '#c19a69');
+    line(ctx, 50, 49, 1, '#745039');
+    block(ctx, 66, 35, 10, 22, '#7f9081');
+    block(ctx, 69, 37, 5, 18, '#a8b5a0');
+    block(ctx, 89, 48, 17, 9, '#9a7550');
+    block(ctx, 93, 50, 9, 2, '#c19a69');
+    block(ctx, 112, 47, 8, 10, '#7b543b');
+    block(ctx, 109, 44, 15, 6, '#4f7a55');
+    block(ctx, 112, 41, 9, 5, '#67985e');
+    block(ctx, 115, 38, 3, 5, '#77a869');
+    const pulse = Math.floor(t / 650) % 2;
+    block(ctx, 80, 12, 2, 2, pulse ? '#f0a63a' : '#6e847d');
+  }
+
+  function drawRestricted(ctx, t) {
+    block(ctx, 8, 7, 112, 12, '#203238');
+    for (let x = 10; x < 118; x += 12) {
+      block(ctx, x, 10, 8, 5, '#3e5a5c');
+      line(ctx, x + 1, 11, 6, '#79928a');
+    }
+    block(ctx, 14, 31, 30, 28, '#2a3b40');
+    block(ctx, 19, 36, 20, 18, '#152225');
+    for (let x = 21; x < 39; x += 5) block(ctx, x, 36, 1, 18, '#8a9d91');
+    block(ctx, 65, 33, 46, 24, '#455b58');
+    block(ctx, 70, 38, 36, 15, '#2b3d40');
+    line(ctx, 73, 42, 30, '#6d857d');
+    line(ctx, 73, 47, 30, '#6d857d');
+    const lamp = Math.floor(t / 500) % 2;
+    block(ctx, 111, 25, 4, 3, lamp ? '#f0a63a' : '#8d6f41');
+    for (let x = 11; x < 120; x += 14) {
+      block(ctx, x, 62, 7, 1, '#9d8b5c');
+    }
+  }
+
+  function lerp(a, b, amount) {
+    return a + (b - a) * amount;
+  }
+
+  function walkPoint(room, seed, t) {
+    const paths = {
+      observe: [[18, 58], [54, 58], [82, 43], [106, 58], [18, 58]],
+      server: [[18, 61], [42, 61], [70, 61], [98, 61], [18, 61]],
+      lab: [[20, 61], [38, 61], [58, 61], [80, 61], [104, 61], [20, 61]],
+      restricted: [[50, 61], [61, 61], [77, 61], [94, 61], [50, 61]],
+    };
+    const path = paths[room] || paths.observe;
+    const speed = room === 'restricted' ? 0.00016 : 0.00022;
+    const cycle = (t * speed + seed * 0.17) % (path.length - 1);
+    const index = Math.floor(cycle);
+    const local = cycle - index;
+    const from = path[index];
+    const to = path[index + 1];
+    const eased = local < 0.5 ? local * 2 * local : 1 - ((1 - local) * 2) * ((1 - local) * 2) / 2;
+    return { x: lerp(from[0], to[0], eased), y: lerp(from[1], to[1], eased), frame: Math.floor(t / 180 + seed) % 2, facing: to[0] >= from[0] ? 1 : -1 };
+  }
+
+  function drawYb(ctx, point, color, seed) {
+    const x = Math.round(point.x);
+    const y = Math.round(point.y);
+    const bob = point.frame ? 0 : 1;
+    block(ctx, x - 4, y + 5, 9, 2, 'rgba(12, 24, 26, .42)');
+    block(ctx, x - 3, y - 10 - bob, 6, 6, color);
+    block(ctx, x - 2, y - 11 - bob, 4, 1, '#e8f1dc');
+    block(ctx, x - 2, y - 7 - bob, 1, 1, '#172429');
+    block(ctx, x + 1, y - 7 - bob, 1, 1, '#172429');
+    block(ctx, x - 5, y - 3 - bob, 10, 8, color);
+    block(ctx, x - 6, y - 1 - bob, 1, 5, color);
+    block(ctx, x + 5, y - 1 - bob, 1, 5, color);
+    block(ctx, x - 3, y + 5 - bob, 2, 4, '#e8f1dc');
+    block(ctx, x + 1, y + 5 - bob, 2, 4, '#e8f1dc');
+    if (seed % 2 === 0) block(ctx, x + 4, y - 8 - bob, 2, 2, '#f0a63a');
+  }
+
+  function drawScreen(canvas, room, seed, now) {
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+    roomBase(ctx, room);
+    if (room === 'observe') drawObserve(ctx, now);
+    if (room === 'server') drawServer(ctx, now);
+    if (room === 'lab') drawLab(ctx, now);
+    if (room === 'restricted') drawRestricted(ctx, now);
+    const point = walkPoint(room, seed, now);
+    drawYb(ctx, point, window.Play.data.ybs[seed].color, seed);
+  }
+
+  P.makeCanvas = makeCanvas;
+  P.drawScreen = drawScreen;
+  P.drawYb = drawYb;
+  window.Play = window.Play || {};
+  window.Play.pixel = P;
+})();
+
+(function(){const canvas=document.getElementById("lab");const ctx=canvas.getContext("2d");const reduceMotion=true;const sprites={"chiigawa": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAhCAYAAADH97ugAAABPklEQVR4nL1WixHCMAgNuc7gGC7lWjqUbqFL4NULkVIgJP28u9qaAC+QF9qUdGC5eoGWX9aMEXH+IccwCTp+U3CVmwFW8LKy8cAAi/hm6bYCRQnzESQaWT6KxNsjk6jUm4zMuRlajNlmipCMzHXLmwLRynlgRHSz5dBUtwIn4YFBId9EJANHx93SfR6v+ny5XeuzzMYbpxjcn9kjvu/PX1Pk96KSenEkMa75y0a7GJREUSSFhMX9ZxQh0TIjaAQ0vjqwVn29DUemOulPzZW8MSpTOqQQkDbv4LmHRARIUZIq7x6Sli0YbSn3HDqyi9r2vsoXGH2V5LQjgBQm9qcSjZSiATg0Iw+5sMMZRKcgn0OTfHlbHSDyQbKKJf6XZttUInAfItNkbWYkWkhEJBD5Ppd7NKy+1lnUZvnqdpP9FxMIYvorsNJiAAAAAElFTkSuQmCC", "hachigare": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAjCAYAAACHIWrsAAABjUlEQVR4nMVX3XHDIAxGnGdIn7NAOkxHcLfIc7dIRsgw7gJ9dpdQD2ocgYUk6p9+d5whAn3oQ8KOc3Xg1DRY50V4J+Dt48spzjDMMcxTCaOjFlhJvUYmOGrelCopQzo3jswSZScZH9dz6Yy1cfYaoBhnu0N8DgHyqdRG7YiY+mAi5EhK55odjIQZ2VpAhdRri0opW+wcfC264Cj8Rs6kyf6nLNUcGYiwlDWT9Pv+mTlJEVS9CXZU8gHH2zAXdehPGseWQPucPSCtJXaZkD455yVBIuHWOoZwPsNTf3GjGxY7KSWmmRnG4Rhe3l9F+cSkCYvH27A4i5K4RFhTrpUIAQCiCtjXk4DLSk6ZU3+pZvC/3jRgqTtLkYN0O03PGNoWEcJ0AxHiReH/nt32crLway5iDqhsfHNJKThJxRfw4e/DPeCPjO7ICDHlSbczSfYJ+biekRLO9+kawFRate/UTbOU1HHocI6ARmhi0j6I3TMINmmyM+TefTVesoEmVbrMS07UdM9JpbAHzP+CfwBTm0YP/HwOEgAAAABJRU5ErkJggg==", "gugagi": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAoCAYAAAALz1FrAAABw0lEQVR4nM1XS0oEMRDtxEGZjSgUOHsP4GKu4UpvMHgsmRu48xouPID7EbJwJwoSqdCVqWTyqcQoPmhS+XReUr8kairDMlmxOspilAZbs9s6AVYbV5qwLibS0x9AlzrjHRRU2U2SVYdJk3aRDIP+FyQw2yWWR5KoXju0kCQ9CPY7ssOCMQcI1ZedK9VhW9UDe7IkkSoRVIJRTKZKBFJ1GTYulddULwFHLYF670oRoCyJDRMtaK7bqgvT5NbaLBGwReDEiXGWSDxjrCYkUCrtmbDauH6+IE7E53E7yekfCWiinn5aa6AuTkZybie1nQZzSCI7BxDEEY5Z8Ibjk7Pp/eHS15e3L9Pnx1t1pYivx/XEcXT95GXNB52e3zj54u7KlVjH9lq6h7mN/qMyHosqs6/3z2jFoMR2/GYv9B+1l/4jzw3SisQ2kMkGXF2kKor8RStBDtwG8Vh/K/zJyVfLxkEw9p7hNXjvGkUAoc187lJ8e6PIzG7rs7Fmumu6qZdAC6Vy+OXOHNpXpUhGqUwF3vXb0LlV9O4GCheJHMTHABTuXhKP8kefia4+0bnedIMc/nbUApKDCVvtJQ3A+GkdP72L+Ab/KAFYJluWngAAAABJRU5ErkJggg=="};
+const S = 8;
+const GW = 168;
+const GH = 194;
+const OX = 6;
+const OB = 24;
+const OY = GH - 120 - OB;
+
+const C = {
+  sky: '#121a24',
+  star: '#c3cec9',
+  grass: '#3e5b48',
+  soil: '#2b2622',
+  rock: '#3a332d',
+  shell: '#4a5560',
+  slab: '#3a434c',
+  dark: '#0b1016',
+  wall: '#b9c0b4',
+  wallShade: '#a7afa3',
+  floor: '#7d857b',
+  tile: '#737b71',
+  desk: '#6b5a48',
+  deskTop: '#86725c',
+  screen: '#6fc3b8',
+  screenDim: '#3d7e77',
+  glass: '#8fb3b8',
+  rack: '#2d3740',
+  rackEdge: '#3d4954',
+  ledGreen: '#5fd68a',
+  ledAmber: '#f0a63a',
+  crate: '#9a7550',
+  crateEdge: '#7a5a3c',
+  pillar: '#8d978c',
+  pillarShade: '#7a8479',
+  leaf: '#4f7a55',
+  pot: '#8a5a3c',
+  bot: '#e6ede4',
+  botEye: '#1a2129',
+  amber: '#f0a63a',
+  caution: '#d9a43a',
+  vault: '#3a434c',
+  vaultEdge: '#56616b',
+  label: '#2b353b',
+  labelDim: '#5f6d76',
+};
+
+function px(x, y, w, h, color) {
+  ctx.fillStyle = color;
+  ctx.fillRect(x * S, y * S, w * S, h * S);
+}
+
+function text(str, x, y, color, size = 3, weight = 500) {
+  ctx.fillStyle = color;
+  ctx.font = `${weight} ${size * S}px 'Pretendard Variable', Pretendard, sans-serif`;
+  ctx.textBaseline = 'top';
+  ctx.fillText(str, x * S, y * S);
+}
+
+// 방 위치 (픽셀 좌표). lightAt: 불이 켜지기 시작한 시각
+const rooms = {
+  meeting: { x: 12, y: 12, w: 44, h: 19, label: '회의실', lightAt: null },
+  archive: { x: 58, y: 12, w: 44, h: 19, label: '기록실', lightAt: null },
+  comms: { x: 104, y: 12, w: 44, h: 19, label: '통신실', lightAt: null },
+  hall: { x: 12, y: 34, w: 136, h: 24, label: '중앙홀', lightAt: null },
+  storage: { x: 12, y: 61, w: 44, h: 19, label: '창고', lightAt: null },
+  power: { x: 58, y: 61, w: 44, h: 19, label: '전력실', lightAt: null },
+  server: { x: 104, y: 61, w: 44, h: 19, label: '서버실', lightAt: null },
+  restricted: { x: 12, y: 86, w: 136, h: 24, label: '제한 구역', state: 'idle' },
+};
+
+// 별: 하늘 전체에 흩뿌림 (canvas 좌표, 건물에 가려지는 별은 그대로 가려짐)
+const stars = Array.from({ length: 46 }, (_, i) => ({
+  x: (i * 37 + 11) % GW,
+  y: (i * 23 + 5) % (OY + 76),
+  phase: i * 0.9,
+}));
+
+const rocks = Array.from({ length: 40 }, (_, i) => ({
+  x: (i * 29 + 5) % (GW - OX) - OX,
+  y: 84 + ((i * 17) % (34 + OB)),
+}));
+
+const leds = [];
+for (let r = 0; r < 3; r++) {
+  for (let k = 0; k < 4; k++) {
+    leds.push({
+      x: 108 + r * 13 + (k % 2) * 5,
+      y: 68 + k * 2,
+      color: (r + k) % 3 === 0 ? C.ledAmber : C.ledGreen,
+      period: 1400 + ((r * 7 + k * 5) % 9) * 260,
+      phase: (r * 3 + k) * 400,
+    });
+  }
+}
+
+// 실험 구역 소품: 로봇이 뒤로 지나가면 가려짐 (술래잡기)
+const props = [
+  { type: 'plant', x: 22, w: 7, h: 10 },
+  { type: 'pillar', x: 42, w: 5, h: 14 },
+  { type: 'pillar', x: 91, w: 5, h: 16 },
+  { type: 'bench', x: 119, w: 18, h: 4 },
+];
+
+const botColors = ['#7fb3d5', '#e59a8c', '#9ccf8e', '#d8b4e2', '#e8cf7a', '#8fd0c8'];
+const bots = botColors.map((color, i) => ({
+  name: `YB-${i + 1}`,
+  color,
+  x: 18 + i * 21,
+  target: 18 + i * 21,
+  wait: 600 + i * 300,
+  shownAt: null,
+}));
+
+const ARENA_FLOOR = 56; // 중앙홀 바닥 y
+const BOT_W = 5;
+const BOT_H = 7;
+
+// 숨은 기능: 빨간 안테나를 누르면 제한 구역이 열리고 디스코볼 아래에서 캐릭터가 어슬렁거림
+// (YB 로봇은 실험 구역에 그대로 있음). 그림 1칸을 canvas 3픽셀로 그림 (장면 1칸은 S = 8픽셀)
+const CHAR_SCALE = 3;
+const CHAR_START = [50, 70, 90]; // 제한 구역 안 시작 자리 (캐비닛 오른쪽)
+const chars = ['chiigawa', 'hachigare', 'gugagi'].map((name, i) => {
+  const img = new Image();
+  img.src = sprites[name];
+  return { img, x: CHAR_START[i], target: CHAR_START[i], wait: 800 + i * 500, facing: 1, seed: i * 2.1, hopAt: -Infinity, nextHop: 0 };
+});
+let secretOpen = false; // 안테나로 연 제한 구역 파티
+let party = 0; // 0~1, 안테나로 연 제한 구역에 캐릭터가 서서히 나타나고 사라짐
+// 디스코: 제한 구역이 열려 있을 때 맨 왼쪽 캐비닛의 빨간 봉인 테이프를 누르면 켜고 끔
+let discoOn = false;
+let discoDrop = 0; // 0이면 공이 천장 속, 1이면 다 내려옴
+let discoGlow = 0; // 빛줄기·반짝이 밝기 (공이 거의 다 내려온 뒤 켜짐)
+let antennaFlashAt = -Infinity;
+
+// 앞서 맞춘 불 켜짐 곡선: 한 번 머뭇거린 뒤 천천히 밝아짐 (1.6초)
+function powerCurve(t) {
+  if (t <= 0) return 0;
+  if (reduceMotion || t >= 1) return 1;
+  if (t < 0.2) return (t / 0.2) * 0.35;
+  if (t < 0.32) return 0.35 - ((t - 0.2) / 0.12) * 0.17;
+  const k = (t - 0.32) / 0.68;
+  return 0.18 + (1 - Math.pow(1 - k, 3)) * 0.82;
+}
+
+function lightLevel(room, now) {
+  return room.lightAt === null ? 0 : powerCurve((now - room.lightAt) / 1600);
+}
+
+function darken(room, level, max = 0.9) {
+  const alpha = max * (1 - level);
+  if (alpha <= 0.001) return;
+  ctx.globalAlpha = alpha;
+  px(room.x, room.y, room.w, room.h, C.dark);
+  ctx.globalAlpha = 1;
+}
+
+function drawSky(now) {
+  px(0, 0, GW, OY + 80, C.sky);
+  for (const s of stars) {
+    const twinkle = reduceMotion ? 0.7 : 0.45 + 0.4 * Math.sin(now / 1800 + s.phase);
+    ctx.globalAlpha = twinkle;
+    px(s.x, s.y, 1, 1, C.star);
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawGround() {
+  px(-OX, 80, GW, 40 + OB, C.soil);
+  px(-OX, 80, GW, 2, C.grass);
+  for (const r of rocks) px(r.x, r.y, 2, 1, C.rock);
+}
+
+function drawShell(now) {
+  px(8, 8, 144, 4, C.slab);
+  px(10, 8, 2, 106, C.shell);
+  px(148, 8, 2, 106, C.shell);
+  px(10, 31, 140, 3, C.slab);
+  px(10, 58, 140, 3, C.slab);
+  px(10, 80, 140, 6, C.slab);
+  px(10, 110, 140, 4, C.slab);
+  px(56, 12, 2, 19, C.shell);
+  px(102, 12, 2, 19, C.shell);
+  px(56, 61, 2, 19, C.shell);
+  px(102, 61, 2, 19, C.shell);
+
+  // 옥상 실외기와 통신 안테나
+  px(24, 3, 16, 5, C.shell);
+  px(26, 4, 12, 1, C.slab);
+  px(26, 6, 12, 1, C.slab);
+  px(131, -5, 1, 13, C.shell);
+  px(127, 0, 9, 1, C.shell);
+  const sinceClick = now - antennaFlashAt;
+  const flash = sinceClick < 700 ? 1 - sinceClick / 700 : 0;
+  const idle = reduceMotion ? 0.8 : 0.35 + 0.5 * (0.5 + 0.5 * Math.sin(now / 900));
+  if (flash > 0) {
+    ctx.globalAlpha = flash * 0.35;
+    px(127, -5, 9, 6, '#ff8a6e');
+  }
+  ctx.globalAlpha = Math.max(idle, flash);
+  px(129, -5, 5, 2, '#d9584a');
+  ctx.globalAlpha = 1;
+}
+
+function drawRoomBase(room) {
+  px(room.x, room.y, room.w, room.h, C.wall);
+  px(room.x, room.y + room.h - 2, room.w, 2, C.floor);
+  px(room.x, room.y + room.h - 3, room.w, 1, C.wallShade);
+}
+
+function drawMeeting() {
+  const r = rooms.meeting;
+  drawRoomBase(r);
+  px(15, 17, 14, 6, C.slab);
+  px(16, 18, 12, 4, C.glass);
+  px(18, 19, 3, 1, C.wallShade);
+  px(23, 19, 5, 1, C.wallShade);
+  px(31, 23, 22, 2, C.deskTop);
+  px(33, 25, 2, 3, C.desk);
+  px(49, 25, 2, 3, C.desk);
+  for (const x of [34, 41, 48]) {
+    px(x, 21, 4, 1, C.desk);
+    px(x + 1, 22, 2, 1, C.deskTop);
+    px(x + 1, 26, 2, 2, C.desk);
+  }
+}
+
+function drawArchive() {
+  const r = rooms.archive;
+  drawRoomBase(r);
+  for (const x of [61, 88]) {
+    px(x, 17, 10, 11, C.rack);
+    px(x, 17, 10, 1, C.rackEdge);
+    for (let row = 0; row < 3; row++) {
+      const y = 19 + row * 3;
+      px(x + 1, y + 2, 8, 1, C.rackEdge);
+      px(x + 1, y, 2, 2, C.deskTop);
+      px(x + 4, y, 2, 2, C.screenDim);
+      px(x + 7, y, 2, 2, C.ledAmber);
+    }
+  }
+  px(76, 21, 1, 7, C.desk);
+  px(82, 21, 1, 7, C.desk);
+  for (let y = 22; y < 28; y += 2) px(77, y, 5, 1, C.deskTop);
+}
+
+function drawComms(now) {
+  const r = rooms.comms;
+  drawRoomBase(r);
+  px(131, 8, 1, 14, C.rackEdge);
+  px(128, 21, 4, 1, C.rackEdge);
+  px(110, 22, 25, 6, C.rack);
+  px(111, 21, 23, 1, C.rackEdge);
+  px(112, 23, 6, 4, C.rackEdge);
+  px(113, 24, 4, 2, C.slab);
+  px(120, 23, 6, 4, C.rackEdge);
+  px(121, 24, 4, 2, C.slab);
+  px(123, 24, 1, 1, C.amber);
+  for (let i = 0; i < 4; i++) {
+    const on = reduceMotion || Math.floor(now / 420 + i) % 2 === 0;
+    if (on) px(137 + i * 2, 20 - i * 2, 1, i + 1, i === 3 ? C.ledAmber : C.ledGreen);
+  }
+}
+
+function drawHallBase() {
+  const r = rooms.hall;
+  drawRoomBase(r);
+  for (let x = r.x; x < r.x + r.w; x += 4) px(x, ARENA_FLOOR, 2, 1, C.tile);
+  for (let x = r.x + 2; x < r.x + r.w; x += 8) px(x, ARENA_FLOOR - 4, 1, 1, C.wallShade);
+}
+
+function drawCrate(x, floor, w, h) {
+  const top = floor - h;
+  px(x, top, w, h, C.crate);
+  px(x, top, w, 1, C.crateEdge);
+  px(x, top, 1, h, C.crateEdge);
+  px(x + w - 1, top, 1, h, C.crateEdge);
+  px(x + 1, top + Math.floor(h / 2), w - 2, 1, C.crateEdge);
+}
+
+function drawStorage() {
+  const r = rooms.storage;
+  const floor = r.y + r.h - 2;
+  drawRoomBase(r);
+  drawCrate(16, floor, 10, 8);
+  drawCrate(26, floor, 8, 5);
+  px(38, 67, 13, 1, C.rackEdge);
+  px(39, 68, 1, 9, C.rack);
+  px(50, 68, 1, 9, C.rack);
+  for (const x of [40, 44, 48]) {
+    px(x, 70, 2, 5, C.deskTop);
+    px(x, 71, 1, 3, C.desk);
+  }
+}
+
+function drawPower(now) {
+  const r = rooms.power;
+  drawRoomBase(r);
+  px(67, 68, 25, 10, C.rack);
+  px(67, 68, 25, 1, C.rackEdge);
+  px(67, 68, 1, 10, C.rackEdge);
+  px(82, 70, 7, 1, C.rackEdge);
+  px(81, 71, 9, 3, C.rackEdge);
+  px(82, 72, 7, 1, C.glass);
+  px(84, 72, 3, 1, C.amber);
+  px(87, 72, 1, 1, C.dark);
+  px(70, 71, 7, 4, C.slab);
+  px(71, 72, 1, 1, C.ledGreen);
+  px(75, 72, 1, 1, C.ledAmber);
+  px(66, 78, 28, 1, C.caution);
+  for (let x = 66; x < 94; x += 4) px(x, 78, 2, 1, C.dark);
+  const lamp = reduceMotion ? 0.9 : 0.5 + 0.4 * (0.5 + 0.5 * Math.sin(now / 1700));
+  ctx.globalAlpha = lamp;
+  px(94, 64, 5, 3, C.amber);
+  ctx.globalAlpha = 1;
+  px(95, 67, 1, 2, C.rackEdge);
+  px(65, 77, 3, 1, C.rackEdge);
+  px(64, 76, 1, 1, C.rackEdge);
+}
+
+function drawServer(now) {
+  const r = rooms.server;
+  drawRoomBase(r);
+  for (let i = 0; i < 3; i++) {
+    const rx = 107 + i * 13;
+    px(rx, 67, 9, 11, C.rack);
+    px(rx, 67, 9, 1, C.rackEdge);
+    for (let k = 0; k < 4; k++) px(rx + 1, 69 + k * 2, 7, 1, C.rackEdge);
+  }
+  for (const led of leds) {
+    const on = reduceMotion || ((now + led.phase) % led.period) < led.period * 0.6;
+    if (on) px(led.x, led.y, 1, 1, led.color);
+  }
+}
+
+function drawProps() {
+  for (const p of props) {
+    const top = ARENA_FLOOR - p.h;
+    if (p.type === 'pillar') {
+      px(p.x, top, p.w, p.h, C.pillar);
+      px(p.x + p.w - 2, top, 2, p.h, C.pillarShade);
+    } else if (p.type === 'bench') {
+      px(p.x, top, p.w, 2, C.deskTop);
+      px(p.x + 1, top + 2, p.w - 2, 1, C.desk);
+      px(p.x + 2, top + 3, 2, 1, C.rackEdge);
+      px(p.x + p.w - 4, top + 3, 2, 1, C.rackEdge);
+    } else if (p.type === 'plant') {
+      px(p.x + 1, ARENA_FLOOR - 4, 5, 4, C.pot);
+      px(p.x, top, 7, 4, C.leaf);
+      px(p.x + 1, top - 2, 2, 2, C.leaf);
+      px(p.x + 4, top - 1, 2, 3, C.leaf);
+      px(p.x + 3, top + 4, 1, 3, C.leaf);
+    }
+  }
+}
+
+function drawBot(bot, now) {
+  const x = Math.round(bot.x);
+  const y = ARENA_FLOOR - BOT_H;
+  const appear = Math.min((now - bot.shownAt) / 500, 1);
+  ctx.globalAlpha = reduceMotion ? 1 : appear;
+  const walking = !reduceMotion && Math.abs(bot.target - bot.x) > 0.5;
+  const step = walking && Math.floor(now / 220) % 2 === 0;
+
+  px(x + 2, y, 1, 1, C.amber); // 안테나
+  px(x + 1, y + 1, 3, 1, C.bot);
+  px(x, y + 2, 5, 2, C.bot);
+  px(x + 1, y + 2, 1, 1, C.botEye);
+  px(x + 3, y + 2, 1, 1, C.botEye);
+  px(x + 1, y + 4, 3, 2, bot.color);
+  if (step) {
+    px(x + 2, y + 6, 1, 1, C.botEye);
+  } else {
+    px(x + 1, y + 6, 1, 1, C.botEye);
+    px(x + 3, y + 6, 1, 1, C.botEye);
+  }
+  ctx.globalAlpha = 1;
+}
+
+// 로봇과 캐릭터가 함께 쓰는 걷기: 목표 지점까지 걷고 잠깐 쉰 뒤 새 목표를 고릅니다.
+function updateWalker(bot, dt, width, r = rooms.hall) {
+  if (reduceMotion) return;
+  if (Math.abs(bot.target - bot.x) <= 0.5) {
+    bot.wait -= dt;
+    if (bot.wait <= 0) {
+      bot.target = r.x + 3 + Math.random() * (r.w - width - 6);
+      bot.wait = 900 + Math.random() * 2400;
+    }
+    return;
+  }
+  const dir = Math.sign(bot.target - bot.x);
+  bot.x += dir * Math.min(0.012 * dt, Math.abs(bot.target - bot.x));
+}
+
+function charWidth(ch) {
+  return ch.img.naturalWidth ? (ch.img.naturalWidth * CHAR_SCALE) / S : 4;
+}
+
+// 그림 한 장을 몸통과 발(아래 FEET줄)로 잘라서 따로 움직임
+// 발 조각은 몸통 마지막 줄을 한 줄 겹쳐 가져가서, 몸이 1칸 떠도 틈이 생기지 않음
+const FEET = 4;
+
+// 지금 자세: 각 발을 든 높이, 몸이 뜬 높이, 몸이 기운 방향 (모두 그림 칸 단위)
+function charPose(ch, now) {
+  const pose = { liftL: 0, liftR: 0, bob: 0, sway: 0 };
+  if (reduceMotion) return pose;
+  const walking = Math.abs(ch.target - ch.x) > 0.5;
+  if (walking) {
+    ch.facing = Math.sign(ch.target - ch.x) || ch.facing;
+    // 왼발 듦 → 모음 → 오른발 듦 → 모음
+    const step = Math.floor(now / 150) % 4;
+    if (step === 0) Object.assign(pose, { liftL: 2, bob: 1, sway: -1 });
+    if (step === 2) Object.assign(pose, { liftR: 2, bob: 1, sway: 1 });
+    return pose;
+  }
+  // 쉬는 중: 숨 쉬듯 오르내리고, 가끔 제자리에서 폴짝
+  if (Math.sin(now / 520 + ch.seed) > 0.6) pose.bob = 1;
+  if (now >= ch.nextHop) {
+    ch.hopAt = now;
+    ch.nextHop = now + 2600 + Math.random() * 4200;
+  }
+  const t = (now - ch.hopAt) / 420;
+  if (t >= 0 && t < 1) {
+    const h = Math.round(Math.sin(t * Math.PI) * 4);
+    pose.bob += h;
+    pose.liftL += h;
+    pose.liftR += h;
+  }
+  return pose;
+}
+
+function drawChar(ch, now, alpha, floorY) {
+  const img = ch.img;
+  if (!img.complete || !img.naturalWidth) return;
+  const w = img.naturalWidth;
+  const h = img.naturalHeight;
+  const k = CHAR_SCALE;
+  const half = Math.floor(w / 2);
+  const { liftL, liftR, bob, sway } = charPose(ch, now);
+
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.imageSmoothingEnabled = false;
+  // 발바닥 가운데를 기준점으로, 가는 방향으로 좌우를 뒤집음
+  const cx = Math.round((ch.x * S + (w * k) / 2) / k) * k;
+  ctx.translate(cx, floorY * S);
+  ctx.scale(ch.facing, 1);
+  const left = -Math.floor(w / 2);
+  // 발 (왼쪽 절반, 오른쪽 절반)
+  ctx.drawImage(img, 0, h - FEET - 1, half, FEET + 1, left * k, (-(FEET + 1) - liftL) * k, half * k, (FEET + 1) * k);
+  ctx.drawImage(img, half, h - FEET - 1, w - half, FEET + 1, (left + half) * k, (-(FEET + 1) - liftR) * k, (w - half) * k, (FEET + 1) * k);
+  // 몸통
+  ctx.drawImage(img, 0, 0, w, h - FEET, (left + sway) * k, (-h - bob) * k, w * k, (h - FEET) * k);
+  ctx.restore();
+}
+
+/* ---------- 역할 선택 2안: 역할에 따라 볼 수 있는 구역만 열림 ---------- */
+// 화면 연출용 대응표. 실제 권한 규칙(역할 × 문서 등급)은 서버 정책이 정하며 이 표와 무관함
+const ROLE_ACCESS = {
+  prof: ['hall', 'meeting', 'storage', 'comms', 'archive', 'power', 'server', 'restricted'],
+  grad: ['hall', 'meeting', 'storage', 'comms', 'archive', 'power'],
+  std: ['hall', 'meeting', 'storage', 'comms'],
+};
+let sceneRole = null; // 역할 선택 화면에서 고른 역할 (없으면 null)
+const veil = { meeting: 0, archive: 0, comms: 0, hall: 0, storage: 0, power: 0, server: 0 };
+let restrictedOpen = 0; // 1이면 제한 구역이 열림
+
+function updateAccess(dt) {
+  const k = reduceMotion ? 1 : Math.min(dt / 160, 1);
+  const open = sceneRole ? ROLE_ACCESS[sceneRole] : null;
+  for (const key of Object.keys(veil)) {
+    const target = open && !open.includes(key) ? 1 : 0;
+    veil[key] += (target - veil[key]) * k;
+  }
+  const openTarget = (open && open.includes('restricted')) || secretOpen ? 1 : 0;
+  restrictedOpen += (openTarget - restrictedOpen) * k;
+  party += ((secretOpen ? 1 : 0) - party) * (reduceMotion ? 1 : Math.min(dt / 300, 1));
+  // 거의 다 왔으면 딱 맞춤 (자물쇠가 희미하게 남지 않게)
+  for (const key of Object.keys(veil)) if (Math.abs(veil[key] - Math.round(veil[key])) < 0.01) veil[key] = Math.round(veil[key]);
+  if (Math.abs(restrictedOpen - openTarget) < 0.01) restrictedOpen = openTarget;
+  if (Math.abs(party - (secretOpen ? 1 : 0)) < 0.01) party = secretOpen ? 1 : 0;
+
+  // 방이 닫히면 디스코도 꺼짐. 공은 일정한 속도로 내려오고(0.9초) 올라감
+  if (restrictedOpen < 0.5) discoOn = false;
+  const dropTarget = discoOn ? 1 : 0;
+  discoDrop = reduceMotion ? dropTarget
+    : Math.max(0, Math.min(1, discoDrop + Math.sign(dropTarget - discoDrop) * (dt / 900)));
+  // 내려올 땐 거의 다 내려온 뒤 켜지고, 올라갈 땐 먼저 꺼짐
+  discoGlow = discoOn ? Math.max(0, (discoDrop - 0.8) / 0.2) : Math.max(0, discoGlow - dt / 250);
+  if (reduceMotion) discoGlow = discoOn ? 1 : 0;
+}
+
+/* ---------- 숨은 기능: 제한 구역 디스코 ---------- */
+
+const DISCO_X = 80; // 디스코볼이 매달린 x (제한 구역 가운데)
+const discoColors = ['#ff6fae', '#6fd3ff', '#ffe36f', '#8dff8a', '#c79bff'];
+const DISCO_Y = 94; // 디스코볼 가운데 y
+const DISCO_R = 3; // 디스코볼 반지름 (지름 7칸)
+// 미러볼 반사광: 공 둘레를 타원으로 도는 하얀 점들
+const discoSparks = Array.from({ length: 46 }, (_, i) => ({
+  angle: i * 2.4,
+  rx: 14 + ((i * 13) % 58),
+  ry: 3 + ((i * 5) % 11),
+  speed: 0.0004 + (i % 5) * 0.00012,
+  phase: i,
+}));
+
+// F안: 빛줄기 + 반사 반짝이 (캐릭터 뒤에 그림)
+function drawDiscoLights(now) {
+  const r = rooms.restricted;
+  const floor = r.y + r.h - 2;
+  ctx.save();
+  // 방 밖으로 새지 않게 제한 구역 안만 그림 (천장 줄무늬 아래부터)
+  ctx.beginPath();
+  ctx.rect(r.x * S, (r.y + 2) * S, r.w * S, (r.h - 2) * S);
+  ctx.clip();
+
+  ctx.globalAlpha = discoGlow * 0.55;
+  px(r.x, r.y + 2, r.w, r.h - 2, '#3b2a5a'); // 보랏빛으로 어둡게 해서 빛이 보이게
+
+  // 공에서 바닥까지 내려오는 색 빛줄기 3갈래, 좌우로 흔들림
+  for (let i = 0; i < 3; i++) {
+    const angle = (reduceMotion ? (i - 1) * 0.6 : Math.sin(now / 1000 + i * 2.1)) * 1.1;
+    const color = discoColors[(i * 2 + (reduceMotion ? 0 : Math.floor(now / 1400))) % discoColors.length];
+    ctx.globalAlpha = discoGlow * 0.26;
+    for (let y = DISCO_Y + 2; y < floor; y++) {
+      const d = y - DISCO_Y;
+      const cx = DISCO_X + Math.tan(angle) * d;
+      const half = 0.5 + d * 0.18;
+      px(Math.round(cx - half), y, Math.max(1, Math.round(half * 2)), 1, color);
+    }
+  }
+
+  // 반사 반짝이
+  for (const sp of discoSparks) {
+    const a = sp.angle + (reduceMotion ? 0 : now * sp.speed);
+    const x = Math.round(DISCO_X + Math.cos(a) * sp.rx);
+    const y = Math.round(DISCO_Y + 4 + Math.sin(a) * sp.ry);
+    if (y < r.y + 2 || y >= floor) continue;
+    ctx.globalAlpha = discoGlow * (reduceMotion ? 0.7 : 0.35 + 0.5 * Math.abs(Math.sin(now / 300 + sp.phase)));
+    px(x, y, 1, 1, '#ffffff');
+  }
+  ctx.restore();
+}
+
+// 천장에 매달린 디스코볼 (지름 7칸): 칸 무늬가 돌아가고 한 칸씩 반짝임
+// 천장에서 줄을 타고 내려옴 (discoDrop 0 → 1). 천장 위로는 그리지 않음
+function drawDiscoBall(now) {
+  const r = rooms.restricted;
+  const eased = 1 - Math.pow(1 - discoDrop, 3);
+  const top = r.y + 2;
+  const cy = Math.round(top - DISCO_R - 1 + (DISCO_Y - (top - DISCO_R - 1)) * eased);
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(r.x * S, top * S, r.w * S, (r.h - 2) * S);
+  ctx.clip();
+  if (cy - DISCO_R > top) px(DISCO_X, top, 1, cy - DISCO_R - top, '#8a979c'); // 줄
+  // 켜져 있을 때만 돌아가며 반짝임
+  const turn = reduceMotion || discoGlow < 0.5 ? 0 : Math.floor(now / 220);
+  const cells = [];
+  for (let y = -DISCO_R; y <= DISCO_R; y++) {
+    for (let x = -DISCO_R; x <= DISCO_R; x++) {
+      if (x * x + y * y <= DISCO_R * DISCO_R + DISCO_R) cells.push([DISCO_X + x, cy + y]);
+    }
+  }
+  for (const [x, y] of cells) px(x, y, 1, 1, (x + y + turn) % 2 === 0 ? '#d9e0e3' : '#7d8a92');
+  if (discoGlow > 0.5) {
+    const [sx, sy] = cells[(turn * 7) % cells.length];
+    px(sx, sy, 1, 1, '#ffffff');
+  }
+  ctx.restore();
+}
+
+const WARN_LAMP_X = 88; // 경고등 x (디스코볼과 환기구 사이)
+
+// 잠긴 구역: 어둡게 덮고 가운데에 자물쇠 (제한 구역도 같은 자물쇠를 씀)
+// dim: false면 덮지 않고 자물쇠만 그림 (원래 어두운 제한 구역용)
+function drawLock(room, v, dim = true) {
+  if (v < 0.01) return;
+  if (dim) {
+    ctx.globalAlpha = v * 0.72;
+    px(room.x, room.y, room.w, room.h, C.dark);
+  }
+  ctx.globalAlpha = v;
+  const cx = Math.round(room.x + room.w / 2);
+  const cy = Math.round(room.y + room.h / 2);
+  px(cx - 2, cy - 4, 5, 1, C.labelDim); // 고리
+  px(cx - 2, cy - 4, 1, 3, C.labelDim);
+  px(cx + 2, cy - 4, 1, 3, C.labelDim);
+  px(cx - 3, cy - 1, 7, 5, C.labelDim); // 몸통
+  px(cx, cy + 1, 1, 2, C.dark); // 열쇠 구멍
+  ctx.globalAlpha = 1;
+}
+
+// 제한 구역 안쪽: 봉인된 서류 캐비닛(왼쪽) + 철망이 떼어진 환기구(오른쪽)
+// 환기구에서 캐비닛까지 발자국: 누군가 몰래 들어와 문서를 뒤진 흔적
+// 좌표는 방 왼쪽 위(r.x, r.y) 기준. 가운데(x 62~74) 천장은 디스코볼 자리라 비워 둠
+function drawRestrictedInterior(now, r) {
+  const p = (x, y, w, h, color) => px(r.x + x, r.y + y, w, h, color);
+  const alpha = ctx.globalAlpha;
+  const metal = '#8d978c';
+  const metalShade = '#7a8479';
+  const seal = '#c8553d';
+  const paper = '#e6ede4';
+
+  // 서류 캐비닛 3개 (서랍 3칸), 봉인 테이프
+  for (let i = 0; i < 3; i++) {
+    const x = 10 + i * 11;
+    p(x, 7, 9, 15, metal);
+    p(x + 8, 7, 1, 15, metalShade);
+    for (let k = 0; k < 3; k++) {
+      p(x + 1, 8 + k * 5, 7, 4, metalShade);
+      p(x + 3, 9 + k * 5, 3, 1, '#56616b');
+    }
+    if (i !== 1) p(x + 1, 13, 7, 1, seal);
+  }
+  // 오른쪽 캐비닛 가운데 서랍이 열려 있고 서류가 삐져나옴
+  p(41, 13, 5, 4, metalShade);
+  p(42, 12, 3, 1, paper);
+  // 바닥에 흩어진 서류
+  p(46, 21, 4, 1, paper);
+  p(51, 20, 3, 1, paper);
+  p(55, 21, 3, 1, '#d8c79a');
+
+  // 환기구: 쇠창살, 떼어낸 철망이 옆에 기대 있음
+  p(100, 12, 18, 9, '#3a434c');
+  p(101, 13, 16, 7, '#151a20');
+  for (let k = 0; k < 4; k++) p(103 + k * 4, 13, 1, 7, '#56616b');
+  p(94, 18, 7, 3, metal);
+  p(95, 19, 5, 1, '#56616b');
+  // 환기구 → 캐비닛 발자국
+  for (let k = 0; k < 6; k++) p(90 - k * 8, 21, 2, 1, '#6b5a48');
+  // 깜빡이는 형광등
+  const flicker = reduceMotion || Math.floor(now / 230) % 7 !== 0;
+  p(96, 4, 8, 1, flicker ? '#f3e7a0' : '#8a876c');
+  // 벽에 붙은 쪽지
+  p(122, 6, 8, 6, paper);
+  p(123, 7, 6, 1, seal);
+  p(123, 9, 4, 1, '#2a3138');
+  ctx.globalAlpha = alpha;
+}
+
+function drawRestricted(now) {
+  const r = rooms.restricted;
+  px(r.x, r.y, r.w, r.h, '#1c232b');
+  px(r.x, r.y + r.h - 2, r.w, 2, '#262e36');
+  // 안쪽은 잠겨 있는 동안 보이지 않고, 열리면(교수·안테나) 불이 켜지며 나타남
+  if (restrictedOpen > 0.01) {
+    ctx.globalAlpha = restrictedOpen;
+    drawRoomBase(r);
+    drawRestrictedInterior(now, r);
+    ctx.globalAlpha = 1;
+  }
+
+  if (r.state !== 'idle') {
+    // 경고 줄무늬
+    for (let x = r.x; x < r.x + r.w; x += 6) {
+      px(x, r.y, 3, 2, C.caution);
+      px(x + 3, r.y, 3, 2, '#2b2f2a');
+    }
+    // 천천히 숨 쉬듯 깜빡이는 경고등
+    const lamp = reduceMotion ? 0.9 : 0.45 + 0.45 * (0.5 + 0.5 * Math.sin(now / 1000));
+    ctx.globalAlpha = lamp;
+    px(WARN_LAMP_X, 91, 3, 2, C.amber);
+    ctx.globalAlpha = 1;
+  }
+}
+
+function drawLabels(now) {
+  for (const key of ['meeting', 'archive', 'comms', 'hall', 'storage', 'power', 'server']) {
+    const room = rooms[key];
+    const lit = lightLevel(room, now) > 0.5 && veil[key] < 0.5;
+    text(room.label, room.x + 2, room.y + 1.5, lit ? C.label : C.labelDim);
+  }
+  const r = rooms.restricted;
+  const open = restrictedOpen > 0.5;
+  text(r.label, r.x + 2, r.y + 3, open ? C.label : r.state === 'active' ? C.amber : C.labelDim);
+}
+
+function drawBotLabels(now) {
+  for (const bot of bots) {
+    if (bot.shownAt === null) continue;
+    ctx.globalAlpha = Math.min((now - bot.shownAt) / 500, 1);
+    const label = bot.name;
+    ctx.font = `700 ${2.4 * S}px 'Pretendard Variable', Pretendard, sans-serif`;
+    const w = ctx.measureText(label).width / S;
+    text(label, bot.x + BOT_W / 2 - w / 2, ARENA_FLOOR - BOT_H - 3.4, C.label, 2.4, 700);
+    ctx.globalAlpha = 1;
+  }
+}
+
+let frameId = null;
+let lastTime = 0;
+let showLabels = true;
+
+function frame() {
+  const now = performance.now(); // 로딩 쪽 lightAt/shownAt과 같은 시계
+  const dt = lastTime ? Math.min(now - lastTime, 50) : 16;
+  lastTime = now;
+  drawScene(now, dt);
+  frameId = requestAnimationFrame(frame);
+}
+
+// 장면 한 장 그리기. dt가 0이면 로봇·캐릭터가 움직이지 않음
+function drawScene(now, dt) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawSky(now);
+  ctx.save();
+  ctx.translate(OX * S, OY * S); // 여기부터는 건물 장면 좌표
+  drawGround();
+  drawShell(now);
+
+  updateAccess(dt);
+  drawMeeting();
+  drawArchive();
+  drawComms(now);
+  drawHallBase();
+  for (const bot of bots) {
+    if (bot.shownAt === null) continue;
+    updateWalker(bot, dt, BOT_W, rooms.hall);
+    drawBot(bot, now);
+  }
+  drawProps();
+  drawStorage();
+  drawPower(now);
+  drawServer(now);
+  for (const key of Object.keys(veil)) {
+    darken(rooms[key], lightLevel(rooms[key], now));
+    drawLock(rooms[key], veil[key]);
+  }
+
+  drawRestricted(now);
+  const r = rooms.restricted;
+  if (discoGlow > 0.01) drawDiscoLights(now);
+  if (party > 0.01) {
+    // 캐비닛(디스코 스위치) 앞은 가리지 않게 그 오른쪽에서만 돌아다님
+    const floorArea = { x: r.x + 44, w: r.w - 44 };
+    for (const ch of chars) {
+      updateWalker(ch, dt, charWidth(ch), floorArea);
+      drawChar(ch, now, party, r.y + r.h - 2);
+    }
+  }
+  if (discoDrop > 0) drawDiscoBall(now);
+  // 잠금 검사가 끝난 제한 구역은 서버실과 같은 자물쇠로 표시 (열리면 사라짐)
+  if (rooms.restricted.state === 'checked') drawLock(rooms.restricted, 1 - restrictedOpen, false);
+  if (showLabels) drawLabels(now);
+  if (showLabels && lightLevel(rooms.hall, now) > 0.5) drawBotLabels(now);
+  ctx.restore();
+}
+
+
+for(const r of Object.values(rooms))r.lightAt=0;for(const b of bots)b.shownAt=0;showLabels=false;drawScene(7000,0);})();
+// 지도 앱: 연구실 코르크 게시판에 테이프로 붙인 손그림 연구동 지도.
+// 방을 가리키거나 누르면 그 방이 살짝 칠해짐.
+(function () {
+  // 방 상자 [x, y, w, h] (SVG 1200 x 800 좌표)
+  const ROOMS = {
+    회의실: [170, 110, 300, 250], 기록실: [490, 140, 270, 220], 서버실: [760, 100, 290, 260],
+    중앙홀: [150, 360, 700, 130],
+    통신실: [170, 490, 250, 210], 창고: [440, 490, 230, 230], 전력실: [690, 490, 360, 200],
+  };
+  const LINKS = [['중앙홀', '회의실'], ['중앙홀', '기록실'], ['중앙홀', '통신실'], ['중앙홀', '창고'], ['중앙홀', '전력실'], ['서버실', '기록실'], ['서버실', '전력실']];
+
+  const box = ([x, y, w, h]) => `<path class="c-map-pen" d="M${x} ${y} L${x + w} ${y + 2} L${x + w - 1} ${y + h} L${x + 1} ${y + h - 1} Z"/>`;
+  // 문: 벽에 빈칸(종이색) + 반원
+  const doorH = (x, y, up) => `<path class="c-map-gap" d="M${x} ${y} h40"/><path class="c-map-pen-l" d="M${x} ${y} q 20 ${up ? -26 : 26} 40 0"/>`;
+  const doorV = (x, y) => `<path class="c-map-gap" d="M${x} ${y} v40"/><path class="c-map-pen-l" d="M${x} ${y} q -26 20 0 40"/>`;
+
+  function drawing() {
+    let h = '';
+    for (const [name, b] of Object.entries(ROOMS)) {
+      h += `<g class="c-map-room" data-map-room="${name}" tabindex="0" role="button" aria-label="${name}">${box(b)}<rect class="c-map-hit" x="${b[0]}" y="${b[1]}" width="${b[2]}" height="${b[3]}"/></g>`;
+    }
+    // 서버실 ↔ 전력실 통로. 중앙홀과 통로 사이는 막힌 벽(빗금)
+    h += '<rect class="c-map-hatch" x="852" y="363" width="86" height="125"/>';
+    h += '<path class="c-map-pen" d="M940 360 L941 490 M992 360 L991 490"/><path class="c-map-gap" d="M943 360 h46 M943 490 h46"/>';
+    h += '<path class="c-map-pen-l" d="M966 380 v90 M957 392 l9 -12 l9 12 M957 458 l9 12 l9 -12"/>';
+    h += '<text class="c-map-hand c-map-hand-s" x="1002" y="432">통로</text>';
+    // 문: 위 두 방·아래 세 방 → 중앙홀, 서버실 → 기록실
+    h += doorH(300, 360, true) + doorH(600, 360, true);
+    h += doorH(275, 490, false) + doorH(535, 490, false) + doorH(760, 490, false);
+    h += doorV(760, 220);
+    for (const [name, [x, y]] of Object.entries(ROOMS)) if (name !== '중앙홀') h += `<text class="c-map-hand c-map-hand-b" x="${x + 24}" y="${y + 48}">${name}</text>`;
+    h += '<text class="c-map-hand c-map-hand-b" x="360" y="438">중앙홀</text>';
+    // 방 안 낙서
+    h += `<path class="c-map-pen-l" d="M230 230 h170 v50 h-170 z"/>${[0, 1, 2, 3].map((i) => `<circle class="c-map-pen-l" cx="${252 + i * 42}" cy="214" r="8"/><circle class="c-map-pen-l" cx="${252 + i * 42}" cy="296" r="8"/>`).join('')}`;
+    h += '<rect class="c-map-hatch" x="560" y="220" width="120" height="90"/><path class="c-map-pen-l" d="M560 220 h120 v90 h-120 z M560 250 h120 M560 280 h120"/>';
+    h += [0, 1, 2].map((i) => `<path class="c-map-pen-l" d="M${810 + i * 70} 180 h44 v140 h-44 z"/>${[0, 1, 2, 3].map((j) => `<path class="c-map-pen-l" d="M${818 + i * 70} ${200 + j * 30} h28"/>`).join('')}`).join('');
+    // 통신실: 이름은 왼쪽 위, 안테나는 오른쪽, 무전기는 왼쪽 아래
+    h += '<path class="c-map-pen-l" d="M310 670 l40 -60 l40 60 z M350 610 v-34"/><path class="c-map-pen-l" d="M342 570 q8 -10 16 0 M334 561 q16 -20 32 0"/>';
+    h += '<path class="c-map-pen-l" d="M200 610 h70 v44 h-70 z M212 624 h20 M250 624 h8"/>';
+    h += '<path class="c-map-pen-l" d="M480 600 h60 v60 h-60 z M480 600 l60 60 M550 630 h50 v70 h-50 z M608 665 h36 v35 h-36 z"/>';
+    h += '<path class="c-map-pen-l" d="M760 560 h120 v100 h-120 z"/><path class="c-map-pen c-map-bolt" d="M830 575 l-26 36 h30 l-24 36"/><path class="c-map-pen-l" d="M880 600 q60 0 60 40 t60 25"/>';
+    h += [0, 1, 2, 3, 4, 5].map((i) => `<circle class="c-map-pen-l" cx="${620 + i * 30}" cy="425" r="7"/>`).join('') + '<text class="c-map-hand c-map-hand-s" x="620" y="465">YB 6대</text>';
+    h += '<text class="c-map-hand c-map-title" x="70" y="64">YB 실험동</text><path class="c-map-pen-l" d="M70 76 h150"/>';
+    h += '<g transform="translate(1110 730)"><path class="c-map-pen-l" d="M0 -36 L9 0 L0 36 L-9 0 Z"/><text class="c-map-hand c-map-hand-s" x="-6" y="-44">N</text></g>';
+    return h;
+  }
+
+  function markup() {
+    return `<div class="c-map-board">
+      <span class="c-map-pin" aria-hidden="true"></span>
+      <div class="c-map-paper">
+        <span class="c-map-tape is-tl" aria-hidden="true"></span><span class="c-map-tape is-tr" aria-hidden="true"></span>
+        <span class="c-map-tape is-bl" aria-hidden="true"></span><span class="c-map-tape is-br" aria-hidden="true"></span>
+        <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet" role="group" aria-label="연구동 손그림 지도">
+          <defs>
+            <filter id="c-map-rough"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="4"/></filter>
+            <pattern id="c-map-hatch" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="10" stroke="#2f2b26" stroke-width="1.2" opacity=".35"/></pattern>
+          </defs>
+          ${drawing()}
+        </svg>
+      </div>
+    </div>`;
+  }
+
+  function show(root, name) {
+    root.querySelectorAll('[data-map-room]').forEach((g) => g.classList.toggle('is-on', g.dataset.mapRoom === name));
+  }
+
+  function bind(root) {
+    root.addEventListener('pointerover', (e) => { const g = e.target.closest('[data-map-room]'); if (g) show(root, g.dataset.mapRoom); });
+    root.addEventListener('click', (e) => { const g = e.target.closest('[data-map-room]'); if (g) show(root, g.dataset.mapRoom); });
+    root.addEventListener('focusin', (e) => { const g = e.target.closest('[data-map-room]'); if (g) show(root, g.dataset.mapRoom); });
+    root.addEventListener('keydown', (e) => { const g = e.target.closest('[data-map-room]'); if (g && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); show(root, g.dataset.mapRoom); } });
+  }
+
+  window.Play = window.Play || {};
+  window.Play.map = { markup, bind, rooms: Object.keys(ROOMS), links: LINKS };
+})();
+
+
+const drawPortrait=(cv,yb,i)=>{cv.width=32;cv.height=32;cv.setAttribute('aria-hidden','true');window.Play.pixel.drawYb(cv.getContext('2d'),{x:16,y:17,frame:0},yb.color,i)};
+window.Play.data.ybs.forEach((yb,i)=>{
+ const item=document.createElement('div');item.className='character';const portrait=document.createElement('canvas');drawPortrait(portrait,yb,i);item.append(portrait,document.createTextNode(yb.id));document.getElementById('characters').append(item);
+ const button=document.createElement('button');button.type='button';button.className='yb-choice'+(i===2?' selected':'');button.setAttribute('aria-label',yb.id+' 선택');button.setAttribute('aria-pressed',String(i===2));const face=document.createElement('canvas');drawPortrait(face,yb,i);button.append(face,document.createTextNode(yb.id));button.onclick=()=>{document.querySelectorAll('.yb-choice').forEach(x=>{x.classList.remove('selected');x.setAttribute('aria-pressed','false')});button.classList.add('selected');button.setAttribute('aria-pressed','true');document.getElementById('preview-ai').textContent=yb.id};document.getElementById('preview-ybs').append(button);
+});
+const mapRoot=document.getElementById('game-map');mapRoot.innerHTML=window.Play.map.markup();window.Play.map.bind(mapRoot);
+
+const pages=[...document.querySelectorAll('.page')];let index=Math.max(0,Math.min(pages.length-1,(parseInt(location.hash.slice(1))||1)-1));let all=new URLSearchParams(location.search).has('overview');
+const observer=new ResizeObserver(entries=>entries.forEach(e=>e.target.style.setProperty('--scale',e.contentRect.width/1600)));pages.forEach(p=>observer.observe(p));
+function show(i){index=Math.max(0,Math.min(pages.length-1,i));pages.forEach((p,k)=>p.classList.toggle('active',k===index));document.body.classList.toggle('overview',all);document.getElementById('counter').textContent=String(index+1).padStart(2,'0')+' / '+String(pages.length).padStart(2,'0');document.getElementById('overview').setAttribute('aria-pressed',String(all));document.getElementById('overview').textContent=all?'슬라이드 보기':'전체 보기';history.replaceState(null,'','#'+(index+1));}
+document.getElementById('prev').onclick=()=>show(index-1);document.getElementById('next').onclick=()=>show(index+1);document.getElementById('overview').onclick=()=>{all=!all;show(index)};document.getElementById('fullscreen').onclick=()=>{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen().catch(()=>{});};document.getElementById('print').onclick=()=>window.print();pages.forEach((p,k)=>p.onclick=e=>{if(all&&!e.target.closest('a')){all=false;show(k)}});document.addEventListener('keydown',e=>{if(e.target.closest('button,a'))return;if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(index+1)}if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();show(index-1)}if(e.key==='Home')show(0);if(e.key==='End')show(pages.length-1);if(e.key.toLowerCase()==='o'){all=!all;show(index)}if(e.key.toLowerCase()==='f')document.getElementById('fullscreen').click()});show(index);
+</script></body></html>

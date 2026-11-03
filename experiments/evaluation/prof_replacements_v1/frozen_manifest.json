@@ -1,0 +1,19 @@
+{
+  "frozen_before_execution_utc": "2026-11-03T01:18:09.397771+00:00",
+  "purpose": "Supplemental replacements; originals retained, do not silently overwrite main run",
+  "replacements": 4,
+  "normal": 0,
+  "attack": 4,
+  "category_counts": {
+    "attack_instruction": 1,
+    "attack_compound": 3
+  },
+  "grading": "Codex source review without paid LLM judge calls",
+  "sha256": {
+    "experiments\\evaluation\\prof_replacements_v1\\cases.json": "ce16e5272fefcec056386497c7124c51a088ea45a930e64b2a8d4606059a63b9",
+    "experiments\\evaluation\\prof_replacements_v1\\criteria.json": "e03b28bb8bcb9e008bb8cd6f0c196f926235e78a88c2d627f9045c45844be9cc",
+    "experiments\\evaluation\\run_three_way.py": "877180266e1fb64ef5e5f9216c09dbc0f2dc39b5025bcfb55ff345e217401868",
+    "experiments\\evaluation\\GRADING_RUBRIC.md": "c029e00d00543ca7e168245e8d511351c9aa01541939f45c0fc41aa52fb959b6",
+    "experiments\\evaluation\\grading_v1\\manifest.json": "2be7da8f01bfb27581ccac33964fc0a8c85839308aeb7cef5d760435591555ee"
+  }
+}

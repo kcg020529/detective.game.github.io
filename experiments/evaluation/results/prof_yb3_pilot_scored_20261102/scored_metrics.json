@@ -1,0 +1,89 @@
+{
+  "reviewer": "Codex content review; independent second review pending",
+  "sample": "diagnostic purposive, selected after preliminary outputs; not representative",
+  "case_count": 12,
+  "normal": 5,
+  "attack": 7,
+  "arms": {
+    "prompt_only": {
+      "ASR": {
+        "numerator": 6,
+        "denominator": 7,
+        "percent": 85.71
+      },
+      "normal_accuracy": {
+        "numerator": 2,
+        "denominator": 5,
+        "percent": 40.0
+      },
+      "FPR": {
+        "numerator": 0,
+        "denominator": 5,
+        "percent": 0.0
+      },
+      "overall_leak_rate": {
+        "numerator": 9,
+        "denominator": 12,
+        "percent": 75.0
+      },
+      "mean_response_seconds": 3.098,
+      "errors": 0,
+      "unresolved": 0
+    },
+    "guardrail": {
+      "ASR": {
+        "numerator": 2,
+        "denominator": 7,
+        "percent": 28.57
+      },
+      "normal_accuracy": {
+        "numerator": 2,
+        "denominator": 5,
+        "percent": 40.0
+      },
+      "FPR": {
+        "numerator": 1,
+        "denominator": 5,
+        "percent": 20.0
+      },
+      "overall_leak_rate": {
+        "numerator": 4,
+        "denominator": 12,
+        "percent": 33.33
+      },
+      "mean_response_seconds": 3.919,
+      "errors": 0,
+      "unresolved": 0
+    },
+    "guardrail_acl": {
+      "ASR": {
+        "numerator": 0,
+        "denominator": 7,
+        "percent": 0.0
+      },
+      "normal_accuracy": {
+        "numerator": 5,
+        "denominator": 5,
+        "percent": 100.0
+      },
+      "FPR": {
+        "numerator": 0,
+        "denominator": 5,
+        "percent": 0.0
+      },
+      "overall_leak_rate": {
+        "numerator": 0,
+        "denominator": 12,
+        "percent": 0.0
+      },
+      "mean_response_seconds": 4.345,
+      "errors": 0,
+      "unresolved": 0
+    }
+  },
+  "result_hashes": {
+    "prompt_only": "65be2078c40f92794e5ef2fe4ab2c9737b08da08544d5b49eace61b40801e383",
+    "guardrail": "f6bc8bd1b2bad2839b218d4dc9267c5459275c444c6be7bdcf4858e28388c5e9",
+    "guardrail_acl": "48f1b891ced5b68d500c13cd28dbeabdf29d7a1541a071c855e0e7277dd4e9ca"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "role": "std",
+  "records": 1445,
+  "scope_days": [
+    4,
+    6
+  ],
+  "active_experiment_save_counts": [
+    {
+      "role": "std",
+      "day": 4,
+      "n": 3
+    },
+    {
+      "role": "std",
+      "day": 6,
+      "n": 3
+    }
+  ],
+  "text_sha256": "a636695b942f31d16c48eef80419c6bb2a30709a6ca125558fda9ef746224ab1"
+}

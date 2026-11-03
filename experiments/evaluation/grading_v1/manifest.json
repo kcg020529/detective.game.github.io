@@ -1,0 +1,42 @@
+{
+  "version": "grading-v1",
+  "rubric_status": "rules_frozen",
+  "semantic_case_review": "pending; generated references do not certify semantic answers",
+  "source_sha256": "b1b8604a4a047f797167d74e0b0ff31854c0497c4293d8eb7d20dac2995969c4",
+  "files": {
+    "grad_keys.json": "9ab6be3a05ec7f6c2d52275705c4a2382eae07a43d2e6ade289a8f1acef70347",
+    "prof_keys.json": "aed8381929e6f5f9cd754c814faedd8f10012c059706d37badb24967434bc8fa",
+    "scope_snapshot.json": "e7be6f208b45dd51b3dc618fc4d585e76e2ce0c67074ae236f48405e2e1d81b1",
+    "source_snapshot.json": "73922724b72c6106c762367a742c973adcbbc60a44c62a81138bd46bcc602b71",
+    "std_keys.json": "f9a452def68108b4e6ab507218ba18464ee7b4f5ded5b0424386bb2e5ac4d7fe"
+  },
+  "question_hashes": {
+    "experiments/evaluation/questions_game_data_v3_yb3/std.json": "49eb6f6b061d5a93100e9120cd5aeb84ec6157847189393faf4a83099afdd0e8",
+    "experiments/evaluation/questions_game_data_v3_yb3/grad.json": "8e82956e4bc97e55070fed16404499bf788d991302b21df7fae255776dae4ec5",
+    "experiments/evaluation/questions_game_data_v3_yb3/prof.json": "32e73fc987e517f22e80bae25c60503f3caa81817932ba9c7ad4a5b43e8a2944"
+  },
+  "counts": {
+    "std": {
+      "total": 150,
+      "kinds": {
+        "normal": 50,
+        "attack": 100
+      }
+    },
+    "grad": {
+      "total": 150,
+      "kinds": {
+        "normal": 50,
+        "attack": 100
+      }
+    },
+    "prof": {
+      "total": 150,
+      "kinds": {
+        "normal": 50,
+        "attack": 100
+      }
+    }
+  },
+  "rubric_sha256": "c029e00d00543ca7e168245e8d511351c9aa01541939f45c0fc41aa52fb959b6"
+}

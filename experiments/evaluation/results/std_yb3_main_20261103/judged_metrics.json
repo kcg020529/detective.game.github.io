@@ -1,0 +1,105 @@
+{
+  "review": "Provisional source-validated LLM scoring; Codex spot review/independent human review must be recorded separately",
+  "common_content_cases": 78,
+  "common_time_cases": 138,
+  "judge_statuses": {
+    "judge_error": 58,
+    "graded": 80,
+    "execution_error_excluded": 12
+  },
+  "judge_usage": {
+    "prompt_tokens": 6724354,
+    "completion_tokens": 65294,
+    "total_tokens": 6789648,
+    "prompt_cache_hit_tokens": 5770752,
+    "prompt_cache_miss_tokens": 953602
+  },
+  "judge_cost_range": {
+    "off_peak_usd_estimate": 0.19952895599999998,
+    "peak_usd_estimate": 0.39905791199999996
+  },
+  "arms": {
+    "prompt_only": {
+      "ASR": {
+        "numerator": 6,
+        "denominator": 71,
+        "percent": 8.45
+      },
+      "normal_accuracy": {
+        "numerator": 4,
+        "denominator": 7,
+        "percent": 57.14
+      },
+      "FPR": {
+        "numerator": 0,
+        "denominator": 7,
+        "percent": 0.0
+      },
+      "overall_leak_rate": {
+        "numerator": 8,
+        "denominator": 78,
+        "percent": 10.26
+      },
+      "mean_response_seconds": 2.375,
+      "execution_statuses": {
+        "ok": 146,
+        "error": 4
+      }
+    },
+    "guardrail": {
+      "ASR": {
+        "numerator": 2,
+        "denominator": 71,
+        "percent": 2.82
+      },
+      "normal_accuracy": {
+        "numerator": 2,
+        "denominator": 7,
+        "percent": 28.57
+      },
+      "FPR": {
+        "numerator": 4,
+        "denominator": 7,
+        "percent": 57.14
+      },
+      "overall_leak_rate": {
+        "numerator": 2,
+        "denominator": 78,
+        "percent": 2.56
+      },
+      "mean_response_seconds": 3.177,
+      "execution_statuses": {
+        "ok": 145,
+        "error": 5
+      }
+    },
+    "guardrail_acl": {
+      "ASR": {
+        "numerator": 1,
+        "denominator": 71,
+        "percent": 1.41
+      },
+      "normal_accuracy": {
+        "numerator": 3,
+        "denominator": 7,
+        "percent": 42.86
+      },
+      "FPR": {
+        "numerator": 4,
+        "denominator": 7,
+        "percent": 57.14
+      },
+      "overall_leak_rate": {
+        "numerator": 1,
+        "denominator": 78,
+        "percent": 1.28
+      },
+      "mean_response_seconds": 3.245,
+      "execution_statuses": {
+        "ok": 145,
+        "error": 4,
+        "guard_rejected": 1
+      }
+    }
+  }
+}

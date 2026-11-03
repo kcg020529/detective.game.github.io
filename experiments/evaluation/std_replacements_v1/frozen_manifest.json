@@ -1,0 +1,25 @@
+{
+  "frozen_before_execution_utc": "2026-11-03T01:29:22.003932+00:00",
+  "replacement_count": 18,
+  "normal": 4,
+  "attack": 14,
+  "category_counts": {
+    "normal_result": 2,
+    "attack_role": 2,
+    "attack_scope": 1,
+    "attack_instruction": 8,
+    "attack_compound": 2,
+    "normal_release": 2,
+    "attack_future": 1
+  },
+  "grading": "Direct Codex source review; no paid LLM judge calls",
+  "sha256": {
+    "experiments\\evaluation\\std_replacements_v1\\cases.json": "c437dc461cbe821882d6495b2e4432ee5905ec7d9fa84e64588a78341e7ef629",
+    "experiments\\evaluation\\std_replacements_v1\\criteria.json": "15ba673a10409feed11b7ae4346a89cb03a44296a9bdc1e930202537f52ce5c8",
+    "experiments\\evaluation\\run_three_way.py": "877180266e1fb64ef5e5f9216c09dbc0f2dc39b5025bcfb55ff345e217401868",
+    "experiments\\evaluation\\GRADING_RUBRIC.md": "c029e00d00543ca7e168245e8d511351c9aa01541939f45c0fc41aa52fb959b6",
+    "experiments\\evaluation\\grading_v1\\manifest.json": "2be7da8f01bfb27581ccac33964fc0a8c85839308aeb7cef5d760435591555ee",
+    "experiments\\evaluation\\grading_v1\\source_snapshot.json": "73922724b72c6106c762367a742c973adcbbc60a44c62a81138bd46bcc602b71",
+    "experiments\\evaluation\\grading_v1\\scope_snapshot.json": "e7be6f208b45dd51b3dc618fc4d585e76e2ce0c67074ae236f48405e2e1d81b1"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "review": "Unblinded Codex first source review; independent human cross-review pending",
+  "frozen_inputs": [
+    {
+      "frozen_before_execution_utc": "2026-11-03T01:29:22.003932+00:00",
+      "replacement_count": 18,
+      "normal": 4,
+      "attack": 14,
+      "category_counts": {
+        "normal_result": 2,
+        "attack_role": 2,
+        "attack_scope": 1,
+        "attack_instruction": 8,
+        "attack_compound": 2,
+        "normal_release": 2,
+        "attack_future": 1
+      },
+      "grading": "Direct Codex source review; no paid LLM judge calls",
+      "sha256": {
+        "experiments\\evaluation\\std_replacements_v1\\cases.json": "c437dc461cbe821882d6495b2e4432ee5905ec7d9fa84e64588a78341e7ef629",
+        "experiments\\evaluation\\std_replacements_v1\\criteria.json": "15ba673a10409feed11b7ae4346a89cb03a44296a9bdc1e930202537f52ce5c8",
+        "experiments\\evaluation\\run_three_way.py": "877180266e1fb64ef5e5f9216c09dbc0f2dc39b5025bcfb55ff345e217401868",
+        "experiments\\evaluation\\GRADING_RUBRIC.md": "c029e00d00543ca7e168245e8d511351c9aa01541939f45c0fc41aa52fb959b6",
+        "experiments\\evaluation\\grading_v1\\manifest.json": "2be7da8f01bfb27581ccac33964fc0a8c85839308aeb7cef5d760435591555ee",
+        "experiments\\evaluation\\grading_v1\\source_snapshot.json": "73922724b72c6106c762367a742c973adcbbc60a44c62a81138bd46bcc602b71",
+        "experiments\\evaluation\\grading_v1\\scope_snapshot.json": "e7be6f208b45dd51b3dc618fc4d585e76e2ce0c67074ae236f48405e2e1d81b1"
+      }
+    },
+    {
+      "frozen_before_execution_utc": "2026-11-03T01:32:07.625234+00:00",
+      "sha256": {
+        "experiments\\evaluation\\std_replacements_v1\\retry_cases.json": "61989d45b1707ae6c0a714c2bca6f1232c3860155f1a83bb0c4285ae320ffca6",
+        "experiments\\evaluation\\std_replacements_v1\\retry_criteria.json": "1e9ef8b41f135e78ae2babc0f48f536617443b3c5f3cab9c6505cb898ce25126",
+        "experiments\\evaluation\\run_three_way.py": "877180266e1fb64ef5e5f9216c09dbc0f2dc39b5025bcfb55ff345e217401868",
+        "experiments\\evaluation\\GRADING_RUBRIC.md": "c029e00d00543ca7e168245e8d511351c9aa01541939f45c0fc41aa52fb959b6"
+      }
+    }
+  ],
+  "result_sha256": {
+    "first": {
+      "prompt_only": "79304c8e1ef4fd662facc0b1c1a1e23bb23476b1cf39574a5f1093e843e0a54b",
+      "guardrail": "0ff6b7e9839dac8a1c27d522f4e9055cae18e52909fca6837f8eee964e8bce22",
+      "guardrail_acl": "e0d1fcb9f705a9f81ecccc4ce4138bc5b7b30fdc819f666d94ac25af6a58199d"
+    },
+    "retry": {
+      "prompt_only": "44975d1573a9df0efe12414fb4ddf5aa4849f1b9c62922ca0b4cd3c3bd58506a",
+      "guardrail": "5288458ae34920ee822779a376b5d59e3ee77fe606d890381a29db6b5161e17b",
+      "guardrail_acl": "58068e2db15a1afea40f7bcb894b7888554747d32a018bdf2c46e80f05ed1608"
+    }
+  },
+  "script_sha256": "426c1a3b6fb1fff1ed78c2accfcd1f15acdcd979b99329699303a7d2e7a4b3fb",
+  "metrics_helper_sha256": "5123c3d22c0d60acc60f3c3a731f806ebc57e7b4b0866eceb2a251684a64a7d2",
+  "original_adjudications_sha256": "2730f7ee701301e74c1234e00ec545acce8fdced1b6b09f3e733d953c14bce33",
+  "original_result_sha256": {
+    "prompt_only": "3d0a9ca06b43e511cda74e148805939e342ce394d0e8a84bc24a9260814a11ff",
+    "guardrail": "d5d37ae16c44b35203796ad481b58764716975483a43a95cd0f3758a4770da07",
+    "guardrail_acl": "c801bc6b4f41f7fb08e35c95a263d24d55f3a0494ab0686330de5b998e8bab97"
+  },
+  "output_sha256": {
+    "selected_cases.json": "a69c23ad0f53646f5ccaa40af6c17cc5be6e2f4f35128ac314882bebc78eb899",
+    "final_adjudications.json": "4eddfa95df2008af37c478474a398ee5dc9e6a48f04d147a44fa9cc193ef087a",
+    "reviewed_metrics.json": "8cb00e04151df2f578c1a591716483301eb6fed7cd555a6a05638b9920619c80",
+    "scored_review.csv": "3bdc0b0765d778f30370297961e3a9aa9e1961df02172e6b9293c510699b3a20",
+    "combined_adjudications.json": "301b9e8dc1b9cdcf489969749f64d5fadf8edc9c2e3054c157489ebf7cd02ba2",
+    "combined_reviewed_metrics.json": "54b1f792b367ca78caf5220183342cedad6c2de2c70fb9973492a7afafa64139",
+    "combined_scored_review.csv": "d0097434ec4c71605dc87d8128fccea4519701e8fe077497e637d6843e0619c2",
+    "selection.json": "664a35bd94fac155486f2e9edc4071ca8743f79d6002f86a477392586e6e0acf"
+  }
+}
