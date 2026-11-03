@@ -23,8 +23,10 @@ CREATE TABLE IF NOT EXISTS audit_events (
         REFERENCES users (user_id) ON DELETE SET NULL,
     CONSTRAINT fk_audit_events_save FOREIGN KEY (save_id)
         REFERENCES saves (save_id) ON DELETE SET NULL,
+    -- Both processing values are allowed to preserve historical monitor-only rows;
+    -- the application validates new warn=true and high_risk=false events.
     CONSTRAINT ck_audit_events_input_level CHECK (
         event_type <> 'input_guard_alert' OR
-        (level IN ('warn', 'high_risk') AND score IN (50, 90) AND continue_processing = 1)
+        (level IN ('warn', 'high_risk') AND score IN (50, 90))
     )
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

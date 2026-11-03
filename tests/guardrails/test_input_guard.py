@@ -11,12 +11,12 @@ CASES = json.loads(
 
 
 class InputGuardTests(unittest.TestCase):
-    def test_mock_questions_and_detection_only_behavior(self):
+    def test_mock_questions_and_processing_contract(self):
         for case in CASES:
             with self.subTest(case=case["id"]):
                 result = inspect_input(case["question"])
                 self.assertEqual(result.level, case["expected_level"])
-                self.assertTrue(result.continue_processing)
+                self.assertEqual(result.continue_processing, result.level != 'high_risk')
                 self.assertEqual(result.model_status, 'not_used')
                 self.assertIn(result.score, (0, 50, 90))
 
@@ -30,7 +30,7 @@ class InputGuardTests(unittest.TestCase):
         self.assertEqual(event["request_id"], "req_123")
         self.assertIn("secret_extraction", event["signals"])
         self.assertNotIn("question", event)
-        self.assertTrue(event["continue_processing"])
+        self.assertFalse(event["continue_processing"])
 
     def test_normal_question_has_no_alert(self):
         result = inspect_input("어제 어떤 실험을 했어?")

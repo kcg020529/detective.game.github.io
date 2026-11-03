@@ -1,7 +1,7 @@
-"""Rule-based, detection-only checks for a player's chat question.
+"""Classify a player's question before normal answer generation.
 
-This module never grants access and never stops the request. Authorization
-must use the authenticated user's Save and the server-side policy engine.
+This module never grants access. Authorization must use the authenticated
+user's Save and the server-side policy engine.
 """
 
 from dataclasses import dataclass
@@ -14,8 +14,12 @@ class InputGuardResult:
     level: str
     score: int
     signals: tuple[str, ...]
-    continue_processing: bool = True
     model_status: Literal["not_used", "ok", "fallback"] = "not_used"
+
+    @property
+    def continue_processing(self) -> bool:
+        """Whether the normal Planner/D answer flow should continue."""
+        return self.level != "high_risk"
 
 
 # Rules are deliberately narrow: words such as "해킹" in a normal mystery
@@ -108,5 +112,5 @@ def input_guard_audit_event(
         "level": result.level,
         "score": result.score,
         "signals": list(result.signals),
-        "continue_processing": True,
+        "continue_processing": result.continue_processing,
     }
