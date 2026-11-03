@@ -34,7 +34,7 @@ event = input_guard_audit_event(
 
 호출자는 인증된 사용자와 서버가 확인한 Save의 역할·Day를 사용해야 한다.
 질문 원문은 감사 이벤트에 포함하지 않는다. I04 채팅 POST는 인증·Save 확인 뒤 `backend.audit.input_guard_flow.inspect_and_record_input()`으로 판정하고 warn·high_risk 메타데이터를 저장한다. LLM 추가 판정은 `KERVION_INPUT_GUARD_LLM=1`일 때 사용한다. 실제 DB 채팅 통합 검증은 남아 있다. 규칙·점수는 초기안이며
-`experiments/attacks/input_guard_cases.json`의 30개 질문은 규칙 검사 기준선이다.
+`experiments/attacks/input_guard/cases/input_guard_cases.json`의 30개 질문은 규칙 검사 기준선이다.
 DeepSeek 결과의 오탐·미탐은 별도로 평가해야 한다.
 
 단독 검증:

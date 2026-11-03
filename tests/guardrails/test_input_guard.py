@@ -6,7 +6,7 @@ from backend.guardrails.input.input_guard import input_guard_audit_event, inspec
 
 
 CASES = json.loads(
-    (Path(__file__).resolve().parents[2] / "experiments/attacks/input_guard_cases.json").read_text()
+    (Path(__file__).resolve().parents[2] / "experiments/attacks/input_guard/cases/input_guard_cases.json").read_text()
 )
 
 
