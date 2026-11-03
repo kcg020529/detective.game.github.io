@@ -89,7 +89,7 @@
 
 1. gamedata16개 파일과 관련 가드/정책 코드를 검토했다. 저장 초안474항목 중465완료·9오류와 test의 원문121/126·withheld121/122·혼합122/126 탐지를 대조했고 해당 탐지는 모두 applied=block임을 확인했다. 현재 코드 재실행 결과는 아니다.
 2. YB-1 비교280문항은 별도 자료이며 71건 중4건 차단 수치를 확인할 실행 원본은 누락돼 있다. rerun_guard의 역할 기준 복구, Day/AI_SCOPE 누락, 채점 오류 포함 분모, default 이름의 상충 수치와 사본 경로/catalog 재현성 문제를 기록했다.
-3. experiments/evaluation/results/gamedata_review_20261103/REPORT.md에 근거와 한계를 저장했다. API/DB 호출·설정 변경·담당자 코드 수정은 없었다.
+3. experiments/leakage/results/gamedata_review_20261103/REPORT.md에 근거와 한계를 저장했다(사용자 요청으로 출력 가드 실험 경로로 이동). API/DB 호출·설정 변경·담당자 코드 수정은 없었다.
 
 4. feature/guardrail-test의725adbf를fetch/git show로추가검토했다. 새브랜치에는acl_off143/guard_only140실행원본이있고공통140초안이동일했다. 직접ChatPipeline호출은HTTP입력가드를거치지않으므로기본on만으로입력검사개입을추정한앞선설명을정정했다. 자동표지기준공통유출72/140→21/140,공격34/78→2/78이며의미재검수수치가아니다. 역할만복구하는출력기준과정상질문누락한계를보고서에기록했다. 체크아웃/병합/라이브API호출없음.
 
