@@ -267,7 +267,7 @@ def test_aws_overlay_and_shared_render(bash, tmp_path):
     assert 'registry.example.invalid' not in result.stderr and 'arn:' not in result.stderr
     objects = list(yaml.safe_load_all(result.stdout))
     allowed = {'registry.example.invalid/kervion-backend:abcdef0', 'registry.example.invalid/kervion-web:abcdef0',
-               'mariadb:11.4.13', 'qdrant/qdrant:v1.19.2'}
+               'mariadb:11.4.13', 'qdrant/qdrant:v1.19.2', 'grafana/grafana:13.2.0'}
     for obj in objects:
         if obj['kind'] not in ('Namespace', 'StorageClass'):
             assert obj['metadata']['namespace'] == 'kervion'
@@ -301,6 +301,19 @@ def test_aws_overlay_and_shared_render(bash, tmp_path):
     assert config['data']['KERVION_ALLOWED_ORIGINS'] == 'https://d111111abcdef8.cloudfront.net'
     service = next(obj for obj in objects if obj['kind'] == 'Service' and obj['metadata']['name'] == 'web')
     assert service['spec']['type'] == 'ClusterIP'
+    # Grafana는 클러스터 내부에서만 열고, 비밀값은 별도 Secret에서 읽는다.
+    grafana_service = next(obj for obj in objects if obj['kind'] == 'Service' and obj['metadata']['name'] == 'grafana')
+    assert grafana_service['spec']['type'] == 'ClusterIP'
+    grafana = next(obj for obj in objects if obj['kind'] == 'Deployment' and obj['metadata']['name'] == 'grafana')
+    env = {item['name']: item for item in _containers(grafana)[0]['env']}
+    assert env['GF_SERVER_ROOT_URL']['value'] == 'https://d111111abcdef8.cloudfront.net/api/v1/admin/grafana/'
+    assert env['GF_AUTH_ANONYMOUS_ENABLED']['value'] == 'false'
+    for key in ('GF_SECURITY_ADMIN_PASSWORD', 'GRAFANA_DB_PASSWORD', 'KERVION_DISCORD_WEBHOOK_URL'):
+        assert env[key]['valueFrom']['secretKeyRef']['name'] == 'kervion-grafana'
+    web = next(obj for obj in objects if obj['kind'] == 'Deployment' and obj['metadata']['name'] == 'web')
+    script = _containers(web)[0]['command'][-1]
+    assert 's/resolver 127.0.0.11/resolver $ns/' in script and 'grafana.kervion.svc.cluster.local:3000' in script
+    assert "exec nginx -g 'daemon off;'" in script
     for obj in objects:
         claims = ([obj] if obj['kind'] == 'PersistentVolumeClaim' else obj.get('spec', {}).get('volumeClaimTemplates', []))
         assert all('storageClassName' not in claim['spec'] for claim in claims)

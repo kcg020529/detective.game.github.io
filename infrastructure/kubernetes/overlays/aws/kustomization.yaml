@@ -6,6 +6,7 @@ resources:
   - ../../base
   - storageclass-gp3.yaml
   - ingress.yaml
+  - grafana.yaml
 images:
   - name: kervion-backend
     newName: __ECR_REGISTRY__/kervion-backend
@@ -15,3 +16,26 @@ images:
     newTag: __IMAGE_TAG__
 patches:
   - path: configmap-patch.yaml
+  - path: web-grafana-patch.yaml
+    target:
+      kind: Deployment
+      name: web
+# Grafana 설정은 Docker 구성과 같은 파일을 그대로 쓴다.
+configMapGenerator:
+  - name: kervion-grafana-datasources
+    files:
+      - audit-mariadb.yml=../../../docker/grafana/provisioning/datasources/audit-mariadb.yml
+  - name: kervion-grafana-dashboard-providers
+    files:
+      - audit.yml=../../../docker/grafana/provisioning/dashboards/audit.yml
+  - name: kervion-grafana-alerting
+    files:
+      - input-high-risk.yml=../../../docker/grafana/provisioning/alerting/input-high-risk.yml
+      - output-policy-alerts.yml=../../../docker/grafana/provisioning/alerting/output-policy-alerts.yml
+  - name: kervion-grafana-dashboards
+    files:
+      - security-audit.json=../../../docker/grafana/dashboards/security-audit.json
+generatorOptions:
+  labels:
+    app.kubernetes.io/part-of: kervion
+    app.kubernetes.io/tier: app
