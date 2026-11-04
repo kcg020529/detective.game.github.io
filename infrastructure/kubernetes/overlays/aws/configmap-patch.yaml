@@ -6,3 +6,5 @@ data:
   KERVION_ALLOWED_ORIGINS: https://__DOMAIN__
   KERVION_COOKIE_SECURE: "true"
   KERVION_COOKIE_SAMESITE: lax
+  # 입력 가드에 DeepSeek 판정을 함께 사용한다(규칙과 모델 중 더 높은 위험도 채택).
+  KERVION_INPUT_GUARD_LLM: "1"
