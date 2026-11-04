@@ -45,6 +45,19 @@ bash infrastructure/kubernetes/scripts/smoke.sh https://dXXXX.cloudfront.net
 
 캐시는 CachingDisabled, origin 요청 정책은 AllViewerAndCloudFrontHeaders-2022-06이다. 쿠키·query·viewer Host와 CloudFront 클라이언트 주소/프로토콜 헤더를 전달한다. nginx는 CloudFront-Viewer-Address의 포트를 제거해 IP별 제한을 적용하고, CloudFront-Forwarded-Proto를 우선한다.
 
+### 감사 대시보드·Discord 알림 (Grafana)
+
+AWS overlay에는 Grafana가 포함된다. 외부 주소는 없고 `/admin/audit`·`/api/v1/admin/grafana/`에서 사이트 관리자 확인을 거쳐서만 열린다. 배포 전에 한 번 아래 두 가지를 준비한다. 값은 화면에 출력하지 않는다.
+
+1. MariaDB에 `audit_events` 읽기 전용 계정 `grafana_reader`를 만든다(`infrastructure/docker/setup_grafana_reader.py`와 같은 권한).
+2. Secret `kervion-grafana`를 만든다. 키: `GRAFANA_ADMIN_PASSWORD`, `GRAFANA_DB_PASSWORD`(1번 비밀번호), `KERVION_DISCORD_WEBHOOK_URL`.
+
+```bash
+kubectl -n kervion create secret generic kervion-grafana --from-env-file=<값을 넣은 임시 파일>
+```
+
+Secret이 없으면 Grafana 파드만 뜨지 않고 게임 서비스는 그대로 동작한다. 관리자 계정은 회원가입 후 `site_admins`에 user_id를 넣어 지정한다.
+
 **60초를 넘는 채팅 응답은 CloudFront에서 504로 끊길 수 있다.** 클라이언트에서 같은 요청을 다시 보내면 저장된 응답을 재생한다. 프론트 채팅 제한도 60초이고 nginx는 90초다.
 
 ## 끄기
