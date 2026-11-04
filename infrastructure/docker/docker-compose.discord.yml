@@ -1,0 +1,6 @@
+services:
+  grafana:
+    environment:
+      KERVION_DISCORD_WEBHOOK_URL: ${KERVION_DISCORD_WEBHOOK_URL:?Set KERVION_DISCORD_WEBHOOK_URL in infrastructure/docker/.env}
+    volumes:
+      - ./grafana/provisioning/alerting:/etc/grafana/provisioning/alerting:ro
