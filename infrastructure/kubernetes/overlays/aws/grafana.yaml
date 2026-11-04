@@ -61,10 +61,11 @@ spec:
           resources:
             requests:
               cpu: 50m
-              memory: 128Mi
+              memory: 256Mi
             limits:
               cpu: 500m
-              memory: 384Mi
+              # 384Mi에서 대시보드 조회와 알림 평가가 겹치면 OOMKilled(실측 317Mi 사용 중 재시작).
+              memory: 1Gi
           volumeMounts:
             - {name: data, mountPath: /var/lib/grafana}
             - {name: datasources, mountPath: /etc/grafana/provisioning/datasources, readOnly: true}
