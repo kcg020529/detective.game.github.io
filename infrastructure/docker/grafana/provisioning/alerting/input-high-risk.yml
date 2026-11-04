@@ -1,0 +1,111 @@
+apiVersion: 1
+
+contactPoints:
+  - orgId: 1
+    name: Kervion Discord Input Guard
+    receivers:
+      - uid: kervion_discord_input
+        type: discord
+        disableResolveMessage: true
+        settings:
+          url: ${KERVION_DISCORD_WEBHOOK_URL}
+          title: '{{ if eq .CommonLabels.alertname "DatasourceError" }}⚠️ INPUT · 감사 조회 오류{{ else if eq .CommonLabels.game_role_attempt "yes" }}🟢 INPUT · 권한 변경 시도{{ else }}🔴 INPUT · 고위험 입력{{ end }}'
+          message: |-
+            ⠀
+            {{ if eq .CommonLabels.alertname "DatasourceError" }}상태: 감사 데이터 조회 실패
+            {{ else }}{{ range .Alerts.Firing }}판정: high_risk
+            처리: 고정 응답 · 일반 답변 생성 중단
+            신호: {{ .Labels.guard_signal }}
+            요청: {{ .Labels.request_id }}
+            {{- end }}{{ end }}
+
+groups:
+  - orgId: 1
+    name: Kervion Input Guard Alerts
+    folder: Kervion Security
+    interval: 10s
+    rules:
+      - uid: kervion_input_high_risk
+        title: Input Guard high_risk detected
+        condition: C
+        for: 0s
+        noDataState: OK
+        execErrState: Error
+        data:
+          - refId: A
+            datasourceUid: kervion-audit-mariadb
+            relativeTimeRange:
+              from: 60
+              to: 0
+            model:
+              datasource:
+                type: mysql
+                uid: kervion-audit-mariadb
+              editorMode: code
+              format: time_series
+              intervalMs: 1000
+              maxDataPoints: 43200
+              rawQuery: true
+              rawSql: >-
+                SELECT NOW() AS time, 1 AS value, request_id,
+                COALESCE(JSON_UNQUOTE(JSON_EXTRACT(signals_json, '$[0]')),
+                'unknown') AS guard_signal,
+                CASE WHEN JSON_CONTAINS(signals_json,
+                JSON_QUOTE('role_or_state_override')) = 1
+                THEN 'yes' ELSE 'no' END AS game_role_attempt
+                FROM audit_events
+                WHERE event_type = 'input_guard_alert' AND level = 'high_risk'
+                AND occurred_at >= NOW() - INTERVAL 1 MINUTE
+                ORDER BY time
+              refId: A
+          - refId: B
+            datasourceUid: __expr__
+            relativeTimeRange:
+              from: 0
+              to: 0
+            model:
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            relativeTimeRange:
+              from: 0
+              to: 0
+            model:
+              conditions:
+                - evaluator:
+                    params: [0]
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: [C]
+                  reducer:
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: B
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        annotations:
+          summary: '이 요청에서 {{ printf "%.0f" $values.B.Value }}건'
+        labels:
+          component: input_guard
+          severity: warning
+        notification_settings:
+          receiver: Kervion Discord Input Guard
+          group_by: ['request_id']
+          group_wait: 0s
+          group_interval: 10s
+          repeat_interval: 30m
